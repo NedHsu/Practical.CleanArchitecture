@@ -148,8 +148,9 @@ namespace ClassifiedAds.BackgroundServer
                 {
                     emailMessageService.SendEmailMessage(data.Id);
                 }
-                catch (Exception ex)
-                { }
+                catch (Exception)
+                {
+                }
 
                 notification.Send(new SendTaskStatusMessage { Step = $"Send Email", Message = message });
             });
@@ -164,8 +165,9 @@ namespace ClassifiedAds.BackgroundServer
                 {
                     smsMessageService.SendSmsMessage(data.Id);
                 }
-                catch (Exception ex)
-                { }
+                catch (Exception)
+                {
+                }
 
                 notification.Send(new SendTaskStatusMessage { Step = $"Send Sms", Message = message });
             });
