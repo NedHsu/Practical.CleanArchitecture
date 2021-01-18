@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using ClassifiedAds.Blazor.Modules.Core.Components;
+using ClassifiedAds.Blazor.Modules.Matchs.Components;
 using ClassifiedAds.Blazor.Modules.Matchs.Models;
 using ClassifiedAds.Blazor.Modules.Matchs.Services;
 using Microsoft.AspNetCore.Components;
@@ -21,7 +22,7 @@ namespace ClassifiedAds.Blazor.Modules.Matchs.Pages {
         [Inject]
         public ILogger<List> Logger { get; set; }
 
-        protected ConfirmDialog DeleteDialog { get; set; }
+        protected JoinDialog JoinDialog { get; set; }
 
         public List<MatchModel> Matchs { get; set; }
 
@@ -68,7 +69,7 @@ namespace ClassifiedAds.Blazor.Modules.Matchs.Pages {
         }
 
         protected async Task Join(MatchModel match) {
-
+            JoinDialog.Show(match);
         }
 
     }

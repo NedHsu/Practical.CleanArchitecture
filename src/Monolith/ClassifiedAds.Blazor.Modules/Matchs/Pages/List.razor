@@ -1,5 +1,6 @@
 ﻿@page "/matchs"
 @attribute [Authorize]
+@using ClassifiedAds.Blazor.Modules.Matchs.Components
 
 <h3>List</h3>
 
@@ -35,4 +36,4 @@ else
 
 }
 
-
+<JoinDialog @ref="JoinDialog"></JoinDialog>
