@@ -1,6 +1,10 @@
+using Blazorise;
+using Blazorise.Bootstrap;
+using Blazorise.Icons.FontAwesome;
 using ClassifiedAds.Blazor.Modules.AuditLogs.Services;
 using ClassifiedAds.Blazor.Modules.Core.Services;
 using ClassifiedAds.Blazor.Modules.Files.Services;
+using ClassifiedAds.Blazor.Modules.Matchs.Services;
 using ClassifiedAds.Blazor.Modules.Products.Services;
 using ClassifiedAds.Blazor.Modules.Users.Services;
 using ClassifiedAds.BlazorServerSide.ConfigurationOptions;
@@ -49,6 +53,14 @@ namespace ClassifiedAds.BlazorServerSide
                 });
             }
 
+            services
+              .AddBlazorise(options =>
+              {
+                  options.ChangeTextOnKeyPress = true; // optional
+              })
+              .AddBootstrapProviders()
+              .AddFontAwesomeIcons();
+
             services.AddRazorPages();
             services.AddServerSideBlazor();
             if (AppSettings.Azure?.SignalR?.IsEnabled ?? false)
@@ -65,6 +77,12 @@ namespace ClassifiedAds.BlazorServerSide
                 client.DefaultRequestHeaders.Clear();
             });
             services.AddHttpClient<ProductService, ProductService>(client =>
+            {
+                client.BaseAddress = new Uri(AppSettings.ResourceServer.Endpoint);
+                client.Timeout = new TimeSpan(0, 0, 30);
+                client.DefaultRequestHeaders.Clear();
+            });
+            services.AddHttpClient<MatchService, MatchService>(client =>
             {
                 client.BaseAddress = new Uri(AppSettings.ResourceServer.Endpoint);
                 client.Timeout = new TimeSpan(0, 0, 30);
@@ -130,6 +148,10 @@ namespace ClassifiedAds.BlazorServerSide
             }
 
             app.UseRouting();
+
+            app.ApplicationServices
+              .UseBootstrapProviders()
+              .UseFontAwesomeIcons();
 
             app.UseAuthentication();
             app.UseAuthorization();

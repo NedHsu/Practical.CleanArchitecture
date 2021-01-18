@@ -1,0 +1,38 @@
+﻿@page "/matchs"
+@attribute [Authorize]
+
+<h3>List</h3>
+
+@if (Matchs.Count > 0)
+{
+    <CardDeck>
+        @foreach (var item in Matchs)
+        {
+            <Card>
+                <CardImage Source="@item.ImageUrl" Alt="Card image cap 3"></CardImage>
+                <CardBody>
+                    <CardTitle Size="5">@item.Title</CardTitle>
+                    <CardSubtitle>
+                        @if (item.Location != null)
+                        {
+                            @item.Location.Name
+                        }
+                        Card Subtitle
+                    </CardSubtitle>
+                    <CardText>
+                        @item.Description
+                    </CardText>
+
+                    <Button Color="Color.Primary" @onclick="(() => Join(item))">Join</Button>
+                </CardBody>
+                <CardFooter>@item.Time.ToString("F")</CardFooter>
+            </Card>
+        }
+    </CardDeck>
+}
+else
+{
+
+}
+
+
