@@ -1,5 +1,8 @@
 <Modal @ref="modalRef">
     <ModalBackdrop />
+    <EditForm Model="MatchJoin" OnValidSubmit="HandleValidSubmit">
+
+    </EditForm>
     <ModalContent IsCentered="true">
         <ModalHeader>
             <ModalTitle>@Match?.Title</ModalTitle>
@@ -7,17 +10,17 @@
         </ModalHeader>
         <ModalBody>
             <Field>
-                <FieldLabel>Name</FieldLabel>
-                <TextEdit Placeholder="Enter name..." />
+                <FieldLabel>人數</FieldLabel>
+                <NumericEdit TValue="int" Min="1" Max="100" @bind-Value="MatchJoin.Number" />
             </Field>
             <Field>
-                <FieldLabel>Surname</FieldLabel>
-                <TextEdit Placeholder="Enter surname..." />
+                <FieldLabel>備註</FieldLabel>
+                <TextEdit Placeholder="跟主辦人說些什麼..." @bind-Text="MatchJoin.Remark" />
             </Field>
         </ModalBody>
         <ModalFooter>
-            <Button Color="Color.Secondary" Clicked="@Hide">Close</Button>
-            <Button Color="Color.Primary" Clicked="@Hide">Save Changes</Button>
+            <Button Color="Color.Secondary" Clicked="@Hide">取消</Button>
+            <Button Color="Color.Primary" Clicked="@Confirm">確定</Button>
         </ModalFooter>
     </ModalContent>
 </Modal>

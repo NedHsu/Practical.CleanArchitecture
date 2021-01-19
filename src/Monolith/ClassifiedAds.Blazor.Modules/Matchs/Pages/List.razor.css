@@ -1,0 +1,7 @@
+.line-end {
+    float: right;
+}
+
+.content {
+    page-break-after: 5px;
+}

@@ -33,17 +33,23 @@ namespace ClassifiedAds.Blazor.Modules.Matchs.Pages {
                 new MatchModel {
                 Title = "一起打籃球",
                 Description = "3V3 自行報隊",
-                Time = System.DateTime.Now,
+                CreateTime = System.DateTime.Now,
+                StartTime = System.DateTime.Now,
+                Creater = "Ned",
+                Joined = 1,
                 Location = new LocationModel {
                 Name = "天橋下",
                 Latitude = 24.227144866802035,
-                Longitude = 120.62602541304933
+                Longitude = 120.62602541304933,
                 }
                 },
                 new MatchModel {
                 Title = "夜衝",
                 Description = "台北到台中",
-                Time = System.DateTime.Now,
+                StartTime = System.DateTime.Now,
+                CreateTime = System.DateTime.Now,
+                Creater = "Ned",
+                Joined = 2,
                 Location = new LocationModel {
                 Latitude = 24.227144866802035,
                 Longitude = 120.72602541304933,
@@ -53,7 +59,10 @@ namespace ClassifiedAds.Blazor.Modules.Matchs.Pages {
                 new MatchModel {
                 Title = "單車",
                 Description = "日月潭環潭",
-                Time = System.DateTime.Now,
+                StartTime = System.DateTime.Now,
+                CreateTime = System.DateTime.Now,
+                Creater = "Ned",
+                Joined = 3,
                 Location = new LocationModel {
                 Latitude = 24.127144866802035,
                 Longitude = 120.62602541304933,
@@ -64,13 +73,12 @@ namespace ClassifiedAds.Blazor.Modules.Matchs.Pages {
             //await MatchService.GetMatchs();
         }
 
-        protected async Task QuickAddMatch() {
-            NavManager.NavigateTo("/matchs/add");
-        }
-
         protected async Task Join(MatchModel match) {
             JoinDialog.Show(match);
         }
 
+        protected async Task Add () {
+            NavManager.NavigateTo("/matchs/add");
+        }
     }
 }

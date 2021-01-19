@@ -13,13 +13,19 @@ namespace ClassifiedAds.Blazor.Modules.Matchs.Models {
         [MaxLength(10)]
         public string Name { get; set; }
 
-        public DateTime Time { get; set; }
+        public DateTime StartTime { get; set; }
+
+        public DateTime CreateTime { get; set; }
 
         public string Title { get; set; }
 
         public string Description { get; set; }
 
         public string ImageUrl { get; set; }
+
+        public string Creater { get; set; }
+
+        public int Joined { get; set; }
 
         public LocationModel Location { get; set; }
 
