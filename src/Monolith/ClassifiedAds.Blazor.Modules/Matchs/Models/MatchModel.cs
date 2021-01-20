@@ -23,7 +23,7 @@ namespace ClassifiedAds.Blazor.Modules.Matchs.Models {
 
         public string ImageUrl { get; set; }
 
-        public string Creater { get; set; }
+        public string CreaterName { get; set; }
 
         public int Joined { get; set; }
 

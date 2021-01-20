@@ -2,17 +2,17 @@
 @attribute [Authorize]
 @using ClassifiedAds.Blazor.Modules.Matchs.Components
 
-<Blazorise.Row>
-    <Column><Check TValue="bool">只看我</Check></Column>
-    <Column><DateEdit TValue="DateTime?"></DateEdit></Column>
-    <Column><DateEdit TValue="DateTime?"></DateEdit></Column>
-    <Column>
+<Blazorise.Row Padding="Padding.Is2">
+    <Column ColumnSize="ColumnSize.Is2.OnDesktop.Is6.OnMobile"><Check TValue="bool" @bind-Value="IsMe">只看我</Check></Column>
+    <Column ColumnSize="ColumnSize.Is2.OnDesktop.Is6.OnMobile">
         <Select TValue="int">
             <SelectItem Value="-1">活動類型</SelectItem>
         </Select>
     </Column>
-    <Column><Button>篩選</Button></Column>
-    <Column><Button Color="Color.Light" @onclick="Add">發起</Button></Column>
+    <Column ColumnSize="ColumnSize.Is2.OnDesktop.Is6.OnMobile"><DateEdit TValue="DateTime?" @bind-Value="StartDate"></DateEdit></Column>
+    <Column ColumnSize="ColumnSize.Is2.OnDesktop.Is6.OnMobile"><DateEdit TValue="DateTime?" @bind-Value="EndDate"></DateEdit></Column>
+    <Column ColumnSize="ColumnSize.Is2.OnDesktop.Is6.OnMobile"><Button @onclick="Search">篩選</Button></Column>
+    <Column ColumnSize="ColumnSize.Is2.OnDesktop.Is6.OnMobile"><Button Float="Float.Right" Color="Color.Light" @onclick="Add">發起</Button></Column>
 </Blazorise.Row>
 
 @if (Matchs.Count > 0)
@@ -42,7 +42,7 @@
                     <div class="line-end"><Button><span>@item.Joined</span>已報名</Button><Button Color="Color.Primary"
                             @onclick="(() => Join(item))">加入</Button></div>
                 </CardBody>
-                <CardFooter>@item.CreateTime.ToString("F") <div class="line-end"> By @item.Creater </div>
+                <CardFooter>@item.CreateTime.ToString("F") <div class="line-end"> By @item.CreaterName </div>
                 </CardFooter>
             </Card>
         }

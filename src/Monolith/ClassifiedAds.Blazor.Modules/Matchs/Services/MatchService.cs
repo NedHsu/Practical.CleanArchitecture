@@ -42,5 +42,11 @@ namespace ClassifiedAds.Blazor.Modules.Matchs.Services
         {
             await DeleteAsync($"api/matchs/{id}");
         }
+
+        public async Task<List<MatchModel>> Query(MatchFilterModel filter)
+        {
+            var matchs = await PostAsync<List<MatchModel>>("api/matchs/paged", filter);
+            return matchs;
+        }
     }
 }

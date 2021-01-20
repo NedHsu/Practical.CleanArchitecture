@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ClassifiedAds.Blazor.Modules.Core.Components;
 using ClassifiedAds.Blazor.Modules.Matchs.Components;
@@ -28,6 +29,10 @@ namespace ClassifiedAds.Blazor.Modules.Matchs.Pages {
 
         public MatchModel DeletingMatch { get; private set; }
 
+        public bool IsMe { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+
         protected override async Task OnInitializedAsync() {
             Matchs = new List<MatchModel> {
                 new MatchModel {
@@ -35,7 +40,7 @@ namespace ClassifiedAds.Blazor.Modules.Matchs.Pages {
                 Description = "3V3 自行報隊",
                 CreateTime = System.DateTime.Now,
                 StartTime = System.DateTime.Now,
-                Creater = "Ned",
+                CreaterName = "Ned",
                 Joined = 1,
                 Location = new LocationModel {
                 Name = "天橋下",
@@ -48,7 +53,7 @@ namespace ClassifiedAds.Blazor.Modules.Matchs.Pages {
                 Description = "台北到台中",
                 StartTime = System.DateTime.Now,
                 CreateTime = System.DateTime.Now,
-                Creater = "Ned",
+                CreaterName = "Ned",
                 Joined = 2,
                 Location = new LocationModel {
                 Latitude = 24.227144866802035,
@@ -61,7 +66,7 @@ namespace ClassifiedAds.Blazor.Modules.Matchs.Pages {
                 Description = "日月潭環潭",
                 StartTime = System.DateTime.Now,
                 CreateTime = System.DateTime.Now,
-                Creater = "Ned",
+                CreaterName = "Ned",
                 Joined = 3,
                 Location = new LocationModel {
                 Latitude = 24.127144866802035,
@@ -77,8 +82,11 @@ namespace ClassifiedAds.Blazor.Modules.Matchs.Pages {
             JoinDialog.Show(match);
         }
 
-        protected async Task Add () {
+        protected async Task Add() {
             NavManager.NavigateTo("/matchs/add");
+        }
+
+        protected async Task Search() {
         }
     }
 }
