@@ -11,6 +11,10 @@ namespace ClassifiedAds.Domain.Entities {
 
         public string Description { get; set; }
 
+        public User Creater { get; set; }
+
+        public MatchType MatchType { get; set; }
+
         public Location Location { get; set; }
 
         public IList<MatchPlayer> Players { get; set; }

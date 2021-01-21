@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.Blazor.Modules.Core.Services;
+﻿using ClassifiedAds.Blazor.Modules.Core.Models;
+using ClassifiedAds.Blazor.Modules.Core.Services;
 using ClassifiedAds.Blazor.Modules.Matchs.Models;
 using System;
 using System.Collections.Generic;
@@ -43,9 +44,9 @@ namespace ClassifiedAds.Blazor.Modules.Matchs.Services
             await DeleteAsync($"api/matchs/{id}");
         }
 
-        public async Task<List<MatchModel>> Query(MatchFilterModel filter)
+        public async Task<PagedResultModel<MatchModel>> QueryMatchs(MatchFilterModel filter)
         {
-            var matchs = await PostAsync<List<MatchModel>>("api/matchs/paged", filter);
+            var matchs = await PostAsync<PagedResultModel<MatchModel>>("api/matchs/paged", filter);
             return matchs;
         }
     }

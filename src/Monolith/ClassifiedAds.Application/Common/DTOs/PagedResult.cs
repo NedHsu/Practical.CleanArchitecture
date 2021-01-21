@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 namespace ClassifiedAds.Application.Common.DTOs
 {
     public class PagedResult<T> : IPagedResult
@@ -12,9 +11,9 @@ namespace ClassifiedAds.Application.Common.DTOs
 
         public int PageIndex { get; }
 
-        public IList<T> Items { get; }
+        public List<T> Items { get; }
 
-        public PagedResult(IList<T> items, int count, int pageIndex, int pageSize)
+        public PagedResult(List<T> items, int count, int pageIndex, int pageSize)
         {
             TotalPages = (int)Math.Ceiling(count / (double)pageSize);
             TotalCount = count;

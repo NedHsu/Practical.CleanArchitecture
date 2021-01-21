@@ -116,3 +116,8 @@
   ```
   helm uninstall myrelease
   ```
+
+# MiniPorfile
+```
+/profiler/results
+```

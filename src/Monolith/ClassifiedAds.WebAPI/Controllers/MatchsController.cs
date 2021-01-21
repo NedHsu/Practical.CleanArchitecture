@@ -1,4 +1,7 @@
-﻿using ClassifiedAds.Application;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using ClassifiedAds.Application;
 using ClassifiedAds.Application.AuditLogEntries.DTOs;
 using ClassifiedAds.Application.AuditLogEntries.Queries;
 using ClassifiedAds.Application.Common.DTOs;
@@ -12,41 +15,33 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace ClassifiedAds.WebAPI.Controllers
-{
+namespace ClassifiedAds.WebAPI.Controllers {
     [Authorize]
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
-    public class MatchsController : ControllerBase
-    {
+    public class MatchsController : ControllerBase {
         private readonly Dispatcher _dispatcher;
         private readonly ILogger _logger;
 
-        public MatchsController(Dispatcher dispatcher, ILogger<MatchsController> logger)
-        {
+        public MatchsController(Dispatcher dispatcher, ILogger<MatchsController> logger) {
             _dispatcher = dispatcher;
             _logger = logger;
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Match>> Get()
-        {
+        public ActionResult<IEnumerable<Match>> Get() {
             _logger.LogInformation("Getting all matchs");
             var matchs = _dispatcher.Dispatch(new GetMatchsQuery());
             var model = matchs.ToDTOs();
             return Ok(model);
         }
 
-        [HttpGet("paged")]
-        public ActionResult<PagedResult<Match>> GetPaged(MatchFilterModel filter) 
-        {
+        [HttpPost("paged")]
+        public ActionResult<PagedResult<Match>> PostPaged(MatchFilterModel filter) {
             _logger.LogInformation("Getting paged match");
-            var result = _dispatcher.Dispatch(new GetMatchPagedQuery(){
+            var result = _dispatcher.Dispatch(new GetMatchPagedQuery() {
                 PageIndex = filter.Pager.PageIndex,
                 PageSize = filter.Pager.PageSize
             });
@@ -56,8 +51,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<Match> Get(Guid id)
-        {
+        public ActionResult<Match> Get(Guid id) {
             var match = _dispatcher.Dispatch(new GetMatchQuery { Id = id, ThrowNotFoundIfNull = true });
             var model = match.ToDTO();
             return Ok(model);
@@ -66,8 +60,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         [HttpPost]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public ActionResult<Match> Post([FromBody] MatchModel model)
-        {
+        public ActionResult<Match> Post([FromBody] MatchModel model) {
             var match = model.ToEntity();
             _dispatcher.Dispatch(new AddUpdateMatchCommand { Match = match });
             model = match.ToDTO();
@@ -78,8 +71,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult Put(Guid id, [FromBody] MatchModel model)
-        {
+        public ActionResult Put(Guid id, [FromBody] MatchModel model) {
             var match = _dispatcher.Dispatch(new GetMatchQuery { Id = id, ThrowNotFoundIfNull = true });
 
             match.Name = model.Name;
@@ -95,8 +87,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult Delete(Guid id)
-        {
+        public ActionResult Delete(Guid id) {
             var match = _dispatcher.Dispatch(new GetMatchQuery { Id = id, ThrowNotFoundIfNull = true });
 
             _dispatcher.Dispatch(new DeleteMatchCommand { Match = match });
@@ -105,24 +96,20 @@ namespace ClassifiedAds.WebAPI.Controllers
         }
 
         [HttpGet("{id}/auditlogs")]
-        public ActionResult<IEnumerable<AuditLogEntryDTO>> GetAuditLogs(Guid id)
-        {
+        public ActionResult<IEnumerable<AuditLogEntryDTO>> GetAuditLogs(Guid id) {
             var logs = _dispatcher.Dispatch(new GetAuditEntriesQuery { ObjectId = id.ToString() });
 
             List<dynamic> entries = new List<dynamic>();
             MatchDTO previous = null;
-            foreach (var log in logs.OrderBy(x => x.CreatedDateTime))
-            {
+            foreach (var log in logs.OrderBy(x => x.CreatedDateTime)) {
                 var data = JsonConvert.DeserializeObject<MatchDTO>(log.Log);
-                var highLight = new
-                {
+                var highLight = new {
                     Code = previous != null && data.Code != previous.Code,
                     Name = previous != null && data.Name != previous.Name,
                     Description = previous != null && data.Description != previous.Description,
                 };
 
-                var entry = new
-                {
+                var entry = new {
                     log.Id,
                     log.UserName,
                     Action = log.Action.Replace("_PRODUCT", string.Empty),
