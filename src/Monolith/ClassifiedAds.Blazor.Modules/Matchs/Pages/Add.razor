@@ -1,15 +1,64 @@
 ﻿@page "/matchs/add"
 @attribute [Authorize]
 
-<div class="card">
-    <div class="card-header">
-        Add Match
-    </div>
-    <div class="card-body">
-    </div>
-    <div class="card-footer">
+<Card>
+    <CardHeader>
+        <CardTitle>發起活動</CardTitle>
+    </CardHeader>
+    <CardBody>
+        <Field>
+            <FieldLabel ColumnSize="ColumnSize.Is2.OnDesktop.Is12.OnMobile">標題</FieldLabel>
+            <FieldBody ColumnSize="ColumnSize.Is10.OnDesktop.Is12.OnMobile">
+                <TextEdit @bind-Text="Match.Title" />
+            </FieldBody>
+        </Field>
+        <Field>
+            <FieldLabel ColumnSize="ColumnSize.Is2.OnDesktop.Is12.OnMobile">開始時間</FieldLabel>
+            <FieldBody ColumnSize="ColumnSize.Is10.OnDesktop.Is12.OnMobile">
+                <DateEdit TValue="DateTime?" />
+            </FieldBody>
+            <FieldBody>
+                <TimeEdit TValue="TimeSpan?" />
+            </FieldBody>
+        </Field>
+        <Field>
+            <FieldLabel ColumnSize="ColumnSize.Is2.OnDesktop.Is12.OnMobile">結束時間</FieldLabel>
+            <FieldBody ColumnSize="ColumnSize.Is10.OnDesktop.Is12.OnMobile">
+                <DateEdit TValue="DateTime?" />
+            </FieldBody>
+            <FieldBody>
+                <TimeEdit TValue="TimeSpan?" />
+            </FieldBody>
+        </Field>
+        <Field>
+            <FieldLabel>類型</FieldLabel>
+            <FieldBody>
+                <Select TValue="int">
+                    <SelectItem Value="0">未分類</SelectItem>
+                </Select>
+            </FieldBody>
+        </Field>
+        <Field>
+            <FieldLabel>地點</FieldLabel>
+            <FieldBody></FieldBody>
+        </Field>
+        <Field>
+            <FieldLabel>參與人員</FieldLabel>
+            <FieldBody>
+
+            </FieldBody>
+        </Field>
+        <Field>
+            <FieldLabel>內容</FieldLabel>
+            <FieldBody>
+                <MemoEdit @bind-Text="Match.Description" />
+            </FieldBody>
+        </Field>
+        <Button Color="Color.Primary" @onclick="Submit">送出</Button>
+    </CardBody>
+    <CardFooter>
         <NavLink class="btn btn-outline-secondary" href="matchs">
             <i class="fa fa-chevron-left"></i> Back
         </NavLink>
-    </div>
-</div>
+    </CardFooter>
+</Card>
