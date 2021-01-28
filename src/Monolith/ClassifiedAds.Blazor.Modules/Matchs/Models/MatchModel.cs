@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using ClassifiedAds.Blazor.Modules.Players.Models;
 
 namespace ClassifiedAds.Blazor.Modules.Matchs.Models {
     public class MatchModel {
@@ -30,5 +32,7 @@ namespace ClassifiedAds.Blazor.Modules.Matchs.Models {
         public LocationModel Location { get; set; }
 
         public MatchMessageModel Messages { get; set; }
+
+        public List<PlayerModel> Players { get; set; }
     }
 }

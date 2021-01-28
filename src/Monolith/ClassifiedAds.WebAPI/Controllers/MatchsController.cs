@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
 
 namespace ClassifiedAds.WebAPI.Controllers {
     [Authorize]
@@ -61,6 +62,8 @@ namespace ClassifiedAds.WebAPI.Controllers {
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         public ActionResult<Match> Post([FromBody] MatchModel model) {
+            model.CreaterId = base.User.GetUserId();
+            
             var match = model.ToEntity();
             _dispatcher.Dispatch(new AddUpdateMatchCommand { Match = match });
             model = match.ToDTO();

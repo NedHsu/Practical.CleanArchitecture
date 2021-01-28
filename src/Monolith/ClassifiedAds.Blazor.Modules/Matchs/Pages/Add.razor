@@ -1,4 +1,5 @@
 ﻿@page "/matchs/add"
+@using ClassifiedAds.Blazor.Modules.Players.Components
 @attribute [Authorize]
 
 <Card>
@@ -6,55 +7,76 @@
         <CardTitle>發起活動</CardTitle>
     </CardHeader>
     <CardBody>
-        <Field>
-            <FieldLabel ColumnSize="ColumnSize.Is2.OnDesktop.Is12.OnMobile">標題</FieldLabel>
+        <Field Horizontal="true">
+            <FieldLabel ColumnSize="ColumnSize.Is2.OnDesktop.Is12.OnMobile">
+                <Text Alignment="TextAlignment.Right">標題</Text>
+            </FieldLabel>
             <FieldBody ColumnSize="ColumnSize.Is10.OnDesktop.Is12.OnMobile">
                 <TextEdit @bind-Text="Match.Title" />
             </FieldBody>
         </Field>
-        <Field>
-            <FieldLabel ColumnSize="ColumnSize.Is2.OnDesktop.Is12.OnMobile">開始時間</FieldLabel>
-            <FieldBody ColumnSize="ColumnSize.Is10.OnDesktop.Is12.OnMobile">
+        <Field Horizontal="true">
+            <FieldLabel ColumnSize="ColumnSize.Is2.OnDesktop.Is12.OnMobile">
+                <Text Alignment="TextAlignment.Right">開始時間</Text>
+            </FieldLabel>
+            <FieldBody ColumnSize="ColumnSize.Is2.OnDesktop.Is12.OnMobile">
                 <DateEdit TValue="DateTime?" />
             </FieldBody>
-            <FieldBody>
+            <FieldBody ColumnSize="ColumnSize.Is2.OnDesktop.Is12.OnMobile">
                 <TimeEdit TValue="TimeSpan?" />
             </FieldBody>
         </Field>
-        <Field>
-            <FieldLabel ColumnSize="ColumnSize.Is2.OnDesktop.Is12.OnMobile">結束時間</FieldLabel>
-            <FieldBody ColumnSize="ColumnSize.Is10.OnDesktop.Is12.OnMobile">
+        <Field Horizontal="true">
+            <FieldLabel ColumnSize="ColumnSize.Is2.OnDesktop.Is12.OnMobile">
+                <Text Alignment="TextAlignment.Right">結束時間</Text>
+            </FieldLabel>
+            <FieldBody ColumnSize="ColumnSize.Is2.OnDesktop.Is12.OnMobile">
                 <DateEdit TValue="DateTime?" />
             </FieldBody>
-            <FieldBody>
+            <FieldBody ColumnSize="ColumnSize.Is2.OnDesktop.Is12.OnMobile">
                 <TimeEdit TValue="TimeSpan?" />
             </FieldBody>
         </Field>
-        <Field>
-            <FieldLabel>類型</FieldLabel>
-            <FieldBody>
+        <Field Horizontal="true">
+            <FieldLabel ColumnSize="ColumnSize.Is2.OnDesktop.Is12.OnMobile">
+                <Text Alignment="TextAlignment.Right">類型</Text>
+            </FieldLabel>
+            <FieldBody ColumnSize="ColumnSize.Is2.OnDesktop.Is12.OnMobile">
                 <Select TValue="int">
                     <SelectItem Value="0">未分類</SelectItem>
                 </Select>
             </FieldBody>
         </Field>
-        <Field>
-            <FieldLabel>地點</FieldLabel>
-            <FieldBody></FieldBody>
-        </Field>
-        <Field>
-            <FieldLabel>參與人員</FieldLabel>
+        <Field Horizontal="true">
+            <FieldLabel ColumnSize="ColumnSize.Is2.OnDesktop.Is12.OnMobile">
+                <Text Alignment="TextAlignment.Right">地點</Text>
+            </FieldLabel>
             <FieldBody>
 
             </FieldBody>
         </Field>
-        <Field>
-            <FieldLabel>內容</FieldLabel>
-            <FieldBody>
-                <MemoEdit @bind-Text="Match.Description" />
+        <Field Horizontal="true">
+            <FieldLabel ColumnSize="ColumnSize.Is2.OnDesktop.Is12.OnMobile">
+                <Text Alignment="TextAlignment.Right">參與人員</Text>
+            </FieldLabel>
+            <FieldBody ColumnSize="ColumnSize.Is2.OnDesktop.Is12.OnMobile">
+                <Button Color="Color.Light" @onclick="SelectPeople">選擇</Button>
             </FieldBody>
         </Field>
-        <Button Color="Color.Primary" @onclick="Submit">送出</Button>
+        <Field Horizontal="true">
+            <FieldLabel ColumnSize="ColumnSize.Is2.OnDesktop.Is12.OnMobile">
+                <Text Alignment="TextAlignment.Right">內容</Text>
+            </FieldLabel>
+            <FieldBody ColumnSize="ColumnSize.Is10.OnDesktop.Is12.OnMobile">
+                <MemoEdit @bind-Text="Match.Description" Rows="5" />
+            </FieldBody>
+        </Field>
+        <Field>
+            <FieldLabel ColumnSize="ColumnSize.Is2.OnDesktop.Is12.OnMobile"></FieldLabel>
+            <FieldBody ColumnSize="ColumnSize.Is10.OnDesktop.Is12.OnMobile">
+                <Button Color="Color.Primary" @onclick="Submit">送出</Button>
+            </FieldBody>
+        </Field>
     </CardBody>
     <CardFooter>
         <NavLink class="btn btn-outline-secondary" href="matchs">
@@ -62,3 +84,5 @@
         </NavLink>
     </CardFooter>
 </Card>
+
+<PlayerSelector @ref="PlayerSelector" ConfirmEventCallback="ConfirmPlayer"></PlayerSelector>

@@ -1,0 +1,45 @@
+<Modal @ref="modalRef">
+    <ModalBackdrop />
+    <ModalContent IsCentered="true">
+        <ModalHeader>
+            <ModalTitle>選擇人員</ModalTitle>
+            <CloseButton Clicked="@Hide" />
+        </ModalHeader>
+        <ModalBody>
+            <Field>
+                <TextEdit Placeholder="輸入姓名/帳號搜尋" @onchange="Search" @bind-value="Keyword"></TextEdit>
+            </Field>
+            @if (playerOptions?.Count > 0) {
+                <ul class="palyer-option list-group">
+                @foreach (var item in playerOptions)
+                {
+                    <li class="list-group-item">
+                        <span>
+                            @item.Name
+                        </span>
+                        <span>
+                            <Button>選擇</Button>
+                        </span>
+                    </li>
+                }
+                </ul>
+            }
+            <hr />
+            已選擇: 
+            @if (selectedPlayers?.Count > 0) {
+                <ListGroup>
+                @foreach (var item in selectedPlayers)
+                {
+                    <ListGroupItem>
+                        @item.Name
+                    </ListGroupItem>
+                }
+                </ListGroup>
+            }
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Secondary" Clicked="@Hide">取消</Button>
+            <Button Color="Color.Primary" Clicked="@ConfirmAsync">確定</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
