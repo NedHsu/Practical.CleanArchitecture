@@ -1,9 +1,11 @@
 ﻿using System;
 
-namespace ClassifiedAds.Domain.Entities
+namespace ClassifiedAds.Application.Players.DTOs
 {
-    public class MatchType : AggregateRoot<int>
+    public class PlayerDTO
     {
+        public Guid Id { get; set; }
+
         public string Code { get; set; }
 
         public string Name { get; set; }

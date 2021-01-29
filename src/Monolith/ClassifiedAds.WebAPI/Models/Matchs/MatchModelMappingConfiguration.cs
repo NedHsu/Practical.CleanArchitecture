@@ -37,7 +37,7 @@ namespace ClassifiedAds.WebAPI.Models.Matchs
                 Description = dto.Description,
                 MatchType = dto.MatchTypeId.HasValue ? new MatchType { Id = dto.MatchTypeId.Value } : null,
                 Location = dto.LocationId.HasValue ? new Location { Id = dto.LocationId.Value } : null,
-                Creater = new User { Id = dto.CreaterId }
+                // Creater = new User { Id = dto.CreaterId }
             };
         }
     }

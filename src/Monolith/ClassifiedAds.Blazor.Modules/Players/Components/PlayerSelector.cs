@@ -19,14 +19,10 @@ namespace ClassifiedAds.Blazor.Modules.Players.Components {
 
         private List<PlayerModel> playerOptions;
 
-        public void Show(List<PlayerModel> players) {
-            this.selectedPlayers = players;
-            this.playerOptions = new List<PlayerModel>() {
-                new PlayerModel {
-                Name = "Test2"
-                }
-            };
+        public async Task ShowAsync(List<PlayerModel> players) {
+            selectedPlayers = players;
             modalRef.Show();
+            await this.Search();
         }
 
         public void AddPlayer(PlayerModel player) {
@@ -47,7 +43,14 @@ namespace ClassifiedAds.Blazor.Modules.Players.Components {
         }
 
         public async Task Search() {
-            
+            this.playerOptions = new List<PlayerModel>() {
+                new PlayerModel {
+                    Name = "Test2"
+                },
+                new PlayerModel {
+                    Name = "Test3"
+                },
+            };
         }
     }
 }

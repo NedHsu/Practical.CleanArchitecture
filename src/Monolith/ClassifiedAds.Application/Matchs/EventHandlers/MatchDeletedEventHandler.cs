@@ -27,7 +27,7 @@ namespace ClassifiedAds.Application.Matchs.EventHandlers
                 {
                     UserId = currentUser.UserId,
                     CreatedDateTime = domainEvent.EventDateTime,
-                    Action = "DELETED_PRODUCT",
+                    Action = "DELETED_MATCH",
                     ObjectId = domainEvent.Entity.Id.ToString(),
                     Log = domainEvent.Entity.AsJsonString(),
                 });

@@ -27,7 +27,7 @@ namespace ClassifiedAds.Application.Matchs.EventHandlers
                 {
                     UserId = currentUser.UserId,
                     CreatedDateTime = domainEvent.EventDateTime,
-                    Action = "UPDATED_PRODUCT",
+                    Action = "UPDATED_MATCH",
                     ObjectId = domainEvent.Entity.Id.ToString(),
                     Log = domainEvent.Entity.AsJsonString(),
                 });

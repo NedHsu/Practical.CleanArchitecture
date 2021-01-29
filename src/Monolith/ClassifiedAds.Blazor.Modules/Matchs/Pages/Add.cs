@@ -43,7 +43,7 @@ namespace ClassifiedAds.Blazor.Modules.Matchs.Pages {
         }
 
         protected async Task SelectPeople() {
-            PlayerSelector.Show(Match.Players);
+            await PlayerSelector.ShowAsync(Match.Players);
         }
 
         protected void ConfirmPlayer(List<PlayerModel> players) {

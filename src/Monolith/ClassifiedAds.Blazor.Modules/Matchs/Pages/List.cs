@@ -44,8 +44,7 @@ namespace ClassifiedAds.Blazor.Modules.Matchs.Pages {
             };
 
             Matchs = new List<MatchModel>();
-            
-            await QueryMatchs(MatchFilter);
+            await QueryMatchs();
         }
 
         protected async Task Join(MatchModel match) {
@@ -56,9 +55,7 @@ namespace ClassifiedAds.Blazor.Modules.Matchs.Pages {
             NavManager.NavigateTo("/matchs/add");
         }
 
-        protected async Task Search() { }
-
-        private async Task QueryMatchs(MatchFilterModel filter) {
+        protected async Task QueryMatchs() {
             var result = await MatchService.QueryMatchs(MatchFilter);
             if (result.Items?.Count > 0) {
                 Matchs.AddRange(result.Items);

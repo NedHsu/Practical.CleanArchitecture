@@ -5,18 +5,18 @@ using ClassifiedAds.Domain.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
-namespace ClassifiedAds.Application.Matchs.EventHandlers
+namespace ClassifiedAds.Application.Players.EventHandlers
 {
-    public class MatchCreatedEventHandler : IDomainEventHandler<EntityCreatedEvent<Match>>
+    public class PlayerCreatedEventHandler : IDomainEventHandler<EntityCreatedEvent<Player>>
     {
         private readonly IServiceProvider _serviceProvider;
 
-        public MatchCreatedEventHandler(IServiceProvider serviceProvider)
+        public PlayerCreatedEventHandler(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }
 
-        public void Handle(EntityCreatedEvent<Match> domainEvent)
+        public void Handle(EntityCreatedEvent<Player> domainEvent)
         {
             using (var scope = _serviceProvider.CreateScope())
             {
@@ -27,7 +27,7 @@ namespace ClassifiedAds.Application.Matchs.EventHandlers
                 {
                     UserId = currentUser.IsAuthenticated ? currentUser.UserId: Guid.Empty,
                     CreatedDateTime = domainEvent.EventDateTime,
-                    Action = "CREATED_MATCH",
+                    Action = "CREATED_PRODUCT",
                     ObjectId = domainEvent.Entity.Id.ToString(),
                     Log = domainEvent.Entity.AsJsonString(),
                 });

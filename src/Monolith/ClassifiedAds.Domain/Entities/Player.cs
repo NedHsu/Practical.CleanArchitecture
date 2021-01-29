@@ -8,6 +8,7 @@ namespace ClassifiedAds.Domain.Entities {
 
         public int Age { get; set; }
 
+        public Guid UserId { get; set; }
         public User User { get; set; }
     }
 }

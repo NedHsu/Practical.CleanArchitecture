@@ -3,12 +3,12 @@ using System.Collections.Generic;
 namespace ClassifiedAds.Blazor.Modules.Core.Models {
     public class PagedResultModel<T> 
     {
-        public int TotalPages { get; }
+        public int TotalPages { get; set; }
 
-        public int TotalCount { get; }
+        public int TotalCount { get; set; }
 
-        public int PageIndex { get; }
+        public int PageIndex { get; set; }
 
-        public List<T> Items { get; }
+        public List<T> Items { get; set; }
     }
 }
