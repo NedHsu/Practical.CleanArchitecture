@@ -1,0 +1,18 @@
+
+<Row>
+
+</Row>
+@foreach(var w in Calendars)
+{
+    <Row>
+        @foreach (var c in w)
+        {
+            <Column ColumnSize="ColumnSize.Is1">
+            @c.Day
+            </Column>
+        }
+    </Row>
+    <Row>
+        
+    </Row>
+}

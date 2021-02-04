@@ -10,7 +10,7 @@ namespace ClassifiedAds.WebAPI.Models.Matchs {
 
         public string Description { get; set; }
 
-        public Guid? MatchTypeId { get; set; }
+        public int? MatchTypeId { get; set; }
 
         public Guid? LocationId { get; set; }
 

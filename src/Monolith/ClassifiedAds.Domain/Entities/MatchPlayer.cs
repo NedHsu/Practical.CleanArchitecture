@@ -6,7 +6,7 @@ namespace ClassifiedAds.Domain.Entities {
 
         public Guid MatchId { get; set; }
         public Match Match { get; set; }
-        public GuidAttribute PlayerId { get; set; }
+        public Guid PlayerId { get; set; }
         public Player Player { get; set; }
     }
 }

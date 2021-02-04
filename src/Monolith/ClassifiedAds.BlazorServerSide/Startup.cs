@@ -2,6 +2,7 @@ using Blazorise;
 using Blazorise.Bootstrap;
 using Blazorise.Icons.FontAwesome;
 using ClassifiedAds.Blazor.Modules.AuditLogs.Services;
+using ClassifiedAds.Blazor.Modules.Calendars.Services;
 using ClassifiedAds.Blazor.Modules.Core.Services;
 using ClassifiedAds.Blazor.Modules.Files.Services;
 using ClassifiedAds.Blazor.Modules.Matchs.Services;
@@ -83,6 +84,12 @@ namespace ClassifiedAds.BlazorServerSide
                 client.DefaultRequestHeaders.Clear();
             });
             services.AddHttpClient<MatchService, MatchService>(client =>
+            {
+                client.BaseAddress = new Uri(AppSettings.ResourceServer.Endpoint);
+                client.Timeout = new TimeSpan(0, 0, 30);
+                client.DefaultRequestHeaders.Clear();
+            });
+            services.AddHttpClient<CalendarService, CalendarService>(client =>
             {
                 client.BaseAddress = new Uri(AppSettings.ResourceServer.Endpoint);
                 client.Timeout = new TimeSpan(0, 0, 30);
