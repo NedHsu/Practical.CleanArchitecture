@@ -1,0 +1,11 @@
+.calendar-col {
+    border: 1px black solid;
+}
+
+.test {
+    color: red;
+}
+
+::deep .test > div {
+    color: red;
+}

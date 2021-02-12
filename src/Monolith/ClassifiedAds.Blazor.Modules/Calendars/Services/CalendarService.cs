@@ -42,5 +42,23 @@ namespace ClassifiedAds.Blazor.Modules.Calendars.Services
         {
             await DeleteAsync($"api/calendars/{id}");
         }
+
+        public async Task<List<EventModel>> GetEvents(DateTime startDate, DateTime endDate) 
+        {
+            var events = await GetAsync<List<CalendarModel>>("api/calendarEvents");
+            return new List<EventModel>()
+            {
+                new EventModel {
+                    StartTime = new DateTime(2021, 1, 31, 8, 0, 0),
+                    EndTime = new DateTime(2021, 2, 9, 18, 0, 0),
+                    Title = "Long Time Event"
+                },
+                new EventModel {
+                    StartTime = new DateTime(2021, 2, 2, 3, 0, 0),
+                    EndTime = new DateTime(2021, 2, 2, 4, 0, 0),
+                    Title = "One Day Event"
+                }
+            };
+        }
     }
 }

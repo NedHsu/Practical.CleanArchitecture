@@ -1,18 +1,24 @@
-
 <Row>
 
 </Row>
-@foreach(var w in Calendars)
-{
-    <Row>
-        @foreach (var c in w)
-        {
-            <Column ColumnSize="ColumnSize.Is1">
-            @c.Day
-            </Column>
-        }
-    </Row>
-    <Row>
-        
+@foreach (var w in Calendars.Select((v , i) => new { Value = v, Index = i }))
+{   
+    <Row Gutter=(7,2) Class="test">
+    @foreach (var c in w.Value)
+    {
+        <Column ColumnSize="ColumnSize.Is1">
+            <div class="calendar-col">
+                @c.Day
+            </div>
+        </Column>
+    }
+    @foreach (var e in CalendarEventBlocks.ElementAtOrDefault(w.Index) ?? new Models.EventBlockModel[]{})
+    {
+        <Row>
+            <Column>@e.Title, @e.StartIndex, @e.EndIndex</Column>
+        </Row>
+    }
     </Row>
 }
+
+<div class="test">test</div>
