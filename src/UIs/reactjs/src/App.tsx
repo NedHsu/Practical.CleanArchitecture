@@ -15,10 +15,13 @@ import EditFile from "./containers/Files/EditFile/EditFile";
 import ListUsers from "./containers/Users/ListUsers/ListUsers";
 import AddUser from "./containers/Users/AddUser/AddUser";
 import ViewUser from "./containers/Users/ViewUser/ViewUser";
+import ListMatches from "./containers/Matches/ListMatches/ListMatches";
+import AddMatch from "./containers/Matches/AddMatch/AddMatch";
+import ViewMatch from "./containers/Matches/ViewMatch/ViewMatch";
 
 function App() {
   return (
-    <div className="container">
+    <div>
       <Nav />
       <Switch>
         <Route path="/home" component={Home} />
@@ -30,6 +33,9 @@ function App() {
         <Route path="/products/edit/:id" component={AddProduct} />
         <Route path="/products/:id" component={ViewProduct} />
         <Route path="/products" component={ListProducts} />
+        <Route path="/matches/add" component={AddMatch} />
+        <Route path="/matches/:id" component={ViewMatch} />
+        <Route path="/matches" component={ListMatches} />
         <Route path="/users/add" component={AddUser} />
         <Route path="/users/edit/:id" component={AddUser} />
         <Route path="/users/:id" component={ViewUser} />

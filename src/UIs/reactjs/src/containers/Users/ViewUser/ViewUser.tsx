@@ -155,7 +155,7 @@ class ViewUser extends Component<any, any> {
     isValid =
       isValid &&
       this.state.setPasswordModel.password ==
-        this.state.setPasswordModel.confirmPassword;
+      this.state.setPasswordModel.confirmPassword;
 
     if (isValid) {
       this.props.setPassword(this.state.setPasswordModel);
@@ -165,8 +165,8 @@ class ViewUser extends Component<any, any> {
   render() {
     const passwordErrors = this.props.postError?.response?.data
       ? this.props.postError?.response?.data?.map((error) => (
-          <li key={error.code}>{error.description}</li>
-        ))
+        <li key={error.code}>{error.description}</li>
+      ))
       : null;
 
     const setPasswordModal = (
@@ -207,7 +207,7 @@ class ViewUser extends Component<any, any> {
                   className={
                     "form-control " +
                     (this.state.submitted &&
-                    !this.state.controls["password"].valid
+                      !this.state.controls["password"].valid
                       ? "is-invalid"
                       : "")
                   }
@@ -236,7 +236,7 @@ class ViewUser extends Component<any, any> {
                   className={
                     "form-control " +
                     (this.state.submitted &&
-                    this.state.setPasswordModel?.password !=
+                      this.state.setPasswordModel?.password !=
                       this.state.setPasswordModel?.confirmPassword
                       ? "is-invalid"
                       : "")

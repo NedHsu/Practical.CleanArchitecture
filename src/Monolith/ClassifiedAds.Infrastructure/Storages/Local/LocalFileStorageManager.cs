@@ -28,6 +28,11 @@ namespace ClassifiedAds.Infrastructure.Storages.Local
 
         public void Delete(FileEntry fileEntry)
         {
+            if (fileEntry.FileLocation == null)
+            {
+                return;
+            }
+            
             var path = Path.Combine(_rootPath, fileEntry.FileLocation);
             if (File.Exists(path))
             {

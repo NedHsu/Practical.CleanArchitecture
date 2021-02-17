@@ -3,55 +3,58 @@ import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
 import { Modal, Button } from "react-bootstrap";
 
+import logo from "../../../logo.svg";
 import * as actions from "../actions";
+import Star from "../../../components/Star/Star";
 
-type Props = {
-  downloadFile: any,
-  fetchFiles: any,
-  deleteFile: any,
-  files: any,
-  errorMessage: any,
-  fetchAuditLogs: any,
-  auditLogs: any,
-}
-
-type State = {
-  pageTitle: string,
-  showDeleteModal: boolean,
-  deletingFile: any,
-  showAuditLogsModal: boolean,
-}
-
-class ListFiles extends Component<Props, State> {
+class ListMatches extends Component<any, any> {
   state = {
-    pageTitle: "Files",
+    pageTitle: "Match List",
+    showImage: false,
     showDeleteModal: false,
-    deletingFile: {
+    deletingMatch: {
       name: null
     },
+    listFilter: "",
     showAuditLogsModal: false,
   };
 
-  downloadFile = (file) => {
-    this.props.downloadFile(file);
+  toggleImage = () => {
+    this.setState({ showImage: !this.state.showImage });
   };
 
-  viewAuditLogs = (file) => {
-    this.props.fetchAuditLogs(file);
+  filterChanged = (event) => {
+    this.setState({ listFilter: event.target.value });
+  };
+
+  performFilter(filterBy) {
+    filterBy = filterBy.toLocaleLowerCase();
+    return this.props.matches.filter(
+      (match) => match.name.toLocaleLowerCase().indexOf(filterBy) !== -1
+    );
+  }
+
+  onRatingClicked = (event) => {
+    const pageTitle = "Match List: " + event;
+    this.setState({ pageTitle: pageTitle });
+  };
+
+  viewAuditLogs = (match) => {
+    this.props.fetchAuditLogs(match);
     this.setState({ showAuditLogsModal: true });
   };
 
-  deleteFile = (file) => {
-    this.setState({ showDeleteModal: true, deletingFile: file });
+  deleteMatch = (match) => {
+    this.setState({ showDeleteModal: true, deletingMatch: match });
   };
 
   deleteCanceled = () => {
-    this.setState({ showDeleteModal: false, deletingFile: {} });
+    this.setState({ showDeleteModal: false, deletingMatch: null });
   };
 
   deleteConfirmed = () => {
-    this.props.deleteFile(this.state.deletingFile);
-    this.setState({ showDeleteModal: false, deletingFile: {} });
+    this.props.deleteMatch(this.state.deletingMatch);
+    this.setState({ showDeleteModal: false, deletingMatch: null });
   };
 
   formatDateTime = (value) => {
@@ -61,37 +64,49 @@ class ListFiles extends Component<Props, State> {
   };
 
   componentDidMount() {
-    this.props.fetchFiles();
+    this.props.fetchMatches();
   }
 
   render() {
-    const rows = this.props.files?.map((file) => (
-      <tr key={file.id}>
+    const filteredMatches = this.state.listFilter
+      ? this.performFilter(this.state.listFilter)
+      : this.props.matches;
+
+    const rows = filteredMatches?.map((match) => (
+      <tr key={match.id}>
         <td>
-          <NavLink to={"/files/" + file.id}>
-            {file.name + " (" + file.fileName + ")"}
-          </NavLink>
+          {this.state.showImage ? (
+            <img
+              src={match.imageUrl || logo}
+              title={match.name}
+              style={{ width: "50px", margin: "2px" }}
+            />
+          ) : null}
         </td>
-        <td>{file.description}</td>
-        <td>{file.size}</td>
-        <td>{this.formatDateTime(file.uploadedTime)}</td>
         <td>
-          {file.fileLocation ? <button
-            type="button"
-            className="btn btn-primary btn-secondary"
-            onClick={() => this.downloadFile(file)}
+          <NavLink to={"/matches/" + match.id}>{match.name}</NavLink>
+        </td>
+        <td>{match.code?.toLocaleUpperCase()}</td>
+        <td>{match.description}</td>
+        <td>{match.price || (5).toFixed(2)}</td>
+        <td>
+          <Star
+            rating={match.starRating || 4}
+            ratingClicked={(event) => this.onRatingClicked(event)}
+          ></Star>
+        </td>
+        <td>
+          <NavLink
+            className="btn btn-primary"
+            to={"/matches/edit/" + match.id}
           >
-            Download
-          </button> : null}
-          &nbsp;
-          <NavLink className="btn btn-primary" to={"/files/edit/" + file.id}>
             Edit
           </NavLink>
           &nbsp;
           <button
             type="button"
             className="btn btn-primary btn-secondary"
-            onClick={() => this.viewAuditLogs(file)}
+            onClick={() => this.viewAuditLogs(match)}
           >
             View Audit Logs
           </button>
@@ -99,7 +114,7 @@ class ListFiles extends Component<Props, State> {
           <button
             type="button"
             className="btn btn-primary btn-danger"
-            onClick={() => this.deleteFile(file)}
+            onClick={() => this.deleteMatch(match)}
           >
             Delete
           </button>
@@ -107,14 +122,20 @@ class ListFiles extends Component<Props, State> {
       </tr>
     ));
 
-    const table = this.props.files ? (
+    const table = this.props.matches ? (
       <table className="table">
         <thead>
           <tr>
-            <th>Name</th>
+            <th>
+              <button className="btn btn-primary" onClick={this.toggleImage}>
+                {this.state.showImage ? "Hide" : "Show"} Image
+              </button>
+            </th>
+            <th>Match</th>
+            <th>Code</th>
             <th>Description</th>
-            <th>Size</th>
-            <th>Uploaded Time</th>
+            <th>Price</th>
+            <th>5 Star Rating</th>
             <th></th>
           </tr>
         </thead>
@@ -126,17 +147,14 @@ class ListFiles extends Component<Props, State> {
         <td>{this.formatDateTime(auditLog.createdDateTime)}</td>
         <td>{auditLog.userName}</td>
         <td>{auditLog.action}</td>
+        <td style={{ color: auditLog.highLight.code ? "red" : "" }}>
+          {auditLog.data.code}
+        </td>
         <td style={{ color: auditLog.highLight.name ? "red" : "" }}>
           {auditLog.data.name}
         </td>
         <td style={{ color: auditLog.highLight.description ? "red" : "" }}>
           {auditLog.data.description}
-        </td>
-        <td style={{ color: auditLog.highLight.fileName ? "red" : "" }}>
-          {auditLog.data.fileName}
-        </td>
-        <td style={{ color: auditLog.highLight.fileLocation ? "red" : "" }}>
-          {auditLog.data.fileLocation}
         </td>
       </tr>
     ));
@@ -154,10 +172,9 @@ class ListFiles extends Component<Props, State> {
                   <th>Date Time</th>
                   <th>User Name</th>
                   <th>Action</th>
+                  <th>Code</th>
                   <th>Name</th>
                   <th>Description</th>
-                  <th>File Name</th>
-                  <th>File Location</th>
                 </tr>
               </thead>
               <tbody>{auditLogRows}</tbody>
@@ -170,11 +187,11 @@ class ListFiles extends Component<Props, State> {
     const deleteModal = (
       <Modal show={this.state.showDeleteModal} onHide={this.deleteCanceled}>
         <Modal.Header closeButton>
-          <Modal.Title>Delete File</Modal.Title>
+          <Modal.Title>Delete Match</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           Are you sure you want to delete
-          <strong> {this.state.deletingFile?.name}</strong>
+          <strong> {this.state.deletingMatch?.name}</strong>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={this.deleteCanceled}>
@@ -195,12 +212,29 @@ class ListFiles extends Component<Props, State> {
             <NavLink
               className="btn btn-primary"
               style={{ float: "right" }}
-              to="/files/upload"
+              to="/matches/add"
             >
-              Upload File
+              Add Match
             </NavLink>
           </div>
           <div className="card-body">
+            <div className="row">
+              <div className="col-md-2">Filter by:</div>
+              <div className="col-md-4">
+                <input
+                  type="text"
+                  value={this.state.listFilter}
+                  onChange={(event) => this.filterChanged(event)}
+                />
+              </div>
+            </div>
+            {this.state.listFilter ? (
+              <div className="row">
+                <div className="col-md-6">
+                  <h4>Filtered by: {this.state.listFilter}</h4>
+                </div>
+              </div>
+            ) : null}
             <div className="table-responsive">{table}</div>
           </div>
         </div>
@@ -218,18 +252,17 @@ class ListFiles extends Component<Props, State> {
 
 const mapStateToProps = (state) => {
   return {
-    files: state.file.files,
-    auditLogs: state.file.auditLogs,
+    matches: state.match.matches,
+    auditLogs: state.match.auditLogs,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchFiles: () => dispatch(actions.fetchFiles()),
-    deleteFile: (file) => dispatch(actions.deleteFile(file)),
-    downloadFile: (file) => dispatch(actions.downloadFile(file)),
-    fetchAuditLogs: (file) => dispatch(actions.fetchAuditLogs(file)),
+    fetchMatches: () => dispatch(actions.fetchMatches()),
+    deleteMatch: (match) => dispatch(actions.deleteMatch(match)),
+    fetchAuditLogs: (match) => dispatch(actions.fetchAuditLogs(match)),
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ListFiles);
+export default connect(mapStateToProps, mapDispatchToProps)(ListMatches);

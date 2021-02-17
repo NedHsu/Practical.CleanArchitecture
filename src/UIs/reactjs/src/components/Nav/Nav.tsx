@@ -35,6 +35,11 @@ class Nav extends Component<Props> {
             </NavLink>
           </li>
           <li>
+            <NavLink className="nav-link" to="/matches">
+              Matches
+            </NavLink>
+          </li>
+          <li>
             <NavLink className="nav-link" to="/users">
               Users
             </NavLink>
