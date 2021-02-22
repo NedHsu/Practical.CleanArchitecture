@@ -31,6 +31,10 @@
       dotnet ef database update --context PersistedGrantDbContext
       dotnet ef database update --context MiniProfilerDbContext
       ```
+    + sc
+      ```
+      dotnet ef dbcontext scaffold "Server=localhost,1433;Database=Test;User Id=sa;Password=Zxc@123456;MultipleActiveResultSets=true;" Microsoft.EntityFrameworkCore.SqlServer -o Models --context-dir Context -c TestContext --context-namespace ClassifiedAds.Domain.Entities
+      ```
   + Option 2: Using Package Manager Console:
     + Set **ClassifiedAds.Migrator** as StartUp Project
     + Open Package Manager Console, select **ClassifiedAds.Migrator** as Default Project
