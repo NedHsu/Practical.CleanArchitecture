@@ -1,7 +1,8 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.OS;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
-using Microsoft.EntityFrameworkCore;
+using ClassifiedAds.Persistence.DapperContext;
+using Dapper;
 using System.Linq;
 
 namespace ClassifiedAds.Persistence.Repositories
@@ -9,20 +10,10 @@ namespace ClassifiedAds.Persistence.Repositories
     public class StockRepository<T> : IStockRepository<T>
         where T : class
     {
-        protected readonly StockDbContext _dbContext;
+        private readonly IStockDbContext _dbContext;
         private readonly IDateTimeProvider _dateTimeProvider;
 
-        protected DbSet<T> DbSet => _dbContext.Set<T>();
-
-        public IUnitOfWork UnitOfWork
-        {
-            get
-            {
-                return _dbContext;
-            }
-        }
-
-        public StockRepository(StockDbContext dbContext, IDateTimeProvider dateTimeProvider)
+        public StockRepository(IStockDbContext dbContext, IDateTimeProvider dateTimeProvider)
         {
             _dbContext = dbContext;
             _dateTimeProvider = dateTimeProvider;
@@ -30,23 +21,22 @@ namespace ClassifiedAds.Persistence.Repositories
 
         public void AddOrUpdate(T entity)
         {
-
+            throw new System.NotImplementedException();
         }
 
         public void Delete(T entity)
         {
-            DbSet.Remove(entity);
+            throw new System.NotImplementedException();
         }
 
         public IQueryable<T> GetAll()
         {
-            return _dbContext.Set<T>();
+            throw new System.NotImplementedException();
         }
 
         public IQueryable<T> Get()
         {
             throw new System.NotImplementedException();
-            
         }
     }
 }
