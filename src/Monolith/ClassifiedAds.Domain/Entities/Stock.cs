@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace ClassifiedAds.Domain.Entities
 {
-    public partial class Stock
+    public partial class Stock : AggregateRoot<Guid>
     {
         public Stock()
         {

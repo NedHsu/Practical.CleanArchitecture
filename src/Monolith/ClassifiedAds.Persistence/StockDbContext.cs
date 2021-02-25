@@ -1,33 +1,36 @@
 ﻿using System;
+using System.Data;
 using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.Domain.Repositories;
+using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-
 #nullable disable
 
-namespace ClassifiedAds.Persistence
-{
-    public partial class StockDbContext : DbContext
-    {
-        public StockDbContext()
-        {
-        }
+namespace ClassifiedAds.Persistence {
+    public partial class StockDbContext : DbContext, IUnitOfWork, IDataProtectionKeyContext {
+        public StockDbContext() { }
 
-        public StockDbContext(DbContextOptions<StockDbContext> options)
-            : base(options)
-        {
-        }
+        public StockDbContext(DbContextOptions<StockDbContext> options) : base(options) { }
 
         public virtual DbSet<Stock> Stocks { get; set; }
         public virtual DbSet<StockDay> StockDays { get; set; }
         public virtual DbSet<StockFundamental> StockFundamentals { get; set; }
         public virtual DbSet<StockFunder> StockFunders { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Stock>(entity =>
-            {
+        public DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
+
+        public void BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted) {
+            throw new NotImplementedException();
+        }
+
+        public void CommitTransaction() {
+            throw new NotImplementedException();
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder) {
+            modelBuilder.Entity<Stock>(entity => {
                 entity.HasKey(e => e.Code)
                     .HasName("PK_stock_1");
 
@@ -95,8 +98,7 @@ namespace ClassifiedAds.Persistence
                     .HasColumnName("twenty_price");
             });
 
-            modelBuilder.Entity<StockDay>(entity =>
-            {
+            modelBuilder.Entity<StockDay>(entity => {
                 entity.HasKey(e => new { e.StockCode, e.Date });
 
                 entity.ToTable("stockDay");
@@ -139,8 +141,7 @@ namespace ClassifiedAds.Persistence
                     .HasConstraintName("FK_stockDay_stock");
             });
 
-            modelBuilder.Entity<StockFundamental>(entity =>
-            {
+            modelBuilder.Entity<StockFundamental>(entity => {
                 entity.HasKey(e => new { e.StockCode, e.Date });
 
                 entity.ToTable("stock_fundamental");
@@ -186,8 +187,7 @@ namespace ClassifiedAds.Persistence
                     .HasColumnName("yield_rate");
             });
 
-            modelBuilder.Entity<StockFunder>(entity =>
-            {
+            modelBuilder.Entity<StockFunder>(entity => {
                 entity.HasKey(e => new { e.StockCode, e.Date });
 
                 entity.ToTable("stock_funder");

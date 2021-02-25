@@ -4,31 +4,29 @@ import { connect } from "react-redux";
 
 import * as actions from "../actions";
 import { checkValidity } from "../../../shared/utility";
-import { Button, Card, Col, Form, Row } from "react-bootstrap";
 
 type Props = {
-  resetMatch: any,
+  resetStock: any,
   match: any,
-  fetchMatch: any,
-  saveMatch: any,
-  updateMatch: any,
+  fetchStock: any,
+  stock: any,
+  saveStock: any,
+  updateStock: any,
   saved: any
 }
 
-class AddMatch extends Component<Props, any> {
+class AddStock extends Component<Props, any> {
   state = {
-    title: "Add Match",
+    title: "Add Stock",
     controls: {
-      title: {
+      name: {
         validation: {
           required: true,
-          minLength: 3,
-          maxLength: 50
+          minLength: 3
         },
         error: {
           required: false,
-          minLength: false,
-          maxLength: false
+          minLength: false
         },
         valid: false,
         touched: false
@@ -64,23 +62,23 @@ class AddMatch extends Component<Props, any> {
   };
 
   componentDidMount() {
-    this.props.resetMatch();
+    this.props.resetStock();
     const id = this.props.match?.params?.id;
     if (id) {
-      this.setState({ title: "Edit Match" });
-      this.props.fetchMatch(id);
+      this.setState({ title: "Edit Stock" });
+      this.props.fetchStock(id);
     }
   }
 
   fieldChanged = event => {
-    const match = {
-      ...this.props.match,
+    const stock = {
+      ...this.props.stock,
       [event.target.name]: event.target.value
     };
 
     this.checkFieldValidity(event.target.name, event.target.value);
 
-    this.props.updateMatch(match);
+    this.props.updateStock(stock);
   };
 
   checkFieldValidity = (name, value) => {
@@ -110,79 +108,16 @@ class AddMatch extends Component<Props, any> {
     let isValid = true;
     for (let fieldName in this.state.controls) {
       isValid =
-        this.checkFieldValidity(fieldName, this.props.match[fieldName]) &&
+        this.checkFieldValidity(fieldName, this.props.stock[fieldName]) &&
         isValid;
     }
 
     if (isValid) {
-      this.props.saveMatch(this.props.match);
+      this.props.saveStock(this.props.stock);
     }
   };
 
   render() {
-    const form0 = (
-      <Card>
-        <Card.Header>
-          {this.state.title}
-        </Card.Header>
-        <Card.Body>
-          {this.state.errorMessage ? (
-            <div
-              className="row alert alert-danger"
-            >
-              {this.state.errorMessage}
-            </div>
-          ) : null}
-          <Form onSubmit={this.onSubmit}>
-            <Form.Group as={Row}>
-              <Form.Label column sm={2}>標題</Form.Label>
-              <Col sm={10}>
-                <Form.Control type="text" required value={this.props.match?.title} name="title" />
-              </Col>
-            </Form.Group>
-            <Form.Group as={Row}>
-              <Form.Label column sm={2}>開始時間</Form.Label>
-              <Col sm={2}>
-                <Form.Control type="date" />
-              </Col>
-              <Col sm={2}>
-                <Form.Control type="time" />
-              </Col>
-            </Form.Group>
-            <Form.Group as={Row}>
-              <Form.Label column sm={2}>結束時間</Form.Label>
-              <Col sm={2}>
-                <Form.Control type="date" />
-              </Col>
-              <Col sm={2}>
-                <Form.Control type="time" />
-              </Col>
-            </Form.Group>
-            <Form.Group>
-              <Form.Label></Form.Label>
-              <Col>
-                <Form.Control></Form.Control>
-              </Col>
-            </Form.Group>
-            <Form.Group as={Row}>
-              <Col sm={2}></Col>
-              <Col sm={10}>
-                <Button type="submit">儲存</Button>
-              </Col>
-            </Form.Group>
-          </Form>
-        </Card.Body>
-        <Card.Footer>
-          <NavLink
-            className="btn btn-outline-secondary"
-            to="/matches"
-            style={{ width: "80px" }}
-          >
-            <i className="fa fa-chevron-left"></i> Back
-          </NavLink>
-        </Card.Footer>
-      </Card>
-    );
     const form = (
       <div className="card">
         <div className="card-header">{this.state.title}</div>
@@ -205,18 +140,18 @@ class AddMatch extends Component<Props, any> {
                   name="name"
                   className={
                     "form-control " +
-                    (this.state.submitted && !this.state.controls["title"].valid
+                    (this.state.submitted && !this.state.controls["name"].valid
                       ? "is-invalid"
                       : "")
                   }
-                  value={this.props.match?.name}
+                  value={this.props.stock?.name}
                   onChange={event => this.fieldChanged(event)}
                 />
                 <span className="invalid-feedback">
-                  {this.state.controls["title"].error.required ? (
+                  {this.state.controls["name"].error.required ? (
                     <span>Enter a name</span>
                   ) : null}
-                  {this.state.controls["title"].error.minLength ? (
+                  {this.state.controls["name"].error.minLength ? (
                     <span>The name must be longer than 3 characters.</span>
                   ) : null}
                 </span>
@@ -236,7 +171,7 @@ class AddMatch extends Component<Props, any> {
                       ? "is-invalid"
                       : "")
                   }
-                  value={this.props.match?.code}
+                  value={this.props.stock?.code}
                   onChange={event => this.fieldChanged(event)}
                 />
                 <span className="invalid-feedback">
@@ -260,11 +195,11 @@ class AddMatch extends Component<Props, any> {
                   className={
                     "form-control " +
                     (this.state.submitted &&
-                      !this.state.controls["description"].valid
+                    !this.state.controls["description"].valid
                       ? "is-invalid"
                       : "")
                   }
-                  value={this.props.match?.description}
+                  value={this.props.stock?.description}
                   onChange={event => this.fieldChanged(event)}
                 />
                 <span className="invalid-feedback">
@@ -291,7 +226,7 @@ class AddMatch extends Component<Props, any> {
         <div className="card-footer">
           <NavLink
             className="btn btn-outline-secondary"
-            to="/matches"
+            to="/stocks"
             style={{ width: "80px" }}
           >
             <i className="fa fa-chevron-left"></i> Back
@@ -301,27 +236,27 @@ class AddMatch extends Component<Props, any> {
     );
 
     return this.state.submitted && this.props.saved ? (
-      <Redirect to={"/matches/" + this.props.match.id} />
+      <Redirect to={"/stocks/" + this.props.stock.id} />
     ) : (
-        form0
-      );
+      form
+    );
   }
 }
 
 const mapStateToProps = state => {
   return {
-    match: state.match.match,
-    saved: state.match.saved
+    stock: state.stock.stock,
+    saved: state.stock.saved
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchMatch: id => dispatch(actions.fetchMatch(id)),
-    updateMatch: match => dispatch(actions.updateMatch(match)),
-    resetMatch: () => dispatch(actions.resetMatch()),
-    saveMatch: match => dispatch(actions.saveMatch(match))
+    fetchStock: id => dispatch(actions.fetchStock(id)),
+    updateStock: stock => dispatch(actions.updateStock(stock)),
+    resetStock: () => dispatch(actions.resetStock()),
+    saveStock: stock => dispatch(actions.saveStock(stock))
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddMatch);
+export default connect(mapStateToProps, mapDispatchToProps)(AddStock);

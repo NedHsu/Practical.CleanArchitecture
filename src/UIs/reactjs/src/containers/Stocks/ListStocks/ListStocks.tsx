@@ -6,14 +6,13 @@ import { Modal, Button } from "react-bootstrap";
 import logo from "../../../logo.svg";
 import * as actions from "../actions";
 import Star from "../../../components/Star/Star";
-import "./ListProducts.scss";
 
-class ListProducts extends Component<any, any> {
+class ListStocks extends Component<any, any> {
   state = {
-    pageTitle: "Product List",
+    pageTitle: "Stock List",
     showImage: false,
     showDeleteModal: false,
-    deletingProduct: {
+    deletingStock: {
       name: null
     },
     listFilter: "",
@@ -30,32 +29,32 @@ class ListProducts extends Component<any, any> {
 
   performFilter(filterBy) {
     filterBy = filterBy.toLocaleLowerCase();
-    return this.props.products.filter(
-      (product) => product.name.toLocaleLowerCase().indexOf(filterBy) !== -1
+    return this.props.stocks.filter(
+      (stock) => stock.name.toLocaleLowerCase().indexOf(filterBy) !== -1
     );
   }
 
   onRatingClicked = (event) => {
-    const pageTitle = "Product List: " + event;
+    const pageTitle = "Stock List: " + event;
     this.setState({ pageTitle: pageTitle });
   };
 
-  viewAuditLogs = (product) => {
-    this.props.fetchAuditLogs(product);
+  viewAuditLogs = (stock) => {
+    this.props.fetchAuditLogs(stock);
     this.setState({ showAuditLogsModal: true });
   };
 
-  deleteProduct = (product) => {
-    this.setState({ showDeleteModal: true, deletingProduct: product });
+  deleteStock = (stock) => {
+    this.setState({ showDeleteModal: true, deletingStock: stock });
   };
 
   deleteCanceled = () => {
-    this.setState({ showDeleteModal: false, deletingProduct: null });
+    this.setState({ showDeleteModal: false, deletingStock: null });
   };
 
   deleteConfirmed = () => {
-    this.props.deleteProduct(this.state.deletingProduct);
-    this.setState({ showDeleteModal: false, deletingProduct: null });
+    this.props.deleteStock(this.state.deletingStock);
+    this.setState({ showDeleteModal: false, deletingStock: null });
   };
 
   formatDateTime = (value) => {
@@ -65,41 +64,41 @@ class ListProducts extends Component<any, any> {
   };
 
   componentDidMount() {
-    this.props.fetchProducts();
+    this.props.fetchStocks();
   }
 
   render() {
-    const filteredProducts = this.state.listFilter
+    const filteredStocks = this.state.listFilter
       ? this.performFilter(this.state.listFilter)
-      : this.props.products;
-    console.log(filteredProducts);
-    const rows = filteredProducts?.map((product) => (
-      <tr key={product.id}>
+      : this.props.stocks;
+
+    const rows = filteredStocks?.map((stock) => (
+      <tr key={stock.id}>
         <td>
           {this.state.showImage ? (
             <img
-              src={product.imageUrl || logo}
-              title={product.name}
+              src={stock.imageUrl || logo}
+              title={stock.name}
               style={{ width: "50px", margin: "2px" }}
             />
           ) : null}
         </td>
         <td>
-          <NavLink to={"/products/" + product.id}>{product.name}</NavLink>
+          <NavLink to={"/stocks/" + stock.id}>{stock.name}</NavLink>
         </td>
-        <td>{product.code?.toLocaleUpperCase()}</td>
-        <td>{product.description}</td>
-        <td>{product.price || (5).toFixed(2)}</td>
+        <td>{stock.code?.toLocaleUpperCase()}</td>
+        <td>{stock.description}</td>
+        <td>{stock.price || (5).toFixed(2)}</td>
         <td>
           <Star
-            rating={product.starRating || 4}
+            rating={stock.starRating || 4}
             ratingClicked={(event) => this.onRatingClicked(event)}
           ></Star>
         </td>
         <td>
           <NavLink
             className="btn btn-primary"
-            to={"/products/edit/" + product.id}
+            to={"/stocks/edit/" + stock.id}
           >
             Edit
           </NavLink>
@@ -107,7 +106,7 @@ class ListProducts extends Component<any, any> {
           <button
             type="button"
             className="btn btn-primary btn-secondary"
-            onClick={() => this.viewAuditLogs(product)}
+            onClick={() => this.viewAuditLogs(stock)}
           >
             View Audit Logs
           </button>
@@ -115,7 +114,7 @@ class ListProducts extends Component<any, any> {
           <button
             type="button"
             className="btn btn-primary btn-danger"
-            onClick={() => this.deleteProduct(product)}
+            onClick={() => this.deleteStock(stock)}
           >
             Delete
           </button>
@@ -123,7 +122,7 @@ class ListProducts extends Component<any, any> {
       </tr>
     ));
 
-    const table = this.props.products ? (
+    const table = this.props.stocks ? (
       <table className="table">
         <thead>
           <tr>
@@ -132,7 +131,7 @@ class ListProducts extends Component<any, any> {
                 {this.state.showImage ? "Hide" : "Show"} Image
               </button>
             </th>
-            <th>Product</th>
+            <th>Stock</th>
             <th>Code</th>
             <th>Description</th>
             <th>Price</th>
@@ -188,11 +187,11 @@ class ListProducts extends Component<any, any> {
     const deleteModal = (
       <Modal show={this.state.showDeleteModal} onHide={this.deleteCanceled}>
         <Modal.Header closeButton>
-          <Modal.Title>Delete Product</Modal.Title>
+          <Modal.Title>Delete Stock</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           Are you sure you want to delete
-          <strong> {this.state.deletingProduct?.name}</strong>
+          <strong> {this.state.deletingStock?.name}</strong>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={this.deleteCanceled}>
@@ -213,9 +212,9 @@ class ListProducts extends Component<any, any> {
             <NavLink
               className="btn btn-primary"
               style={{ float: "right" }}
-              to="/products/add"
+              to="/stocks/add"
             >
-              Add Product
+              Add Stock
             </NavLink>
           </div>
           <div className="card-body">
@@ -253,17 +252,17 @@ class ListProducts extends Component<any, any> {
 
 const mapStateToProps = (state) => {
   return {
-    products: state.product.products,
-    auditLogs: state.product.auditLogs,
+    stocks: state.stock.stocks,
+    auditLogs: state.stock.auditLogs,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchProducts: () => dispatch(actions.fetchProducts()),
-    deleteProduct: (product) => dispatch(actions.deleteProduct(product)),
-    fetchAuditLogs: (product) => dispatch(actions.fetchAuditLogs(product)),
+    fetchStocks: () => dispatch(actions.fetchStocks()),
+    deleteStock: (stock) => dispatch(actions.deleteStock(stock)),
+    fetchAuditLogs: (stock) => dispatch(actions.fetchAuditLogs(stock)),
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ListProducts);
+export default connect(mapStateToProps, mapDispatchToProps)(ListStocks);

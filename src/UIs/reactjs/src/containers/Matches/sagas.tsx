@@ -64,9 +64,9 @@ export function* fetchAuditLogsSaga(action) {
 }
 
 export function* watchMatch() {
-  yield takeEvery(actionTypes.FETCH_PRODUCTS, fetchMatchesSaga);
-  yield takeEvery(actionTypes.FETCH_PRODUCT, fetchMatchSaga);
-  yield takeEvery(actionTypes.SAVE_PRODUCT, saveMatchSaga);
-  yield takeEvery(actionTypes.DELETE_PRODUCT, deleteMatchSaga);
-  yield takeEvery(actionTypes.FETCH_PRODUCT_AUDIT_LOGS, fetchAuditLogsSaga);
+  yield takeEvery(actionTypes.FETCH_MATCHS, fetchMatchesSaga);
+  yield takeEvery(actionTypes.FETCH_MATCH, fetchMatchSaga);
+  yield takeEvery(actionTypes.SAVE_MATCH, saveMatchSaga);
+  yield takeEvery(actionTypes.DELETE_MATCH, deleteMatchSaga);
+  yield takeEvery(actionTypes.FETCH_MATCH_AUDIT_LOGS, fetchAuditLogsSaga);
 }

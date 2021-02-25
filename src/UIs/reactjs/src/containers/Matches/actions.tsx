@@ -1,158 +1,158 @@
 import * as actionTypes from "./actionTypes";
 
-/// PRODUCTS
+/// MATCHS
 export const fetchMatchesSuccess = (matches) => {
   return {
-    type: actionTypes.FETCH_PRODUCTS_SUCCESS,
+    type: actionTypes.FETCH_MATCHS_SUCCESS,
     matches: matches,
   };
 };
 
 export const fetchMatchesFail = (error) => {
   return {
-    type: actionTypes.FETCH_PRODUCTS_FAIL,
+    type: actionTypes.FETCH_MATCHS_FAIL,
     error: error,
   };
 };
 
 export const fetchMatchesStart = () => {
   return {
-    type: actionTypes.FETCH_PRODUCTS_START,
+    type: actionTypes.FETCH_MATCHS_START,
   };
 };
 
 export const fetchMatches = () => {
   return {
-    type: actionTypes.FETCH_PRODUCTS,
+    type: actionTypes.FETCH_MATCHS,
   };
 };
-/// PRODUCTS
+/// MATCHS
 
-/// PRODUCT
+/// MATCH
 export const fetchMatchSuccess = (match) => {
   return {
-    type: actionTypes.FETCH_PRODUCT_SUCCESS,
+    type: actionTypes.FETCH_MATCH_SUCCESS,
     match: match,
   };
 };
 
 export const fetchMatchFail = (error) => {
   return {
-    type: actionTypes.FETCH_PRODUCT_FAIL,
+    type: actionTypes.FETCH_MATCH_FAIL,
     error: error,
   };
 };
 
 export const fetchMatchStart = () => {
   return {
-    type: actionTypes.FETCH_PRODUCT_START,
+    type: actionTypes.FETCH_MATCH_START,
   };
 };
 
 export const fetchMatch = (id) => {
   return {
-    type: actionTypes.FETCH_PRODUCT,
+    type: actionTypes.FETCH_MATCH,
     id: id,
   };
 };
-/// PRODUCT
+/// MATCH
 
-/// UPDATE PRODUCT
+/// UPDATE MATCH
 export const updateMatch = (match) => {
   return {
-    type: actionTypes.UPDATE_PRODUCT,
+    type: actionTypes.UPDATE_MATCH,
     match: match,
   };
 };
 
 export const resetMatch = () => {
   return {
-    type: actionTypes.RESET_PRODUCT,
+    type: actionTypes.RESET_MATCH,
   };
 };
-/// UPDATE PRODUCT
+/// UPDATE MATCH
 
-/// SAVE PRODUCT
+/// SAVE MATCH
 export const saveMatchSuccess = (match) => {
   return {
-    type: actionTypes.SAVE_PRODUCT_SUCCESS,
+    type: actionTypes.SAVE_MATCH_SUCCESS,
     match: match,
   };
 };
 
 export const saveMatchFail = (error) => {
   return {
-    type: actionTypes.SAVE_PRODUCT_FAIL,
+    type: actionTypes.SAVE_MATCH_FAIL,
     error: error,
   };
 };
 
 export const saveMatchStart = () => {
   return {
-    type: actionTypes.SAVE_PRODUCT_START,
+    type: actionTypes.SAVE_MATCH_START,
   };
 };
 
 export const saveMatch = (match) => {
   return {
-    type: actionTypes.SAVE_PRODUCT,
+    type: actionTypes.SAVE_MATCH,
     match: match,
   };
 };
-/// SAVE PRODUCT
+/// SAVE MATCH
 
-/// DELETE PRODUCT
+/// DELETE MATCH
 export const deleteMatchSuccess = (match) => {
   return {
-    type: actionTypes.DELETE_PRODUCT_SUCCESS,
+    type: actionTypes.DELETE_MATCH_SUCCESS,
   };
 };
 
 export const deleteMatchFail = (error) => {
   return {
-    type: actionTypes.DELETE_PRODUCT_FAIL,
+    type: actionTypes.DELETE_MATCH_FAIL,
     error: error,
   };
 };
 
 export const deleteMatchStart = () => {
   return {
-    type: actionTypes.DELETE_PRODUCT_START,
+    type: actionTypes.DELETE_MATCH_START,
   };
 };
 
 export const deleteMatch = (match) => {
   return {
-    type: actionTypes.DELETE_PRODUCT,
+    type: actionTypes.DELETE_MATCH,
     match: match,
   };
 };
-/// DELETE PRODUCT
+/// DELETE MATCH
 
 /// VIEW AUDIT LOGS
 export const fetchAuditLogsSuccess = (auditLogs) => {
   return {
-    type: actionTypes.FETCH_PRODUCT_AUDIT_LOGS_SUCCESS,
+    type: actionTypes.FETCH_MATCH_AUDIT_LOGS_SUCCESS,
     auditLogs: auditLogs,
   };
 };
 
 export const fetchAuditLogsFail = (error) => {
   return {
-    type: actionTypes.FETCH_PRODUCT_AUDIT_LOGS_FAIL,
+    type: actionTypes.FETCH_MATCH_AUDIT_LOGS_FAIL,
     error: error,
   };
 };
 
 export const fetchAuditLogsStart = () => {
   return {
-    type: actionTypes.FETCH_PRODUCT_AUDIT_LOGS_START,
+    type: actionTypes.FETCH_MATCH_AUDIT_LOGS_START,
   };
 };
 
 export const fetchAuditLogs = (match) => {
   return {
-    type: actionTypes.FETCH_PRODUCT_AUDIT_LOGS,
+    type: actionTypes.FETCH_MATCH_AUDIT_LOGS,
     match: match,
   };
 };

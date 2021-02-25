@@ -23,6 +23,14 @@ namespace Microsoft.Extensions.DependencyInjection
                     .AddScoped(typeof(ISmsMessageRepository), typeof(SmsMessageRepository))
                     .AddScoped(typeof(IUserRepository), typeof(UserRepository))
                     .AddScoped(typeof(IRoleRepository), typeof(RoleRepository));
+
+            services.AddDbContext<StockDbContext>(options => options.UseSqlServer(connectionString, sql =>
+            {
+                if (!string.IsNullOrEmpty(migrationsAssembly))
+                {
+                    sql.MigrationsAssembly(migrationsAssembly);
+                }
+            }));
             return services;
         }
 
