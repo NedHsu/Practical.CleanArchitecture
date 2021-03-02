@@ -2,8 +2,6 @@
 using System.Data;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
-using ClassifiedAds.Persistence.DapperModels;
-using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 

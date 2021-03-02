@@ -6,28 +6,26 @@ namespace ClassifiedAds.WebAPI.Models.Stocks
 {
     public static class StockModelMappingConfiguration
     {
-        public static IEnumerable<StockModel> ToDTOs(this IEnumerable<Stock> entities)
+        public static IEnumerable<StockModel> ToDTOs(this IEnumerable<stock> entities)
         {
             return entities.Select(x => x.ToDTO());
         }
 
-        public static StockModel ToDTO(this Stock entity)
+        public static StockModel ToDTO(this stock entity)
         {
             return new StockModel
             {
-                Id = entity.Id,
-                Code = entity.Code,
-                Name = entity.Name,
+                Code = entity.code,
+                Name = entity.name,
             };
         }
 
-        public static Stock ToEntity(this StockModel dto)
+        public static stock ToEntity(this StockModel dto)
         {
-            return new Stock
+            return new stock
             {
-                Id = dto.Id,
-                Code = dto.Code,
-                Name = dto.Name,
+                code = dto.Code,
+                name = dto.Name,
             };
         }
     }
