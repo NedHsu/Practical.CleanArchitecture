@@ -26,14 +26,16 @@
       dotnet ef migrations add Init --context ConfigurationDbContext -o Migrations/ConfigurationDb
       dotnet ef migrations add Init --context PersistedGrantDbContext -o Migrations/PersistedGrantDb
       dotnet ef migrations add Init --context MiniProfilerDbContext -o Migrations/MiniProfilerDb
+      dotnet ef migrations add Init --context StockDbContext -o Migrations/StockDb 
       dotnet ef database update --context AdsDbContext
       dotnet ef database update --context ConfigurationDbContext
       dotnet ef database update --context PersistedGrantDbContext
       dotnet ef database update --context MiniProfilerDbContext
+      dotnet ef database update --context StockDbContext
       ```
     + sc
       ```
-      dotnet ef dbcontext scaffold "Server=localhost,1433;Database=Test;User Id=sa;Password=Zxc@123456;MultipleActiveResultSets=true;" Microsoft.EntityFrameworkCore.SqlServer -o Models --context-dir Context -c TestContext --context-namespace ClassifiedAds.Domain.Entities
+      dotnet ef dbcontext scaffold -f "Server=localhost,1433;Database=Test;User Id=sa;Password=Zxc@123456;MultipleActiveResultSets=true;" Microsoft.EntityFrameworkCore.SqlServer -o Models --context-dir Context -c StockContext --context-namespace ClassifiedAds.Persistence --namespace ClassifiedAds.Persistence.DapperModels --use-database-names
       ```
   + Option 2: Using Package Manager Console:
     + Set **ClassifiedAds.Migrator** as StartUp Project

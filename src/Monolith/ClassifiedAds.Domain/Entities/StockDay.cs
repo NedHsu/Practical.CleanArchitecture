@@ -1,22 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 #nullable disable
 
 namespace ClassifiedAds.Domain.Entities
 {
-    public partial class StockDay
+    public partial class stockDay
     {
-        public string StockCode { get; set; }
-        public DateTime Date { get; set; }
-        public long? DealAmount { get; set; }
-        public long? DealMoney { get; set; }
-        public decimal? OpenPrice { get; set; }
-        public decimal? HighestPrice { get; set; }
-        public decimal? LowestPrice { get; set; }
-        public decimal? ClosePrice { get; set; }
-        public int? DealCount { get; set; }
+        [Key]
+        public string stock_code { get; set; }
+        [Key]
+        public DateTime date { get; set; }
+        public long? deal_amount { get; set; }
+        public long? deal_money { get; set; }
+        public decimal? open_price { get; set; }
+        public decimal? highest_price { get; set; }
+        public decimal? lowest_price { get; set; }
+        public decimal? close_price { get; set; }
+        public int? deal_count { get; set; }
 
-        public virtual Stock StockCodeNavigation { get; set; }
+        public virtual stock stock_codeNavigation { get; set; }
     }
 }

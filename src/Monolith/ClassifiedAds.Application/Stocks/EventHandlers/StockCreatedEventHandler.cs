@@ -7,7 +7,7 @@ using System;
 
 namespace ClassifiedAds.Application.Stocks.EventHandlers
 {
-    public class StockCreatedEventHandler : IDomainEventHandler<EntityCreatedEvent<Stock>>
+    public class StockCreatedEventHandler : IDomainEventHandler<EntityCreatedEvent<stock>>
     {
         private readonly IServiceProvider _serviceProvider;
 
@@ -16,22 +16,20 @@ namespace ClassifiedAds.Application.Stocks.EventHandlers
             _serviceProvider = serviceProvider;
         }
 
-        public void Handle(EntityCreatedEvent<Stock> domainEvent)
+        public void Handle(EntityCreatedEvent<stock> domainEvent)
         {
-            using (var scope = _serviceProvider.CreateScope())
-            {
-                var auditSerivce = scope.ServiceProvider.GetService<ICrudService<AuditLogEntry>>();
-                var currentUser = scope.ServiceProvider.GetService<ICurrentUser>();
+            using var scope = _serviceProvider.CreateScope();
+            var auditSerivce = scope.ServiceProvider.GetService<ICrudService<AuditLogEntry>>();
+            var currentUser = scope.ServiceProvider.GetService<ICurrentUser>();
 
-                auditSerivce.AddOrUpdate(new AuditLogEntry
-                {
-                    UserId = currentUser.IsAuthenticated ? currentUser.UserId: Guid.Empty,
-                    CreatedDateTime = domainEvent.EventDateTime,
-                    Action = "CREATED_STOCK",
-                    ObjectId = domainEvent.Entity.Id.ToString(),
-                    Log = domainEvent.Entity.AsJsonString(),
-                });
-            }
+            auditSerivce.AddOrUpdate(new AuditLogEntry
+            {
+                UserId = currentUser.IsAuthenticated ? currentUser.UserId : Guid.Empty,
+                CreatedDateTime = domainEvent.EventDateTime,
+                Action = "CREATED_STOCK",
+                ObjectId = domainEvent.Entity.code.ToString(),
+                Log = domainEvent.Entity.AsJsonString(),
+            });
         }
     }
 }

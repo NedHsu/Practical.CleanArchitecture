@@ -7,7 +7,7 @@ using System;
 
 namespace ClassifiedAds.Application.Stocks.EventHandlers
 {
-    public class StockUpdatedEventHandler : IDomainEventHandler<EntityUpdatedEvent<Stock>>
+    public class StockUpdatedEventHandler : IDomainEventHandler<EntityUpdatedEvent<stock>>
     {
         private readonly IServiceProvider _serviceProvider;
 
@@ -16,22 +16,20 @@ namespace ClassifiedAds.Application.Stocks.EventHandlers
             _serviceProvider = serviceProvider;
         }
 
-        public void Handle(EntityUpdatedEvent<Stock> domainEvent)
+        public void Handle(EntityUpdatedEvent<stock> domainEvent)
         {
-            using (var scope = _serviceProvider.CreateScope())
-            {
-                var auditSerivce = scope.ServiceProvider.GetService<ICrudService<AuditLogEntry>>();
-                var currentUser = scope.ServiceProvider.GetService<ICurrentUser>();
+            using var scope = _serviceProvider.CreateScope();
+            var auditSerivce = scope.ServiceProvider.GetService<ICrudService<AuditLogEntry>>();
+            var currentUser = scope.ServiceProvider.GetService<ICurrentUser>();
 
-                auditSerivce.AddOrUpdate(new AuditLogEntry
-                {
-                    UserId = currentUser.UserId,
-                    CreatedDateTime = domainEvent.EventDateTime,
-                    Action = "UPDATED_STOCK",
-                    ObjectId = domainEvent.Entity.Id.ToString(),
-                    Log = domainEvent.Entity.AsJsonString(),
-                });
-            }
+            auditSerivce.AddOrUpdate(new AuditLogEntry
+            {
+                UserId = currentUser.UserId,
+                CreatedDateTime = domainEvent.EventDateTime,
+                Action = "UPDATED_STOCK",
+                ObjectId = domainEvent.Entity.code,
+                Log = domainEvent.Entity.AsJsonString(),
+            });
         }
     }
 }

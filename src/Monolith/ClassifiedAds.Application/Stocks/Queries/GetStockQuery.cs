@@ -6,28 +6,28 @@ using System.Linq;
 
 namespace ClassifiedAds.Application.Stocks.Queries
 {
-    public class GetStockQuery : IQuery<Stock>
+    public class GetStockQuery : IQuery<stock>
     {
-        public Guid Id { get; set; }
+        public string Code { get; set; }
         public bool ThrowNotFoundIfNull { get; set; }
     }
 
-    internal class GetStockQueryHandler : IQueryHandler<GetStockQuery, Stock>
+    internal class GetStockQueryHandler : IQueryHandler<GetStockQuery, stock>
     {
-        private readonly IRepository<Stock, Guid> _stockRepository;
+        private readonly IStockRepository<stock> _stockRepository;
 
-        public GetStockQueryHandler(IRepository<Stock, Guid> stockRepository)
+        public GetStockQueryHandler(IStockRepository<stock> stockRepository)
         {
             _stockRepository = stockRepository;
         }
 
-        public Stock Handle(GetStockQuery query)
+        public stock Handle(GetStockQuery query)
         {
-            var stock = _stockRepository.GetAll().FirstOrDefault(x => x.Id == query.Id);
+            var stock = _stockRepository.Get(x => x.code == query.Code);
 
             if (query.ThrowNotFoundIfNull && stock == null)
             {
-                throw new NotFoundException($"Stock {query.Id} not found.");
+                throw new NotFoundException($"Stock {query.Code} not found.");
             }
 
             return stock;

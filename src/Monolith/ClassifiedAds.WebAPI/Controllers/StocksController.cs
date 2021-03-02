@@ -46,7 +46,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<Stock> Get(Guid id)
         {
-            var stock = _dispatcher.Dispatch(new GetStockQuery { Id = id, ThrowNotFoundIfNull = true });
+            var stock = _dispatcher.Dispatch(new GetStockQuery { Code = id, ThrowNotFoundIfNull = true });
             var model = stock.ToDTO();
             return Ok(model);
         }
@@ -68,7 +68,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult Put(Guid id, [FromBody] StockModel model)
         {
-            var stock = _dispatcher.Dispatch(new GetStockQuery { Id = id, ThrowNotFoundIfNull = true });
+            var stock = _dispatcher.Dispatch(new GetStockQuery { Code = id, ThrowNotFoundIfNull = true });
 
             stock.Code = model.Code;
             stock.Name = model.Name;
@@ -85,7 +85,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult Delete(Guid id)
         {
-            var stock = _dispatcher.Dispatch(new GetStockQuery { Id = id, ThrowNotFoundIfNull = true });
+            var stock = _dispatcher.Dispatch(new GetStockQuery { Code = id, ThrowNotFoundIfNull = true });
 
             _dispatcher.Dispatch(new DeleteStockCommand { Stock = stock });
 

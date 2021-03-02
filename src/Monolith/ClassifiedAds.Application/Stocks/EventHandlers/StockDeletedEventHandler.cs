@@ -7,7 +7,7 @@ using System;
 
 namespace ClassifiedAds.Application.Stocks.EventHandlers
 {
-    public class StockDeletedEventHandler : IDomainEventHandler<EntityDeletedEvent<Stock>>
+    public class StockDeletedEventHandler : IDomainEventHandler<EntityDeletedEvent<stock>>
     {
         private readonly IServiceProvider _serviceProvider;
 
@@ -16,22 +16,20 @@ namespace ClassifiedAds.Application.Stocks.EventHandlers
             _serviceProvider = serviceProvider;
         }
 
-        public void Handle(EntityDeletedEvent<Stock> domainEvent)
+        public void Handle(EntityDeletedEvent<stock> domainEvent)
         {
-            using (var scope = _serviceProvider.CreateScope())
-            {
-                var auditSerivce = scope.ServiceProvider.GetService<ICrudService<AuditLogEntry>>();
-                var currentUser = scope.ServiceProvider.GetService<ICurrentUser>();
+            using var scope = _serviceProvider.CreateScope();
+            var auditSerivce = scope.ServiceProvider.GetService<ICrudService<AuditLogEntry>>();
+            var currentUser = scope.ServiceProvider.GetService<ICurrentUser>();
 
-                auditSerivce.AddOrUpdate(new AuditLogEntry
-                {
-                    UserId = currentUser.UserId,
-                    CreatedDateTime = domainEvent.EventDateTime,
-                    Action = "DELETED_STOCK",
-                    ObjectId = domainEvent.Entity.Id.ToString(),
-                    Log = domainEvent.Entity.AsJsonString(),
-                });
-            }
+            auditSerivce.AddOrUpdate(new AuditLogEntry
+            {
+                UserId = currentUser.UserId,
+                CreatedDateTime = domainEvent.EventDateTime,
+                Action = "DELETED_STOCK",
+                ObjectId = domainEvent.Entity.code,
+                Log = domainEvent.Entity.AsJsonString(),
+            });
         }
     }
 }

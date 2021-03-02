@@ -4,7 +4,7 @@ using System;
 namespace ClassifiedAds.Domain.Events
 {
     public class EntityDeletedEvent<T> : IDomainEvent
-        where T : Entity<Guid>
+        where T : class
     {
         public EntityDeletedEvent(T entity, DateTime eventDateTime)
         {

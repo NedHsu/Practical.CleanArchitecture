@@ -1,4 +1,4 @@
-﻿using ClassifiedAds.Persistence.DapperModels;
+﻿using ClassifiedAds.Domain.Entities;
 using MicroOrm.Dapper.Repositories;
 using MicroOrm.Dapper.Repositories.DbContext;
 using System;
@@ -11,6 +11,6 @@ namespace ClassifiedAds.Persistence.DapperContext
 {
     public interface IStockDbContext : IDapperDbContext
     {
-        IDapperRepository<StockDTO> Stock { get; }
+        IDapperRepository<stock> stock { get; }
     }
 }

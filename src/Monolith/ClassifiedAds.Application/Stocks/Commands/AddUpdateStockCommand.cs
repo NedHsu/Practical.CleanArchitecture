@@ -4,14 +4,14 @@ namespace ClassifiedAds.Application.Stocks.Commands
 {
     public class AddUpdateStockCommand : ICommand
     {
-        public Stock Stock { get; set; }
+        public stock Stock { get; set; }
     }
 
     internal class AddUpdateStockCommandHandler : ICommandHandler<AddUpdateStockCommand>
     {
-        private readonly ICrudService<Stock> _stockService;
+        private readonly IDapperCrudService<stock> _stockService;
 
-        public AddUpdateStockCommandHandler(ICrudService<Stock> stockService)
+        public AddUpdateStockCommandHandler(IDapperCrudService<stock> stockService)
         {
             _stockService = stockService;
         }

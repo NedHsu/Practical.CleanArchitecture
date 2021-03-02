@@ -6,10 +6,9 @@ using System;
 
 namespace ClassifiedAds.Application.Stocks.Services
 {
-    public class StockService : CrudService<Stock>, IStockService
+    public class StockService : IStockService
     {
-        public StockService(IRepository<Stock, Guid> stockRepository, IDomainEvents domainEvents, ICurrentUser currentUser)
-            : base(stockRepository, domainEvents)
+        public StockService(IStockRepository<stock> stockRepository, IDomainEvents domainEvents, ICurrentUser currentUser)
         {
         }
         

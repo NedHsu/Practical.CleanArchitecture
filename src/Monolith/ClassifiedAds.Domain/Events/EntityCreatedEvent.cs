@@ -4,7 +4,7 @@ using System;
 namespace ClassifiedAds.Domain.Events
 {
     public class EntityCreatedEvent<T> : IDomainEvent
-        where T : Entity<Guid>
+        where T : class
     {
         public EntityCreatedEvent(T entity, DateTime eventDateTime)
         {
