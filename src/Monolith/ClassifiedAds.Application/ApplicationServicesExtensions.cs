@@ -3,6 +3,7 @@ using ClassifiedAds.Application.EmailMessages.Services;
 using ClassifiedAds.Application.Matchs.Services;
 using ClassifiedAds.Application.Products.Services;
 using ClassifiedAds.Application.SmsMessages.Services;
+using ClassifiedAds.Application.Stocks.Services;
 using ClassifiedAds.Application.Users.Services;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Events;
@@ -24,6 +25,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddScoped<IUserService, UserService>()
                 .AddScoped<IProductService, ProductService>()
                 .AddScoped<IMatchService, MatchService>()
+                .AddScoped<IStockService, StockService>()
                 .AddScoped<EmailMessageService>()
                 .AddScoped<SmsMessageService>();
 
@@ -38,6 +40,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 configureInterceptor(typeof(IUserService), typeof(UserService), ServiceLifetime.Scoped);
                 configureInterceptor(typeof(IProductService), typeof(ProductService), ServiceLifetime.Scoped);
                 configureInterceptor(typeof(IMatchService), typeof(MatchService), ServiceLifetime.Scoped);
+                configureInterceptor(typeof(IMatchService), typeof(StockService), ServiceLifetime.Scoped);
             }
 
             return services;

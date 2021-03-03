@@ -29,8 +29,8 @@ export function* fetchStockSaga(action) {
 export function* saveStockSaga(action) {
   yield put(actions.saveStockStart());
   try {
-    const response = action.stock.id
-      ? yield axios.put(action.stock.id, action.stock)
+    const response = action.stock.code
+      ? yield axios.put(action.stock.code, action.stock)
       : yield axios.post("", action.stock);
     const stock = response.data;
     yield put(actions.saveStockSuccess(stock));
@@ -43,7 +43,7 @@ export function* saveStockSaga(action) {
 export function* deleteStockSaga(action) {
   yield put(actions.deleteStockStart());
   try {
-    const response = yield axios.delete(action.stock.id, action.stock);
+    const response = yield axios.delete(action.stock.code, action.stock);
     yield put(actions.deleteStockSuccess(action.stock));
     yield put(actions.fetchStocks());
   } catch (error) {
@@ -55,7 +55,7 @@ export function* deleteStockSaga(action) {
 export function* fetchAuditLogsSaga(action) {
   yield put(actions.fetchAuditLogsStart());
   try {
-    const response = yield axios.get(action.stock.id + "/auditLogs");
+    const response = yield axios.get(action.stock.code + "/auditLogs");
     const fetchedAuditLogs = response.data;
     yield put(actions.fetchAuditLogsSuccess(fetchedAuditLogs));
   } catch (error) {

@@ -30,7 +30,7 @@ class ListStocks extends Component<any, any> {
   performFilter(filterBy) {
     filterBy = filterBy.toLocaleLowerCase();
     return this.props.stocks.filter(
-      (stock) => stock.name.toLocaleLowerCase().indexOf(filterBy) !== -1
+      (stock) => (stock.name + stock.code).toLocaleLowerCase().indexOf(filterBy) !== -1
     );
   }
 
@@ -72,8 +72,8 @@ class ListStocks extends Component<any, any> {
       ? this.performFilter(this.state.listFilter)
       : this.props.stocks;
 
-    const rows = filteredStocks?.map((stock) => (
-      <tr key={stock.id}>
+    const rows = filteredStocks?.slice(0, 10).map((stock) => (
+      <tr key={stock.code}>
         <td>
           {this.state.showImage ? (
             <img
@@ -84,7 +84,7 @@ class ListStocks extends Component<any, any> {
           ) : null}
         </td>
         <td>
-          <NavLink to={"/stocks/" + stock.id}>{stock.name}</NavLink>
+          <NavLink to={"/stocks/" + stock.code}>{stock.name}</NavLink>
         </td>
         <td>{stock.code?.toLocaleUpperCase()}</td>
         <td>{stock.description}</td>
@@ -98,7 +98,7 @@ class ListStocks extends Component<any, any> {
         <td>
           <NavLink
             className="btn btn-primary"
-            to={"/stocks/edit/" + stock.id}
+            to={"/stocks/edit/" + stock.code}
           >
             Edit
           </NavLink>

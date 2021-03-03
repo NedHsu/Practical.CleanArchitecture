@@ -195,7 +195,7 @@ class AddStock extends Component<Props, any> {
                   className={
                     "form-control " +
                     (this.state.submitted &&
-                    !this.state.controls["description"].valid
+                      !this.state.controls["description"].valid
                       ? "is-invalid"
                       : "")
                   }
@@ -236,10 +236,10 @@ class AddStock extends Component<Props, any> {
     );
 
     return this.state.submitted && this.props.saved ? (
-      <Redirect to={"/stocks/" + this.props.stock.id} />
+      <Redirect to={"/stocks/" + this.props.stock.code} />
     ) : (
-      form
-    );
+        form
+      );
   }
 }
 

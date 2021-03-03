@@ -81,7 +81,7 @@ class ViewStock extends Component<any, any> {
           &nbsp;
           <NavLink
             className="btn btn-primary"
-            to={"/stocks/edit/" + this.props.stock.id}
+            to={"/stocks/edit/" + this.props.stock.code}
           >
             Edit
           </NavLink>

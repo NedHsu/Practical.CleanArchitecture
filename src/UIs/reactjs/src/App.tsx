@@ -18,6 +18,9 @@ import ViewUser from "./containers/Users/ViewUser/ViewUser";
 import ListMatches from "./containers/Matches/ListMatches/ListMatches";
 import AddMatch from "./containers/Matches/AddMatch/AddMatch";
 import ViewMatch from "./containers/Matches/ViewMatch/ViewMatch";
+import ListStocks from "./containers/Stocks/ListStocks/ListStocks";
+import ViewStock from "./containers/Stocks/ViewStock/ViewStock";
+import AddStock from "./containers/Stocks/AddStock/AddStock";
 
 function App() {
   return (
@@ -36,6 +39,9 @@ function App() {
         <Route path="/matches/add" component={AddMatch} />
         <Route path="/matches/:id" component={ViewMatch} />
         <Route path="/matches" component={ListMatches} />
+        <Route path="/stocks/add" component={AddStock} />
+        <Route path="/stocks/:id" component={ViewStock} />
+        <Route path="/stocks" component={ListStocks} />
         <Route path="/users/add" component={AddUser} />
         <Route path="/users/edit/:id" component={AddUser} />
         <Route path="/users/:id" component={ViewUser} />

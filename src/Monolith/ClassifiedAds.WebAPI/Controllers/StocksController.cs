@@ -33,18 +33,18 @@ namespace ClassifiedAds.WebAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<stock>> Get()
+        public ActionResult<IEnumerable<StockModel>> Get()
         {
             _logger.LogInformation("Getting all stocks");
-            var stocks = _dispatcher.Dispatch(new GetStocksQuery());
+            var stocks = _dispatcher.Dispatch(new GetStocksQuery(){ });
             var model = stocks.ToDTOs();
             return Ok(model);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{code}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<stock> Get(string code)
+        public ActionResult<StockModel> Get(string code)
         {
             var stock = _dispatcher.Dispatch(new GetStockQuery { Code = code, ThrowNotFoundIfNull = true });
             var model = stock.ToDTO();
@@ -62,7 +62,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             return Created($"/api/stocks/{model.Id}", model);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{code}")]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -80,7 +80,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             return Ok(model);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{code}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult Delete(string code)
@@ -113,7 +113,7 @@ namespace ClassifiedAds.WebAPI.Controllers
                 {
                     log.Id,
                     log.UserName,
-                    Action = log.Action.Replace("_PRODUCT", string.Empty),
+                    Action = log.Action.Replace("_STOCK", string.Empty),
                     log.CreatedDateTime,
                     data,
                     highLight,
