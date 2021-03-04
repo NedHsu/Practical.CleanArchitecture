@@ -4,21 +4,20 @@ import { connect } from "react-redux";
 
 import * as actions from "../actions";
 import { checkValidity } from "../../../shared/utility";
-import { Col, FormControl, FormGroup, FormLabel, Row } from "react-bootstrap";
 
 type Props = {
-  resetStock: any,
+  resetStockNote: any,
   match: any,
-  fetchStock: any,
-  stock: any,
-  saveStock: any,
-  updateStock: any,
+  fetchStockNote: any,
+  stocknote: any,
+  saveStockNote: any,
+  updateStockNote: any,
   saved: any
 }
 
-class AddStock extends Component<Props, any> {
+class AddStockNote extends Component<Props, any> {
   state = {
-    title: "Add Stock",
+    title: "Add StockNote",
     controls: {
       name: {
         validation: {
@@ -63,23 +62,23 @@ class AddStock extends Component<Props, any> {
   };
 
   componentDidMount() {
-    this.props.resetStock();
+    this.props.resetStockNote();
     const id = this.props.match?.params?.id;
     if (id) {
-      this.setState({ title: "Edit Stock" });
-      this.props.fetchStock(id);
+      this.setState({ title: "Edit StockNote" });
+      this.props.fetchStockNote(id);
     }
   }
 
   fieldChanged = event => {
-    const stock = {
-      ...this.props.stock,
+    const stocknote = {
+      ...this.props.stocknote,
       [event.target.name]: event.target.value
     };
 
     this.checkFieldValidity(event.target.name, event.target.value);
 
-    this.props.updateStock(stock);
+    this.props.updateStockNote(stocknote);
   };
 
   checkFieldValidity = (name, value) => {
@@ -109,12 +108,12 @@ class AddStock extends Component<Props, any> {
     let isValid = true;
     for (let fieldName in this.state.controls) {
       isValid =
-        this.checkFieldValidity(fieldName, this.props.stock[fieldName]) &&
+        this.checkFieldValidity(fieldName, this.props.stocknote[fieldName]) &&
         isValid;
     }
 
     if (isValid) {
-      this.props.saveStock(this.props.stock);
+      this.props.saveStockNote(this.props.stocknote);
     }
   };
 
@@ -131,42 +130,6 @@ class AddStock extends Component<Props, any> {
             </div>
           ) : null}
           <form onSubmit={this.onSubmit}>
-            <FormGroup as={Row}>
-              <FormLabel column sm={2}>Ex</FormLabel>
-              <Col>
-                <FormControl as="select">
-                  <option>tse</option>
-                  <option>otc</option>
-                </FormControl>
-              </Col>
-            </FormGroup>
-            <div className="form-group row">
-              <label htmlFor="code" className="col-sm-2 col-form-label">
-                Code
-              </label>
-              <div className="col-sm-10">
-                <input
-                  id="code"
-                  name="code"
-                  className={
-                    "form-control " +
-                    (this.state.submitted && !this.state.controls["code"].valid
-                      ? "is-invalid"
-                      : "")
-                  }
-                  value={this.props.stock?.code}
-                  onChange={event => this.fieldChanged(event)}
-                />
-                <span className="invalid-feedback">
-                  {this.state.controls["code"].error.required ? (
-                    <span>Enter a code</span>
-                  ) : null}
-                  {this.state.controls["code"].error.maxLength ? (
-                    <span>The code must be less than 10 characters.</span>
-                  ) : null}
-                </span>
-              </div>
-            </div>
             <div className="form-group row">
               <label htmlFor="name" className="col-sm-2 col-form-label">
                 Name
@@ -181,7 +144,7 @@ class AddStock extends Component<Props, any> {
                       ? "is-invalid"
                       : "")
                   }
-                  value={this.props.stock?.name}
+                  value={this.props.stocknote?.name}
                   onChange={event => this.fieldChanged(event)}
                 />
                 <span className="invalid-feedback">
@@ -194,7 +157,33 @@ class AddStock extends Component<Props, any> {
                 </span>
               </div>
             </div>
-
+            <div className="form-group row">
+              <label htmlFor="code" className="col-sm-2 col-form-label">
+                Code
+              </label>
+              <div className="col-sm-10">
+                <input
+                  id="code"
+                  name="code"
+                  className={
+                    "form-control " +
+                    (this.state.submitted && !this.state.controls["code"].valid
+                      ? "is-invalid"
+                      : "")
+                  }
+                  value={this.props.stocknote?.code}
+                  onChange={event => this.fieldChanged(event)}
+                />
+                <span className="invalid-feedback">
+                  {this.state.controls["code"].error.required ? (
+                    <span>Enter a code</span>
+                  ) : null}
+                  {this.state.controls["code"].error.maxLength ? (
+                    <span>The code must be less than 10 characters.</span>
+                  ) : null}
+                </span>
+              </div>
+            </div>
             <div className="form-group row">
               <label htmlFor="description" className="col-sm-2 col-form-label">
                 Description
@@ -206,11 +195,11 @@ class AddStock extends Component<Props, any> {
                   className={
                     "form-control " +
                     (this.state.submitted &&
-                      !this.state.controls["description"].valid
+                    !this.state.controls["description"].valid
                       ? "is-invalid"
                       : "")
                   }
-                  value={this.props.stock?.description}
+                  value={this.props.stocknote?.description}
                   onChange={event => this.fieldChanged(event)}
                 />
                 <span className="invalid-feedback">
@@ -237,7 +226,7 @@ class AddStock extends Component<Props, any> {
         <div className="card-footer">
           <NavLink
             className="btn btn-outline-secondary"
-            to="/stocks"
+            to="/stocknotes"
             style={{ width: "80px" }}
           >
             <i className="fa fa-chevron-left"></i> Back
@@ -247,27 +236,27 @@ class AddStock extends Component<Props, any> {
     );
 
     return this.state.submitted && this.props.saved ? (
-      <Redirect to={"/stocks/" + this.props.stock.code} />
+      <Redirect to={"/stocknotes/" + this.props.stocknote.id} />
     ) : (
-        form
-      );
+      form
+    );
   }
 }
 
 const mapStateToProps = state => {
   return {
-    stock: state.stock.stock,
-    saved: state.stock.saved
+    stocknote: state.stocknote.stocknote,
+    saved: state.stocknote.saved
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchStock: id => dispatch(actions.fetchStock(id)),
-    updateStock: stock => dispatch(actions.updateStock(stock)),
-    resetStock: () => dispatch(actions.resetStock()),
-    saveStock: stock => dispatch(actions.saveStock(stock))
+    fetchStockNote: id => dispatch(actions.fetchStockNote(id)),
+    updateStockNote: stocknote => dispatch(actions.updateStockNote(stocknote)),
+    resetStockNote: () => dispatch(actions.resetStockNote()),
+    saveStockNote: stocknote => dispatch(actions.saveStockNote(stocknote))
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddStock);
+export default connect(mapStateToProps, mapDispatchToProps)(AddStockNote);

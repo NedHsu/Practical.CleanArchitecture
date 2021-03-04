@@ -4,26 +4,34 @@ using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Storage;
 
 #nullable disable
 
 namespace ClassifiedAds.Persistence {
-    public partial class StockDbContext : DbContext, IUnitOfWork {
+    public partial class StockDbContext : DbContext, IUnitOfWork
+    {
         public StockDbContext() { }
 
-        public StockDbContext(DbContextOptions<StockDbContext> options) : base(options) { }
+        public StockDbContext(DbContextOptions<StockDbContext> options)
+            : base(options) { }
 
         public virtual DbSet<stock> Stocks { get; set; }
         public virtual DbSet<stockDay> StockDays { get; set; }
         public virtual DbSet<stock_fundamental> StockFundamentals { get; set; }
         public virtual DbSet<stock_funder> StockFunders { get; set; }
+        public virtual DbSet<StockGroup> StockGroups { get; set; }
+        public virtual DbSet<StockGroupItem> StockGroupItems { get; set; }
+        public virtual DbSet<StockNote> StockNotes { get; set; }
+
+        private IDbContextTransaction _dbContextTransaction;
 
         public void BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted) {
-            throw new NotImplementedException();
+            _dbContextTransaction = Database.BeginTransaction(isolationLevel);
         }
 
         public void CommitTransaction() {
-            throw new NotImplementedException();
+            _dbContextTransaction.Commit();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
@@ -140,6 +148,59 @@ namespace ClassifiedAds.Persistence {
                     .IsUnicode(false);
 
                 entity.Property(e => e.date).HasColumnType("date");
+            });
+
+            modelBuilder.Entity<StockGroup>(entity =>
+            {
+                entity.ToTable("StockGroup");
+
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.GroupTitle).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<StockGroupItem>(entity =>
+            {
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.StockCode)
+                    .IsRequired()
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.StockCodeNavigation)
+                    .WithMany(p => p.StockGroupItems)
+                    .HasForeignKey(d => d.StockCode)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_stock_group_items_stock");
+            });
+
+            modelBuilder.Entity<StockNote>(entity =>
+            {
+                entity.ToTable("StockNote");
+
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.Property(e => e.Contents).HasMaxLength(500);
+
+                entity.Property(e => e.Created).HasColumnType("datetime");
+
+                entity.Property(e => e.StockCode)
+                    .IsRequired()
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Title)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.Updated).HasColumnType("datetime");
+
+                entity.HasOne(d => d.StockCodeNavigation)
+                    .WithMany(p => p.StockNotes)
+                    .HasForeignKey(d => d.StockCode)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_stock_note_stock");
             });
 
             OnModelCreatingPartial(modelBuilder);

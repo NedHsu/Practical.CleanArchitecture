@@ -33,5 +33,7 @@ namespace ClassifiedAds.Domain.Entities
 
         [LeftJoin("stockDay", "Code", "StockCode", TableAlias = "StockDay_Id")]
         public virtual ICollection<stockDay> stockDays { get; set; }
+        public virtual ICollection<StockGroupItem> StockGroupItems { get; set; }
+        public virtual ICollection<StockNote> StockNotes { get; set; }
     }
 }

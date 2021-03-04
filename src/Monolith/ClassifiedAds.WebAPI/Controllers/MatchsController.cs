@@ -17,6 +17,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
 using ClassifiedAds.Application.Users.Queries;
+using AutoMapper;
 
 namespace ClassifiedAds.WebAPI.Controllers {
     [Authorize]
@@ -26,10 +27,12 @@ namespace ClassifiedAds.WebAPI.Controllers {
     public class MatchsController : ControllerBase {
         private readonly Dispatcher _dispatcher;
         private readonly ILogger _logger;
+        private readonly IMapper _mapper;
 
-        public MatchsController(Dispatcher dispatcher, ILogger<MatchsController> logger) {
+        public MatchsController(Dispatcher dispatcher, ILogger<MatchsController> logger, IMapper mapper) {
             _dispatcher = dispatcher;
             _logger = logger;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -45,7 +48,7 @@ namespace ClassifiedAds.WebAPI.Controllers {
             _logger.LogInformation("Getting paged match");
             var result = _dispatcher.Dispatch(new GetMatchPagedQuery() {
                 PageIndex = filter.Pager.PageIndex,
-                PageSize = filter.Pager.PageSize
+                PageSize = filter.Pager.PageSize,
             });
             return Ok(result.ToDTO());
         }

@@ -39,14 +39,15 @@ namespace ClassifiedAds.Application.Matchs.Queries {
             {
                 query = query.Where(x => options.StartDate > x.Time && options.EndDate < x.Time);
             }
+
             if (options.CreaterId.HasValue)
             {
-                
             }
+
             if (options.Type.HasValue)
             {
-                
             }
+
             return PagedResult<Match>.Create(query, options.PageIndex, options.PageSize);
         }
     }

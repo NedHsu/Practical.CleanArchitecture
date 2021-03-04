@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.Application;
+﻿using AutoMapper;
+using ClassifiedAds.Application;
 using ClassifiedAds.Application.AuditLogEntries.DTOs;
 using ClassifiedAds.Application.AuditLogEntries.Queries;
 using ClassifiedAds.Application.Stocks.Commands;
@@ -25,11 +26,13 @@ namespace ClassifiedAds.WebAPI.Controllers
     {
         private readonly Dispatcher _dispatcher;
         private readonly ILogger _logger;
+        private readonly IMapper _mapper;
 
-        public StocksController(Dispatcher dispatcher, ILogger<StocksController> logger)
+        public StocksController(Dispatcher dispatcher, ILogger<StocksController> logger, IMapper mapper)
         {
             _dispatcher = dispatcher;
             _logger = logger;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -37,7 +40,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         {
             _logger.LogInformation("Getting all stocks");
             var stocks = _dispatcher.Dispatch(new GetStocksQuery(){ });
-            var model = stocks.ToDTOs();
+            var model = _mapper.Map<IEnumerable<StockModel>>(stocks);
             return Ok(model);
         }
 
@@ -47,7 +50,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         public ActionResult<StockModel> Get(string code)
         {
             var stock = _dispatcher.Dispatch(new GetStockQuery { Code = code, ThrowNotFoundIfNull = true });
-            var model = stock.ToDTO();
+            var model = _mapper.Map<StockModel>(stock);
             return Ok(model);
         }
 
@@ -56,10 +59,10 @@ namespace ClassifiedAds.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public ActionResult<stock> Post([FromBody] StockModel model)
         {
-            var stock = model.ToEntity();
+            var stock = _mapper.Map<stock>(model);
             _dispatcher.Dispatch(new AddUpdateStockCommand { Stock = stock });
-            model = stock.ToDTO();
-            return Created($"/api/stocks/{model.Id}", model);
+            model = _mapper.Map<StockModel>(stock);
+            return Created($"/api/stocks/{model.Code}", model);
         }
 
         [HttpPut("{code}")]
@@ -68,14 +71,15 @@ namespace ClassifiedAds.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult Put(string code, [FromBody] StockModel model)
         {
-            var stock = _dispatcher.Dispatch(new GetStockQuery { Code = code, ThrowNotFoundIfNull = true });
+            var stock = _dispatcher.Dispatch(new GetStockQuery { Code = code, ThrowNotFoundIfNull = false }) 
+                ?? new stock { };
 
             stock.code = model.Code;
             stock.name = model.Name;
 
             _dispatcher.Dispatch(new AddUpdateStockCommand { Stock = stock });
 
-            model = stock.ToDTO();
+            model = _mapper.Map<StockModel>(stock);
 
             return Ok(model);
         }

@@ -1,4 +1,4 @@
-namespace ClassifiedAds.Application.Common.DTOs
+namespace ClassifiedAds.Domain.Entities
 {
     public interface IPagedResult
     {

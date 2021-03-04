@@ -69,5 +69,5 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/tr
 
 ## TODO
 
-- [V] Sass/Scss
-- [ ] Scoped-css
+- [V] Sass/Scss: node-sass
+- [V] Scoped-css: react-scripts *.module.scss

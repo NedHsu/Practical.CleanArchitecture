@@ -42,6 +42,8 @@ namespace ClassifiedAds.WebAPI
 
             services.AddMonitoringServices(AppSettings.Monitoring);
 
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             services.AddControllers(configure =>
             {
                 configure.Filters.Add(typeof(GlobalExceptionFilter));

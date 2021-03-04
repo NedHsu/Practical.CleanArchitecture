@@ -6,15 +6,13 @@ import { Modal, Button } from "react-bootstrap";
 import logo from "../../../logo.svg";
 import * as actions from "../actions";
 import Star from "../../../components/Star/Star";
-import styles from "./ListStocks.module.scss";
-import * as noteActions from "../../StockNotes/actions";
 
-class ListStocks extends Component<any, any> {
+class ListStockNotes extends Component<any, any> {
   state = {
-    pageTitle: "Stock List",
+    pageTitle: "StockNote List",
     showImage: false,
     showDeleteModal: false,
-    deletingStock: {
+    deletingStockNote: {
       name: null
     },
     listFilter: "",
@@ -31,32 +29,32 @@ class ListStocks extends Component<any, any> {
 
   performFilter(filterBy) {
     filterBy = filterBy.toLocaleLowerCase();
-    return this.props.stocks.filter(
-      (stock) => (stock.name + stock.code).toLocaleLowerCase().indexOf(filterBy) !== -1
+    return this.props.stocknotes.filter(
+      (stocknote) => stocknote.name.toLocaleLowerCase().indexOf(filterBy) !== -1
     );
   }
 
   onRatingClicked = (event) => {
-    const pageTitle = "Stock List: " + event;
+    const pageTitle = "StockNote List: " + event;
     this.setState({ pageTitle: pageTitle });
   };
 
-  viewAuditLogs = (stock) => {
-    this.props.fetchAuditLogs(stock);
+  viewAuditLogs = (stocknote) => {
+    this.props.fetchAuditLogs(stocknote);
     this.setState({ showAuditLogsModal: true });
   };
 
-  deleteStock = (stock) => {
-    this.setState({ showDeleteModal: true, deletingStock: stock });
+  deleteStockNote = (stocknote) => {
+    this.setState({ showDeleteModal: true, deletingStockNote: stocknote });
   };
 
   deleteCanceled = () => {
-    this.setState({ showDeleteModal: false, deletingStock: null });
+    this.setState({ showDeleteModal: false, deletingStockNote: null });
   };
 
   deleteConfirmed = () => {
-    this.props.deleteStock(this.state.deletingStock);
-    this.setState({ showDeleteModal: false, deletingStock: null });
+    this.props.deleteStockNote(this.state.deletingStockNote);
+    this.setState({ showDeleteModal: false, deletingStockNote: null });
   };
 
   formatDateTime = (value) => {
@@ -66,40 +64,41 @@ class ListStocks extends Component<any, any> {
   };
 
   componentDidMount() {
-    this.props.fetchStocks();
+    this.props.fetchStockNotes();
   }
 
   render() {
-    const filteredStocks = this.state.listFilter
+    const filteredStockNotes = this.state.listFilter
       ? this.performFilter(this.state.listFilter)
-      : this.props.stocks;
+      : this.props.stocknotes;
 
-    const rows = filteredStocks?.slice(0, 10).map((stock) => (
-      <tr key={stock.code}>
+    const rows = filteredStockNotes?.map((stocknote) => (
+      <tr key={stocknote.id}>
         <td>
           {this.state.showImage ? (
             <img
-              src={stock.imageUrl || logo}
-              title={stock.name}
+              src={stocknote.imageUrl || logo}
+              title={stocknote.name}
               style={{ width: "50px", margin: "2px" }}
             />
           ) : null}
         </td>
         <td>
-          <NavLink to={"/stocks/" + stock.code}>({stock.code}){stock.name}</NavLink>
+          <NavLink to={"/stocknotes/" + stocknote.id}>{stocknote.name}</NavLink>
         </td>
-        <td>{stock.note}</td>
-        <td className={styles.test}>{stock.price || "--"}</td>
+        <td>{stocknote.code?.toLocaleUpperCase()}</td>
+        <td>{stocknote.description}</td>
+        <td>{stocknote.price || (5).toFixed(2)}</td>
         <td>
           <Star
-            rating={stock.starRating || 4}
+            rating={stocknote.starRating || 4}
             ratingClicked={(event) => this.onRatingClicked(event)}
           ></Star>
         </td>
         <td>
           <NavLink
             className="btn btn-primary"
-            to={"/stocks/edit/" + stock.code}
+            to={"/stocknotes/edit/" + stocknote.id}
           >
             Edit
           </NavLink>
@@ -107,7 +106,7 @@ class ListStocks extends Component<any, any> {
           <button
             type="button"
             className="btn btn-primary btn-secondary"
-            onClick={() => this.viewAuditLogs(stock)}
+            onClick={() => this.viewAuditLogs(stocknote)}
           >
             View Audit Logs
           </button>
@@ -115,7 +114,7 @@ class ListStocks extends Component<any, any> {
           <button
             type="button"
             className="btn btn-primary btn-danger"
-            onClick={() => this.deleteStock(stock)}
+            onClick={() => this.deleteStockNote(stocknote)}
           >
             Delete
           </button>
@@ -123,7 +122,7 @@ class ListStocks extends Component<any, any> {
       </tr>
     ));
 
-    const table = this.props.stocks ? (
+    const table = this.props.stocknotes ? (
       <table className="table">
         <thead>
           <tr>
@@ -132,8 +131,9 @@ class ListStocks extends Component<any, any> {
                 {this.state.showImage ? "Hide" : "Show"} Image
               </button>
             </th>
-            <th>Stock</th>
-            <th>Note</th>
+            <th>StockNote</th>
+            <th>Code</th>
+            <th>Description</th>
             <th>Price</th>
             <th>5 Star Rating</th>
             <th></th>
@@ -187,11 +187,11 @@ class ListStocks extends Component<any, any> {
     const deleteModal = (
       <Modal show={this.state.showDeleteModal} onHide={this.deleteCanceled}>
         <Modal.Header closeButton>
-          <Modal.Title>Delete Stock</Modal.Title>
+          <Modal.Title>Delete StockNote</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           Are you sure you want to delete
-          <strong> {this.state.deletingStock?.name}</strong>
+          <strong> {this.state.deletingStockNote?.name}</strong>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={this.deleteCanceled}>
@@ -212,9 +212,9 @@ class ListStocks extends Component<any, any> {
             <NavLink
               className="btn btn-primary"
               style={{ float: "right" }}
-              to="/stocks/add"
+              to="/stocknotes/add"
             >
-              Add Stock
+              Add StockNote
             </NavLink>
           </div>
           <div className="card-body">
@@ -252,18 +252,17 @@ class ListStocks extends Component<any, any> {
 
 const mapStateToProps = (state) => {
   return {
-    stocks: state.stock.stocks,
-    auditLogs: state.stock.auditLogs,
+    stocknotes: state.stocknote.stocknotes,
+    auditLogs: state.stocknote.auditLogs,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchStocks: () => dispatch(actions.fetchStocks()),
-    deleteStock: (stock) => dispatch(actions.deleteStock(stock)),
-    fetchAuditLogs: (stock) => dispatch(actions.fetchAuditLogs(stock)),
-    fetchStockNotes: (stock) => dispatch(noteActions.fetchStockNotes(stock))
+    fetchStockNotes: () => dispatch(actions.fetchStockNotes()),
+    deleteStockNote: (stocknote) => dispatch(actions.deleteStockNote(stocknote)),
+    fetchAuditLogs: (stocknote) => dispatch(actions.fetchAuditLogs(stocknote)),
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ListStocks);
+export default connect(mapStateToProps, mapDispatchToProps)(ListStockNotes);

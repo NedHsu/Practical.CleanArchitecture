@@ -49,19 +49,22 @@ namespace ClassifiedAds.Persistence.Repositories
 
         public int AddOrUpdate(TEntity entity)
         {
-            var trans = _dbContext.BeginTransaction();
             int status = 0;
-            if (_dbContext.Connection.ExecuteScalar<bool>(@$"select (case when exists (select 1 from {TableName}) then 1 else 0 end)", transaction: trans))
+
+            var filters = string.Join(" AND ", TableKeys.Select(x => $"{x.Name} = @{x.Name}"));
+            var param = TableKeys.Select(x => new KeyValuePair<string, object>($"@{x.Name}", x.GetValue(entity)));
+            var sql = $"select (case when exists (select 1 from {TableName} where {filters}) then 1 else 0 end)";
+
+            if (_dbContext.Connection.ExecuteScalar<bool>(sql, param: param))
             {
-                DapperRepository.Update(entity, trans);
+                DapperRepository.Update(entity);
             }
             else
             {
-                DapperRepository.Insert(entity, trans);
+                DapperRepository.Insert(entity);
                 status = 1;
             }
 
-            trans.Commit();
             return status;
         }
 

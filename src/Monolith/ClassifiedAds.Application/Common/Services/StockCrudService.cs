@@ -24,7 +24,6 @@ namespace ClassifiedAds.Application
         public virtual void AddOrUpdate(T entity)
         {
             var adding = _repository.AddOrUpdate(entity);
-            _unitOfWork.SaveChanges();
 
             if (adding == 1)
             {
@@ -44,7 +43,6 @@ namespace ClassifiedAds.Application
         public virtual void Delete(T entity)
         {
             _repository.Delete(entity);
-            _unitOfWork.SaveChanges();
             _domainEvents.Dispatch(new EntityDeletedEvent<T>(entity, DateTime.UtcNow));
         }
     }

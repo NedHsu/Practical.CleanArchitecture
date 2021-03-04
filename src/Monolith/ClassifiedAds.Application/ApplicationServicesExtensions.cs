@@ -22,6 +22,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services
                 .AddSingleton<IDomainEvents, DomainEvents>()
                 .AddScoped(typeof(ICrudService<>), typeof(CrudService<>))
+                .AddScoped(typeof(IDapperCrudService<>), typeof(StockCrudService<>))
                 .AddScoped<IUserService, UserService>()
                 .AddScoped<IProductService, ProductService>()
                 .AddScoped<IMatchService, MatchService>()

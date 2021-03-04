@@ -21,6 +21,7 @@ namespace ClassifiedAds.Domain.Repositories
         public IEnumerable<TEntity> GetAll();
 
         IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate);
+
         TEntity Get(Expression<Func<TEntity, bool>> predicate);
     }
 }

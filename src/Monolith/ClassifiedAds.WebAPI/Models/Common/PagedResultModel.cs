@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using ClassifiedAds.Application.Common.DTOs;
+using ClassifiedAds.Domain.Entities;
 
 namespace ClassifiedAds.WebAPI.Models.Common
 {
@@ -21,9 +21,8 @@ namespace ClassifiedAds.WebAPI.Models.Common
 
         public IEnumerable<T> Items { get; }
 
-        public static PagedResultModel<T> CreatePagedResult<P>(P paged, IEnumerable<T> items) where P : IPagedResult
+        public static PagedResultModel<T> CreatePagedResult<P>(P paged, IEnumerable<T> items)
+            where P : IPagedResult
             => new PagedResultModel<T>(paged.TotalPages, paged.TotalCount, paged.PageIndex, items);
     }
-
-    
 }

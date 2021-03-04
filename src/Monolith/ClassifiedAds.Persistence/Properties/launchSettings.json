@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ClassifiedAds.Persistence": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}
