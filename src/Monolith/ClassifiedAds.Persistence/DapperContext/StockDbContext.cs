@@ -9,6 +9,8 @@ namespace ClassifiedAds.Persistence.DapperContext
     public class StockDbContext : DapperDbContext, IStockDbContext
     {
         private IDapperRepository<stock> _stockRepository;
+        private IDapperRepository<StockNote> _stockNoteRepository;
+        private IDapperRepository<StockGroup> _stockGroupRepository;
         private IDbTransaction trans;
 
         public StockDbContext(string connection)
@@ -17,6 +19,8 @@ namespace ClassifiedAds.Persistence.DapperContext
         }
 
         public IDapperRepository<stock> stock => _stockRepository ?? (_stockRepository = new DapperRepository<stock>(Connection));
+        public IDapperRepository<StockNote> StockNote => _stockNoteRepository ?? (_stockNoteRepository = new DapperRepository<StockNote>(Connection));
+        public IDapperRepository<StockGroup> StockGroup => _stockGroupRepository ?? (_stockGroupRepository = new DapperRepository<StockGroup>(Connection));
 
         public void BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
         {

@@ -7,7 +7,7 @@
   ],
   "identity": "ClassifiedAds.Application",
   "name": "ClassifiedAds Application template",
-  "sourceName": "Product",
+  "sourceName": "StockNote",
   "shortName": "Application",
   "tags": {
     "language": "C#",

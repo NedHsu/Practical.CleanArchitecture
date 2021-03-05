@@ -154,14 +154,14 @@ namespace ClassifiedAds.Persistence {
             {
                 entity.ToTable("StockGroup");
 
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.Property(e => e.Id).HasDefaultValueSql("newsequentialid()");
 
                 entity.Property(e => e.GroupTitle).HasMaxLength(50);
             });
 
             modelBuilder.Entity<StockGroupItem>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.Property(e => e.Id).HasDefaultValueSql("newsequentialid()");
 
                 entity.Property(e => e.StockCode)
                     .IsRequired()
@@ -179,7 +179,7 @@ namespace ClassifiedAds.Persistence {
             {
                 entity.ToTable("StockNote");
 
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.Property(e => e.Id).HasDefaultValueSql("newsequentialid()");
 
                 entity.Property(e => e.Contents).HasMaxLength(500);
 

@@ -1,5 +1,6 @@
 import { updateObject } from "../../shared/utility";
 import * as actionTypes from "./actionTypes";
+console.log("reducer");
 
 const initialState = {
   stocknotes: [],
@@ -17,7 +18,7 @@ const initialState = {
 
 /// StockNotes
 const fetchStockNotesStart = (state, action) => {
-  return updateObject(state, { loading: true });
+  return updateObject(state, { loading: true, stock: action.stock });
 };
 
 const fetchStockNotesSuccess = (state, action) => {

@@ -6,6 +6,8 @@ import { Modal, Button } from "react-bootstrap";
 import logo from "../../../logo.svg";
 import * as actions from "../actions";
 import Star from "../../../components/Star/Star";
+import AddStockNote from "../AddStockNote/AddStockNote";
+import ViewStockNote from "../ViewStockNote/ViewStockNote";
 
 class ListStockNotes extends Component<any, any> {
   state = {
@@ -16,11 +18,18 @@ class ListStockNotes extends Component<any, any> {
       name: null
     },
     listFilter: "",
-    showAuditLogsModal: false,
+    showAddNote: false,
+    showListNote: true,
+    stockNoteId: null,
   };
 
   toggleImage = () => {
     this.setState({ showImage: !this.state.showImage });
+  };
+
+  toggleAddNote = () => {
+    console.log("toggleAddNote");
+    this.setState({ showListNote: this.state.showAddNote, showAddNote: !this.state.showAddNote });
   };
 
   filterChanged = (event) => {
@@ -39,13 +48,13 @@ class ListStockNotes extends Component<any, any> {
     this.setState({ pageTitle: pageTitle });
   };
 
-  viewAuditLogs = (stocknote) => {
-    this.props.fetchAuditLogs(stocknote);
-    this.setState({ showAuditLogsModal: true });
-  };
-
   deleteStockNote = (stocknote) => {
     this.setState({ showDeleteModal: true, deletingStockNote: stocknote });
+  };
+
+  editStockNote = (stocknote) => {
+    this.props.updateStockNote(stocknote);
+    this.toggleAddNote();
   };
 
   deleteCanceled = () => {
@@ -64,7 +73,7 @@ class ListStockNotes extends Component<any, any> {
   };
 
   componentDidMount() {
-    this.props.fetchStockNotes();
+    //this.props.fetchStockNotes();
   }
 
   render() {
@@ -75,19 +84,9 @@ class ListStockNotes extends Component<any, any> {
     const rows = filteredStockNotes?.map((stocknote) => (
       <tr key={stocknote.id}>
         <td>
-          {this.state.showImage ? (
-            <img
-              src={stocknote.imageUrl || logo}
-              title={stocknote.name}
-              style={{ width: "50px", margin: "2px" }}
-            />
-          ) : null}
+          <NavLink to={"/stocknotes/" + stocknote.id}>{stocknote.title}</NavLink>
         </td>
-        <td>
-          <NavLink to={"/stocknotes/" + stocknote.id}>{stocknote.name}</NavLink>
-        </td>
-        <td>{stocknote.code?.toLocaleUpperCase()}</td>
-        <td>{stocknote.description}</td>
+        <td>{stocknote.contents}</td>
         <td>{stocknote.price || (5).toFixed(2)}</td>
         <td>
           <Star
@@ -96,20 +95,9 @@ class ListStockNotes extends Component<any, any> {
           ></Star>
         </td>
         <td>
-          <NavLink
-            className="btn btn-primary"
-            to={"/stocknotes/edit/" + stocknote.id}
-          >
+          <Button variant="primary" onClick={() => this.editStockNote(stocknote)}>
             Edit
-          </NavLink>
-          &nbsp;
-          <button
-            type="button"
-            className="btn btn-primary btn-secondary"
-            onClick={() => this.viewAuditLogs(stocknote)}
-          >
-            View Audit Logs
-          </button>
+          </Button>
           &nbsp;
           <button
             type="button"
@@ -126,14 +114,8 @@ class ListStockNotes extends Component<any, any> {
       <table className="table">
         <thead>
           <tr>
-            <th>
-              <button className="btn btn-primary" onClick={this.toggleImage}>
-                {this.state.showImage ? "Hide" : "Show"} Image
-              </button>
-            </th>
-            <th>StockNote</th>
-            <th>Code</th>
-            <th>Description</th>
+            <th>Title</th>
+            <th>Content</th>
             <th>Price</th>
             <th>5 Star Rating</th>
             <th></th>
@@ -142,47 +124,6 @@ class ListStockNotes extends Component<any, any> {
         <tbody>{rows}</tbody>
       </table>
     ) : null;
-    const auditLogRows = this.props.auditLogs?.map((auditLog) => (
-      <tr key={auditLog.id}>
-        <td>{this.formatDateTime(auditLog.createdDateTime)}</td>
-        <td>{auditLog.userName}</td>
-        <td>{auditLog.action}</td>
-        <td style={{ color: auditLog.highLight.code ? "red" : "" }}>
-          {auditLog.data.code}
-        </td>
-        <td style={{ color: auditLog.highLight.name ? "red" : "" }}>
-          {auditLog.data.name}
-        </td>
-        <td style={{ color: auditLog.highLight.description ? "red" : "" }}>
-          {auditLog.data.description}
-        </td>
-      </tr>
-    ));
-    const auditLogsModal = (
-      <Modal
-        size="xl"
-        show={this.state.showAuditLogsModal}
-        onHide={() => this.setState({ showAuditLogsModal: false })}
-      >
-        <Modal.Body>
-          <div className="table-responsive">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>Date Time</th>
-                  <th>User Name</th>
-                  <th>Action</th>
-                  <th>Code</th>
-                  <th>Name</th>
-                  <th>Description</th>
-                </tr>
-              </thead>
-              <tbody>{auditLogRows}</tbody>
-            </table>
-          </div>
-        </Modal.Body>
-      </Modal>
-    );
 
     const deleteModal = (
       <Modal show={this.state.showDeleteModal} onHide={this.deleteCanceled}>
@@ -204,18 +145,18 @@ class ListStockNotes extends Component<any, any> {
       </Modal>
     );
 
+    const addStockNote = (
+      <div hidden={!this.state.showAddNote}>
+        <AddStockNote back={() => this.toggleAddNote()} stockNoteId={this.state.stockNoteId}></AddStockNote>
+      </div>
+    );
+
     return (
       <div>
-        <div className="card">
+        <div hidden={!this.state.showListNote} className="card">
           <div className="card-header">
             {this.state.pageTitle}
-            <NavLink
-              className="btn btn-primary"
-              style={{ float: "right" }}
-              to="/stocknotes/add"
-            >
-              Add StockNote
-            </NavLink>
+            <Button variant="primary" style={{ float: "right" }} onClick={() => this.toggleAddNote()}>Add StockNote</Button>
           </div>
           <div className="card-body">
             <div className="row">
@@ -244,7 +185,7 @@ class ListStockNotes extends Component<any, any> {
           </div>
         ) : null}
         {deleteModal}
-        {auditLogsModal}
+        {addStockNote}
       </div>
     );
   }
@@ -252,16 +193,17 @@ class ListStockNotes extends Component<any, any> {
 
 const mapStateToProps = (state) => {
   return {
-    stocknotes: state.stocknote.stocknotes,
-    auditLogs: state.stocknote.auditLogs,
+    stocknotes: state.stockNote.stocknotes,
+    auditLogs: state.stockNote.auditLogs,
+    stock: state.stockNote.stock,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchStockNotes: () => dispatch(actions.fetchStockNotes()),
+    fetchStockNotes: (stock) => dispatch(actions.fetchStockNotes(stock)),
     deleteStockNote: (stocknote) => dispatch(actions.deleteStockNote(stocknote)),
-    fetchAuditLogs: (stocknote) => dispatch(actions.fetchAuditLogs(stocknote)),
+    updateStockNote: stocknote => dispatch(actions.updateStockNote(stocknote)),
   };
 };
 

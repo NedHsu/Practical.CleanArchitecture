@@ -7,7 +7,7 @@
   ],
   "identity": "ClassifiedAds.WebAPI",
   "name": "ClassifiedAds WebAPI template",
-  "sourceName": "Product",
+  "sourceName": "Stock",
   "shortName": "Controller",
   "tags": {
     "language": "C#",

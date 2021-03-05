@@ -8,6 +8,7 @@ import * as actions from "../actions";
 import Star from "../../../components/Star/Star";
 import styles from "./ListStocks.module.scss";
 import * as noteActions from "../../StockNotes/actions";
+import ListNotes from "../../StockNotes/ListStockNotes/ListStockNotes";
 
 class ListStocks extends Component<any, any> {
   state = {
@@ -19,6 +20,7 @@ class ListStocks extends Component<any, any> {
     },
     listFilter: "",
     showAuditLogsModal: false,
+    showNotesModal: false,
   };
 
   toggleImage = () => {
@@ -44,6 +46,11 @@ class ListStocks extends Component<any, any> {
   viewAuditLogs = (stock) => {
     this.props.fetchAuditLogs(stock);
     this.setState({ showAuditLogsModal: true });
+  };
+
+  viewNotes = (stock) => {
+    this.props.fetchStockNotes(stock);
+    this.setState({ showNotesModal: true });
   };
 
   deleteStock = (stock) => {
@@ -119,6 +126,10 @@ class ListStocks extends Component<any, any> {
           >
             Delete
           </button>
+          &nbsp;
+          <Button onClick={() => this.viewNotes(stock)}>
+            View Notes
+          </Button>
         </td>
       </tr>
     ));
@@ -204,6 +215,12 @@ class ListStocks extends Component<any, any> {
       </Modal>
     );
 
+    const listNoteModal = (
+      <Modal size="xl" show={this.state.showNotesModal} onHide={() => this.setState({ showNotesModal: false })}>
+        <ListNotes></ListNotes>
+      </Modal>
+    );
+
     return (
       <div>
         <div className="card">
@@ -245,6 +262,7 @@ class ListStocks extends Component<any, any> {
         ) : null}
         {deleteModal}
         {auditLogsModal}
+        {listNoteModal}
       </div>
     );
   }

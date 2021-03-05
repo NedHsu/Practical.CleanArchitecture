@@ -4,6 +4,8 @@ import { connect } from "react-redux";
 
 import * as actions from "../actions";
 import { checkValidity } from "../../../shared/utility";
+import { Button } from "react-bootstrap";
+import { stat } from "fs/promises";
 
 type Props = {
   resetStockNote: any,
@@ -12,14 +14,17 @@ type Props = {
   stocknote: any,
   saveStockNote: any,
   updateStockNote: any,
-  saved: any
+  saved: any,
+  back: any,
+  stockNoteId: any,
+  stock: any,
 }
 
 class AddStockNote extends Component<Props, any> {
   state = {
     title: "Add StockNote",
     controls: {
-      name: {
+      title: {
         validation: {
           required: true,
           minLength: 3
@@ -31,7 +36,7 @@ class AddStockNote extends Component<Props, any> {
         valid: false,
         touched: false
       },
-      code: {
+      stockCode: {
         validation: {
           required: true,
           maxLength: 10
@@ -43,10 +48,10 @@ class AddStockNote extends Component<Props, any> {
         valid: false,
         touched: false
       },
-      description: {
+      contents: {
         validation: {
           required: true,
-          maxLength: 100
+          maxLength: 500
         },
         error: {
           required: false,
@@ -61,13 +66,16 @@ class AddStockNote extends Component<Props, any> {
     errorMessage: null
   };
 
-  componentDidMount() {
-    this.props.resetStockNote();
-    const id = this.props.match?.params?.id;
-    if (id) {
-      this.setState({ title: "Edit StockNote" });
-      this.props.fetchStockNote(id);
+  static getDerivedStateFromProps(props, state) {
+    if (props.stocknote?.id) {
+      state.title = "Edit StockNote";
+    } else if (!props.stocknote?.stockCode || props.stocknote?.stockCode !== props.stock.code) {
+      props.updateStockNote({
+        ...props.stocknote,
+        stockCode: props.stock.code,
+      });
     }
+    return null;
   }
 
   fieldChanged = event => {
@@ -131,90 +139,85 @@ class AddStockNote extends Component<Props, any> {
           ) : null}
           <form onSubmit={this.onSubmit}>
             <div className="form-group row">
-              <label htmlFor="name" className="col-sm-2 col-form-label">
-                Name
-              </label>
-              <div className="col-sm-10">
-                <input
-                  id="name"
-                  name="name"
-                  className={
-                    "form-control " +
-                    (this.state.submitted && !this.state.controls["name"].valid
-                      ? "is-invalid"
-                      : "")
-                  }
-                  value={this.props.stocknote?.name}
-                  onChange={event => this.fieldChanged(event)}
-                />
-                <span className="invalid-feedback">
-                  {this.state.controls["name"].error.required ? (
-                    <span>Enter a name</span>
-                  ) : null}
-                  {this.state.controls["name"].error.minLength ? (
-                    <span>The name must be longer than 3 characters.</span>
-                  ) : null}
-                </span>
-              </div>
-            </div>
-            <div className="form-group row">
-              <label htmlFor="code" className="col-sm-2 col-form-label">
+              <label htmlFor="stockCode" className="col-sm-2 col-form-label">
                 Code
               </label>
               <div className="col-sm-10">
                 <input
-                  id="code"
-                  name="code"
-                  className={
-                    "form-control " +
-                    (this.state.submitted && !this.state.controls["code"].valid
-                      ? "is-invalid"
-                      : "")
-                  }
-                  value={this.props.stocknote?.code}
-                  onChange={event => this.fieldChanged(event)}
+                  id="stockCode"
+                  name="stockCode"
+                  className="form-control"
+                  value={this.props.stocknote?.stockCode}
+                  disabled={true}
                 />
                 <span className="invalid-feedback">
-                  {this.state.controls["code"].error.required ? (
+                  {this.state.controls["stockCode"].error.required ? (
                     <span>Enter a code</span>
                   ) : null}
-                  {this.state.controls["code"].error.maxLength ? (
+                  {this.state.controls["stockCode"].error.maxLength ? (
                     <span>The code must be less than 10 characters.</span>
                   ) : null}
                 </span>
               </div>
             </div>
             <div className="form-group row">
-              <label htmlFor="description" className="col-sm-2 col-form-label">
-                Description
+              <label htmlFor="title" className="col-sm-2 col-form-label">
+                Title
               </label>
               <div className="col-sm-10">
                 <input
-                  id="description"
-                  name="description"
+                  id="title"
+                  name="title"
                   className={
                     "form-control " +
-                    (this.state.submitted &&
-                    !this.state.controls["description"].valid
+                    (this.state.submitted && !this.state.controls["title"].valid
                       ? "is-invalid"
                       : "")
                   }
-                  value={this.props.stocknote?.description}
+                  value={this.props.stocknote?.title}
                   onChange={event => this.fieldChanged(event)}
                 />
                 <span className="invalid-feedback">
-                  {this.state.controls["description"].error.required ? (
-                    <span>Enter a description</span>
+                  {this.state.controls["title"].error.required ? (
+                    <span>Enter a title</span>
                   ) : null}
-                  {this.state.controls["description"].error.maxLength ? (
-                    <span>The code must be less than 100 characters.</span>
+                  {this.state.controls["title"].error.minLength ? (
+                    <span>The title must be longer than 3 characters.</span>
+                  ) : null}
+                </span>
+              </div>
+            </div>
+            <div className="form-group row">
+              <label htmlFor="contents" className="col-sm-2 col-form-label">
+                Content
+              </label>
+              <div className="col-sm-10">
+                <textarea
+                  id="contents"
+                  name="contents"
+                  className={
+                    "form-control " +
+                    (this.state.submitted &&
+                      !this.state.controls["contents"].valid
+                      ? "is-invalid"
+                      : "")
+                  }
+                  value={this.props.stocknote?.contents}
+                  onChange={event => this.fieldChanged(event)}
+                />
+                <span className="invalid-feedback">
+                  {this.state.controls["contents"].error.required ? (
+                    <span>Enter content</span>
+                  ) : null}
+                  {this.state.controls["contents"].error.maxLength ? (
+                    <span>The content must be less than 500 characters.</span>
                   ) : null}
                 </span>
               </div>
             </div>
             <div className="form-group row">
               <label
-                htmlFor="description"
+                htmlFor="contents"
                 className="col-sm-2 col-form-label"
               ></label>
               <div className="col-sm-10">
@@ -224,29 +227,22 @@ class AddStockNote extends Component<Props, any> {
           </form>
         </div>
         <div className="card-footer">
-          <NavLink
-            className="btn btn-outline-secondary"
-            to="/stocknotes"
-            style={{ width: "80px" }}
-          >
+          <Button variant="outline-secondary" style={{ width: "80px" }} onClick={this.props.back}>
             <i className="fa fa-chevron-left"></i> Back
-          </NavLink>
+          </Button>
         </div>
       </div>
     );
 
-    return this.state.submitted && this.props.saved ? (
-      <Redirect to={"/stocknotes/" + this.props.stocknote.id} />
-    ) : (
-      form
-    );
+    return form;
   }
 }
 
 const mapStateToProps = state => {
   return {
-    stocknote: state.stocknote.stocknote,
-    saved: state.stocknote.saved
+    stocknote: state.stockNote.stocknote,
+    saved: state.stockNote.saved,
+    stock: state.stockNote.stock,
   };
 };
 

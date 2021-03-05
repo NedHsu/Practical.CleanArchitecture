@@ -5,7 +5,7 @@ import * as actionTypes from "./actionTypes";
 import * as actions from "./actions";
 
 export function* fetchAllStockNotesSaga(action) {
-  yield put(actions.fetchStockNotesStart());
+  yield put(actions.fetchStockNotesStart({}));
   try {
     const response = yield axios.get("");
     const fetchedStockNotes = response.data;
@@ -16,7 +16,7 @@ export function* fetchAllStockNotesSaga(action) {
 }
 
 export function* fetchStockNotesSaga(action) {
-  yield put(actions.fetchStockNotesStart());
+  yield put(actions.fetchStockNotesStart(action.stock));
   try {
     const response = yield axios.get(`?code=${action.stock.code}`);
     const fetchedStockNotes = response.data;
@@ -76,7 +76,7 @@ export function* fetchAuditLogsSaga(action) {
 
 export function* watchStockNote() {
   yield takeEvery(actionTypes.FETCH_ALL_STOCK_NOTES, fetchAllStockNotesSaga);
-  yield takeEvery(actionTypes.FETCH_STOCK_NOTES, fetchAllStockNotesSaga);
+  yield takeEvery(actionTypes.FETCH_STOCK_NOTES, fetchStockNotesSaga);
   yield takeEvery(actionTypes.FETCH_STOCK_NOTE, fetchStockNoteSaga);
   yield takeEvery(actionTypes.SAVE_STOCK_NOTE, saveStockNoteSaga);
   yield takeEvery(actionTypes.DELETE_STOCK_NOTE, deleteStockNoteSaga);

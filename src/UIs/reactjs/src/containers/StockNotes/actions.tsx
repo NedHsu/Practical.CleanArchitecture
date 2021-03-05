@@ -15,9 +15,10 @@ export const fetchStockNotesFail = (error) => {
   };
 };
 
-export const fetchStockNotesStart = () => {
+export const fetchStockNotesStart = (stock) => {
   return {
     type: actionTypes.FETCH_STOCK_NOTES_START,
+    stock: stock,
   };
 };
 
