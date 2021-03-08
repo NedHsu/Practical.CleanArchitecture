@@ -2,11 +2,11 @@ import { updateObject } from "../../shared/utility";
 import * as actionTypes from "./actionTypes";
 
 const initialState = {
-  stockgroups: [],
-  stockgroup: {
-    name: "",
-    code: "",
-    description: "",
+  stockGroups: [],
+  stockGroup: {
+    id: null,
+    groupTitle: "",
+    sort: 0,
   },
   auditLogs: [],
   loading: false,
@@ -22,7 +22,7 @@ const fetchStockGroupsStart = (state, action) => {
 
 const fetchStockGroupsSuccess = (state, action) => {
   return updateObject(state, {
-    stockgroups: action.stockgroups,
+    stockGroups: action.stockGroups,
     loading: false,
   });
 };
@@ -40,7 +40,7 @@ const fetchStockGroupStart = (state, action) => {
 
 const fetchStockGroupSuccess = (state, action) => {
   return updateObject(state, {
-    stockgroup: action.stockgroup,
+    stockGroup: action.stockGroup,
     loading: false,
   });
 };
@@ -56,10 +56,18 @@ const saveStockGroupStart = (state, action) => {
 };
 
 const saveStockGroupSuccess = (state, action) => {
+  var stockGroups = state.stockGroups;
+  var oldGroup = stockGroups.find(x => x.id === action.stockGroup.id);
+  if (oldGroup) {
+    Object.assign(oldGroup, action.stockGroup)
+  } else {
+    stockGroups = [...state.stockGroups, action.stockGroup]
+  }
   return updateObject(state, {
-    stockgroup: action.stockgroup,
+    stockGroup: action.stockGroup,
     loading: false,
     saved: true,
+    stockGroups: stockGroups,
   });
 };
 
@@ -81,7 +89,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.FETCH_STOCK_GROUP_FAIL:
       return fetchStockGroupFail(state, action);
     case actionTypes.UPDATE_STOCK_GROUP:
-      return updateObject(state, { stockgroup: action.stockgroup });
+      return updateObject(state, { stockGroup: action.stockGroup });
     case actionTypes.RESET_STOCK_GROUP:
       return updateObject(state, initialState);
     case actionTypes.SAVE_STOCK_GROUP_START:
@@ -92,13 +100,13 @@ const reducer = (state = initialState, action) => {
       return saveStockGroupFail(state, action);
     case actionTypes.DELETE_STOCK_GROUP_START:
       return updateObject(state, {
-        stockgroup: action.stockgroup,
+        stockGroup: action.stockGroup,
         loading: true,
         deleted: false,
       });
     case actionTypes.DELETE_STOCK_GROUP_SUCCESS:
       return updateObject(state, {
-        stockgroup: initialState.stockgroup,
+        stockGroup: initialState.stockGroup,
         loading: false,
         deleted: true,
       });
@@ -110,7 +118,7 @@ const reducer = (state = initialState, action) => {
       });
     case actionTypes.FETCH_STOCK_GROUP_AUDIT_LOGS_START:
       return updateObject(state, {
-        stockgroup: action.stockgroup,
+        stockGroup: action.stockGroup,
         loading: true,
       });
     case actionTypes.FETCH_STOCK_GROUP_AUDIT_LOGS_SUCCESS:

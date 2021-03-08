@@ -1,159 +1,159 @@
 import * as actionTypes from "./actionTypes";
 
-/// PRODUCTS
-export const fetchStockGroupsSuccess = (stockgroups) => {
+/// STOCK_GROUPS
+export const fetchStockGroupsSuccess = (stockGroups) => {
   return {
-    type: actionTypes.FETCH_PRODUCTS_SUCCESS,
-    stockgroups: stockgroups,
+    type: actionTypes.FETCH_STOCK_GROUPS_SUCCESS,
+    stockGroups: stockGroups,
   };
 };
 
 export const fetchStockGroupsFail = (error) => {
   return {
-    type: actionTypes.FETCH_PRODUCTS_FAIL,
+    type: actionTypes.FETCH_STOCK_GROUPS_FAIL,
     error: error,
   };
 };
 
 export const fetchStockGroupsStart = () => {
   return {
-    type: actionTypes.FETCH_PRODUCTS_START,
+    type: actionTypes.FETCH_STOCK_GROUPS_START,
   };
 };
 
 export const fetchStockGroups = () => {
   return {
-    type: actionTypes.FETCH_PRODUCTS,
+    type: actionTypes.FETCH_STOCK_GROUPS,
   };
 };
-/// PRODUCTS
+/// STOCK_GROUPS
 
-/// PRODUCT
-export const fetchStockGroupSuccess = (stockgroup) => {
+/// STOCK_GROUP
+export const fetchStockGroupSuccess = (stockGroup) => {
   return {
-    type: actionTypes.FETCH_PRODUCT_SUCCESS,
-    stockgroup: stockgroup,
+    type: actionTypes.FETCH_STOCK_GROUP_SUCCESS,
+    stockGroup: stockGroup,
   };
 };
 
 export const fetchStockGroupFail = (error) => {
   return {
-    type: actionTypes.FETCH_PRODUCT_FAIL,
+    type: actionTypes.FETCH_STOCK_GROUP_FAIL,
     error: error,
   };
 };
 
 export const fetchStockGroupStart = () => {
   return {
-    type: actionTypes.FETCH_PRODUCT_START,
+    type: actionTypes.FETCH_STOCK_GROUP_START,
   };
 };
 
 export const fetchStockGroup = (id) => {
   return {
-    type: actionTypes.FETCH_PRODUCT,
+    type: actionTypes.FETCH_STOCK_GROUP,
     id: id,
   };
 };
-/// PRODUCT
+/// STOCK_GROUP
 
-/// UPDATE PRODUCT
-export const updateStockGroup = (stockgroup) => {
+/// UPDATE STOCK_GROUP
+export const updateStockGroup = (stockGroup) => {
   return {
-    type: actionTypes.UPDATE_PRODUCT,
-    stockgroup: stockgroup,
+    type: actionTypes.UPDATE_STOCK_GROUP,
+    stockGroup: stockGroup,
   };
 };
 
 export const resetStockGroup = () => {
   return {
-    type: actionTypes.RESET_PRODUCT,
+    type: actionTypes.RESET_STOCK_GROUP,
   };
 };
-/// UPDATE PRODUCT
+/// UPDATE STOCK_GROUP
 
-/// SAVE PRODUCT
-export const saveStockGroupSuccess = (stockgroup) => {
+/// SAVE STOCK_GROUP
+export const saveStockGroupSuccess = (stockGroup) => {
   return {
-    type: actionTypes.SAVE_PRODUCT_SUCCESS,
-    stockgroup: stockgroup,
+    type: actionTypes.SAVE_STOCK_GROUP_SUCCESS,
+    stockGroup: stockGroup,
   };
 };
 
 export const saveStockGroupFail = (error) => {
   return {
-    type: actionTypes.SAVE_PRODUCT_FAIL,
+    type: actionTypes.SAVE_STOCK_GROUP_FAIL,
     error: error,
   };
 };
 
 export const saveStockGroupStart = () => {
   return {
-    type: actionTypes.SAVE_PRODUCT_START,
+    type: actionTypes.SAVE_STOCK_GROUP_START,
   };
 };
 
-export const saveStockGroup = (stockgroup) => {
+export const saveStockGroup = (stockGroup) => {
   return {
-    type: actionTypes.SAVE_PRODUCT,
-    stockgroup: stockgroup,
+    type: actionTypes.SAVE_STOCK_GROUP,
+    stockGroup: stockGroup,
   };
 };
-/// SAVE PRODUCT
+/// SAVE STOCK_GROUP
 
-/// DELETE PRODUCT
-export const deleteStockGroupSuccess = (stockgroup) => {
+/// DELETE STOCK_GROUP
+export const deleteStockGroupSuccess = (stockGroup) => {
   return {
-    type: actionTypes.DELETE_PRODUCT_SUCCESS,
+    type: actionTypes.DELETE_STOCK_GROUP_SUCCESS,
   };
 };
 
 export const deleteStockGroupFail = (error) => {
   return {
-    type: actionTypes.DELETE_PRODUCT_FAIL,
+    type: actionTypes.DELETE_STOCK_GROUP_FAIL,
     error: error,
   };
 };
 
 export const deleteStockGroupStart = () => {
   return {
-    type: actionTypes.DELETE_PRODUCT_START,
+    type: actionTypes.DELETE_STOCK_GROUP_START,
   };
 };
 
-export const deleteStockGroup = (stockgroup) => {
+export const deleteStockGroup = (stockGroup) => {
   return {
-    type: actionTypes.DELETE_PRODUCT,
-    stockgroup: stockgroup,
+    type: actionTypes.DELETE_STOCK_GROUP,
+    stockGroup: stockGroup,
   };
 };
-/// DELETE PRODUCT
+/// DELETE STOCK_GROUP
 
 /// VIEW AUDIT LOGS
 export const fetchAuditLogsSuccess = (auditLogs) => {
   return {
-    type: actionTypes.FETCH_PRODUCT_AUDIT_LOGS_SUCCESS,
+    type: actionTypes.FETCH_STOCK_GROUP_AUDIT_LOGS_SUCCESS,
     auditLogs: auditLogs,
   };
 };
 
 export const fetchAuditLogsFail = (error) => {
   return {
-    type: actionTypes.FETCH_PRODUCT_AUDIT_LOGS_FAIL,
+    type: actionTypes.FETCH_STOCK_GROUP_AUDIT_LOGS_FAIL,
     error: error,
   };
 };
 
 export const fetchAuditLogsStart = () => {
   return {
-    type: actionTypes.FETCH_PRODUCT_AUDIT_LOGS_START,
+    type: actionTypes.FETCH_STOCK_GROUP_AUDIT_LOGS_START,
   };
 };
 
-export const fetchAuditLogs = (stockgroup) => {
+export const fetchAuditLogs = (stockGroup) => {
   return {
-    type: actionTypes.FETCH_PRODUCT_AUDIT_LOGS,
-    stockgroup: stockgroup,
+    type: actionTypes.FETCH_STOCK_GROUP_AUDIT_LOGS,
+    stockGroup: stockGroup,
   };
 };
 /// VIEW AUDIT LOGS

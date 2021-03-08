@@ -39,7 +39,7 @@ class ListStockNotes extends Component<any, any> {
   performFilter(filterBy) {
     filterBy = filterBy.toLocaleLowerCase();
     return this.props.stocknotes.filter(
-      (stocknote) => stocknote.name.toLocaleLowerCase().indexOf(filterBy) !== -1
+      (stocknote) => stocknote.title.toLocaleLowerCase().indexOf(filterBy) !== -1
     );
   }
 

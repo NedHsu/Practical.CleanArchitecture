@@ -8,7 +8,7 @@ import * as actions from "../actions";
 
 class ViewStockGroup extends Component<any, any> {
   state = {
-    stockgroup: {
+    stockGroup: {
       name: "",
       code: "",
       description: ""
@@ -22,14 +22,14 @@ class ViewStockGroup extends Component<any, any> {
   }
 
   back = () => {
-    this.props.history.push("/stockgroups");
+    this.props.history.push("/stockGroups");
   };
 
   render() {
-    const page = this.props.stockgroup ? (
+    const page = this.props.stockGroup ? (
       <div className="card">
         <div className="card-header">
-          {"StockGroup Detail: " + this.props.stockgroup.name}
+          {"StockGroup Detail: " + this.props.stockGroup.name}
         </div>
 
         <div className="card-body">
@@ -37,24 +37,24 @@ class ViewStockGroup extends Component<any, any> {
             <div className="col-md-8">
               <div className="row">
                 <div className="col-md-4">Name:</div>
-                <div className="col-md-8">{this.props.stockgroup.name}</div>
+                <div className="col-md-8">{this.props.stockGroup.name}</div>
               </div>
               <div className="row">
                 <div className="col-md-4">Code:</div>
-                <div className="col-md-8">{this.props.stockgroup.code}</div>
+                <div className="col-md-8">{this.props.stockGroup.code}</div>
               </div>
               <div className="row">
                 <div className="col-md-4">Description:</div>
-                <div className="col-md-8">{this.props.stockgroup.description}</div>
+                <div className="col-md-8">{this.props.stockGroup.description}</div>
               </div>
               <div className="row">
                 <div className="col-md-4">Price:</div>
-                <div className="col-md-8">{this.props.stockgroup.price || 5}</div>
+                <div className="col-md-8">{this.props.stockGroup.price || 5}</div>
               </div>
               <div className="row">
                 <div className="col-md-4">5 Star Rating:</div>
                 <div className="col-md-8">
-                  <Star rating={this.props.stockgroup.starRating || 4} />
+                  <Star rating={this.props.stockGroup.starRating || 4} />
                 </div>
               </div>
             </div>
@@ -63,8 +63,8 @@ class ViewStockGroup extends Component<any, any> {
               <img
                 className="center-block img-responsive"
                 style={{ width: "200px", margin: "2px" }}
-                src={this.props.stockgroup.imageUrl || logo}
-                title={this.props.stockgroup.name}
+                src={this.props.stockGroup.imageUrl || logo}
+                title={this.props.stockGroup.name}
               />
             </div>
           </div>
@@ -81,7 +81,7 @@ class ViewStockGroup extends Component<any, any> {
           &nbsp;
           <NavLink
             className="btn btn-primary"
-            to={"/stockgroups/edit/" + this.props.stockgroup.id}
+            to={"/stockGroups/edit/" + this.props.stockGroup.id}
           >
             Edit
           </NavLink>
@@ -94,7 +94,7 @@ class ViewStockGroup extends Component<any, any> {
 
 const mapStateToProps = state => {
   return {
-    stockgroup: state.stockgroup.stockgroup
+    stockGroup: state.stockGroup.stockGroup
   };
 };
 

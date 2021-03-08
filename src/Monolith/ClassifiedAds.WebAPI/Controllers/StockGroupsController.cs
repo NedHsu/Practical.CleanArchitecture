@@ -5,6 +5,7 @@ using ClassifiedAds.Application.AuditLogEntries.Queries;
 using ClassifiedAds.Application.StockGroups.Commands;
 using ClassifiedAds.Application.StockGroups.DTOs;
 using ClassifiedAds.Application.StockGroups.Queries;
+using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.WebAPI.Models.StockGroups;
 using Microsoft.AspNetCore.Authorization;
@@ -39,7 +40,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         public ActionResult<IEnumerable<StockGroupModel>> Get()
         {
             _logger.LogInformation("Getting all stockgroups");
-            var stockgroups = _dispatcher.Dispatch(new GetStockGroupsQuery(){ });
+            var stockgroups = _dispatcher.Dispatch(new GetStockGroupsQuery() { });
             var model = _mapper.Map<IEnumerable<StockGroupModel>>(stockgroups);
             return Ok(model);
         }
@@ -60,9 +61,11 @@ namespace ClassifiedAds.WebAPI.Controllers
         public ActionResult<StockGroup> Post([FromBody] StockGroupModel model)
         {
             var stockgroup = _mapper.Map<StockGroup>(model);
+            stockgroup.Id = Guid.NewGuid();
+            stockgroup.Creater = User.GetUserId();
             _dispatcher.Dispatch(new AddUpdateStockGroupCommand { StockGroup = stockgroup });
             model = _mapper.Map<StockGroupModel>(stockgroup);
-            return Created($"/api/stockgroups/{model.Title}", model);
+            return Created($"/api/stockgroups/{model.GroupTitle}", model);
         }
 
         [HttpPut("{id}")]
@@ -74,7 +77,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             var stockgroup = _dispatcher.Dispatch(new GetStockGroupQuery { Id = id, ThrowNotFoundIfNull = false }) 
                 ?? new StockGroup { };
 
-            stockgroup.GroupTitle = model.Title;
+            stockgroup.GroupTitle = model.GroupTitle;
             stockgroup.Sort = model.Sort;
 
             _dispatcher.Dispatch(new AddUpdateStockGroupCommand { StockGroup = stockgroup });

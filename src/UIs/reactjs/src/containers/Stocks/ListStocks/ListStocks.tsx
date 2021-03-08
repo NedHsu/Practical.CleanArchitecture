@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button, Row, Col, Form, FormControl } from "react-bootstrap";
 
 import logo from "../../../logo.svg";
 import * as actions from "../actions";
@@ -9,6 +9,8 @@ import Star from "../../../components/Star/Star";
 import styles from "./ListStocks.module.scss";
 import * as noteActions from "../../StockNotes/actions";
 import ListNotes from "../../StockNotes/ListStockNotes/ListStockNotes";
+import * as groupActions from "../../StockGroups/actions";
+import { IoMdAddCircle, IoMdClose, IoMdCheckmark } from "react-icons/io"
 
 class ListStocks extends Component<any, any> {
   state = {
@@ -21,6 +23,7 @@ class ListStocks extends Component<any, any> {
     listFilter: "",
     showAuditLogsModal: false,
     showNotesModal: false,
+    showGroupEditor: false,
   };
 
   toggleImage = () => {
@@ -74,6 +77,32 @@ class ListStocks extends Component<any, any> {
 
   componentDidMount() {
     this.props.fetchStocks();
+    this.props.fetchStockGroups();
+  }
+
+  showStockGroupEditor(stockGroup) {
+    this.props.updateStockGroup({ ...this.props.stockGroup, ...stockGroup });
+    this.setState({ showGroupEditor: true });
+  }
+
+  closeStockGroupEditor() {
+    this.setState({ showGroupEditor: false });
+  }
+
+  async submitStockGroupForm() {
+    await this.props.saveStockGroup(this.props.stockGroup);
+    this.closeStockGroupEditor();
+  }
+
+  stockGroupChanged = event => {
+    this.props.updateStockGroup({
+      ...this.props.stockGroup,
+      [event.target.name]: event.target.value
+    });
+  }
+
+  selectGroup(stockGroup) {
+    this.props.updateStockGroup(stockGroup);
   }
 
   render() {
@@ -221,6 +250,19 @@ class ListStocks extends Component<any, any> {
       </Modal>
     );
 
+    const stockGroupTags = this.props.stockGroups?.map((item) => (
+      <Col key={item.id} md={1} className={styles.groupTags}>
+        <Button
+          variant="outline-dark"
+          active={this.props.stockGroup?.id === item.id}
+          block
+          onClick={() => this.selectGroup(item)}
+          onDoubleClick={() => this.showStockGroupEditor(item)}>
+          {item.groupTitle}
+        </Button>
+      </Col>
+    ));
+
     return (
       <div>
         <div className="card">
@@ -235,8 +277,38 @@ class ListStocks extends Component<any, any> {
             </NavLink>
           </div>
           <div className="card-body">
+            <Row>
+              <Col md={1} className={styles.groupTags}>
+                Groups:
+              </Col>
+              {stockGroupTags}
+              <Col md={2} hidden={!this.state.showGroupEditor} className={styles.groupTags}>
+                <Row>
+                  <Col md={10}>
+                    <Form>
+                      <FormControl id="groupTitle" name="groupTitle" className="mb-2" type="text" placeholder="" value={this.props.stockGroup?.groupTitle} onChange={this.stockGroupChanged}>
+                      </FormControl>
+                    </Form>
+                  </Col>
+                  <Col md={2}>
+                    <Button variant="link" onClick={() => this.submitStockGroupForm()} style={{ color: "#43A047" }}>
+                      <IoMdCheckmark size="1.5rem"></IoMdCheckmark>
+                    </Button>
+                    <Button variant="link" onClick={() => this.closeStockGroupEditor()} style={{ color: "red" }}>
+                      <IoMdClose size="1.5rem"></IoMdClose>
+                    </Button>
+                  </Col>
+                </Row>
+              </Col>
+              <Col className={styles.groupTags}>
+                <Button variant="link" onClick={() => this.showStockGroupEditor({ id: null, groupTitle: "", sort: this.props.stockGroups?.length ?? 0 })}>
+                  <IoMdAddCircle size="1.5rem" />
+                </Button>
+              </Col>
+            </Row>
+            <hr />
             <div className="row">
-              <div className="col-md-2">Filter by:</div>
+              <div className="col-md-1">Filter by:</div>
               <div className="col-md-4">
                 <input
                   type="text"
@@ -272,6 +344,9 @@ const mapStateToProps = (state) => {
   return {
     stocks: state.stock.stocks,
     auditLogs: state.stock.auditLogs,
+    stockGroups: state.stockGroup.stockGroups,
+    stockGroup: state.stockGroup.stockGroup,
+    groupLoading: state.stockGroup.loading,
   };
 };
 
@@ -280,7 +355,10 @@ const mapDispatchToProps = (dispatch) => {
     fetchStocks: () => dispatch(actions.fetchStocks()),
     deleteStock: (stock) => dispatch(actions.deleteStock(stock)),
     fetchAuditLogs: (stock) => dispatch(actions.fetchAuditLogs(stock)),
-    fetchStockNotes: (stock) => dispatch(noteActions.fetchStockNotes(stock))
+    fetchStockNotes: (stock) => dispatch(noteActions.fetchStockNotes(stock)),
+    fetchStockGroups: () => dispatch(groupActions.fetchStockGroups()),
+    saveStockGroup: (stockGroup) => dispatch(groupActions.saveStockGroup(stockGroup)),
+    updateStockGroup: (stockGroup) => dispatch(groupActions.updateStockGroup(stockGroup)),
   };
 };
 

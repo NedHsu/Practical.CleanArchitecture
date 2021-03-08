@@ -29,11 +29,11 @@ export function* fetchStockGroupSaga(action) {
 export function* saveStockGroupSaga(action) {
   yield put(actions.saveStockGroupStart());
   try {
-    const response = action.stockgroup.id
-      ? yield axios.put(action.stockgroup.id, action.stockgroup)
-      : yield axios.post("", action.stockgroup);
-    const stockgroup = response.data;
-    yield put(actions.saveStockGroupSuccess(stockgroup));
+    const response = action.stockGroup.id
+      ? yield axios.put(action.stockGroup.id, action.stockGroup)
+      : yield axios.post("", action.stockGroup);
+    const stockGroup = response.data;
+    yield put(actions.saveStockGroupSuccess(stockGroup));
   } catch (error) {
     console.log(error);
     yield put(actions.saveStockGroupFail(error));
@@ -43,8 +43,8 @@ export function* saveStockGroupSaga(action) {
 export function* deleteStockGroupSaga(action) {
   yield put(actions.deleteStockGroupStart());
   try {
-    const response = yield axios.delete(action.stockgroup.id, action.stockgroup);
-    yield put(actions.deleteStockGroupSuccess(action.stockgroup));
+    const response = yield axios.delete(action.stockGroup.id, action.stockGroup);
+    yield put(actions.deleteStockGroupSuccess(action.stockGroup));
     yield put(actions.fetchStockGroups());
   } catch (error) {
     console.log(error);
@@ -55,7 +55,7 @@ export function* deleteStockGroupSaga(action) {
 export function* fetchAuditLogsSaga(action) {
   yield put(actions.fetchAuditLogsStart());
   try {
-    const response = yield axios.get(action.stockgroup.id + "/auditLogs");
+    const response = yield axios.get(action.stockGroup.id + "/auditLogs");
     const fetchedAuditLogs = response.data;
     yield put(actions.fetchAuditLogsSuccess(fetchedAuditLogs));
   } catch (error) {

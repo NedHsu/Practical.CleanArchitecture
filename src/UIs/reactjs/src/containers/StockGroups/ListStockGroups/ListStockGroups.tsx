@@ -29,8 +29,8 @@ class ListStockGroups extends Component<any, any> {
 
   performFilter(filterBy) {
     filterBy = filterBy.toLocaleLowerCase();
-    return this.props.stockgroups.filter(
-      (stockgroup) => stockgroup.name.toLocaleLowerCase().indexOf(filterBy) !== -1
+    return this.props.stockGroups.filter(
+      (stockGroup) => stockGroup.name.toLocaleLowerCase().indexOf(filterBy) !== -1
     );
   }
 
@@ -39,13 +39,13 @@ class ListStockGroups extends Component<any, any> {
     this.setState({ pageTitle: pageTitle });
   };
 
-  viewAuditLogs = (stockgroup) => {
-    this.props.fetchAuditLogs(stockgroup);
+  viewAuditLogs = (stockGroup) => {
+    this.props.fetchAuditLogs(stockGroup);
     this.setState({ showAuditLogsModal: true });
   };
 
-  deleteStockGroup = (stockgroup) => {
-    this.setState({ showDeleteModal: true, deletingStockGroup: stockgroup });
+  deleteStockGroup = (stockGroup) => {
+    this.setState({ showDeleteModal: true, deletingStockGroup: stockGroup });
   };
 
   deleteCanceled = () => {
@@ -70,35 +70,35 @@ class ListStockGroups extends Component<any, any> {
   render() {
     const filteredStockGroups = this.state.listFilter
       ? this.performFilter(this.state.listFilter)
-      : this.props.stockgroups;
+      : this.props.stockGroups;
 
-    const rows = filteredStockGroups?.map((stockgroup) => (
-      <tr key={stockgroup.id}>
+    const rows = filteredStockGroups?.map((stockGroup) => (
+      <tr key={stockGroup.id}>
         <td>
           {this.state.showImage ? (
             <img
-              src={stockgroup.imageUrl || logo}
-              title={stockgroup.name}
+              src={stockGroup.imageUrl || logo}
+              title={stockGroup.name}
               style={{ width: "50px", margin: "2px" }}
             />
           ) : null}
         </td>
         <td>
-          <NavLink to={"/stockgroups/" + stockgroup.id}>{stockgroup.name}</NavLink>
+          <NavLink to={"/stockGroups/" + stockGroup.id}>{stockGroup.name}</NavLink>
         </td>
-        <td>{stockgroup.code?.toLocaleUpperCase()}</td>
-        <td>{stockgroup.description}</td>
-        <td>{stockgroup.price || (5).toFixed(2)}</td>
+        <td>{stockGroup.code?.toLocaleUpperCase()}</td>
+        <td>{stockGroup.description}</td>
+        <td>{stockGroup.price || (5).toFixed(2)}</td>
         <td>
           <Star
-            rating={stockgroup.starRating || 4}
+            rating={stockGroup.starRating || 4}
             ratingClicked={(event) => this.onRatingClicked(event)}
           ></Star>
         </td>
         <td>
           <NavLink
             className="btn btn-primary"
-            to={"/stockgroups/edit/" + stockgroup.id}
+            to={"/stockGroups/edit/" + stockGroup.id}
           >
             Edit
           </NavLink>
@@ -106,7 +106,7 @@ class ListStockGroups extends Component<any, any> {
           <button
             type="button"
             className="btn btn-primary btn-secondary"
-            onClick={() => this.viewAuditLogs(stockgroup)}
+            onClick={() => this.viewAuditLogs(stockGroup)}
           >
             View Audit Logs
           </button>
@@ -114,7 +114,7 @@ class ListStockGroups extends Component<any, any> {
           <button
             type="button"
             className="btn btn-primary btn-danger"
-            onClick={() => this.deleteStockGroup(stockgroup)}
+            onClick={() => this.deleteStockGroup(stockGroup)}
           >
             Delete
           </button>
@@ -122,7 +122,7 @@ class ListStockGroups extends Component<any, any> {
       </tr>
     ));
 
-    const table = this.props.stockgroups ? (
+    const table = this.props.stockGroups ? (
       <table className="table">
         <thead>
           <tr>
@@ -212,7 +212,7 @@ class ListStockGroups extends Component<any, any> {
             <NavLink
               className="btn btn-primary"
               style={{ float: "right" }}
-              to="/stockgroups/add"
+              to="/stockGroups/add"
             >
               Add StockGroup
             </NavLink>
@@ -252,16 +252,16 @@ class ListStockGroups extends Component<any, any> {
 
 const mapStateToProps = (state) => {
   return {
-    stockgroups: state.stockgroup.stockgroups,
-    auditLogs: state.stockgroup.auditLogs,
+    stockGroups: state.stockGroup.stockGroups,
+    auditLogs: state.stockGroup.auditLogs,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchStockGroups: () => dispatch(actions.fetchStockGroups()),
-    deleteStockGroup: (stockgroup) => dispatch(actions.deleteStockGroup(stockgroup)),
-    fetchAuditLogs: (stockgroup) => dispatch(actions.fetchAuditLogs(stockgroup)),
+    deleteStockGroup: (stockGroup) => dispatch(actions.deleteStockGroup(stockGroup)),
+    fetchAuditLogs: (stockGroup) => dispatch(actions.fetchAuditLogs(stockGroup)),
   };
 };
 

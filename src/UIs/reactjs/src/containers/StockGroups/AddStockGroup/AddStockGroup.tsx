@@ -9,7 +9,7 @@ type Props = {
   resetStockGroup: any,
   match: any,
   fetchStockGroup: any,
-  stockgroup: any,
+  stockGroup: any,
   saveStockGroup: any,
   updateStockGroup: any,
   saved: any
@@ -71,14 +71,14 @@ class AddStockGroup extends Component<Props, any> {
   }
 
   fieldChanged = event => {
-    const stockgroup = {
-      ...this.props.stockgroup,
+    const stockGroup = {
+      ...this.props.stockGroup,
       [event.target.name]: event.target.value
     };
 
     this.checkFieldValidity(event.target.name, event.target.value);
 
-    this.props.updateStockGroup(stockgroup);
+    this.props.updateStockGroup(stockGroup);
   };
 
   checkFieldValidity = (name, value) => {
@@ -108,12 +108,12 @@ class AddStockGroup extends Component<Props, any> {
     let isValid = true;
     for (let fieldName in this.state.controls) {
       isValid =
-        this.checkFieldValidity(fieldName, this.props.stockgroup[fieldName]) &&
+        this.checkFieldValidity(fieldName, this.props.stockGroup[fieldName]) &&
         isValid;
     }
 
     if (isValid) {
-      this.props.saveStockGroup(this.props.stockgroup);
+      this.props.saveStockGroup(this.props.stockGroup);
     }
   };
 
@@ -144,7 +144,7 @@ class AddStockGroup extends Component<Props, any> {
                       ? "is-invalid"
                       : "")
                   }
-                  value={this.props.stockgroup?.name}
+                  value={this.props.stockGroup?.name}
                   onChange={event => this.fieldChanged(event)}
                 />
                 <span className="invalid-feedback">
@@ -171,7 +171,7 @@ class AddStockGroup extends Component<Props, any> {
                       ? "is-invalid"
                       : "")
                   }
-                  value={this.props.stockgroup?.code}
+                  value={this.props.stockGroup?.code}
                   onChange={event => this.fieldChanged(event)}
                 />
                 <span className="invalid-feedback">
@@ -195,11 +195,11 @@ class AddStockGroup extends Component<Props, any> {
                   className={
                     "form-control " +
                     (this.state.submitted &&
-                    !this.state.controls["description"].valid
+                      !this.state.controls["description"].valid
                       ? "is-invalid"
                       : "")
                   }
-                  value={this.props.stockgroup?.description}
+                  value={this.props.stockGroup?.description}
                   onChange={event => this.fieldChanged(event)}
                 />
                 <span className="invalid-feedback">
@@ -226,7 +226,7 @@ class AddStockGroup extends Component<Props, any> {
         <div className="card-footer">
           <NavLink
             className="btn btn-outline-secondary"
-            to="/stockgroups"
+            to="/stockGroups"
             style={{ width: "80px" }}
           >
             <i className="fa fa-chevron-left"></i> Back
@@ -236,26 +236,26 @@ class AddStockGroup extends Component<Props, any> {
     );
 
     return this.state.submitted && this.props.saved ? (
-      <Redirect to={"/stockgroups/" + this.props.stockgroup.id} />
+      <Redirect to={"/stockGroups/" + this.props.stockGroup.id} />
     ) : (
-      form
-    );
+        form
+      );
   }
 }
 
 const mapStateToProps = state => {
   return {
-    stockgroup: state.stockgroup.stockgroup,
-    saved: state.stockgroup.saved
+    stockGroup: state.stockGroup.stockGroup,
+    saved: state.stockGroup.saved
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     fetchStockGroup: id => dispatch(actions.fetchStockGroup(id)),
-    updateStockGroup: stockgroup => dispatch(actions.updateStockGroup(stockgroup)),
+    updateStockGroup: stockGroup => dispatch(actions.updateStockGroup(stockGroup)),
     resetStockGroup: () => dispatch(actions.resetStockGroup()),
-    saveStockGroup: stockgroup => dispatch(actions.saveStockGroup(stockgroup))
+    saveStockGroup: stockGroup => dispatch(actions.saveStockGroup(stockGroup)),
   };
 };
 
