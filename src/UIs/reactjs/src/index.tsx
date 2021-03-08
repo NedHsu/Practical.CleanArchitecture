@@ -25,6 +25,8 @@ import stockReducer from "./containers/Stocks/reducer";
 import { watchStock } from "./containers/Stocks/sagas";
 import stockNoteReducer from "./containers/StockNotes/reducer";
 import { watchStockNote } from "./containers/StockNotes/sagas";
+import stockGroupReducer from "./containers/StockGroups/reducer";
+import { watchStockGroup } from "./containers/StockGroups/sagas";
 
 const composeEnhancers =
   (process.env.NODE_ENV === "development"
@@ -40,6 +42,7 @@ const rootReducer = combineReducers({
   match: matchReducer,
   stock: stockReducer,
   stockNote: stockNoteReducer,
+  stockGroup: stockGroupReducer,
 });
 
 const sagaMiddleware = createSagaMiddleware();
@@ -56,6 +59,7 @@ sagaMiddleware.run(watchAuditLog);
 sagaMiddleware.run(watchMatch);
 sagaMiddleware.run(watchStock);
 sagaMiddleware.run(watchStockNote);
+sagaMiddleware.run(watchStockGroup);
 
 store.dispatch({
   type: "SET_AUTH_SERVICE",
