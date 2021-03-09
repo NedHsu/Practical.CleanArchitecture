@@ -3,11 +3,14 @@ import * as actionTypes from "./actionTypes";
 console.log("reducer");
 
 const initialState = {
-  stocknotes: [],
-  stocknote: {
-    name: "",
+  stockNotes: [],
+  stockNote: {
+    stockCode: "",
+    title: "",
+    contents: "",
+  },
+  stock: {
     code: "",
-    description: "",
   },
   auditLogs: [],
   loading: false,
@@ -17,13 +20,19 @@ const initialState = {
 };
 
 /// StockNotes
+const initStockNote = (stockCode) => {
+  return Object.assign(initialState.stockNote, { stockCode: stockCode });
+}
+
+
 const fetchStockNotesStart = (state, action) => {
-  return updateObject(state, { loading: true, stock: action.stock });
+  return updateObject(state, { loading: true, stock: action.stock, stockNote: initStockNote(action.stock.code) });
 };
 
 const fetchStockNotesSuccess = (state, action) => {
+
   return updateObject(state, {
-    stocknotes: action.stocknotes,
+    stockNotes: action.stockNotes,
     loading: false,
   });
 };
@@ -41,7 +50,7 @@ const fetchStockNoteStart = (state, action) => {
 
 const fetchStockNoteSuccess = (state, action) => {
   return updateObject(state, {
-    stocknote: action.stocknote,
+    stockNote: action.stockNote,
     loading: false,
   });
 };
@@ -57,16 +66,33 @@ const saveStockNoteStart = (state, action) => {
 };
 
 const saveStockNoteSuccess = (state, action) => {
+  var stockNotes = state.stockNotes;
+  var oldNote = stockNotes.find(x => x.id === action.stockNote.id);
+  if (oldNote) {
+    Object.assign(oldNote, action.stockNote)
+  } else {
+    stockNotes = [action.stockNote, ...state.stockNotes]
+  }
   return updateObject(state, {
-    stocknote: action.stocknote,
+    stockNote: action.stockNote,
     loading: false,
     saved: true,
+    stockNotes: stockNotes,
   });
 };
 
 const saveStockNoteFail = (state, action) => {
   return updateObject(state, { loading: false, saved: false });
 };
+
+const deleteStockNoteSuccess = (state, action) => {
+  return updateObject(state, {
+    stockNote: initStockNote(state.stock.code),
+    loading: false,
+    deleted: true,
+    stockNotes: state.stockNotes.filter(x => x.id !== action.stockNote.id)
+  });
+}
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -75,6 +101,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.FETCH_STOCK_NOTES_SUCCESS:
       return fetchStockNotesSuccess(state, action);
     case actionTypes.FETCH_STOCK_NOTES_FAIL:
+      return fetchStockNotesFail(state, action);
     case actionTypes.FETCH_STOCK_NOTE_START:
       return fetchStockNoteStart(state, action);
     case actionTypes.FETCH_STOCK_NOTE_SUCCESS:
@@ -82,9 +109,9 @@ const reducer = (state = initialState, action) => {
     case actionTypes.FETCH_STOCK_NOTE_FAIL:
       return fetchStockNoteFail(state, action);
     case actionTypes.UPDATE_STOCK_NOTE:
-      return updateObject(state, { stocknote: action.stocknote });
+      return updateObject(state, { stockNote: action.stockNote });
     case actionTypes.RESET_STOCK_NOTE:
-      return updateObject(state, initialState);
+      return updateObject(state, { stockNote: initStockNote(state.stock.code) });
     case actionTypes.SAVE_STOCK_NOTE_START:
       return saveStockNoteStart(state, action);
     case actionTypes.SAVE_STOCK_NOTE_SUCCESS:
@@ -93,16 +120,12 @@ const reducer = (state = initialState, action) => {
       return saveStockNoteFail(state, action);
     case actionTypes.DELETE_STOCK_NOTE_START:
       return updateObject(state, {
-        stocknote: action.stocknote,
+        stockNote: action.stockNote,
         loading: true,
         deleted: false,
       });
     case actionTypes.DELETE_STOCK_NOTE_SUCCESS:
-      return updateObject(state, {
-        stocknote: initialState.stocknote,
-        loading: false,
-        deleted: true,
-      });
+      return deleteStockNoteSuccess(state, action);
     case actionTypes.DELETE_STOCK_NOTE_FAIL:
       return updateObject(state, {
         error: action.error,
@@ -111,7 +134,7 @@ const reducer = (state = initialState, action) => {
       });
     case actionTypes.FETCH_STOCK_NOTE_AUDIT_LOGS_START:
       return updateObject(state, {
-        stocknote: action.stocknote,
+        stockNote: action.stockNote,
         loading: true,
       });
     case actionTypes.FETCH_STOCK_NOTE_AUDIT_LOGS_SUCCESS:

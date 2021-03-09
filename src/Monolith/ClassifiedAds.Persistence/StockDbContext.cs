@@ -161,6 +161,8 @@ namespace ClassifiedAds.Persistence {
 
             modelBuilder.Entity<StockGroupItem>(entity =>
             {
+                entity.ToTable("StockGroupItem");
+
                 entity.Property(e => e.Id).HasDefaultValueSql("newsequentialid()");
 
                 entity.Property(e => e.StockCode)

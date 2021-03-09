@@ -6,9 +6,9 @@ using System;
 
 namespace ClassifiedAds.Application.StockNotes.Services
 {
-    public class StockNoteService : StockCrudService<StockNote>, IStockNoteService
+    public class StockNoteService : DapperCrudService<StockNote>, IStockNoteService
     {
-        public StockNoteService(IStockRepository<StockNote> stocknoteRepository, IDomainEvents domainEvents, ICurrentUser currentUser)
+        public StockNoteService(IBaseDapperRepository<StockNote> stocknoteRepository, IDomainEvents domainEvents, ICurrentUser currentUser)
             : base(stocknoteRepository, domainEvents)
         {
         }

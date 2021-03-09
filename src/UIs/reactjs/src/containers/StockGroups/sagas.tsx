@@ -43,7 +43,7 @@ export function* saveStockGroupSaga(action) {
 export function* deleteStockGroupSaga(action) {
   yield put(actions.deleteStockGroupStart());
   try {
-    const response = yield axios.delete(action.stockGroup.id, action.stockGroup);
+    yield axios.delete(action.stockGroup.id, action.stockGroup);
     yield put(actions.deleteStockGroupSuccess(action.stockGroup));
     yield put(actions.fetchStockGroups());
   } catch (error) {

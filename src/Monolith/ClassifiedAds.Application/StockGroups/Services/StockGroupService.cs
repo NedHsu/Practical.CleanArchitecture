@@ -6,9 +6,9 @@ using System;
 
 namespace ClassifiedAds.Application.StockGroups.Services
 {
-    public class StockGroupService : StockCrudService<StockGroup>, IStockGroupService
+    public class StockGroupService : DapperCrudService<StockGroup>, IStockGroupService
     {
-        public StockGroupService(IStockRepository<StockGroup> stockgroupRepository, IDomainEvents domainEvents, ICurrentUser currentUser)
+        public StockGroupService(IBaseDapperRepository<StockGroup> stockgroupRepository, IDomainEvents domainEvents, ICurrentUser currentUser)
             : base(stockgroupRepository, domainEvents)
         {
         }

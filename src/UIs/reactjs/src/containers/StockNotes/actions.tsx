@@ -1,10 +1,10 @@
 import * as actionTypes from "./actionTypes";
 
 /// STOCK_NOTES
-export const fetchStockNotesSuccess = (stocknotes) => {
+export const fetchStockNotesSuccess = (stockNotes) => {
   return {
     type: actionTypes.FETCH_STOCK_NOTES_SUCCESS,
-    stocknotes: stocknotes,
+    stockNotes: stockNotes,
   };
 };
 
@@ -38,10 +38,10 @@ export const fetchAllStockNotes = () => {
 /// STOCK_NOTES
 
 /// STOCK_NOTE
-export const fetchStockNoteSuccess = (stocknote) => {
+export const fetchStockNoteSuccess = (stockNote) => {
   return {
     type: actionTypes.FETCH_STOCK_NOTE_SUCCESS,
-    stocknote: stocknote,
+    stockNote: stockNote,
   };
 };
 
@@ -67,10 +67,10 @@ export const fetchStockNote = (id) => {
 /// STOCK_NOTE
 
 /// UPDATE STOCK_NOTE
-export const updateStockNote = (stocknote) => {
+export const updateStockNote = (stockNote) => {
   return {
     type: actionTypes.UPDATE_STOCK_NOTE,
-    stocknote: stocknote,
+    stockNote: stockNote,
   };
 };
 
@@ -82,10 +82,10 @@ export const resetStockNote = () => {
 /// UPDATE STOCK_NOTE
 
 /// SAVE STOCK_NOTE
-export const saveStockNoteSuccess = (stocknote) => {
+export const saveStockNoteSuccess = (stockNote) => {
   return {
     type: actionTypes.SAVE_STOCK_NOTE_SUCCESS,
-    stocknote: stocknote,
+    stockNote: stockNote,
   };
 };
 
@@ -102,18 +102,19 @@ export const saveStockNoteStart = () => {
   };
 };
 
-export const saveStockNote = (stocknote) => {
+export const saveStockNote = (stockNote) => {
   return {
     type: actionTypes.SAVE_STOCK_NOTE,
-    stocknote: stocknote,
+    stockNote: stockNote,
   };
 };
 /// SAVE STOCK_NOTE
 
 /// DELETE STOCK_NOTE
-export const deleteStockNoteSuccess = (stocknote) => {
+export const deleteStockNoteSuccess = (stockNote) => {
   return {
     type: actionTypes.DELETE_STOCK_NOTE_SUCCESS,
+    stockNote: stockNote,
   };
 };
 
@@ -130,10 +131,10 @@ export const deleteStockNoteStart = () => {
   };
 };
 
-export const deleteStockNote = (stocknote) => {
+export const deleteStockNote = (stockNote) => {
   return {
     type: actionTypes.DELETE_STOCK_NOTE,
-    stocknote: stocknote,
+    stockNote: stockNote,
   };
 };
 /// DELETE STOCK_NOTE
@@ -159,10 +160,10 @@ export const fetchAuditLogsStart = () => {
   };
 };
 
-export const fetchAuditLogs = (stocknote) => {
+export const fetchAuditLogs = (stockNote) => {
   return {
     type: actionTypes.FETCH_STOCK_NOTE_AUDIT_LOGS,
-    stocknote: stocknote,
+    stockNote: stockNote,
   };
 };
 /// VIEW AUDIT LOGS

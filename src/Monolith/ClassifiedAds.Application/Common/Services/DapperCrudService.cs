@@ -8,14 +8,14 @@ using System.Linq;
 
 namespace ClassifiedAds.Application
 {
-    public class StockCrudService<T> : IDapperCrudService<T>
+    public class DapperCrudService<T> : IDapperCrudService<T>
         where T : class
     {
         private readonly IUnitOfWork _unitOfWork;
-        protected readonly IStockRepository<T> _repository;
+        protected readonly IBaseDapperRepository<T> _repository;
         private readonly IDomainEvents _domainEvents;
 
-        public StockCrudService(IStockRepository<T> repository, IDomainEvents domainEvents)
+        public DapperCrudService(IBaseDapperRepository<T> repository, IDomainEvents domainEvents)
         {
             _repository = repository;
             _domainEvents = domainEvents;

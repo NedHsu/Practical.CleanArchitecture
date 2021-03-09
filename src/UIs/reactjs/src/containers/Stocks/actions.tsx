@@ -26,6 +26,13 @@ export const fetchStocks = () => {
     type: actionTypes.FETCH_STOCKS,
   };
 };
+
+export const fetchGroupStocks = (group) => {
+  return {
+    type: actionTypes.FETCH_GROUP_STOCKS,
+    group: group,
+  };
+};
 /// STOCKS
 
 /// STOCK

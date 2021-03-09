@@ -36,11 +36,21 @@ namespace ClassifiedAds.WebAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<StockModel>> Get()
+        public ActionResult<List<StockModel>> Get()
         {
             _logger.LogInformation("Getting all stocks");
             var stocks = _dispatcher.Dispatch(new GetStocksQuery(){ });
-            var model = _mapper.Map<IEnumerable<StockModel>>(stocks);
+            var model = _mapper.Map<List<StockModel>>(stocks);
+            return Ok(model);
+        }
+
+        [HttpGet("groupId/{groupId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<List<StockModel>> Get(Guid groupId)
+        {
+            var stock = _dispatcher.Dispatch(new GetGroupStocksQuery { GroupId = groupId });
+            var model = _mapper.Map<List<StockModel>>(stock);
             return Ok(model);
         }
 

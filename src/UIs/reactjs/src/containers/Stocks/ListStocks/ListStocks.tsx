@@ -10,6 +10,7 @@ import styles from "./ListStocks.module.scss";
 import * as noteActions from "../../StockNotes/actions";
 import ListNotes from "../../StockNotes/ListStockNotes/ListStockNotes";
 import * as groupActions from "../../StockGroups/actions";
+import * as groupItemActions from "../../StockGroupItems/actions";
 import { IoMdAddCircle, IoMdClose, IoMdCheckmark } from "react-icons/io"
 
 class ListStocks extends Component<any, any> {
@@ -24,6 +25,8 @@ class ListStocks extends Component<any, any> {
     showAuditLogsModal: false,
     showNotesModal: false,
     showGroupEditor: false,
+    showGroupsModal: false,
+    stockGroupIds: {},
   };
 
   toggleImage = () => {
@@ -32,6 +35,10 @@ class ListStocks extends Component<any, any> {
 
   filterChanged = (event) => {
     this.setState({ listFilter: event.target.value });
+  };
+
+  groupCheckChanged = (event) => {
+    console.log(event.target.value);
   };
 
   performFilter(filterBy) {
@@ -54,6 +61,11 @@ class ListStocks extends Component<any, any> {
   viewNotes = (stock) => {
     this.props.fetchStockNotes(stock);
     this.setState({ showNotesModal: true });
+  };
+
+  editGroups = (stock) => {
+    this.setState({ showGroupsModal: true });
+    this.props.fetchStockGroupItems(stock);
   };
 
   deleteStock = (stock) => {
@@ -102,7 +114,13 @@ class ListStocks extends Component<any, any> {
   }
 
   selectGroup(stockGroup) {
-    this.props.updateStockGroup(stockGroup);
+    if (stockGroup?.id) {
+      this.props.updateStockGroup(stockGroup);
+      this.props.fetchGroupStocks(stockGroup);
+    } else {
+      this.props.resetStockGroup();
+      this.props.fetchStocks();
+    }
   }
 
   render() {
@@ -158,6 +176,10 @@ class ListStocks extends Component<any, any> {
           &nbsp;
           <Button onClick={() => this.viewNotes(stock)}>
             View Notes
+          </Button>
+          &nbsp;
+          <Button onClick={() => this.editGroups(stock)}>
+            Edit Groups
           </Button>
         </td>
       </tr>
@@ -263,6 +285,36 @@ class ListStocks extends Component<any, any> {
       </Col>
     ));
 
+    const GroupOptions = this.props.stockGroups?.map((item) => (
+      <Col key={`check-${item.id}`} md={4}>
+        <Form.Check
+          custom
+          type="checkbox"
+          id={`group-check-${item.id}`}
+          label={item.groupTitle}
+          checked={this.state.stockGroupIds[item.groupId]}
+          value={item.groupId}
+          onChange={this.groupCheckChanged}
+        />
+      </Col>
+    ));
+
+    const GroupOptionsModal = (
+      <Modal show={this.state.showGroupsModal} onHide={() => this.setState({ showGroupsModal: false })}>
+        <Form>
+          <Row>
+            {GroupOptions}
+          </Row>
+          <Button variant="secondary" onClick={() => this.setState({ showGroupsModal: false })}>
+            No
+          </Button>
+          <Button>
+            Save
+          </Button>
+        </Form>
+      </Modal>
+    );
+
     return (
       <div>
         <div className="card">
@@ -280,6 +332,15 @@ class ListStocks extends Component<any, any> {
             <Row>
               <Col md={1} className={styles.groupTags}>
                 Groups:
+              </Col>
+              <Col className={styles.groupTags}>
+                <Button
+                  variant="outline-dark"
+                  active={!this.props.stockGroup?.id}
+                  block
+                  onClick={() => this.selectGroup({})}>
+                  All
+                </Button>
               </Col>
               {stockGroupTags}
               <Col md={2} hidden={!this.state.showGroupEditor} className={styles.groupTags}>
@@ -327,15 +388,18 @@ class ListStocks extends Component<any, any> {
             <div className="table-responsive">{table}</div>
           </div>
         </div>
-        {this.props.errorMessage ? (
-          <div className="alert alert-danger">
-            Error: {this.props.errorMessage}
-          </div>
-        ) : null}
-        {deleteModal}
-        {auditLogsModal}
-        {listNoteModal}
-      </div>
+        {
+          this.props.errorMessage ? (
+            <div className="alert alert-danger">
+              Error: {this.props.errorMessage}
+            </div>
+          ) : null
+        }
+        { deleteModal}
+        { auditLogsModal}
+        { listNoteModal}
+        { GroupOptionsModal}
+      </div >
     );
   }
 }
@@ -347,18 +411,22 @@ const mapStateToProps = (state) => {
     stockGroups: state.stockGroup.stockGroups,
     stockGroup: state.stockGroup.stockGroup,
     groupLoading: state.stockGroup.loading,
+    stockGroupItems: state.stockGroupItem.stockGroupItems,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchStocks: () => dispatch(actions.fetchStocks()),
+    fetchGroupStocks: (group) => dispatch(actions.fetchGroupStocks(group)),
     deleteStock: (stock) => dispatch(actions.deleteStock(stock)),
     fetchAuditLogs: (stock) => dispatch(actions.fetchAuditLogs(stock)),
     fetchStockNotes: (stock) => dispatch(noteActions.fetchStockNotes(stock)),
     fetchStockGroups: () => dispatch(groupActions.fetchStockGroups()),
     saveStockGroup: (stockGroup) => dispatch(groupActions.saveStockGroup(stockGroup)),
     updateStockGroup: (stockGroup) => dispatch(groupActions.updateStockGroup(stockGroup)),
+    resetStockGroup: () => dispatch(groupActions.resetStockGroup()),
+    fetchStockGroupItems: (stock) => dispatch(groupItemActions.fetchStockGroupItems(stock)),
   };
 };
 

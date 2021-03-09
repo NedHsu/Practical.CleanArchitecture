@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.WebAPI.Models.StockGroupItems;
 using ClassifiedAds.WebAPI.Models.StockGroups;
 using ClassifiedAds.WebAPI.Models.StockNotes;
 using ClassifiedAds.WebAPI.Models.Stocks;
@@ -16,6 +17,7 @@ namespace ClassifiedAds.WebAPI.AutoMapper
             CreateMap<StockNoteModel, StockNote>();
             CreateMap<StockGroup, StockGroupModel>();
             CreateMap<StockGroupModel, StockGroup>();
+            CreateMap<StockGroupItem, StockGroupItemModel>();
         }
     }
 }

@@ -15,5 +15,6 @@ namespace ClassifiedAds.Persistence.DapperContext
         IDapperRepository<stock> stock { get; }
         IDapperRepository<StockNote> StockNote { get; }
         IDapperRepository<StockGroup> StockGroup { get; }
+        IDapperRepository<StockGroupItem> StockGroupItem { get; }
     }
 }

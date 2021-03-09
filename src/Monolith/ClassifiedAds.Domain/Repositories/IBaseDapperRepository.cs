@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace ClassifiedAds.Domain.Repositories
 {
-    public interface IStockRepository<TEntity>
+    public interface IBaseDapperRepository<TEntity>
     {
         public void Add(TEntity entity);
 

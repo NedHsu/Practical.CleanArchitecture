@@ -15,6 +15,17 @@ export function* fetchStocksSaga(action) {
   }
 }
 
+export function* fetchGroupStocksSaga(action) {
+  yield put(actions.fetchStocksStart());
+  try {
+    const response = yield axios.get(`/groupId/${action.group?.id}`);
+    const fetchedStocks = response.data;
+    yield put(actions.fetchStocksSuccess(fetchedStocks));
+  } catch (error) {
+    yield put(actions.fetchStocksFail(error));
+  }
+}
+
 export function* fetchStockSaga(action) {
   yield put(actions.fetchStockStart());
   try {
@@ -64,6 +75,7 @@ export function* fetchAuditLogsSaga(action) {
 }
 
 export function* watchStock() {
+  yield takeEvery(actionTypes.FETCH_GROUP_STOCKS, fetchGroupStocksSaga);
   yield takeEvery(actionTypes.FETCH_STOCKS, fetchStocksSaga);
   yield takeEvery(actionTypes.FETCH_STOCK, fetchStockSaga);
   yield takeEvery(actionTypes.SAVE_STOCK, saveStockSaga);

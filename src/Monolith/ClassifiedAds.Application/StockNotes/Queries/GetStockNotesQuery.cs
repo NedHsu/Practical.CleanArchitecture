@@ -10,21 +10,27 @@ namespace ClassifiedAds.Application.StockNotes.Queries
 {
     public class GetStockNotesQuery : IQuery<List<StockNote>>
     {
+        public string Code { get; set; }
     }
 
     [AuditLog]
     [DatabaseRetry]
     internal class GetStockNotesQueryHandler : IQueryHandler<GetStockNotesQuery, List<StockNote>>
     {
-        private readonly IStockRepository<StockNote> _stocknoteRepository;
+        private readonly IBaseDapperRepository<StockNote> _stocknoteRepository;
 
-        public GetStockNotesQueryHandler(IStockRepository<StockNote> stocknoteRepository)
+        public GetStockNotesQueryHandler(IBaseDapperRepository<StockNote> stocknoteRepository)
         {
             _stocknoteRepository = stocknoteRepository;
         }
 
         public List<StockNote> Handle(GetStockNotesQuery query)
         {
+            if (!string.IsNullOrWhiteSpace(query.Code))
+            {
+                return _stocknoteRepository.GetAll(x => x.StockCode == query.Code).ToList();
+            }
+
             return _stocknoteRepository.GetAll().ToList();
         }
     }

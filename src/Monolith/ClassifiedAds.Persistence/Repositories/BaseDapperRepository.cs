@@ -13,7 +13,7 @@ using MicroOrm.Dapper.Repositories;
 
 namespace ClassifiedAds.Persistence.Repositories
 {
-    public class StockRepository<TEntity> : IStockRepository<TEntity>
+    public class BaseDapperRepository<TEntity> : Domain.Repositories.IBaseDapperRepository<TEntity>
         where TEntity : class
     {
         private readonly IStockDbContext _dbContext;
@@ -22,9 +22,9 @@ namespace ClassifiedAds.Persistence.Repositories
         protected string TableName { get; }
         protected PropertyInfo[] TableKeys { get; }
 
-        protected IDapperRepository<TEntity> DapperRepository { get; }
+        protected MicroOrm.Dapper.Repositories.IDapperRepository<TEntity> DapperRepository { get; }
 
-        public StockRepository(IStockDbContext dbContext, IDateTimeProvider dateTimeProvider)
+        public BaseDapperRepository(IStockDbContext dbContext, IDateTimeProvider dateTimeProvider)
         {
             _dbContext = dbContext;
             _dateTimeProvider = dateTimeProvider;
@@ -32,7 +32,7 @@ namespace ClassifiedAds.Persistence.Repositories
             var t = typeof(TEntity);
             TableName = t.GetCustomAttributesData().FirstOrDefault(x => x.AttributeType == typeof(TableAttribute))?.ConstructorArguments[0].Value.ToString() ?? t.Name;
             TableKeys = t.GetProperties().Where(p => p.IsDefined(typeof(KeyAttribute), false)).ToArray();
-            DapperRepository = (IDapperRepository<TEntity>)typeof(IStockDbContext).GetProperty(TableName).GetValue(_dbContext);
+            DapperRepository = (MicroOrm.Dapper.Repositories.IDapperRepository<TEntity>)typeof(IStockDbContext).GetProperty(TableName).GetValue(_dbContext);
         }
 
         protected IStockDbContext DbContext => _dbContext;

@@ -11,7 +11,7 @@ type Props = {
   resetStockNote: any,
   match: any,
   fetchStockNote: any,
-  stocknote: any,
+  stockNote: any,
   saveStockNote: any,
   updateStockNote: any,
   saved: any,
@@ -22,7 +22,6 @@ type Props = {
 
 class AddStockNote extends Component<Props, any> {
   state = {
-    title: "Add StockNote",
     controls: {
       title: {
         validation: {
@@ -32,18 +31,6 @@ class AddStockNote extends Component<Props, any> {
         error: {
           required: false,
           minLength: false
-        },
-        valid: false,
-        touched: false
-      },
-      stockCode: {
-        validation: {
-          required: true,
-          maxLength: 10
-        },
-        error: {
-          required: false,
-          maxLength: false
         },
         valid: false,
         touched: false
@@ -66,27 +53,26 @@ class AddStockNote extends Component<Props, any> {
     errorMessage: null
   };
 
-  static getDerivedStateFromProps(props, state) {
-    if (props.stocknote?.id) {
-      state.title = "Edit StockNote";
-    } else if (!props.stocknote?.stockCode || props.stocknote?.stockCode !== props.stock.code) {
-      props.updateStockNote({
-        ...props.stocknote,
-        stockCode: props.stock.code,
-      });
-    }
-    return null;
-  }
+  // static getDerivedStateFromProps(props, state) {
+  //   if (!props.stockNote?.stockCode || props.stockNote?.stockCode !== props.stock.code) {
+  //     console.log(props.stockNote, props.stock);
+  //     var stockNote = Object.assign(props.stockNote, {
+  //       stockCode: props.stock.code,
+  //     });
+  //     props.updateStockNote(stockNote);
+  //   }
+  //   return null;
+  // }
 
   fieldChanged = event => {
-    const stocknote = {
-      ...this.props.stocknote,
+    const stockNote = {
+      ...this.props.stockNote,
       [event.target.name]: event.target.value
     };
 
     this.checkFieldValidity(event.target.name, event.target.value);
 
-    this.props.updateStockNote(stocknote);
+    this.props.updateStockNote(stockNote);
   };
 
   checkFieldValidity = (name, value) => {
@@ -110,25 +96,26 @@ class AddStockNote extends Component<Props, any> {
     return validationRs.isValid;
   };
 
-  onSubmit = event => {
+  onSubmit = async event => {
     event.preventDefault();
     this.setState({ submitted: true });
     let isValid = true;
     for (let fieldName in this.state.controls) {
       isValid =
-        this.checkFieldValidity(fieldName, this.props.stocknote[fieldName]) &&
+        this.checkFieldValidity(fieldName, this.props.stockNote[fieldName]) &&
         isValid;
     }
 
     if (isValid) {
-      this.props.saveStockNote(this.props.stocknote);
+      await this.props.saveStockNote(this.props.stockNote);
+      this.props.back();
     }
   };
 
   render() {
     const form = (
       <div className="card">
-        <div className="card-header">{this.state.title}</div>
+        <div className="card-header">{this.props.stockNote?.id ? "Edit StockNote" : "Add StockNote"}</div>
         <div className="card-body">
           {this.state.errorMessage ? (
             <div
@@ -147,17 +134,9 @@ class AddStockNote extends Component<Props, any> {
                   id="stockCode"
                   name="stockCode"
                   className="form-control"
-                  value={this.props.stocknote?.stockCode}
+                  value={this.props.stockNote?.stockCode}
                   disabled={true}
                 />
-                <span className="invalid-feedback">
-                  {this.state.controls["stockCode"].error.required ? (
-                    <span>Enter a code</span>
-                  ) : null}
-                  {this.state.controls["stockCode"].error.maxLength ? (
-                    <span>The code must be less than 10 characters.</span>
-                  ) : null}
-                </span>
               </div>
             </div>
             <div className="form-group row">
@@ -174,7 +153,7 @@ class AddStockNote extends Component<Props, any> {
                       ? "is-invalid"
                       : "")
                   }
-                  value={this.props.stocknote?.title}
+                  value={this.props.stockNote?.title}
                   onChange={event => this.fieldChanged(event)}
                 />
                 <span className="invalid-feedback">
@@ -202,7 +181,7 @@ class AddStockNote extends Component<Props, any> {
                       ? "is-invalid"
                       : "")
                   }
-                  value={this.props.stocknote?.contents}
+                  value={this.props.stockNote?.contents}
                   onChange={event => this.fieldChanged(event)}
                 />
                 <span className="invalid-feedback">
@@ -240,7 +219,7 @@ class AddStockNote extends Component<Props, any> {
 
 const mapStateToProps = state => {
   return {
-    stocknote: state.stockNote.stocknote,
+    stockNote: state.stockNote.stockNote,
     saved: state.stockNote.saved,
     stock: state.stockNote.stock,
   };
@@ -249,9 +228,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     fetchStockNote: id => dispatch(actions.fetchStockNote(id)),
-    updateStockNote: stocknote => dispatch(actions.updateStockNote(stocknote)),
+    updateStockNote: stockNote => dispatch(actions.updateStockNote(stockNote)),
     resetStockNote: () => dispatch(actions.resetStockNote()),
-    saveStockNote: stocknote => dispatch(actions.saveStockNote(stocknote))
+    saveStockNote: stockNote => dispatch(actions.saveStockNote(stockNote))
   };
 };
 

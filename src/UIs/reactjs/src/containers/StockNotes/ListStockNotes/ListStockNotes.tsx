@@ -28,7 +28,6 @@ class ListStockNotes extends Component<any, any> {
   };
 
   toggleAddNote = () => {
-    console.log("toggleAddNote");
     this.setState({ showListNote: this.state.showAddNote, showAddNote: !this.state.showAddNote });
   };
 
@@ -38,8 +37,8 @@ class ListStockNotes extends Component<any, any> {
 
   performFilter(filterBy) {
     filterBy = filterBy.toLocaleLowerCase();
-    return this.props.stocknotes.filter(
-      (stocknote) => stocknote.title.toLocaleLowerCase().indexOf(filterBy) !== -1
+    return this.props.stockNotes.filter(
+      (stockNote) => stockNote.title.toLocaleLowerCase().indexOf(filterBy) !== -1
     );
   }
 
@@ -48,12 +47,12 @@ class ListStockNotes extends Component<any, any> {
     this.setState({ pageTitle: pageTitle });
   };
 
-  deleteStockNote = (stocknote) => {
-    this.setState({ showDeleteModal: true, deletingStockNote: stocknote });
+  deleteStockNote = (stockNote) => {
+    this.setState({ showDeleteModal: true, deletingStockNote: stockNote });
   };
 
-  editStockNote = (stocknote) => {
-    this.props.updateStockNote(stocknote);
+  editStockNote = (stockNote) => {
+    this.props.updateStockNote(stockNote);
     this.toggleAddNote();
   };
 
@@ -61,8 +60,8 @@ class ListStockNotes extends Component<any, any> {
     this.setState({ showDeleteModal: false, deletingStockNote: null });
   };
 
-  deleteConfirmed = () => {
-    this.props.deleteStockNote(this.state.deletingStockNote);
+  deleteConfirmed = async () => {
+    await this.props.deleteStockNote(this.state.deletingStockNote);
     this.setState({ showDeleteModal: false, deletingStockNote: null });
   };
 
@@ -79,30 +78,30 @@ class ListStockNotes extends Component<any, any> {
   render() {
     const filteredStockNotes = this.state.listFilter
       ? this.performFilter(this.state.listFilter)
-      : this.props.stocknotes;
+      : this.props.stockNotes;
 
-    const rows = filteredStockNotes?.map((stocknote) => (
-      <tr key={stocknote.id}>
+    const rows = filteredStockNotes?.map((stockNote) => (
+      <tr key={stockNote.id}>
         <td>
-          <NavLink to={"/stocknotes/" + stocknote.id}>{stocknote.title}</NavLink>
+          <NavLink to={"/stockNotes/" + stockNote.id}>{stockNote.title}</NavLink>
         </td>
-        <td>{stocknote.contents}</td>
-        <td>{stocknote.price || (5).toFixed(2)}</td>
+        <td>{stockNote.contents}</td>
+        <td>{stockNote.price || (5).toFixed(2)}</td>
         <td>
           <Star
-            rating={stocknote.starRating || 4}
+            rating={stockNote.starRating || 4}
             ratingClicked={(event) => this.onRatingClicked(event)}
           ></Star>
         </td>
         <td>
-          <Button variant="primary" onClick={() => this.editStockNote(stocknote)}>
+          <Button variant="primary" onClick={() => this.editStockNote(stockNote)}>
             Edit
           </Button>
           &nbsp;
           <button
             type="button"
             className="btn btn-primary btn-danger"
-            onClick={() => this.deleteStockNote(stocknote)}
+            onClick={() => this.deleteStockNote(stockNote)}
           >
             Delete
           </button>
@@ -110,7 +109,7 @@ class ListStockNotes extends Component<any, any> {
       </tr>
     ));
 
-    const table = this.props.stocknotes ? (
+    const table = this.props.stockNotes ? (
       <table className="table">
         <thead>
           <tr>
@@ -156,7 +155,7 @@ class ListStockNotes extends Component<any, any> {
         <div hidden={!this.state.showListNote} className="card">
           <div className="card-header">
             {this.state.pageTitle}
-            <Button variant="primary" style={{ float: "right" }} onClick={() => this.toggleAddNote()}>Add StockNote</Button>
+            <Button variant="primary" style={{ float: "right" }} onClick={() => { this.props.resetStockNote(); this.toggleAddNote(); }}>Add StockNote</Button>
           </div>
           <div className="card-body">
             <div className="row">
@@ -193,7 +192,7 @@ class ListStockNotes extends Component<any, any> {
 
 const mapStateToProps = (state) => {
   return {
-    stocknotes: state.stockNote.stocknotes,
+    stockNotes: state.stockNote.stockNotes,
     auditLogs: state.stockNote.auditLogs,
     stock: state.stockNote.stock,
   };
@@ -202,8 +201,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchStockNotes: (stock) => dispatch(actions.fetchStockNotes(stock)),
-    deleteStockNote: (stocknote) => dispatch(actions.deleteStockNote(stocknote)),
-    updateStockNote: stocknote => dispatch(actions.updateStockNote(stocknote)),
+    deleteStockNote: (stockNote) => dispatch(actions.deleteStockNote(stockNote)),
+    updateStockNote: stockNote => dispatch(actions.updateStockNote(stockNote)),
+    resetStockNote: () => dispatch(actions.resetStockNote()),
   };
 };
 

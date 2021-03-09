@@ -74,6 +74,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.FETCH_STOCKS_SUCCESS:
       return fetchStocksSuccess(state, action);
     case actionTypes.FETCH_STOCKS_FAIL:
+      return fetchStocksFail(state, action);
     case actionTypes.FETCH_STOCK_START:
       return fetchStockStart(state, action);
     case actionTypes.FETCH_STOCK_SUCCESS:

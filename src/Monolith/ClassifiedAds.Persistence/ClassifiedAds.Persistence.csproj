@@ -28,8 +28,4 @@
     <ProjectReference Include="..\ClassifiedAds.Domain\ClassifiedAds.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DapperModels\" />
-  </ItemGroup>
-
 </Project>

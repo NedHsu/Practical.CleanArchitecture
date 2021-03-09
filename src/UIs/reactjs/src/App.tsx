@@ -39,6 +39,7 @@ function App() {
         <Route path="/matches/add" component={AddMatch} />
         <Route path="/matches/:id" component={ViewMatch} />
         <Route path="/matches" component={ListMatches} />
+        <Route path="/stocks/edit/:id" component={AddStock} />
         <Route path="/stocks/add" component={AddStock} />
         <Route path="/stocks/:id" component={ViewStock} />
         <Route path="/stocks" component={ListStocks} />

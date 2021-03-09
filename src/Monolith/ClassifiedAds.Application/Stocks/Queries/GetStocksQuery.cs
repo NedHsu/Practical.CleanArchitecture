@@ -14,9 +14,9 @@ namespace ClassifiedAds.Application.Stocks.Queries {
     [AuditLog]
     [DatabaseRetry]
     internal class GetStocksQueryHandler : IQueryHandler<GetStocksQuery, List<stock>> {
-        private readonly IStockRepository<stock> _stockRepository;
+        private readonly IBaseDapperRepository<stock> _stockRepository;
 
-        public GetStocksQueryHandler(IStockRepository<stock> stockRepository) {
+        public GetStocksQueryHandler(IBaseDapperRepository<stock> stockRepository) {
             _stockRepository = stockRepository;
         }
 

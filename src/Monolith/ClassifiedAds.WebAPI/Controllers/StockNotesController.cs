@@ -36,10 +36,10 @@ namespace ClassifiedAds.WebAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<StockNoteModel>> Get()
+        public ActionResult<IEnumerable<StockNoteModel>> Get(string code)
         {
             _logger.LogInformation("Getting all stocknotes");
-            var stocknotes = _dispatcher.Dispatch(new GetStockNotesQuery());
+            var stocknotes = _dispatcher.Dispatch(new GetStockNotesQuery(){ Code = code });
             var model = _mapper.Map<IEnumerable<StockNoteModel>>(stocknotes);
             return Ok(model);
         }

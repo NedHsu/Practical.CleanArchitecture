@@ -16,9 +16,9 @@ namespace ClassifiedAds.Application.StockNotes.Queries
     [DatabaseRetry]
     internal class GetStockNotesQueryHandler : IQueryHandler<GetStockNotesQuery, List<StockNote>>
     {
-        private readonly IStockRepository<StockNote> _stocknoteRepository;
+        private readonly IBaseDapperRepository<StockNote> _stocknoteRepository;
 
-        public GetStockNotesQueryHandler(IStockRepository<StockNote> stocknoteRepository)
+        public GetStockNotesQueryHandler(IBaseDapperRepository<StockNote> stocknoteRepository)
         {
             _stocknoteRepository = stocknoteRepository;
         }

@@ -14,9 +14,9 @@ namespace ClassifiedAds.Application.StockNotes.Queries
 
     internal class GetStockNoteQueryHandler : IQueryHandler<GetStockNoteQuery, StockNote>
     {
-        private readonly IStockRepository<StockNote> _stocknoteRepository;
+        private readonly IBaseDapperRepository<StockNote> _stocknoteRepository;
 
-        public GetStockNoteQueryHandler(IStockRepository<StockNote> stocknoteRepository)
+        public GetStockNoteQueryHandler(IBaseDapperRepository<StockNote> stocknoteRepository)
         {
             _stocknoteRepository = stocknoteRepository;
         }

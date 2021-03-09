@@ -8,6 +8,7 @@ const initialState = {
     groupTitle: "",
     sort: 0,
   },
+  stockGroupItems: [],
   auditLogs: [],
   loading: false,
   saved: false,
@@ -82,6 +83,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.FETCH_STOCK_GROUPS_SUCCESS:
       return fetchStockGroupsSuccess(state, action);
     case actionTypes.FETCH_STOCK_GROUPS_FAIL:
+      return fetchStockGroupsFail(state, action);
     case actionTypes.FETCH_STOCK_GROUP_START:
       return fetchStockGroupStart(state, action);
     case actionTypes.FETCH_STOCK_GROUP_SUCCESS:
@@ -91,7 +93,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.UPDATE_STOCK_GROUP:
       return updateObject(state, { stockGroup: action.stockGroup });
     case actionTypes.RESET_STOCK_GROUP:
-      return updateObject(state, initialState);
+      return updateObject(state, { stockGroup: initialState.stockGroup });
     case actionTypes.SAVE_STOCK_GROUP_START:
       return saveStockGroupStart(state, action);
     case actionTypes.SAVE_STOCK_GROUP_SUCCESS:
