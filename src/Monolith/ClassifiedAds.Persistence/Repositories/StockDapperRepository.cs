@@ -20,7 +20,7 @@ namespace ClassifiedAds.Persistence.Repositories
         {
             string sql = @"
 SELECT s.* 
-FROM StockGroupItems i
+FROM StockGroupItem i
 	JOIN stock s ON i.StockCode = s.code
 WHERE i.GroupId = @GroupId
 ORDER BY i.Sort, s.code

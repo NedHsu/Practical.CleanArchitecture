@@ -292,8 +292,8 @@ class ListStocks extends Component<any, any> {
           type="checkbox"
           id={`group-check-${item.id}`}
           label={item.groupTitle}
-          checked={this.state.stockGroupIds[item.groupId]}
-          value={item.groupId}
+          checked={this.state.stockGroupIds[item.id]}
+          value={item.id}
           onChange={this.groupCheckChanged}
         />
       </Col>
