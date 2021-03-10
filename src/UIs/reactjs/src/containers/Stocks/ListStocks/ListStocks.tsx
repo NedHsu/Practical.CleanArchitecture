@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
-import { Modal, Button, Row, Col, Form, FormControl } from "react-bootstrap";
+import { Modal, Button, Row, Col, Form, FormControl, Card, Spinner } from "react-bootstrap";
 
 import logo from "../../../logo.svg";
 import * as actions from "../actions";
@@ -11,9 +11,15 @@ import * as noteActions from "../../StockNotes/actions";
 import ListNotes from "../../StockNotes/ListStockNotes/ListStockNotes";
 import * as groupActions from "../../StockGroups/actions";
 import * as groupItemActions from "../../StockGroupItems/actions";
-import { IoMdAddCircle, IoMdClose, IoMdCheckmark } from "react-icons/io"
+import { IoMdAddCircle, IoMdClose, IoMdCheckmark, IoIosTrash } from "react-icons/io"
 
 class ListStocks extends Component<any, any> {
+  groupTitleField: any;
+  constructor(props) {
+    super(props);
+    this.groupTitleField = React.createRef();
+  }
+
   state = {
     pageTitle: "Stock List",
     showImage: false,
@@ -22,11 +28,14 @@ class ListStocks extends Component<any, any> {
       name: null
     },
     listFilter: "",
-    showAuditLogsModal: false,
     showNotesModal: false,
     showGroupEditor: false,
     showGroupsModal: false,
-    stockGroupIds: {},
+    stockGroupIds: Array<string>(),
+    stock: {
+      code: "",
+      name: "",
+    },
   };
 
   toggleImage = () => {
@@ -38,7 +47,13 @@ class ListStocks extends Component<any, any> {
   };
 
   groupCheckChanged = (event) => {
-    console.log(event.target.value);
+    var stockGroupIds = this.state.stockGroupIds;
+    if (event.target.checked) {
+      stockGroupIds.push(event.target.value);
+    } else {
+      stockGroupIds.splice(stockGroupIds.indexOf(event.target.value), 1);
+    }
+    this.setState({ stockGroupIds: stockGroupIds })
   };
 
   performFilter(filterBy) {
@@ -53,23 +68,13 @@ class ListStocks extends Component<any, any> {
     this.setState({ pageTitle: pageTitle });
   };
 
-  viewAuditLogs = (stock) => {
-    this.props.fetchAuditLogs(stock);
-    this.setState({ showAuditLogsModal: true });
-  };
-
   viewNotes = (stock) => {
     this.props.fetchStockNotes(stock);
     this.setState({ showNotesModal: true });
   };
 
-  editGroups = (stock) => {
-    this.setState({ showGroupsModal: true });
-    this.props.fetchStockGroupItems(stock);
-  };
-
   deleteStock = (stock) => {
-    this.setState({ showDeleteModal: true, deletingStock: stock });
+    this.props.deleteStockGroupItem({ stockCode: stock.code, groupId: this.props.stockGroup.id });
   };
 
   deleteCanceled = () => {
@@ -94,6 +99,7 @@ class ListStocks extends Component<any, any> {
 
   showStockGroupEditor(stockGroup) {
     this.props.updateStockGroup({ ...this.props.stockGroup, ...stockGroup });
+    this.groupTitleField.current.focus();
     this.setState({ showGroupEditor: true });
   }
 
@@ -101,8 +107,13 @@ class ListStocks extends Component<any, any> {
     this.setState({ showGroupEditor: false });
   }
 
-  async submitStockGroupForm() {
-    await this.props.saveStockGroup(this.props.stockGroup);
+  saveStockGroup() {
+    this.props.saveStockGroup(this.props.stockGroup);
+    this.closeStockGroupEditor();
+  }
+
+  deleteStockGroup() {
+    this.props.deleteStockGroup(this.props.stockGroup);
     this.closeStockGroupEditor();
   }
 
@@ -120,6 +131,24 @@ class ListStocks extends Component<any, any> {
     } else {
       this.props.resetStockGroup();
       this.props.fetchStocks();
+      this.closeStockGroupEditor();
+    }
+  }
+
+  editGroups = (stock) => {
+    this.setState({ showGroupsModal: true, stock: stock, });
+    this.props.fetchStockGroupItems(stock);
+  };
+
+  saveStockGroups() {
+    this.props.saveStockGroupItems(this.state.stock.code, this.state.stockGroupIds);
+    this.setState({ showGroupsModal: false, });
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.stockGroupItems !== this.props.stockGroupItems) {
+      var stockGroupIds = this.props.stockGroupItems.map(x => x.groupId);
+      this.setState({ stockGroupIds: stockGroupIds });
     }
   }
 
@@ -159,14 +188,7 @@ class ListStocks extends Component<any, any> {
           </NavLink>
           &nbsp;
           <button
-            type="button"
-            className="btn btn-primary btn-secondary"
-            onClick={() => this.viewAuditLogs(stock)}
-          >
-            View Audit Logs
-          </button>
-          &nbsp;
-          <button
+            hidden={!this.props.stockGroup.id}
             type="button"
             className="btn btn-primary btn-danger"
             onClick={() => this.deleteStock(stock)}
@@ -174,7 +196,7 @@ class ListStocks extends Component<any, any> {
             Delete
           </button>
           &nbsp;
-          <Button onClick={() => this.viewNotes(stock)}>
+          <Button onClick={() => this.viewNotes(stock)} variant="secondary">
             View Notes
           </Button>
           &nbsp;
@@ -204,47 +226,6 @@ class ListStocks extends Component<any, any> {
         <tbody>{rows}</tbody>
       </table>
     ) : null;
-    const auditLogRows = this.props.auditLogs?.map((auditLog) => (
-      <tr key={auditLog.id}>
-        <td>{this.formatDateTime(auditLog.createdDateTime)}</td>
-        <td>{auditLog.userName}</td>
-        <td>{auditLog.action}</td>
-        <td style={{ color: auditLog.highLight.code ? "red" : "" }}>
-          {auditLog.data.code}
-        </td>
-        <td style={{ color: auditLog.highLight.name ? "red" : "" }}>
-          {auditLog.data.name}
-        </td>
-        <td style={{ color: auditLog.highLight.description ? "red" : "" }}>
-          {auditLog.data.description}
-        </td>
-      </tr>
-    ));
-    const auditLogsModal = (
-      <Modal
-        size="xl"
-        show={this.state.showAuditLogsModal}
-        onHide={() => this.setState({ showAuditLogsModal: false })}
-      >
-        <Modal.Body>
-          <div className="table-responsive">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>Date Time</th>
-                  <th>User Name</th>
-                  <th>Action</th>
-                  <th>Code</th>
-                  <th>Name</th>
-                  <th>Description</th>
-                </tr>
-              </thead>
-              <tbody>{auditLogRows}</tbody>
-            </table>
-          </div>
-        </Modal.Body>
-      </Modal>
-    );
 
     const deleteModal = (
       <Modal show={this.state.showDeleteModal} onHide={this.deleteCanceled}>
@@ -292,7 +273,7 @@ class ListStocks extends Component<any, any> {
           type="checkbox"
           id={`group-check-${item.id}`}
           label={item.groupTitle}
-          checked={this.state.stockGroupIds[item.id]}
+          checked={this.state.stockGroupIds.indexOf(item.id) > -1}
           value={item.id}
           onChange={this.groupCheckChanged}
         />
@@ -301,17 +282,35 @@ class ListStocks extends Component<any, any> {
 
     const GroupOptionsModal = (
       <Modal show={this.state.showGroupsModal} onHide={() => this.setState({ showGroupsModal: false })}>
-        <Form>
-          <Row>
-            {GroupOptions}
-          </Row>
-          <Button variant="secondary" onClick={() => this.setState({ showGroupsModal: false })}>
-            No
-          </Button>
-          <Button>
-            Save
-          </Button>
-        </Form>
+        <Card>
+          <Card.Header>
+            ({this.state.stock.code}) {this.state.stock.name}
+          </Card.Header>
+          <Card.Body>
+            <Form>
+              <Row>
+                {GroupOptions}
+              </Row>
+            </Form>
+          </Card.Body>
+          <Card.Footer>
+            <Button variant="secondary" onClick={() => this.setState({ showGroupsModal: false })}>
+              No
+            </Button>
+            &nbsp;
+            <Button onClick={() => this.saveStockGroups()} disabled={this.props.stockGroupItemLoading}>
+              <Spinner
+                as="span"
+                animation="grow"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+                hidden={!this.props.stockGroupItemLoading}
+              />
+              Save
+            </Button>
+          </Card.Footer>
+        </Card>
       </Modal>
     );
 
@@ -333,7 +332,7 @@ class ListStocks extends Component<any, any> {
               <Col md={1} className={styles.groupTags}>
                 Groups:
               </Col>
-              <Col className={styles.groupTags}>
+              <Col md={1} className={styles.groupTags}>
                 <Button
                   variant="outline-dark"
                   active={!this.props.stockGroup?.id}
@@ -346,17 +345,27 @@ class ListStocks extends Component<any, any> {
               <Col md={2} hidden={!this.state.showGroupEditor} className={styles.groupTags}>
                 <Row>
                   <Col md={10}>
-                    <Form>
-                      <FormControl id="groupTitle" name="groupTitle" className="mb-2" type="text" placeholder="" value={this.props.stockGroup?.groupTitle} onChange={this.stockGroupChanged}>
-                      </FormControl>
-                    </Form>
+                    <FormControl
+                      id="groupTitle"
+                      name="groupTitle"
+                      className="mb-2"
+                      type="text"
+                      placeholder=""
+                      ref={this.groupTitleField}
+                      value={this.props.stockGroup?.groupTitle}
+                      onChange={this.stockGroupChanged}
+                      onKeyPress={(event) => { if (event.charCode === 13) { this.saveStockGroup() } }}>
+                    </FormControl>
                   </Col>
                   <Col md={2}>
-                    <Button variant="link" onClick={() => this.submitStockGroupForm()} style={{ color: "#43A047" }}>
+                    <Button variant="link" onClick={() => this.saveStockGroup()} style={{ color: "#43A047" }}>
                       <IoMdCheckmark size="1.5rem"></IoMdCheckmark>
                     </Button>
                     <Button variant="link" onClick={() => this.closeStockGroupEditor()} style={{ color: "red" }}>
                       <IoMdClose size="1.5rem"></IoMdClose>
+                    </Button>
+                    <Button variant="link" onClick={() => this.deleteStockGroup()}>
+                      <IoIosTrash size="1.5rem"></IoIosTrash>
                     </Button>
                   </Col>
                 </Row>
@@ -396,7 +405,6 @@ class ListStocks extends Component<any, any> {
           ) : null
         }
         { deleteModal}
-        { auditLogsModal}
         { listNoteModal}
         { GroupOptionsModal}
       </div >
@@ -407,11 +415,11 @@ class ListStocks extends Component<any, any> {
 const mapStateToProps = (state) => {
   return {
     stocks: state.stock.stocks,
-    auditLogs: state.stock.auditLogs,
     stockGroups: state.stockGroup.stockGroups,
     stockGroup: state.stockGroup.stockGroup,
     groupLoading: state.stockGroup.loading,
     stockGroupItems: state.stockGroupItem.stockGroupItems,
+    stockGroupItemLoading: state.stockGroupItem.loading,
   };
 };
 
@@ -420,13 +428,15 @@ const mapDispatchToProps = (dispatch) => {
     fetchStocks: () => dispatch(actions.fetchStocks()),
     fetchGroupStocks: (group) => dispatch(actions.fetchGroupStocks(group)),
     deleteStock: (stock) => dispatch(actions.deleteStock(stock)),
-    fetchAuditLogs: (stock) => dispatch(actions.fetchAuditLogs(stock)),
     fetchStockNotes: (stock) => dispatch(noteActions.fetchStockNotes(stock)),
     fetchStockGroups: () => dispatch(groupActions.fetchStockGroups()),
     saveStockGroup: (stockGroup) => dispatch(groupActions.saveStockGroup(stockGroup)),
     updateStockGroup: (stockGroup) => dispatch(groupActions.updateStockGroup(stockGroup)),
     resetStockGroup: () => dispatch(groupActions.resetStockGroup()),
+    deleteStockGroup: (stockGroup) => dispatch(groupActions.deleteStockGroup(stockGroup)),
     fetchStockGroupItems: (stock) => dispatch(groupItemActions.fetchStockGroupItems(stock)),
+    saveStockGroupItems: (stockCode, groupIds) => dispatch(groupItemActions.saveStockGroupItems(stockCode, groupIds)),
+    deleteStockGroupItem: (stockGroupItem) => dispatch(groupItemActions.deleteStockGroupItem(stockGroupItem)),
   };
 };
 

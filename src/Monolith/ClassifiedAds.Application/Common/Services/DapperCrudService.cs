@@ -12,8 +12,10 @@ namespace ClassifiedAds.Application
         where T : class
     {
         private readonly IUnitOfWork _unitOfWork;
-        protected readonly IBaseDapperRepository<T> _repository;
+        private readonly IBaseDapperRepository<T> _repository;
         private readonly IDomainEvents _domainEvents;
+
+        protected IBaseDapperRepository<T> Repository => _repository;
 
         public DapperCrudService(IBaseDapperRepository<T> repository, IDomainEvents domainEvents)
         {

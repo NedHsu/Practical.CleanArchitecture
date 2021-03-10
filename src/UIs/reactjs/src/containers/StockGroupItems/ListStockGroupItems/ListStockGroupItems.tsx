@@ -259,7 +259,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchStockGroupItems: () => dispatch(actions.fetchStockGroupItems()),
+    fetchStockGroupItems: (stock) => dispatch(actions.fetchStockGroupItems(stock)),
     deleteStockGroupItem: (stockGroupItem) => dispatch(actions.deleteStockGroupItem(stockGroupItem)),
     fetchAuditLogs: (stockGroupItem) => dispatch(actions.fetchAuditLogs(stockGroupItem)),
   };

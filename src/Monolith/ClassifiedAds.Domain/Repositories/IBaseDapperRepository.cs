@@ -18,6 +18,8 @@ namespace ClassifiedAds.Domain.Repositories
 
         public void Delete(TEntity entity);
 
+        public void Delete(IEnumerable<TEntity> entities);
+
         public IEnumerable<TEntity> GetAll();
 
         IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate);

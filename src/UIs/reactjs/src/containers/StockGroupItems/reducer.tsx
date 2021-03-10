@@ -57,7 +57,6 @@ const saveStockGroupItemStart = (state, action) => {
 
 const saveStockGroupItemSuccess = (state, action) => {
   return updateObject(state, {
-    stockGroupItem: action.stockGroupItem,
     loading: false,
     saved: true,
   });

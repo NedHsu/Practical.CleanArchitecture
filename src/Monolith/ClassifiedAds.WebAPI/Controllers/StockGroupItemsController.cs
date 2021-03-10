@@ -65,22 +65,15 @@ namespace ClassifiedAds.WebAPI.Controllers
             return Created($"/api/StockGroupItems/{model.Id}", model);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{stockCode}")]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult Put(Guid id, [FromBody] StockGroupItemModel model)
+        public ActionResult Put(string stockCode, [FromBody] List<Guid> groupIds)
         {
-            var stockGroupItem = _dispatcher.Dispatch(new GetStockGroupItemQuery { Id = id, ThrowNotFoundIfNull = false }) 
-                ?? new StockGroupItem { };
+            _dispatcher.Dispatch(new UpdateStockGroupItemsCommand { StockCode = stockCode, StockGroupIds = groupIds });
 
-            stockGroupItem.GroupId = model.GroupId;
-
-            _dispatcher.Dispatch(new AddUpdateStockGroupItemCommand { StockGroupItem = stockGroupItem });
-
-            model = _mapper.Map<StockGroupItemModel>(stockGroupItem);
-
-            return Ok(model);
+            return Ok();
         }
 
         [HttpDelete("{id}")]
@@ -93,6 +86,18 @@ namespace ClassifiedAds.WebAPI.Controllers
             _dispatcher.Dispatch(new DeleteStockGroupItemCommand { StockGroupItem = stockGroupItem });
 
             return Ok();
+        }
+
+        [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult Delete([FromQuery] StockGroupItem item)
+        {
+            var stockGroupItem = _dispatcher.Dispatch(new GetStockGroupItemExQuery { StockCode = item.StockCode, GroupId = item.GroupId, ThrowNotFoundIfNull = true });
+
+            _dispatcher.Dispatch(new DeleteStockGroupItemCommand { StockGroupItem = stockGroupItem });
+
+            return Ok(stockGroupItem);
         }
 
         [HttpGet("{id}/auditlogs")]

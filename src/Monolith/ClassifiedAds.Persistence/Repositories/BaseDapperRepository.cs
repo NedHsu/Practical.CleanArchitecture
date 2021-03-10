@@ -13,7 +13,7 @@ using MicroOrm.Dapper.Repositories;
 
 namespace ClassifiedAds.Persistence.Repositories
 {
-    public class BaseDapperRepository<TEntity> : Domain.Repositories.IBaseDapperRepository<TEntity>
+    public class BaseDapperRepository<TEntity> : IBaseDapperRepository<TEntity>
         where TEntity : class
     {
         private readonly IStockDbContext _dbContext;
@@ -22,7 +22,7 @@ namespace ClassifiedAds.Persistence.Repositories
         protected string TableName { get; }
         protected PropertyInfo[] TableKeys { get; }
 
-        protected MicroOrm.Dapper.Repositories.IDapperRepository<TEntity> DapperRepository { get; }
+        protected IDapperRepository<TEntity> DapperRepository { get; }
 
         public BaseDapperRepository(IStockDbContext dbContext, IDateTimeProvider dateTimeProvider)
         {
@@ -88,6 +88,11 @@ namespace ClassifiedAds.Persistence.Repositories
             return DapperRepository.FindAll(predicate);
         }
 
+        public IEnumerable<TEntity> GetAll<T>(Expression<Func<TEntity, bool>> predicate)
+        {
+            return DapperRepository.FindAll(predicate);
+        }
+
         public TEntity Get(Expression<Func<TEntity, bool>> predicate)
         {
             return DapperRepository.Find(predicate);
@@ -101,6 +106,14 @@ namespace ClassifiedAds.Persistence.Repositories
         public void Update(IEnumerable<TEntity> entities)
         {
             DapperRepository.BulkUpdate(entities);
+        }
+
+        public void Delete(IEnumerable<TEntity> entities)
+        {
+            foreach (var entity in entities)
+            {
+                Delete(entity);
+            }
         }
     }
 }

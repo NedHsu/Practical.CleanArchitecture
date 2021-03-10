@@ -74,10 +74,9 @@ export const resetStockGroupItem = () => {
 /// UPDATE STOCK_GROUP_ITEM
 
 /// SAVE STOCK_GROUP_ITEM
-export const saveStockGroupItemSuccess = (stockGroupItem) => {
+export const saveStockGroupItemSuccess = () => {
   return {
     type: actionTypes.SAVE_STOCK_GROUP_ITEM_SUCCESS,
-    stockGroupItem: stockGroupItem,
   };
 };
 
@@ -94,6 +93,14 @@ export const saveStockGroupItemStart = () => {
   };
 };
 
+export const saveStockGroupItems = (stockCode, groupIds) => {
+  return {
+    type: actionTypes.SAVE_STOCK_GROUP_ITEMS,
+    stockCode: stockCode,
+    groupIds: groupIds,
+  };
+};
+
 export const saveStockGroupItem = (stockGroupItem) => {
   return {
     type: actionTypes.SAVE_STOCK_GROUP_ITEM,
@@ -106,6 +113,7 @@ export const saveStockGroupItem = (stockGroupItem) => {
 export const deleteStockGroupItemSuccess = (stockGroupItem) => {
   return {
     type: actionTypes.DELETE_STOCK_GROUP_ITEM_SUCCESS,
+    stockGroupItem: stockGroupItem,
   };
 };
 

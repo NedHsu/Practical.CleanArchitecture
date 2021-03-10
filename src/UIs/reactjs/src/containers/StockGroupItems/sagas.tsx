@@ -33,7 +33,18 @@ export function* saveStockGroupItemSaga(action) {
       ? yield axios.put(action.stockGroupItem.id, action.stockGroupItem)
       : yield axios.post("", action.stockGroupItem);
     const stockGroupItem = response.data;
-    yield put(actions.saveStockGroupItemSuccess(stockGroupItem));
+    yield put(actions.saveStockGroupItemSuccess());
+  } catch (error) {
+    console.log(error);
+    yield put(actions.saveStockGroupItemFail(error));
+  }
+}
+
+export function* saveStockGroupItemsSaga(action) {
+  yield put(actions.saveStockGroupItemStart());
+  try {
+    const response = yield axios.put(action.stockCode, action.groupIds);
+    yield put(actions.saveStockGroupItemSuccess());
   } catch (error) {
     console.log(error);
     yield put(actions.saveStockGroupItemFail(error));
@@ -43,7 +54,7 @@ export function* saveStockGroupItemSaga(action) {
 export function* deleteStockGroupItemSaga(action) {
   yield put(actions.deleteStockGroupItemStart());
   try {
-    const response = yield axios.delete(action.stockGroupItem.id, action.stockGroupItem);
+    const response = yield axios.delete(`?stockCode=${action.stockGroupItem.stockCode}&groupId=${action.stockGroupItem.groupId}`, action.stockGroupItem);
     yield put(actions.deleteStockGroupItemSuccess(action.stockGroupItem));
   } catch (error) {
     console.log(error);
@@ -66,6 +77,7 @@ export function* watchStockGroupItem() {
   yield takeEvery(actionTypes.FETCH_STOCK_GROUP_ITEMS, fetchStockGroupItemsSaga);
   yield takeEvery(actionTypes.FETCH_STOCK_GROUP_ITEM, fetchStockGroupItemSaga);
   yield takeEvery(actionTypes.SAVE_STOCK_GROUP_ITEM, saveStockGroupItemSaga);
+  yield takeEvery(actionTypes.SAVE_STOCK_GROUP_ITEMS, saveStockGroupItemsSaga);
   yield takeEvery(actionTypes.DELETE_STOCK_GROUP_ITEM, deleteStockGroupItemSaga);
   yield takeEvery(actionTypes.FETCH_STOCK_GROUP_ITEM_AUDIT_LOGS, fetchAuditLogsSaga);
 }
