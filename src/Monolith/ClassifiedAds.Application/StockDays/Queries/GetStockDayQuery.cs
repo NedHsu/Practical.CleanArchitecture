@@ -8,7 +8,8 @@ namespace ClassifiedAds.Application.StockDays.Queries
 {
     public class GetStockDayQuery : IQuery<StockDay>
     {
-        public string Code { get; set; }
+        public string StockCode { get; set; }
+        public DateTime Date { get; set; }
         public bool ThrowNotFoundIfNull { get; set; }
     }
 
@@ -23,11 +24,11 @@ namespace ClassifiedAds.Application.StockDays.Queries
 
         public StockDay Handle(GetStockDayQuery query)
         {
-            var stockday = _stockdayRepository.Get(x => x.StockCode == query.Code);
+            var stockday = _stockdayRepository.Get(x => x.StockCode == query.StockCode && x.Date == query.Date);
 
             if (query.ThrowNotFoundIfNull && stockday == null)
             {
-                throw new NotFoundException($"StockDay {query.Code} not found.");
+                throw new NotFoundException($"StockDay {query.StockCode} not found.");
             }
 
             return stockday;

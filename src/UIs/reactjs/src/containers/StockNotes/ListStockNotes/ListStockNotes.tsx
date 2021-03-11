@@ -88,12 +88,6 @@ class ListStockNotes extends Component<any, any> {
         <td>{stockNote.contents}</td>
         <td>{stockNote.price || (5).toFixed(2)}</td>
         <td>
-          <Star
-            rating={stockNote.starRating || 4}
-            ratingClicked={(event) => this.onRatingClicked(event)}
-          ></Star>
-        </td>
-        <td>
           <Button variant="primary" onClick={() => this.editStockNote(stockNote)}>
             Edit
           </Button>
@@ -116,7 +110,6 @@ class ListStockNotes extends Component<any, any> {
             <th>Title</th>
             <th>Content</th>
             <th>Price</th>
-            <th>5 Star Rating</th>
             <th></th>
           </tr>
         </thead>

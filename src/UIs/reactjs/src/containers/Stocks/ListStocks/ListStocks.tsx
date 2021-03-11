@@ -406,7 +406,7 @@ class ListStocks extends Component<any, any> {
         { deleteModal}
         { listNoteModal}
         { GroupOptionsModal}
-      </div >
+      </div>
     );
   }
 }

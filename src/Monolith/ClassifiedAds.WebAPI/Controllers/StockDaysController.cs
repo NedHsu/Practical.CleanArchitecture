@@ -47,86 +47,11 @@ namespace ClassifiedAds.WebAPI.Controllers
         [HttpGet("{code}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<StockDayModel> Get(string code)
+        public ActionResult<IEnumerable<StockDayModel>> Get(string code, DateTime startDate, DateTime endDate)
         {
-            var stockday = _dispatcher.Dispatch(new GetStockDayQuery { Code = code, ThrowNotFoundIfNull = true });
-            var model = _mapper.Map<StockDayModel>(stockday);
+            var stockday = _dispatcher.Dispatch(new GetStockDaysQuery { StockCode = code, StartDate = startDate, EndDate = endDate });
+            var model = _mapper.Map<IEnumerable<StockDayModel>>(stockday);
             return Ok(model);
-        }
-
-        [HttpPost]
-        [Consumes("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        public ActionResult<StockDay> Post([FromBody] StockDayModel model)
-        {
-            var stockday = _mapper.Map<StockDay>(model);
-            _dispatcher.Dispatch(new AddUpdateStockDayCommand { StockDay = stockday });
-            model = _mapper.Map<StockDayModel>(stockday);
-            return Created($"/api/stockdays/{model.Code}", model);
-        }
-
-        [HttpPut("{code}")]
-        [Consumes("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult Put(string code, [FromBody] StockDayModel model)
-        {
-            var stockday = _dispatcher.Dispatch(new GetStockDayQuery { Code = code, ThrowNotFoundIfNull = false }) 
-                ?? new StockDay { };
-
-            stockday.StockCode = model.Code;
-
-            _dispatcher.Dispatch(new AddUpdateStockDayCommand { StockDay = stockday });
-
-            model = _mapper.Map<StockDayModel>(stockday);
-
-            return Ok(model);
-        }
-
-        [HttpDelete("{code}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult Delete(string code)
-        {
-            var stockday = _dispatcher.Dispatch(new GetStockDayQuery { Code = code, ThrowNotFoundIfNull = true });
-
-            _dispatcher.Dispatch(new DeleteStockDayCommand { StockDay = stockday });
-
-            return Ok();
-        }
-
-        [HttpGet("{id}/auditlogs")]
-        public ActionResult<IEnumerable<AuditLogEntryDTO>> GetAuditLogs(Guid id)
-        {
-            var logs = _dispatcher.Dispatch(new GetAuditEntriesQuery { ObjectId = id.ToString() });
-
-            List<dynamic> entries = new List<dynamic>();
-            StockDayDTO previous = null;
-            foreach (var log in logs.OrderBy(x => x.CreatedDateTime))
-            {
-                var data = JsonConvert.DeserializeObject<StockDayDTO>(log.Log);
-                var highLight = new
-                {
-                    Code = previous != null && data.Code != previous.Code,
-                    Name = previous != null && data.Name != previous.Name,
-                    Description = previous != null && data.Description != previous.Description,
-                };
-
-                var entry = new
-                {
-                    log.Id,
-                    log.UserName,
-                    Action = log.Action.Replace("_STOCK", string.Empty),
-                    log.CreatedDateTime,
-                    data,
-                    highLight,
-                };
-                entries.Add(entry);
-
-                previous = data;
-            }
-
-            return Ok(entries.OrderByDescending(x => x.CreatedDateTime));
         }
     }
 }

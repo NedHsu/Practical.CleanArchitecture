@@ -10,6 +10,9 @@ namespace ClassifiedAds.Application.StockDays.Queries
 {
     public class GetStockDaysQuery : IQuery<List<StockDay>>
     {
+        public string StockCode { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
     }
 
     [AuditLog]
@@ -25,7 +28,8 @@ namespace ClassifiedAds.Application.StockDays.Queries
 
         public List<StockDay> Handle(GetStockDaysQuery query)
         {
-            return _stockdayRepository.GetAll().ToList();
+            return _stockdayRepository.GetAll(x => x.StockCode == query.StockCode && x.Date >= query.StartDate && x.Date <= query.EndDate)
+                                      .ToList();
         }
     }
 }
