@@ -7,32 +7,32 @@ using MicroOrm.Dapper.Repositories.Attributes.Joins;
 
 namespace ClassifiedAds.Domain.Entities
 {
-    public partial class stock
+    public partial class Stock
     {
-        public stock()
+        public Stock()
         {
-            stockDays = new HashSet<stockDay>();
+            StockDays = new HashSet<StockDay>();
         }
 
         [Key]
-        public string ex { get; set; }
+        public string Ex { get; set; }
         [Key]
-        public string code { get; set; }
-        public decimal? close_price { get; set; }
-        public decimal? five_price { get; set; }
-        public decimal? ten_price { get; set; }
-        public decimal? twenty_price { get; set; }
-        public decimal? sixty_price { get; set; }
-        public DateTime? fetchDate { get; set; }
-        public string name { get; set; }
-        public DateTime? listing_date { get; set; }
-        public string industry { get; set; }
+        public string Code { get; set; }
+        public decimal? ClosePrice { get; set; }
+        public decimal? FivePrice { get; set; }
+        public decimal? TenPrice { get; set; }
+        public decimal? TwentyPrice { get; set; }
+        public decimal? SixtyPrice { get; set; }
+        public DateTime? FetchDate { get; set; }
+        public string Name { get; set; }
+        public DateTime? ListingDate { get; set; }
+        public string Industry { get; set; }
         public string CFICode { get; set; }
-        public string note { get; set; }
+        public string Note { get; set; }
         public string ISINCode { get; set; }
 
-        [LeftJoin("stockDay", "Code", "StockCode", TableAlias = "StockDay_Id")]
-        public virtual ICollection<stockDay> stockDays { get; set; }
+        [LeftJoin("StockDay", "Code", "StockCode", TableAlias = "StockDay_Id")]
+        public virtual ICollection<StockDay> StockDays { get; set; }
         public virtual ICollection<StockGroupItem> StockGroupItems { get; set; }
         public virtual ICollection<StockNote> StockNotes { get; set; }
     }

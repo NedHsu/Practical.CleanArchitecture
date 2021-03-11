@@ -8,7 +8,7 @@ namespace ClassifiedAds.Application.Stocks.Services
 {
     public class StockService : IStockService
     {
-        public StockService(IBaseDapperRepository<stock> stockRepository, IDomainEvents domainEvents, ICurrentUser currentUser)
+        public StockService(IBaseDapperRepository<Stock> stockRepository, IDomainEvents domainEvents, ICurrentUser currentUser)
         {
         }
         

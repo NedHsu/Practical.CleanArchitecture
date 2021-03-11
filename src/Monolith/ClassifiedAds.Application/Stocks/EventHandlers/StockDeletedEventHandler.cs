@@ -7,7 +7,7 @@ using System;
 
 namespace ClassifiedAds.Application.Stocks.EventHandlers
 {
-    public class StockDeletedEventHandler : IDomainEventHandler<EntityDeletedEvent<stock>>
+    public class StockDeletedEventHandler : IDomainEventHandler<EntityDeletedEvent<Stock>>
     {
         private readonly IServiceProvider _serviceProvider;
 
@@ -16,7 +16,7 @@ namespace ClassifiedAds.Application.Stocks.EventHandlers
             _serviceProvider = serviceProvider;
         }
 
-        public void Handle(EntityDeletedEvent<stock> domainEvent)
+        public void Handle(EntityDeletedEvent<Stock> domainEvent)
         {
             using var scope = _serviceProvider.CreateScope();
             var auditSerivce = scope.ServiceProvider.GetService<ICrudService<AuditLogEntry>>();
@@ -27,7 +27,7 @@ namespace ClassifiedAds.Application.Stocks.EventHandlers
                 UserId = currentUser.UserId,
                 CreatedDateTime = domainEvent.EventDateTime,
                 Action = "DELETED_STOCK",
-                ObjectId = domainEvent.Entity.code,
+                ObjectId = domainEvent.Entity.Code,
                 Log = domainEvent.Entity.AsJsonString(),
             });
         }

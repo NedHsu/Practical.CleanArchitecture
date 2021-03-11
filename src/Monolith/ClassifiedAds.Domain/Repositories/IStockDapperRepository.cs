@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 namespace ClassifiedAds.Domain.Repositories
 {
-    public interface IStockDapperRepository : IBaseDapperRepository<stock>
+    public interface IStockDapperRepository : IBaseDapperRepository<Stock>
     {
-        List<stock> GetByGroupId(Guid groupId);
+        List<Stock> GetByGroupId(Guid groupId);
     }
 }

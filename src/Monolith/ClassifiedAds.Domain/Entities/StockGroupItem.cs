@@ -14,6 +14,6 @@ namespace ClassifiedAds.Domain.Entities
         public Guid GroupId { get; set; }
         public int Sort { get; set; }
 
-        public virtual stock StockCodeNavigation { get; set; }
+        public virtual Stock StockCodeNavigation { get; set; }
     }
 }

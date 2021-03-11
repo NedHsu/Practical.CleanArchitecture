@@ -17,7 +17,7 @@ namespace ClassifiedAds.Domain.Entities
         public DateTime? Updated { get; set; }
         public Guid? Creater { get; set; }
 
-        public virtual stock StockCodeNavigation { get; set; }
+        public virtual Stock StockCodeNavigation { get; set; }
 
     }
 }

@@ -6,24 +6,24 @@ using System.Linq;
 
 namespace ClassifiedAds.Application.Stocks.Queries
 {
-    public class GetStockQuery : IQuery<stock>
+    public class GetStockQuery : IQuery<Stock>
     {
         public string Code { get; set; }
         public bool ThrowNotFoundIfNull { get; set; }
     }
 
-    internal class GetStockQueryHandler : IQueryHandler<GetStockQuery, stock>
+    internal class GetStockQueryHandler : IQueryHandler<GetStockQuery, Stock>
     {
-        private readonly IBaseDapperRepository<stock> _stockRepository;
+        private readonly IBaseDapperRepository<Stock> _stockRepository;
 
-        public GetStockQueryHandler(IBaseDapperRepository<stock> stockRepository)
+        public GetStockQueryHandler(IBaseDapperRepository<Stock> stockRepository)
         {
             _stockRepository = stockRepository;
         }
 
-        public stock Handle(GetStockQuery query)
+        public Stock Handle(GetStockQuery query)
         {
-            var stock = _stockRepository.Get(x => x.code == query.Code);
+            var stock = _stockRepository.Get(x => x.Code == query.Code);
 
             if (query.ThrowNotFoundIfNull && stock == null)
             {

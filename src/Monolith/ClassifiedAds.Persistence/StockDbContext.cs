@@ -16,10 +16,10 @@ namespace ClassifiedAds.Persistence {
         public StockDbContext(DbContextOptions<StockDbContext> options)
             : base(options) { }
 
-        public virtual DbSet<stock> Stocks { get; set; }
-        public virtual DbSet<stockDay> StockDays { get; set; }
-        public virtual DbSet<stock_fundamental> StockFundamentals { get; set; }
-        public virtual DbSet<stock_funder> StockFunders { get; set; }
+        public virtual DbSet<Stock> Stocks { get; set; }
+        public virtual DbSet<StockDay> StockDays { get; set; }
+        public virtual DbSet<StockFundamental> StockFundamentals { get; set; }
+        public virtual DbSet<StockFunder> StockFunders { get; set; }
         public virtual DbSet<StockGroup> StockGroups { get; set; }
         public virtual DbSet<StockGroupItem> StockGroupItems { get; set; }
         public virtual DbSet<StockNote> StockNotes { get; set; }
@@ -36,14 +36,14 @@ namespace ClassifiedAds.Persistence {
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
 
-            modelBuilder.Entity<stock>(entity =>
+            modelBuilder.Entity<Stock>(entity =>
             {
-                entity.HasKey(e => e.code)
+                entity.HasKey(e => e.Code)
                     .HasName("PK_stock_1");
 
-                entity.ToTable("stock");
+                entity.ToTable("Stock");
 
-                entity.Property(e => e.code)
+                entity.Property(e => e.Code)
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
@@ -55,99 +55,99 @@ namespace ClassifiedAds.Persistence {
                     .HasMaxLength(20)
                     .IsUnicode(false);
 
-                entity.Property(e => e.close_price).HasColumnType("decimal(8, 2)");
+                entity.Property(e => e.ClosePrice).HasColumnType("decimal(8, 2)");
 
-                entity.Property(e => e.ex)
+                entity.Property(e => e.Ex)
                     .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
-                entity.Property(e => e.fetchDate).HasColumnType("date");
+                entity.Property(e => e.FetchDate).HasColumnType("date");
 
-                entity.Property(e => e.five_price).HasColumnType("decimal(8, 2)");
+                entity.Property(e => e.FivePrice).HasColumnType("decimal(8, 2)");
 
-                entity.Property(e => e.industry).HasMaxLength(10);
+                entity.Property(e => e.Industry).HasMaxLength(10);
 
-                entity.Property(e => e.listing_date).HasColumnType("date");
+                entity.Property(e => e.ListingDate).HasColumnType("date");
 
-                entity.Property(e => e.name).HasMaxLength(50);
+                entity.Property(e => e.Name).HasMaxLength(50);
 
-                entity.Property(e => e.note).HasMaxLength(100);
+                entity.Property(e => e.Note).HasMaxLength(100);
 
-                entity.Property(e => e.sixty_price).HasColumnType("decimal(8, 2)");
+                entity.Property(e => e.SixtyPrice).HasColumnType("decimal(8, 2)");
 
-                entity.Property(e => e.ten_price).HasColumnType("decimal(8, 2)");
+                entity.Property(e => e.TenPrice).HasColumnType("decimal(8, 2)");
 
-                entity.Property(e => e.twenty_price).HasColumnType("decimal(8, 2)");
+                entity.Property(e => e.TwentyPrice).HasColumnType("decimal(8, 2)");
             });
 
-            modelBuilder.Entity<stockDay>(entity =>
+            modelBuilder.Entity<StockDay>(entity =>
             {
-                entity.HasKey(e => new { e.stock_code, e.date });
+                entity.HasKey(e => new { e.StockCode, e.Date });
 
-                entity.ToTable("stockDay");
+                entity.ToTable("StockDay");
 
-                entity.Property(e => e.stock_code)
+                entity.Property(e => e.StockCode)
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
-                entity.Property(e => e.date).HasColumnType("date");
+                entity.Property(e => e.Date).HasColumnType("date");
 
-                entity.Property(e => e.close_price).HasColumnType("decimal(8, 2)");
+                entity.Property(e => e.ClosePrice).HasColumnType("decimal(8, 2)");
 
-                entity.Property(e => e.highest_price).HasColumnType("decimal(8, 2)");
+                entity.Property(e => e.HighestPrice).HasColumnType("decimal(8, 2)");
 
-                entity.Property(e => e.lowest_price).HasColumnType("decimal(8, 2)");
+                entity.Property(e => e.LowestPrice).HasColumnType("decimal(8, 2)");
 
-                entity.Property(e => e.open_price).HasColumnType("decimal(8, 2)");
+                entity.Property(e => e.OpenPrice).HasColumnType("decimal(8, 2)");
 
-                entity.HasOne(d => d.stock_codeNavigation)
-                    .WithMany(p => p.stockDays)
-                    .HasForeignKey(d => d.stock_code)
+                entity.HasOne(d => d.StockCodeNavigation)
+                    .WithMany(p => p.StockDays)
+                    .HasForeignKey(d => d.StockCode)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_stockDay_stock");
             });
 
-            modelBuilder.Entity<stock_fundamental>(entity =>
+            modelBuilder.Entity<StockFundamental>(entity =>
             {
-                entity.HasKey(e => new { e.stock_code, e.date });
+                entity.HasKey(e => new { e.StockCode, e.Date });
 
-                entity.ToTable("stock_fundamental");
+                entity.ToTable("StockFundamental");
 
-                entity.Property(e => e.stock_code)
+                entity.Property(e => e.StockCode)
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
-                entity.Property(e => e.date).HasColumnType("date");
+                entity.Property(e => e.Date).HasColumnType("date");
 
-                entity.Property(e => e.created).HasColumnType("datetime");
+                entity.Property(e => e.Created).HasColumnType("datetime");
 
-                entity.Property(e => e.pe_ratio).HasColumnType("decimal(18, 2)");
+                entity.Property(e => e.PERatio).HasColumnType("decimal(18, 2)");
 
-                entity.Property(e => e.price_net_ratio).HasColumnType("decimal(5, 2)");
+                entity.Property(e => e.PriceNetRatio).HasColumnType("decimal(5, 2)");
 
-                entity.Property(e => e.report_year_quarter)
+                entity.Property(e => e.ReportYearQuarter)
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
-                entity.Property(e => e.stock_name).HasMaxLength(50);
+                entity.Property(e => e.StockName).HasMaxLength(50);
 
-                entity.Property(e => e.updated).HasColumnType("datetime");
+                entity.Property(e => e.Updated).HasColumnType("datetime");
 
-                entity.Property(e => e.yield_rate).HasColumnType("decimal(5, 2)");
+                entity.Property(e => e.YieldRate).HasColumnType("decimal(5, 2)");
             });
 
-            modelBuilder.Entity<stock_funder>(entity =>
+            modelBuilder.Entity<StockFunder>(entity =>
             {
-                entity.HasKey(e => new { e.stock_code, e.date });
+                entity.HasKey(e => new { e.StockCode, e.Date });
 
-                entity.ToTable("stock_funder");
+                entity.ToTable("StockFunder");
 
-                entity.Property(e => e.stock_code)
+                entity.Property(e => e.StockCode)
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
-                entity.Property(e => e.date).HasColumnType("date");
+                entity.Property(e => e.Date).HasColumnType("date");
             });
 
             modelBuilder.Entity<StockGroup>(entity =>

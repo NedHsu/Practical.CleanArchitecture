@@ -7,20 +7,20 @@ using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
 
 namespace ClassifiedAds.Application.Stocks.Queries {
-    public class GetStocksQuery : IQuery<List<stock>> {
+    public class GetStocksQuery : IQuery<List<Stock>> {
         public string Code { get; set; }
     }
 
     [AuditLog]
     [DatabaseRetry]
-    internal class GetStocksQueryHandler : IQueryHandler<GetStocksQuery, List<stock>> {
-        private readonly IBaseDapperRepository<stock> _stockRepository;
+    internal class GetStocksQueryHandler : IQueryHandler<GetStocksQuery, List<Stock>> {
+        private readonly IBaseDapperRepository<Stock> _stockRepository;
 
-        public GetStocksQueryHandler(IBaseDapperRepository<stock> stockRepository) {
+        public GetStocksQueryHandler(IBaseDapperRepository<Stock> stockRepository) {
             _stockRepository = stockRepository;
         }
 
-        public List<stock> Handle(GetStocksQuery query) {
+        public List<Stock> Handle(GetStocksQuery query) {
             return _stockRepository.GetAll().ToList();
         }
     }

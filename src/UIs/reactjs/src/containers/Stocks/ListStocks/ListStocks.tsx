@@ -171,14 +171,12 @@ class ListStocks extends Component<any, any> {
         <td>
           <NavLink to={"/stocks/" + stock.code}>({stock.code}){stock.name}</NavLink>
         </td>
-        <td>{stock.note}</td>
-        <td className={styles.test}>{stock.price || "--"}</td>
+        <td>{stock.industry}</td>
+        <td className={styles.test}>{stock.closePrice || "--"}</td>
         <td>
-          <Star
-            rating={stock.starRating || 4}
-            ratingClicked={(event) => this.onRatingClicked(event)}
-          ></Star>
+          {stock.fivePrice}/{stock.tenPrice}/{stock.twentyPrice}/{stock.sixtyPrice}
         </td>
+        <td>{stock.fetchDate}</td>
         <td>
           <NavLink
             className="btn btn-primary"
@@ -217,9 +215,10 @@ class ListStocks extends Component<any, any> {
               </button>
             </th>
             <th>Stock</th>
-            <th>Note</th>
+            <th>Industry</th>
             <th>Price</th>
-            <th>5 Star Rating</th>
+            <th>5/10/20/60</th>
+            <th>Fetch Date</th>
             <th></th>
           </tr>
         </thead>
@@ -364,7 +363,7 @@ class ListStocks extends Component<any, any> {
                     <Button variant="link" onClick={() => this.closeStockGroupEditor()} style={{ color: "red" }}>
                       <IoMdClose size="1.5rem"></IoMdClose>
                     </Button>
-                    <Button variant="link" onClick={() => this.deleteStockGroup()}>
+                    <Button variant="link" onClick={() => this.deleteStockGroup()} hidden={!this.props.stockGroup?.id}>
                       <IoIosTrash size="1.5rem"></IoIosTrash>
                     </Button>
                   </Col>

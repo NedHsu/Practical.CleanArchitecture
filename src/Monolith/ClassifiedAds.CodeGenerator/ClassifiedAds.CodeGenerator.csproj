@@ -23,33 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="templates\Application\StockNotes\Commands\AddUpdateStockNoteCommand.cs" />
-    <Content Remove="templates\Application\StockNotes\Commands\DeleteStockNoteCommand.cs" />
-    <Content Remove="templates\Application\StockNotes\DTOs\StockNoteDTO.cs" />
-    <Content Remove="templates\Application\StockNotes\EventHandlers\StockNoteCreatedEventHandler.cs" />
-    <Content Remove="templates\Application\StockNotes\EventHandlers\StockNoteDeletedEventHandler.cs" />
-    <Content Remove="templates\Application\StockNotes\EventHandlers\StockNoteUpdatedEventHandler.cs" />
-    <Content Remove="templates\Application\StockNotes\Queries\GetStockNoteQuery.cs" />
-    <Content Remove="templates\Application\StockNotes\Queries\GetStockNotesQuery.cs" />
-    <Content Remove="templates\Application\StockNotes\Services\IStockNoteService.cs" />
-    <Content Remove="templates\Application\StockNotes\Services\StockNoteService.cs" />
-    <Content Remove="templates\WebAPI\StocksController.cs" />
-    <Content Remove="templates\WebAPI\Stocks\StockModel.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="templates\Application\StockNotes\Commands\AddUpdateStockNoteCommand.cs" />
-    <Compile Include="templates\Application\StockNotes\Commands\DeleteStockNoteCommand.cs" />
-    <Compile Include="templates\Application\StockNotes\DTOs\StockNoteDTO.cs" />
-    <Compile Include="templates\Application\StockNotes\EventHandlers\StockNoteCreatedEventHandler.cs" />
-    <Compile Include="templates\Application\StockNotes\EventHandlers\StockNoteDeletedEventHandler.cs" />
-    <Compile Include="templates\Application\StockNotes\EventHandlers\StockNoteUpdatedEventHandler.cs" />
-    <Compile Include="templates\Application\StockNotes\Queries\GetStockNoteQuery.cs" />
-    <Compile Include="templates\Application\StockNotes\Queries\GetStockNotesQuery.cs" />
-    <Compile Include="templates\Application\StockNotes\Services\IStockNoteService.cs" />
-    <Compile Include="templates\Application\StockNotes\Services\StockNoteService.cs" />
-    <Compile Include="templates\WebAPI\StocksController.cs" />
-    <Compile Include="templates\WebAPI\Stocks\StockModel.cs" />
+    <Folder Include="templates\BlazorModule\Templates\Components\" />
   </ItemGroup>
 
 </Project>

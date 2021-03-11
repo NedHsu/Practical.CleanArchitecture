@@ -9,14 +9,14 @@ using System.Linq;
 
 namespace ClassifiedAds.Persistence.Repositories
 {
-    public class StockDapperRepository : BaseDapperRepository<stock>, IStockDapperRepository
+    public class StockDapperRepository : BaseDapperRepository<Stock>, IStockDapperRepository
     {
         public StockDapperRepository(IStockDbContext dbContext, IDateTimeProvider dateTimeProvider)
             : base(dbContext, dateTimeProvider)
         {
         }
 
-        public List<stock> GetByGroupId(Guid groupId)
+        public List<Stock> GetByGroupId(Guid groupId)
         {
             string sql = @"
 SELECT s.* 
@@ -29,7 +29,7 @@ ORDER BY i.Sort, s.code
             {
                 { "@GroupId", groupId },
             };
-            return DbContext.Connection.Query<stock>(sql, param).ToList();
+            return DbContext.Connection.Query<Stock>(sql, param).ToList();
         }
     }
 }

@@ -12,7 +12,7 @@ namespace ClassifiedAds.Persistence.DapperContext
 {
     public interface IStockDbContext : IDapperDbContext, IUnitOfWork
     {
-        IDapperRepository<stock> stock { get; }
+        IDapperRepository<Stock> Stock { get; }
         IDapperRepository<StockNote> StockNote { get; }
         IDapperRepository<StockGroup> StockGroup { get; }
         IDapperRepository<StockGroupItem> StockGroupItem { get; }

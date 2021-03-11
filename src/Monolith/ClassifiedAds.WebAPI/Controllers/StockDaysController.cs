@@ -2,11 +2,11 @@
 using ClassifiedAds.Application;
 using ClassifiedAds.Application.AuditLogEntries.DTOs;
 using ClassifiedAds.Application.AuditLogEntries.Queries;
-using ClassifiedAds.Application.Stocks.Commands;
-using ClassifiedAds.Application.Stocks.DTOs;
-using ClassifiedAds.Application.Stocks.Queries;
+using ClassifiedAds.Application.StockDays.Commands;
+using ClassifiedAds.Application.StockDays.DTOs;
+using ClassifiedAds.Application.StockDays.Queries;
 using ClassifiedAds.Domain.Entities;
-using ClassifiedAds.WebAPI.Models.Stocks;
+using ClassifiedAds.WebAPI.Models.StockDays;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,13 +22,13 @@ namespace ClassifiedAds.WebAPI.Controllers
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
-    public class StocksController : ControllerBase
+    public class StockDaysController : ControllerBase
     {
         private readonly Dispatcher _dispatcher;
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
 
-        public StocksController(Dispatcher dispatcher, ILogger<StocksController> logger, IMapper mapper)
+        public StockDaysController(Dispatcher dispatcher, ILogger<StockDaysController> logger, IMapper mapper)
         {
             _dispatcher = dispatcher;
             _logger = logger;
@@ -36,60 +36,49 @@ namespace ClassifiedAds.WebAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<StockModel>> Get()
+        public ActionResult<IEnumerable<StockDayModel>> Get()
         {
-            _logger.LogInformation("Getting all stocks");
-            var stocks = _dispatcher.Dispatch(new GetStocksQuery() { });
-            var model = _mapper.Map<List<StockModel>>(stocks);
-            return Ok(model);
-        }
-
-        [HttpGet("groupId/{groupId}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<List<StockModel>> Get(Guid groupId)
-        {
-            var stock = _dispatcher.Dispatch(new GetGroupStocksQuery { GroupId = groupId });
-            var model = _mapper.Map<List<StockModel>>(stock);
+            _logger.LogInformation("Getting all stockdays");
+            var stockdays = _dispatcher.Dispatch(new GetStockDaysQuery(){ });
+            var model = _mapper.Map<IEnumerable<StockDayModel>>(stockdays);
             return Ok(model);
         }
 
         [HttpGet("{code}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<StockModel> Get(string code)
+        public ActionResult<StockDayModel> Get(string code)
         {
-            var stock = _dispatcher.Dispatch(new GetStockQuery { Code = code, ThrowNotFoundIfNull = true });
-            var model = _mapper.Map<StockModel>(stock);
+            var stockday = _dispatcher.Dispatch(new GetStockDayQuery { Code = code, ThrowNotFoundIfNull = true });
+            var model = _mapper.Map<StockDayModel>(stockday);
             return Ok(model);
         }
 
         [HttpPost]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public ActionResult<Stock> Post([FromBody] StockModel model)
+        public ActionResult<StockDay> Post([FromBody] StockDayModel model)
         {
-            var stock = _mapper.Map<Stock>(model);
-            _dispatcher.Dispatch(new AddUpdateStockCommand { Stock = stock });
-            model = _mapper.Map<StockModel>(stock);
-            return Created($"/api/stocks/{model.Code}", model);
+            var stockday = _mapper.Map<StockDay>(model);
+            _dispatcher.Dispatch(new AddUpdateStockDayCommand { StockDay = stockday });
+            model = _mapper.Map<StockDayModel>(stockday);
+            return Created($"/api/stockdays/{model.Code}", model);
         }
 
         [HttpPut("{code}")]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult Put(string code, [FromBody] StockModel model)
+        public ActionResult Put(string code, [FromBody] StockDayModel model)
         {
-            var stock = _dispatcher.Dispatch(new GetStockQuery { Code = code, ThrowNotFoundIfNull = false }) 
-                ?? new Stock { };
+            var stockday = _dispatcher.Dispatch(new GetStockDayQuery { Code = code, ThrowNotFoundIfNull = false }) 
+                ?? new StockDay { };
 
-            stock.Code = model.Code;
-            stock.Name = model.Name;
+            stockday.StockCode = model.Code;
 
-            _dispatcher.Dispatch(new AddUpdateStockCommand { Stock = stock });
+            _dispatcher.Dispatch(new AddUpdateStockDayCommand { StockDay = stockday });
 
-            model = _mapper.Map<StockModel>(stock);
+            model = _mapper.Map<StockDayModel>(stockday);
 
             return Ok(model);
         }
@@ -99,9 +88,9 @@ namespace ClassifiedAds.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult Delete(string code)
         {
-            var stock = _dispatcher.Dispatch(new GetStockQuery { Code = code, ThrowNotFoundIfNull = true });
+            var stockday = _dispatcher.Dispatch(new GetStockDayQuery { Code = code, ThrowNotFoundIfNull = true });
 
-            _dispatcher.Dispatch(new DeleteStockCommand { Stock = stock });
+            _dispatcher.Dispatch(new DeleteStockDayCommand { StockDay = stockday });
 
             return Ok();
         }
@@ -112,10 +101,10 @@ namespace ClassifiedAds.WebAPI.Controllers
             var logs = _dispatcher.Dispatch(new GetAuditEntriesQuery { ObjectId = id.ToString() });
 
             List<dynamic> entries = new List<dynamic>();
-            StockDTO previous = null;
+            StockDayDTO previous = null;
             foreach (var log in logs.OrderBy(x => x.CreatedDateTime))
             {
-                var data = JsonConvert.DeserializeObject<StockDTO>(log.Log);
+                var data = JsonConvert.DeserializeObject<StockDayDTO>(log.Log);
                 var highLight = new
                 {
                     Code = previous != null && data.Code != previous.Code,

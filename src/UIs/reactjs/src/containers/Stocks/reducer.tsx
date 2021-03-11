@@ -22,7 +22,7 @@ const fetchStocksStart = (state, action) => {
 
 const fetchStocksSuccess = (state, action) => {
   return updateObject(state, {
-    stocks: action.stocks,
+    stocks: action.stocks?.sort((a, b) => { return 0 }),
     loading: false,
   });
 };

@@ -8,7 +8,7 @@ namespace ClassifiedAds.Persistence.DapperContext
 {
     public class StockDbContext : DapperDbContext, IStockDbContext
     {
-        private IDapperRepository<stock> _stockRepository;
+        private IDapperRepository<Stock> _stockRepository;
         private IDapperRepository<StockNote> _stockNoteRepository;
         private IDapperRepository<StockGroup> _stockGroupRepository;
         private IDapperRepository<StockGroupItem> _stockGroupItemRepository;
@@ -19,7 +19,7 @@ namespace ClassifiedAds.Persistence.DapperContext
         {
         }
 
-        public IDapperRepository<stock> stock => _stockRepository ?? (_stockRepository = new DapperRepository<stock>(Connection));
+        public IDapperRepository<Stock> Stock => _stockRepository ?? (_stockRepository = new DapperRepository<Stock>(Connection));
         public IDapperRepository<StockNote> StockNote => _stockNoteRepository ?? (_stockNoteRepository = new DapperRepository<StockNote>(Connection));
         public IDapperRepository<StockGroup> StockGroup => _stockGroupRepository ?? (_stockGroupRepository = new DapperRepository<StockGroup>(Connection));
         public IDapperRepository<StockGroupItem> StockGroupItem => _stockGroupItemRepository ?? (_stockGroupItemRepository = new DapperRepository<StockGroupItem>(Connection));

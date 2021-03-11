@@ -8,14 +8,14 @@ using ClassifiedAds.Domain.Repositories;
 
 namespace ClassifiedAds.Application.Stocks.Queries
 {
-    public class GetGroupStocksQuery : IQuery<List<stock>>
+    public class GetGroupStocksQuery : IQuery<List<Stock>>
     {
         public Guid GroupId { get; set; }
     }
 
     [AuditLog]
     [DatabaseRetry]
-    internal class GetGroupStocksQueryHandler : IQueryHandler<GetGroupStocksQuery, List<stock>>
+    internal class GetGroupStocksQueryHandler : IQueryHandler<GetGroupStocksQuery, List<Stock>>
     {
         private readonly IStockDapperRepository _stockRepository;
 
@@ -24,7 +24,7 @@ namespace ClassifiedAds.Application.Stocks.Queries
             _stockRepository = stockRepository;
         }
 
-        public List<stock> Handle(GetGroupStocksQuery query)
+        public List<Stock> Handle(GetGroupStocksQuery query)
         {
             return _stockRepository.GetByGroupId(query.GroupId);
         }
