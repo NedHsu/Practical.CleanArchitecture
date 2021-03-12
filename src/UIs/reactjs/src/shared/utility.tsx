@@ -55,3 +55,7 @@ export const checkValidity = (value, rules) => {
 
   return rs;
 };
+
+export const urlParams = (params) => {
+  return "?" + Object.keys(params).map(key => key + '=' + params[key]).join('&');
+}

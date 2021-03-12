@@ -6,6 +6,7 @@ using ClassifiedAds.Application.Stocks.Commands;
 using ClassifiedAds.Application.Stocks.DTOs;
 using ClassifiedAds.Application.Stocks.Queries;
 using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.WebAPI.Models.Common;
 using ClassifiedAds.WebAPI.Models.Stocks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -36,11 +37,11 @@ namespace ClassifiedAds.WebAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<StockModel>> Get()
+        public ActionResult<PagedResultModel<StockModel>> Get(string keyword, uint pageIndex, uint pageSize)
         {
             _logger.LogInformation("Getting all stocks");
-            var stocks = _dispatcher.Dispatch(new GetStocksQuery() { });
-            var model = _mapper.Map<List<StockModel>>(stocks);
+            var stocks = _dispatcher.Dispatch(new GetStocksQuery() { Keyword = keyword, PageIndex = pageIndex, PageSize = pageSize });
+            var model = _mapper.Map<PagedResultModel<StockModel>>(stocks);
             return Ok(model);
         }
 
@@ -50,6 +51,23 @@ namespace ClassifiedAds.WebAPI.Controllers
         public ActionResult<List<StockModel>> Get(Guid groupId)
         {
             var stock = _dispatcher.Dispatch(new GetGroupStocksQuery { GroupId = groupId });
+            var model = _mapper.Map<List<StockModel>>(stock);
+            return Ok(model);
+        }
+
+        [HttpGet("Industry")]
+        public ActionResult<List<string>> GetIndustry()
+        {
+            _logger.LogInformation("Getting all stocks");
+            var industrys = _dispatcher.Dispatch(new GetIndustrysQuery() { });
+            return Ok(industrys);
+        }
+
+        [HttpGet("Industry/{industry}")]
+        public ActionResult<List<StockModel>> GetByIndustry(string industry)
+        {
+            _logger.LogInformation("Getting all stocks");
+            var stock = _dispatcher.Dispatch(new GetStocksQuery() { Industry = industry });
             var model = _mapper.Map<List<StockModel>>(stock);
             return Ok(model);
         }

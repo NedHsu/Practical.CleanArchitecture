@@ -5,17 +5,17 @@ namespace ClassifiedAds.Domain.Entities
 {
     public class PagedResult<T> : IPagedResult
     {
-        public int TotalPages { get; }
+        public uint TotalPages { get; }
 
-        public int TotalCount { get; }
+        public uint TotalCount { get; }
 
-        public int PageIndex { get; }
+        public uint PageIndex { get; }
 
         public List<T> Items { get; }
 
-        public PagedResult(List<T> items, int count, int pageIndex, int pageSize)
+        public PagedResult(List<T> items, uint count, uint pageIndex, uint pageSize)
         {
-            TotalPages = (int)Math.Ceiling(count / (double)pageSize);
+            TotalPages = (uint)Math.Ceiling(count / (double)pageSize);
             TotalCount = count;
             PageIndex = pageIndex;
             Items = items;
@@ -27,10 +27,9 @@ namespace ClassifiedAds.Domain.Entities
 
         public static PagedResult<T> Create(IQueryable<T> source, int pageIndex, int pageSize)
         {
-            var count = source.Count();
+            var count = (uint)source.Count();
             var items = source.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
-            return new PagedResult<T>(items, count, pageIndex, pageSize);
+            return new PagedResult<T>(items, count, (uint)pageIndex, (uint)pageSize);
         }
-
     }
 }

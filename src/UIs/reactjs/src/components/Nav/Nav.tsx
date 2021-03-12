@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
+import Spaceship from "../Spaceship/Spaceship";
 
 import classes from "./Nav.module.css";
 
@@ -13,7 +14,7 @@ class Nav extends Component<Props> {
     const pageTitle = "ClassifiedAds.React";
     return (
       <nav
-        className={"navbar navbar-expand navbar-light bg-light " + classes.Nav}
+        className={"navbar navbar-expand navbar-dark " + classes.Nav}
       >
         <a className="navbar-brand" href="/">
           {pageTitle + " " + React.version}
@@ -42,6 +43,11 @@ class Nav extends Component<Props> {
           <li>
             <NavLink className="nav-link" to="/stocks">
               Stocks
+            </NavLink>
+          </li>
+          <li>
+            <NavLink className="nav-link" to="/illustrations">
+              Illustration
             </NavLink>
           </li>
           <li>
@@ -81,6 +87,7 @@ class Nav extends Component<Props> {
             </li>
           ) : null}
         </ul>
+        <Spaceship />
       </nav>
     );
   }

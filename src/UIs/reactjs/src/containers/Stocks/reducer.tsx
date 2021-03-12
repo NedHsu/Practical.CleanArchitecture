@@ -3,11 +3,14 @@ import * as actionTypes from "./actionTypes";
 
 const initialState = {
   stocks: [],
+  totalPage: 0,
+  totalCount: 0,
   stock: {
     name: "",
     code: "",
     description: "",
   },
+  industrys: [],
   auditLogs: [],
   loading: false,
   saved: false,
@@ -22,7 +25,16 @@ const fetchStocksStart = (state, action) => {
 
 const fetchStocksSuccess = (state, action) => {
   return updateObject(state, {
-    stocks: action.stocks?.sort((a, b) => { return 0 }),
+    stocks: action.stocks,
+    loading: false,
+    totalPage: action.totalPage,
+    totalCount: action.totalCount,
+  });
+};
+
+const fetchGroupStocksSuccess = (state, action) => {
+  return updateObject(state, {
+    stocks: action.stocks,
     loading: false,
   });
 };
@@ -73,6 +85,8 @@ const reducer = (state = initialState, action) => {
       return fetchStocksStart(state, action);
     case actionTypes.FETCH_STOCKS_SUCCESS:
       return fetchStocksSuccess(state, action);
+    case actionTypes.FETCH_GROUP_STOCKS_SUCCESS:
+      return fetchGroupStocksSuccess(state, action);
     case actionTypes.FETCH_STOCKS_FAIL:
       return fetchStocksFail(state, action);
     case actionTypes.FETCH_STOCK_START:

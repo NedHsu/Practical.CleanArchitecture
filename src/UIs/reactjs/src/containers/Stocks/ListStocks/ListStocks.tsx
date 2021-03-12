@@ -15,6 +15,7 @@ import { IoMdAddCircle, IoMdClose, IoMdCheckmark, IoIosTrash } from "react-icons
 
 class ListStocks extends Component<any, any> {
   groupTitleField: any;
+  filterTimer: any;
   constructor(props) {
     super(props);
     this.groupTitleField = React.createRef();
@@ -36,6 +37,8 @@ class ListStocks extends Component<any, any> {
       code: "",
       name: "",
     },
+    pageIndex: 1,
+    pageSize: 50,
   };
 
   toggleImage = () => {
@@ -44,6 +47,21 @@ class ListStocks extends Component<any, any> {
 
   filterChanged = (event) => {
     this.setState({ listFilter: event.target.value });
+    if (this.props.stockGroup.id) {
+      return;
+    }
+
+    if (this.filterTimer !== undefined) {
+      clearTimeout(this.filterTimer);
+    }
+
+    this.filterTimer = setTimeout(() => {
+      this.props.fetchStocks({
+        pageSize: this.state.pageSize,
+        pageIndex: 1,
+        keyword: this.state.listFilter,
+      })
+    }, 500);
   };
 
   groupCheckChanged = (event) => {
@@ -93,7 +111,10 @@ class ListStocks extends Component<any, any> {
   };
 
   componentDidMount() {
-    this.props.fetchStocks();
+    this.props.fetchStocks({
+      pageSize: this.state.pageSize,
+      pageIndex: this.state.pageIndex,
+    });
     this.props.fetchStockGroups();
   }
 
@@ -130,7 +151,10 @@ class ListStocks extends Component<any, any> {
       this.props.fetchGroupStocks(stockGroup);
     } else {
       this.props.resetStockGroup();
-      this.props.fetchStocks();
+      this.props.fetchStocks({
+        pageIndex: 1,
+        pageSize: this.state.pageSize,
+      });
       this.closeStockGroupEditor();
     }
   }
@@ -153,11 +177,11 @@ class ListStocks extends Component<any, any> {
   }
 
   render() {
-    const filteredStocks = this.state.listFilter
+    const filteredStocks = this.state.listFilter && this.props.stockGroup.id
       ? this.performFilter(this.state.listFilter)
       : this.props.stocks;
 
-    const rows = filteredStocks?.slice(0, 10).map((stock) => (
+    const rows = filteredStocks?.map((stock) => (
       <tr key={stock.code}>
         <td>
           {this.state.showImage ? (
@@ -396,6 +420,8 @@ class ListStocks extends Component<any, any> {
             <div className="table-responsive">{table}</div>
           </div>
         </div>
+        <div onScroll={(event) => console.log(event)}>
+        </div>
         {
           this.props.errorMessage ? (
             <div className="alert alert-danger">
@@ -419,12 +445,14 @@ const mapStateToProps = (state) => {
     groupLoading: state.stockGroup.loading,
     stockGroupItems: state.stockGroupItem.stockGroupItems,
     stockGroupItemLoading: state.stockGroupItem.loading,
+    stockTotalCount: state.stock.totalCount,
+    stockTotalPage: state.stock.totalPage,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchStocks: () => dispatch(actions.fetchStocks()),
+    fetchStocks: (options) => dispatch(actions.fetchStocks(options)),
     fetchGroupStocks: (group) => dispatch(actions.fetchGroupStocks(group)),
     deleteStock: (stock) => dispatch(actions.deleteStock(stock)),
     fetchStockNotes: (stock) => dispatch(noteActions.fetchStockNotes(stock)),

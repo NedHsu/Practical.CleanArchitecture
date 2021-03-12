@@ -21,6 +21,7 @@ import ViewMatch from "./containers/Matches/ViewMatch/ViewMatch";
 import ListStocks from "./containers/Stocks/ListStocks/ListStocks";
 import ViewStock from "./containers/Stocks/ViewStock/ViewStock";
 import AddStock from "./containers/Stocks/AddStock/AddStock";
+import ViewIllustration from "./containers/Illustrations/ViewIllustration/ViewIllustration";
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
         <Route path="/stocks/add" component={AddStock} />
         <Route path="/stocks/:id" component={ViewStock} />
         <Route path="/stocks" component={ListStocks} />
+        <Route path="/illustrations/:id" component={ViewIllustration} />
         <Route path="/users/add" component={AddUser} />
         <Route path="/users/edit/:id" component={AddUser} />
         <Route path="/users/:id" component={ViewUser} />

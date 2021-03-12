@@ -1,9 +1,18 @@
 import * as actionTypes from "./actionTypes";
 
 /// STOCKS
-export const fetchStocksSuccess = (stocks) => {
+export const fetchStocksSuccess = (result) => {
   return {
     type: actionTypes.FETCH_STOCKS_SUCCESS,
+    stocks: result.items,
+    totalCount: result.totalCount,
+    totalPage: result.totalPage,
+  };
+};
+
+export const fetchGroupStocksSuccess = (stocks) => {
+  return {
+    type: actionTypes.FETCH_GROUP_STOCKS_SUCCESS,
     stocks: stocks,
   };
 };
@@ -21,9 +30,10 @@ export const fetchStocksStart = () => {
   };
 };
 
-export const fetchStocks = () => {
+export const fetchStocks = (options) => {
   return {
     type: actionTypes.FETCH_STOCKS,
+    options: options,
   };
 };
 
@@ -164,3 +174,18 @@ export const fetchAuditLogs = (stock) => {
   };
 };
 /// VIEW AUDIT LOGS
+
+/// INDUSTRYS
+export const fetchIndustrys = () => {
+  return {
+    type: actionTypes.FETCH_INDUSTRYS,
+  };
+};
+
+export const fetchIndustrysSuccess = (industrys) => {
+  return {
+    type: actionTypes.FETCH_INDUSTRYS_SUCCESS,
+    industrys: industrys,
+  }
+}
+/// INDUSTRYS

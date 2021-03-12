@@ -1,27 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using ClassifiedAds.Application.Decorators.AuditLog;
 using ClassifiedAds.Application.Decorators.DatabaseRetry;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
 
-namespace ClassifiedAds.Application.Stocks.Queries {
-    public class GetStocksQuery : IQuery<List<Stock>> {
-        public string Code { get; set; }
+namespace ClassifiedAds.Application.Stocks.Queries
+{
+    public class GetStocksQuery : IQuery<PagedResult<Stock>>
+    {
+        public string Keyword { get; set; }
+        public string Industry { get; set; }
+        public uint PageSize { get; set; }
+        public uint PageIndex { get; set; }
     }
 
     [AuditLog]
     [DatabaseRetry]
-    internal class GetStocksQueryHandler : IQueryHandler<GetStocksQuery, List<Stock>> {
+    internal class GetStocksQueryHandler : IQueryHandler<GetStocksQuery, PagedResult<Stock>>
+    {
         private readonly IBaseDapperRepository<Stock> _stockRepository;
 
-        public GetStocksQueryHandler(IBaseDapperRepository<Stock> stockRepository) {
+        public GetStocksQueryHandler(IBaseDapperRepository<Stock> stockRepository)
+        {
             _stockRepository = stockRepository;
         }
 
-        public List<Stock> Handle(GetStocksQuery query) {
-            return _stockRepository.GetAll().ToList();
+        public PagedResult<Stock> Handle(GetStocksQuery query)
+        {
+            Expression<Func<Stock, bool>> predicate = null;
+            if (!string.IsNullOrWhiteSpace(query.Industry))
+            {
+                predicate = x => x.Industry == query.Industry;
+            }
+            else if (!string.IsNullOrWhiteSpace(query.Keyword))
+            {
+                var keyword = query.Keyword.ToUpper();
+                predicate = x => x.Code.Contains(query.Keyword) || x.Name.Contains(keyword);
+            }
+
+            return _stockRepository.GetPaged(query.PageIndex, query.PageSize, predicate, $"{nameof(Stock.CFICode)} ASC, {nameof(Stock.Code)} ASC ");
         }
     }
 }

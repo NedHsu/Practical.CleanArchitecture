@@ -31,5 +31,17 @@ ORDER BY i.Sort, s.code
             };
             return DbContext.Connection.Query<Stock>(sql, param).ToList();
         }
+
+        public List<string> GetAllIndustry()
+        {
+            string sql = @"
+SELECT Industry
+FROM Stock
+WHERE Industry <> ''
+GROUP BY Industry
+ORDER BY COUNT(0) DESC";
+
+            return DbContext.Connection.Query<string>(sql).ToList();
+        }
     }
 }

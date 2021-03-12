@@ -7,5 +7,6 @@ namespace ClassifiedAds.Domain.Repositories
     public interface IStockDapperRepository : IBaseDapperRepository<Stock>
     {
         List<Stock> GetByGroupId(Guid groupId);
+        List<string> GetAllIndustry();
     }
 }

@@ -3,11 +3,12 @@ import axios from "./axios";
 
 import * as actionTypes from "./actionTypes";
 import * as actions from "./actions";
+import { urlParams } from "../../shared/utility";
 
 export function* fetchStocksSaga(action) {
   yield put(actions.fetchStocksStart());
   try {
-    const response = yield axios.get("");
+    const response = yield axios.get(urlParams(action.options));
     const fetchedStocks = response.data;
     yield put(actions.fetchStocksSuccess(fetchedStocks));
   } catch (error) {
@@ -20,7 +21,18 @@ export function* fetchGroupStocksSaga(action) {
   try {
     const response = yield axios.get(`/groupId/${action.group?.id}`);
     const fetchedStocks = response.data;
-    yield put(actions.fetchStocksSuccess(fetchedStocks));
+    yield put(actions.fetchGroupStocksSuccess(fetchedStocks));
+  } catch (error) {
+    yield put(actions.fetchStocksFail(error));
+  }
+}
+
+export function* fetchIndustrysSaga() {
+  yield put(actions.fetchStocksStart());
+  try {
+    const response = yield axios.get(`/Industry`);
+    const fetchedIndustrys = response.data;
+    yield put(actions.fetchIndustrysSuccess(fetchedIndustrys));
   } catch (error) {
     yield put(actions.fetchStocksFail(error));
   }
@@ -56,7 +68,6 @@ export function* deleteStockSaga(action) {
   try {
     const response = yield axios.delete(action.stock.code, action.stock);
     yield put(actions.deleteStockSuccess(action.stock));
-    yield put(actions.fetchStocks());
   } catch (error) {
     console.log(error);
     yield put(actions.deleteStockFail(error));
@@ -75,6 +86,7 @@ export function* fetchAuditLogsSaga(action) {
 }
 
 export function* watchStock() {
+  yield takeEvery(actionTypes.FETCH_INDUSTRYS, fetchIndustrysSaga);
   yield takeEvery(actionTypes.FETCH_GROUP_STOCKS, fetchGroupStocksSaga);
   yield takeEvery(actionTypes.FETCH_STOCKS, fetchStocksSaga);
   yield takeEvery(actionTypes.FETCH_STOCK, fetchStockSaga);

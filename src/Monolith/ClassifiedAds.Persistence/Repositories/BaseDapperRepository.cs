@@ -6,6 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using ClassifiedAds.CrossCuttingConcerns.OS;
+using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Persistence.DapperContext;
 using Dapper;
@@ -32,7 +33,7 @@ namespace ClassifiedAds.Persistence.Repositories
             var t = typeof(TEntity);
             TableName = t.GetCustomAttributesData().FirstOrDefault(x => x.AttributeType == typeof(TableAttribute))?.ConstructorArguments[0].Value.ToString() ?? t.Name;
             TableKeys = t.GetProperties().Where(p => p.IsDefined(typeof(KeyAttribute), false)).ToArray();
-            DapperRepository = (MicroOrm.Dapper.Repositories.IDapperRepository<TEntity>)typeof(IStockDbContext).GetProperty(TableName).GetValue(_dbContext);
+            DapperRepository = (IDapperRepository<TEntity>)typeof(IStockDbContext).GetProperty(TableName).GetValue(_dbContext);
         }
 
         protected IStockDbContext DbContext => _dbContext;
@@ -114,6 +115,22 @@ namespace ClassifiedAds.Persistence.Repositories
             {
                 Delete(entity);
             }
+        }
+
+        public PagedResult<TEntity> GetPaged(uint pageIndex, uint pageSize, Expression<Func<TEntity, bool>> predicate, string orderBy)
+        {
+            uint count = (uint)DapperRepository.Count(predicate);
+            if (pageSize > 0)
+            {
+                DapperRepository.SetLimit(pageSize, (pageIndex - 1) * pageSize);
+            }
+
+            if (!string.IsNullOrWhiteSpace(orderBy))
+            {
+                DapperRepository.SetOrderBy(orderBy);
+            }
+
+            return new PagedResult<TEntity>(DapperRepository.FindAll(predicate).ToList(), count, pageIndex, pageSize);
         }
     }
 }

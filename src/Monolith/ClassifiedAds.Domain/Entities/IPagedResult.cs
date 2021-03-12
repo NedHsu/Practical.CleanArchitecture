@@ -2,10 +2,10 @@ namespace ClassifiedAds.Domain.Entities
 {
     public interface IPagedResult
     {
-        int TotalPages { get; }
+        uint TotalPages { get; }
 
-        int TotalCount { get; }
+        uint TotalCount { get; }
 
-        int PageIndex { get; }
+        uint PageIndex { get; }
     }
 }

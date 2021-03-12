@@ -5,7 +5,7 @@ namespace ClassifiedAds.WebAPI.Models.Common
 {
     public class PagedResultModel<T>
     {
-        public PagedResultModel(int totalPages, int totalCount, int pageIndex, IEnumerable<T> items)
+        public PagedResultModel(uint totalPages, uint totalCount, uint pageIndex, IEnumerable<T> items)
         {
             TotalPages = totalPages;
             TotalCount = totalCount;
@@ -13,11 +13,11 @@ namespace ClassifiedAds.WebAPI.Models.Common
             Items = items;
         }
 
-        public int TotalPages { get; }
+        public uint TotalPages { get; }
 
-        public int TotalCount { get; }
+        public uint TotalCount { get; }
 
-        public int PageIndex { get; }
+        public uint PageIndex { get; }
 
         public IEnumerable<T> Items { get; }
 

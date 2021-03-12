@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.WebAPI.Models.Common;
 using ClassifiedAds.WebAPI.Models.StockDays;
 using ClassifiedAds.WebAPI.Models.StockGroupItems;
 using ClassifiedAds.WebAPI.Models.StockGroups;
@@ -21,6 +22,7 @@ namespace ClassifiedAds.WebAPI.AutoMapper
             CreateMap<StockGroupModel, StockGroup>();
             CreateMap<StockGroupItem, StockGroupItemModel>();
             CreateMap<StockDay, StockDayModel>();
+            CreateMap(typeof(PagedResult<>), typeof(PagedResultModel<>));
         }
     }
 }
