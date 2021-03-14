@@ -24,7 +24,7 @@ class ViewIllustration extends Component<any, any> {
 
 const mapStateToProps = state => {
   return {
-    illustration: state.illustration.illustration
+    // illustration: state.illustration.illustration
   };
 };
 

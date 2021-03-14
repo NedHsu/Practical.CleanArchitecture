@@ -111,10 +111,7 @@ class ListStocks extends Component<any, any> {
   };
 
   componentDidMount() {
-    this.props.fetchStocks({
-      pageSize: this.state.pageSize,
-      pageIndex: this.state.pageIndex,
-    });
+    this.selectGroup({});
     this.props.fetchStockGroups();
   }
 

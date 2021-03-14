@@ -44,7 +44,7 @@ function App() {
         <Route path="/stocks/add" component={AddStock} />
         <Route path="/stocks/:id" component={ViewStock} />
         <Route path="/stocks" component={ListStocks} />
-        <Route path="/illustrations/:id" component={ViewIllustration} />
+        <Route path="/illustrations" component={ViewIllustration} />
         <Route path="/users/add" component={AddUser} />
         <Route path="/users/edit/:id" component={AddUser} />
         <Route path="/users/:id" component={ViewUser} />

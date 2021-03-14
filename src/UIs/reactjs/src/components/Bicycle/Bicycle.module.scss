@@ -14,20 +14,21 @@ body {
   width: 108px;
   position: absolute;
   right: 220px;
-  top: 70px;
+  top: 72px;
   z-index: 3;
+  transform: rotate(-5deg);
 }
 .seat {
-  height: 30px;
-  width: 118px;
-  background-color: #0098a8;
+  height: 15px;
+  width: 100px;
+  background-color: #3d3d3d;
   border-top-left-radius: 28px;
   border-top-right-radius: 35px;
   border-bottom-right-radius: 60px;
   border-bottom-left-radius: 100px;
   transform: skew(39deg, 3deg) rotateX(9deg) rotateY(2deg);
   transform-style: preserve-3d;
-  top: 10px;
+  top: 20px;
   position: absolute;
 }
 .frame_container,
@@ -46,14 +47,25 @@ body {
 }
 .frame_container_2 .frame_1 {
   width: 527px;
-  height: 16px;
+  height: 25px;
   background-color: #e55138;
   transform: rotateX(18.6deg) rotateY(66deg);
-  left: 60px;
+  left: 55px;
   position: absolute;
-  top: 110px;
+  top: 100px;
   transform-origin: left;
   z-index: 5;
+}
+.frame_container .frame_0 {
+  width: 50px;
+  height: 50px;
+  border-bottom-left-radius: 50%;
+  border-bottom-right-radius: 5px;
+  border-bottom: 10px solid black;
+  border-left: 10px solid black;
+  right: 173px;
+  top: 25px;
+  position: absolute;
 }
 .frame_container .frame_1,
 .frame_container .frame_2,
@@ -88,8 +100,8 @@ body {
 }
 .frame_container .frame_4 {
   height: 11px;
-  width: 500px;
-  right: -90px;
+  width: 300px;
+  right: 110px;
   top: 105px;
   transform: rotateX(-20deg) rotateY(0);
   transform-style: flat;
@@ -113,35 +125,28 @@ body {
 .frame_container_front .frame_1::after {
   position: absolute;
   content: "";
-  width: 175px;
+  width: 90px;
   height: 7px;
-  background-color: #929298;
+  background-color: black;
   border-radius: 50px;
   left: -76px;
-  background-image: linear-gradient(
-    90deg,
-    rgba(0, 0, 0, 1) 25%,
-    rgba(233, 233, 233, 1) 25%,
-    rgba(233, 233, 233, 1) 75%,
-    rgba(0, 0, 0, 1) 75%
-  );
   top: -5px;
   /* transform: rotateX(-28deg) rotateY(8deg); */
 }
 .front_wheel {
-  height: 190px;
-  width: 190px;
+  height: 240px;
+  width: 240px;
   position: absolute;
-  bottom: 25px;
+  bottom: 7px;
   border-radius: 50%;
   border: 12px solid #1f191d;
-  left: 171px;
+  left: 159px;
   display: flex;
   justify-content: center;
   align-items: center;
   animation: rotate 2s infinite linear reverse;
 }
-.inner-wheel {
+.inner_wheel {
   height: 30px;
   width: 30px;
   border-radius: 50%;
@@ -182,21 +187,20 @@ body {
 .spike_1::before {
   transform: rotate(90deg);
 }
-.front_wheel.back-wheel {
+.back_wheel {
   right: -50px;
-  left: unset;
-  top: 57px;
   z-index: 1;
+  left: 170px;
 }
-.front_wheel.back-wheel::after,
+.front_wheel .back_wheel::after,
 .front_wheel::after {
   position: absolute;
   content: "";
   width: calc(100% + 35px);
   height: calc(100% + 35px);
-  border-top: 7px solid #e55138;
+  // border-top: 7px solid #e55138;
   animation: rotate 2s infinite linear;
-  border-right: 7px solid #e55138;
+  // border-right: 7px solid #e55138;
   border-radius: 50%;
   border-bottom: 5px solid transparent;
   border-left: 5px solid transparent;
@@ -209,10 +213,10 @@ body {
   top: 185px;
 }
 .frame_container_back .frame_1 {
-  width: 527px;
+  width: 466px;
   height: 16px;
   background-color: #e55138;
-  transform: rotateX(18.6deg) rotateY(72deg);
+  transform: rotateX(18.6deg) rotateY(77deg);
   left: 180px;
   position: absolute;
   top: -4px;
@@ -220,13 +224,13 @@ body {
   z-index: 5;
 }
 .frame_container_back .frame_2 {
-  width: 198px;
-  height: 13px;
+  width: 150px;
+  height: 12px;
   background-color: #e55138;
-  right: 58px;
+  right: 110px;
   left: unset;
   position: absolute;
-  bottom: 104px;
+  bottom: 120px;
   z-index: 2;
 }
 .paddel_container {
@@ -234,12 +238,12 @@ body {
   z-index: 3;
   height: 80px;
   width: 310px;
-  bottom: 77px;
+  bottom: 78px;
   right: 0;
 }
 .paddel {
-  height: 50px;
-  width: 50px;
+  height: 70px;
+  width: 70px;
   border-radius: 50%;
   background-color: #a2a7b0;
   border: 10px solid #1f191d;
@@ -251,13 +255,12 @@ body {
 .paddel_container::before {
   position: absolute;
   height: 0;
-  width: 190px;
+  width: 150px;
   border: 2px dotted #1f191d;
   content: "";
   left: 57px;
   top: 17px;
   // z-index: ;
-  transform: rotateX(11deg) rotateY(26deg);
 }
 .paddel_container::after {
   animation: chain-move 50ms infinite alternate-reverse;
@@ -265,9 +268,13 @@ body {
 .paddel_container::before {
   animation: chain-move 50ms infinite reverse;
 }
+.paddel_container::after {
+  transform: rotateX(11deg) rotateY(26deg);
+  top: 15px;
+}
 .paddel_container::before {
-  transform: rotateX(7deg) rotateY(-13deg);
-  top: 69px;
+  transform: rotateX(22deg) rotateY(-30deg);
+  top: 58px;
 }
 .paddel .p_l,
 .paddel .p_r {

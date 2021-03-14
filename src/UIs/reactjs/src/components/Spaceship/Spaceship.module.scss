@@ -5,13 +5,13 @@ $lightShadowColor: #ef689e;
 $lightShadowColor2: #c6003d;
 $lightShadowColor3: #e92d77;
 $darkShadowColor: #a10532;
-$periscopeColor: #F0F78B;
+$periscopeColor: #f0f78b;
 $propellerColor: #f7e349;
 $propellerColor2: #f7ac08;
 $windowLightColor: #c9e5d9;
-$lightColor: #817E97;
-$seaGroundColor1:#0c0051;
-$seaGroundColor2:#08003b;
+$lightColor: #817e97;
+$seaGroundColor1: #0c0051;
+$seaGroundColor2: #08003b;
 //sizes
 
 .seaContainer {
@@ -21,13 +21,13 @@ $seaGroundColor2:#08003b;
   width: 100%;
   height: 100%;
   background: #130560;
-  overflow:hidden;
+  overflow: hidden;
   z-index: -1;
 }
 .submarine__container {
   position: absolute;
   top: 50%;
-  right: 0px;
+  right: -150px;
   width: 400px;
   height: 200px;
   transform: translate(-50%, -50%);
@@ -50,20 +50,17 @@ $seaGroundColor2:#08003b;
   height: 50px;
   transform: translate(0%, -50%);
   perspective: 600px;
- 
 }
-.propeller__perspective
-{
-   width: 100%;
+.propeller__perspective {
+  width: 100%;
   height: 100%;
   transition: transform 1s;
- 
+
   transform-style: preserve-3d;
-  animation:rotateInfinite 1s linear infinite;
+  animation: rotateInfinite 1s linear infinite;
   cursor: pointer;
 }
-.submarine__propeller_parts
-{
+.submarine__propeller_parts {
   position: absolute;
   left: 0%;
   width: 100%;
@@ -73,15 +70,14 @@ $seaGroundColor2:#08003b;
   transform-style: preserve-3d;
 }
 .darkOne {
-  top:0%;
+  top: 0%;
   background: $propellerColor2;
-  transform: rotateY(180deg)rotateX(225deg)
+  transform: rotateY(180deg) rotateX(225deg);
 }
-.lightOne
-{
-  top:0%;
-   background: $propellerColor;
-  transform:rotateX(45deg);
+.lightOne {
+  top: 0%;
+  background: $propellerColor;
+  transform: rotateX(45deg);
 }
 .submarine__sail {
   position: absolute;
@@ -106,25 +102,24 @@ $seaGroundColor2:#08003b;
   top: 0%;
   transform: translate(0%, -33%);
 }
-.dark2
-{
-  left:0%;
-  top:50%;
+.dark2 {
+  left: 0%;
+  top: 50%;
 }
-.light1{
-  left:20%;
-  top:20%;
-  width:50%;
-  background:$lightShadowColor;
+.light1 {
+  left: 20%;
+  top: 20%;
+  width: 50%;
+  background: $lightShadowColor;
 }
 .submarine__window {
   width: 25px;
   height: 25px;
   border-radius: 100%;
-  background-image: linear-gradient(45deg,$windowLightColor,#fff);
+  background-image: linear-gradient(45deg, $windowLightColor, #fff);
   border: 8px solid $darkShadowColor;
-  z-index:10;
-  animation:shadow-change 1s linear infinite;
+  z-index: 10;
+  animation: shadow-change 1s linear infinite;
 }
 .one,
 .two {
@@ -198,174 +193,197 @@ $seaGroundColor2:#08003b;
   background: linear-gradient(to left, $lightColor, $bgColor);
   /* The points are: centered top, left bottom, right bottom */
   clip-path: polygon(0% 0%, 50% 45%, 50% 55%, 0% 100%);
-  
+
   transform: translate(-18%, -45%);
 }
-.bubbles__container
-{
-  position:absolute;
-  top:50%;
-  left:55%;
-  width:100px;
-  height:50px;
-transform:translate(100%,-50%);
+.bubbles__container {
+  position: absolute;
+  top: 50%;
+  left: 55%;
+  width: 100px;
+  height: 50px;
+  transform: translate(100%, -50%);
 }
-.bubbles
-{
-  position:absolute;
-  width:10px;
-  height:10px;
-  border-radius:100%;
-  left:5%;
-  top:5%;
-  background:#fff;
-  opacity:0.8;
+.bubbles {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 100%;
+  left: 5%;
+  top: 5%;
+  background: #fff;
+  opacity: 0.8;
 }
 $bubble-class: bubble;
 
-@for $i from 1 through 4{
-  .#{$bubble-class}-#{$i}{
-    top:15%*($i+1-1);
-    left:1%;
+@for $i from 1 through 4 {
+  .#{$bubble-class}-#{$i} {
+    top: 15% * ($i + 1-1);
+    left: 1%;
     opacity: 0;
-    animation:move-right 1s infinite linear;
-    animation-delay: 0.25s*$i;
+    animation: move-right 1s infinite linear;
+    animation-delay: 0.25s * $i;
+  }
 }
+.ground__container {
+  position: absolute;
+  top: 75%;
+  left: 0%;
+  width: 100%;
+  height: 25%;
+  background: $seaGroundColor2;
+  margin-top: 20px;
 }
-.ground__container
-{
-  position:absolute;
-  top:75%;
-  left:0%;
-  width:100%;
-  height:25%;
-  background:$seaGroundColor2;
-  margin-top:20px;
+.ground1 {
+  top: 75%;
+  height: 100%;
+  background: $seaGroundColor1;
 }
-.ground1
-{
-  top:75%;
-  height:100%;
-   background:$seaGroundColor1;
-}
-.ground2
-{
-  position:absolute;
-  top:35%;
-  width:100%;
-  height:100%;
-  background:$seaGroundColor2;
+.ground2 {
+  position: absolute;
+  top: 35%;
+  width: 100%;
+  height: 100%;
+  background: $seaGroundColor2;
 }
 
-.ground span
-{
-  position:absolute;
-  width:60px;
-  height:60px;
-  border-radius:100%;
-  
+.ground span {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border-radius: 100%;
 }
-.ground1 span
-{
-   background:$seaGroundColor1;
+.ground1 span {
+  background: $seaGroundColor1;
 }
-.ground2 span
-{
-   background:$seaGroundColor2;
-   width:80px;
-  height:80px;
-  border-radius:100%;
- transform:translateY(30%);
+.ground2 span {
+  background: $seaGroundColor2;
+  width: 80px;
+  height: 80px;
+  border-radius: 100%;
+  transform: translateY(30%);
 }
 
 $ground-class: up;
-@for $i from 1 through 20 
-{
-  .#{$ground-class}_#{$i}{
-    left:-10%*($i+-1);
-    top:-20px*($i*0.10);
-    animation:moveThegroundRight $i+2s infinite linear;
-}
+@for $i from 1 through 20 {
+  .#{$ground-class}_#{$i} {
+    left: -10% * ($i + -1);
+    top: -20px * ($i * 0.1);
+    animation: moveThegroundRight $i + 2s infinite linear;
+  }
 }
 //animation
 
-@keyframes shadow-change
-{
-  0%,100%
-  {
-    background-image: linear-gradient(45deg,$windowLightColor 0%,$windowLightColor 20% ,#fff 21%, #fff 39%, $windowLightColor 40%,#fff 41%,#fff 59%,$windowLightColor 60%);
+@keyframes shadow-change {
+  0%,
+  100% {
+    background-image: linear-gradient(
+      45deg,
+      $windowLightColor 0%,
+      $windowLightColor 20%,
+      #fff 21%,
+      #fff 39%,
+      $windowLightColor 40%,
+      #fff 41%,
+      #fff 59%,
+      $windowLightColor 60%
+    );
   }
-  20%
-  {
-    background-image: linear-gradient(45deg,$windowLightColor 20%,$windowLightColor 40% ,#fff 41%, #fff 59%, $windowLightColor 60%,#fff 61%,#fff 79%,$windowLightColor 80%);
+  20% {
+    background-image: linear-gradient(
+      45deg,
+      $windowLightColor 20%,
+      $windowLightColor 40%,
+      #fff 41%,
+      #fff 59%,
+      $windowLightColor 60%,
+      #fff 61%,
+      #fff 79%,
+      $windowLightColor 80%
+    );
   }
-  40%
-  {
-    
-    background-image: linear-gradient(45deg,$windowLightColor 40%,$windowLightColor 60% ,#fff 61%, #fff 79%, $windowLightColor 80%,#fff 81%,#fff 99%,$windowLightColor 0%);
+  40% {
+    background-image: linear-gradient(
+      45deg,
+      $windowLightColor 40%,
+      $windowLightColor 60%,
+      #fff 61%,
+      #fff 79%,
+      $windowLightColor 80%,
+      #fff 81%,
+      #fff 99%,
+      $windowLightColor 0%
+    );
   }
-  60%
-  {
-    background-image: linear-gradient(45deg,$windowLightColor 60%,$windowLightColor 80% ,#fff 81%, #fff 99%, $windowLightColor 0%,#fff 1%,#fff 19%,$windowLightColor 20%);
+  60% {
+    background-image: linear-gradient(
+      45deg,
+      $windowLightColor 60%,
+      $windowLightColor 80%,
+      #fff 81%,
+      #fff 99%,
+      $windowLightColor 0%,
+      #fff 1%,
+      #fff 19%,
+      $windowLightColor 20%
+    );
   }
-  80%
-  {
-    background-image: linear-gradient(45deg,$windowLightColor 80%,$windowLightColor 0% ,#fff 1%, #fff 19%, $windowLightColor 20%,#fff 21%,#fff 39%,$windowLightColor 40%);
+  80% {
+    background-image: linear-gradient(
+      45deg,
+      $windowLightColor 80%,
+      $windowLightColor 0%,
+      #fff 1%,
+      #fff 19%,
+      $windowLightColor 20%,
+      #fff 21%,
+      #fff 39%,
+      $windowLightColor 40%
+    );
   }
-  
 }
 
 @keyframes move-right {
-  0%
-  {
-    opacity:0;
+  0% {
+    opacity: 0;
   }
-  10%
-  {
-    opacity:0.4;
-    transform:translate(10%,10%);
+  10% {
+    opacity: 0.4;
+    transform: translate(10%, 10%);
   }
-  50%
-  {
-    opacity:0.2;
-    transform:translate(450%,25%);
+  50% {
+    opacity: 0.2;
+    transform: translate(450%, 25%);
   }
-  80%
-  {
-    opacity:0;
-     transform:translateX(555%);
+  80% {
+    opacity: 0;
+    transform: translateX(555%);
   }
-  100%
-  {
-    opacity:0;
-    left:0%;
-    top:0%;
+  100% {
+    opacity: 0;
+    left: 0%;
+    top: 0%;
   }
 }
-@keyframes rotateInfinite{
-  0%
-  {
+@keyframes rotateInfinite {
+  0% {
     transform: rotateX(0deg);
   }
-  50%
-  {
+  50% {
     transform: rotateX(180deg);
   }
-  100%
-  {
+  100% {
     transform: rotateX(360deg);
   }
 }
-@keyframes moveThegroundRight
-{
- 90%
-  {
-    opacity:1;
-   left:100%;
+@keyframes moveThegroundRight {
+  90% {
+    opacity: 1;
+    left: 100%;
   }
-  95%,100%
-  {
-    left:1050%;
-    opacity:0;
+  95%,
+  100% {
+    left: 1050%;
+    opacity: 0;
   }
 }

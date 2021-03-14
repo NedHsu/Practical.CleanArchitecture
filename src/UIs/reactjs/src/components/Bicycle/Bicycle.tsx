@@ -18,6 +18,7 @@ const Bicycle = props => {
         <div className={styles.frame_1}></div>
       </div>
       <div className={styles.frame_container_front + " " + styles.frame_container}>
+        <div className={styles.frame_0}></div>
         <div className={styles.frame_1}></div>
         <div className={styles.frame_2}></div>
         <div className={styles.frame_3}></div>
