@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
-import Spaceship from "../Spaceship/Spaceship";
+import Submarine from "../Submarine/Submarine";
 
 import classes from "./Nav.module.css";
 
@@ -87,7 +87,7 @@ class Nav extends Component<Props> {
             </li>
           ) : null}
         </ul>
-        <Spaceship />
+        <Submarine />
       </nav>
     );
   }
