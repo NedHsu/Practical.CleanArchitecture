@@ -16,6 +16,13 @@ $peak: #efdbd8;
   z-index: -1;
   top: 0%;
   left: 0%;
+  .orbit {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    transform-style: preserve-3d;
+    animation: orbit 10s linear infinite;
+  }
   .sun {
     background-color: $sunColor;
     width: 50px;
@@ -38,7 +45,7 @@ $peak: #efdbd8;
     border-radius: 50%;
     width: 30px;
     height: 30px;
-    animation: moon-revolution 10s linear infinite;
+    transform: rotateX(0deg);
   }
   .ship {
     .body {
@@ -80,11 +87,22 @@ $ground-class: up;
   }
 }
 
-@keyframes moon-revolution {
+@keyframes orbit {
   0% {
-    transform: rotate3d(100deg, 100deg, 100deg);
+    transform: rotateZ(0deg);
   }
+
   100% {
-    transform: rotate3d(-100deg, -100deg, -100deg);
+    transform: rotateZ(-360deg);
+  }
+}
+
+@keyframes invert {
+  0% {
+    transform: rotateX(-90deg) rotateY(360deg) rotateZ(0deg);
+  }
+
+  100% {
+    transform: rotateX(-90deg) rotateY(0deg) rotateZ(0deg);
   }
 }

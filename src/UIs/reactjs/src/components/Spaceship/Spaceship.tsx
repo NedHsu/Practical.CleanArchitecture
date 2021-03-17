@@ -8,8 +8,9 @@ const Spaceship = props => {
     <div className={styles.space}>
       <div className={styles.sun}></div>
       <div className={styles.earth}>
-        <div className={styles.moon}></div>
-        <div className={styles.moon}></div>
+        <div className={styles.orbit}>
+          <div className={styles.moon}></div>
+        </div>
       </div>
       <div className={styles.ship}>
         <body>
