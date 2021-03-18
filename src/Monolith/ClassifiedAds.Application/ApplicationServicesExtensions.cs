@@ -43,7 +43,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 configureInterceptor(typeof(IUserService), typeof(UserService), ServiceLifetime.Scoped);
                 configureInterceptor(typeof(IProductService), typeof(ProductService), ServiceLifetime.Scoped);
                 configureInterceptor(typeof(IMatchService), typeof(MatchService), ServiceLifetime.Scoped);
-                configureInterceptor(typeof(IMatchService), typeof(StockService), ServiceLifetime.Scoped);
+                configureInterceptor(typeof(IStockService), typeof(StockService), ServiceLifetime.Scoped);
             }
 
             return services;
