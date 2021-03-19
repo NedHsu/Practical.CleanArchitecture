@@ -7,7 +7,9 @@ using ClassifiedAds.Domain.Identity;
 using ClassifiedAds.Domain.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
+using System.Web;
 
 namespace ClassifiedAds.Application.Weathers.Services
 {
@@ -16,7 +18,7 @@ namespace ClassifiedAds.Application.Weathers.Services
         private readonly HttpClient _httpClient;
         private readonly WeatherServiceConfigs configs;
 
-        public WeatherService(HttpClient httpClient, WeatherServiceConfigs configs, ICurrentUser currentUser)
+        public WeatherService(HttpClient httpClient, WeatherServiceConfigs configs)
         {
             _httpClient = httpClient;
             this.configs = configs;
@@ -31,36 +33,32 @@ namespace ClassifiedAds.Application.Weathers.Services
         private TResult GetResponse<TQuery, TResult>(TQuery query, string api)
             where TQuery : class
         {
-            var response = _httpClient.GetAsync($"{api}?Authorization={configs.Key}" + GetParamters(query));
+            var response = _httpClient.GetAsync($"/api{api}?Authorization={configs.Key}" + ToParamters(query));
+            var t = response.Result.Content.ReadAsStringAsync().Result;
             return response.Result.Content.ReadAs<TResult>().Result;
         }
 
-        public List<WeatherDTO> GetAll()
+        public CountyResponse GetByCountry(GetWeatherCountyWeatherQuery query)
         {
-            throw new NotImplementedException();
+            return GetResponse<GetWeatherCountyWeatherQuery, CountyResponse>(query, $"/v1/rest/datastore/{query.Country}");
         }
 
-        public CountyResponse GetByCountry(GetCountyWeatherQuery query)
+        public EarthquakeResponse GetEarthquake(GetWeatherEarthquakerQuery query)
         {
-            return GetResponse<GetCountyWeatherQuery, CountyResponse>(query, $"/v1/rest/datastore/{query.Country}");
+            return GetResponse<GetWeatherEarthquakerQuery, EarthquakeResponse>(query, "/v1/rest/datastore/E-A0015-001");
         }
 
-        public EarthquakeResponse GetEarthquake(GetEarthquakerQuery query)
+        public RecentResponse GetRecent(GetWeatherRecentQuery query)
         {
-            return GetResponse<GetEarthquakerQuery, EarthquakeResponse>(query, "/v1/rest/datastore/E-A0015-001");
+            return GetResponse<GetWeatherRecentQuery, RecentResponse>(query, "/v1/rest/datastore/F-C0032-001");
         }
 
-        public RecentResponse GetRecent(GetRecentQuery query)
+        public TidalResponse GetTida(GetWeatherTidalQuery query)
         {
-            return GetResponse<GetRecentQuery, RecentResponse>(query, "/v1/rest/datastore/F-C0032-001");
+            return GetResponse<GetWeatherTidalQuery, TidalResponse>(query, "/v1/rest/datastore/F-A0021-001");
         }
 
-        public TidalResponse GetTida(GetTidalQuery query)
-        {
-            return GetResponse<GetTidalQuery, TidalResponse>(query, "/v1/rest/datastore/F-A0021-001");
-        }
-
-        public string GetParamters<T>(T query)
+        public string ToParamters<T>(T query)
             where T : class
         {
             var t = typeof(T);
@@ -68,30 +66,37 @@ namespace ClassifiedAds.Application.Weathers.Services
             var result = string.Empty;
             foreach (var p in pInfos)
             {
+                var value = p.GetValue(query);
+                if (value == null)
+                {
+                    continue;
+                }
+
+                var typeName = Nullable.GetUnderlyingType(p.PropertyType) != null ? p.PropertyType.GenericTypeArguments[0].Name : p.PropertyType.Name;
                 var filedName = p.Name.Substring(0, 1).ToLower() + p.Name.Substring(1);
                 var fieldValue = string.Empty;
-                switch (Type.GetTypeCode(p.PropertyType))
+                switch (typeName)
                 {
-                    case TypeCode.DateTime:
-                        fieldValue = ((DateTime)p.GetValue(query)).ToString("yyyy-MM-ddThh:mm:ss");
+                    case "DateTime":
+                        fieldValue = ((DateTime)value).ToString("yyyy-MM-ddThh:mm:ss");
                         break;
-                    case TypeCode.String:
-                        fieldValue = p.GetValue(query).ToString();
+                    case "String":
+                        fieldValue = value?.ToString();
                         break;
-                    case TypeCode.Int32:
-                        fieldValue = p.GetValue(query).ToString();
+                    case "Int32":
+                        fieldValue = value?.ToString();
                         break;
-                    case TypeCode.Object:
-                        if (p.PropertyType.IsGenericType && p.PropertyType.GetGenericTypeDefinition() == typeof(List<string>))
-                        {
-                        }
-
+                    case "String[]":
+                        fieldValue = string.Join(",", (string[])value);
+                        break;
+                    case "DateTime[]":
+                        fieldValue = string.Join(",", ((DateTime[])value).Select(x => x.ToString("yyyy-MM-ddThh:mm:ss")));
                         break;
                 }
 
                 if (!string.IsNullOrEmpty(fieldValue))
                 {
-                    result += $"&{filedName}={fieldValue}";
+                    result += $"&{filedName}={HttpUtility.UrlEncode(fieldValue)}";
                 }
             }
 

@@ -11,7 +11,6 @@ namespace ClassifiedAds.Application.Weathers.DTOs
 
     public class CountyRecord
     {
-        public string DatasetDescription { get; set; }
         public List<CountyLocationWeather> Locations { get; set; }
     }
 
@@ -19,8 +18,8 @@ namespace ClassifiedAds.Application.Weathers.DTOs
     {
         public string Dataid { get; set; }
         public string DatasetDescription { get; set; }
-        public string LocationName { get; set; }
-        public List<TownshipLocationWeather> Locations { get; set; }
+        public string LocationsName { get; set; }
+        public List<TownshipLocationWeather> Location { get; set; }
     }
 
     public class TownshipLocationWeather

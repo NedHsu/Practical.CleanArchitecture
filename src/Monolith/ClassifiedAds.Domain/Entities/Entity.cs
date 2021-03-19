@@ -5,6 +5,7 @@ namespace ClassifiedAds.Domain.Entities
 {
     public abstract class Entity<TKey> : IHasKey<TKey>, ITrackable
     {
+        [Key]
         public TKey Id { get; set; }
 
         [Timestamp]

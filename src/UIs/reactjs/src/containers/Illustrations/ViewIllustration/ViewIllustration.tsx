@@ -4,7 +4,10 @@ import { connect } from "react-redux";
 
 import Bicycle from "../../../components/Bicycle/Bicycle";
 import Spaceship from "../../../components/Spaceship/Spaceship";
+import Submarine from "../../../components/Submarine/Submarine";
 import * as actions from "../actions";
+
+import styles from "./ViewIllustration.module.scss";
 
 class ViewIllustration extends Component<any, any> {
   state = {
@@ -19,10 +22,15 @@ class ViewIllustration extends Component<any, any> {
       <div>
         <Tabs defaultActiveKey="Bicycle" id="uncontrolled-tab-example">
           <Tab eventKey="Bicycle" title="Bicycle">
-            <Bicycle />
+            <div className={styles.bicycle}>
+              <Bicycle />
+            </div>
           </Tab>
           <Tab eventKey="Spaceship" title="Spaceship">
             <Spaceship />
+          </Tab>
+          <Tab eventKey="Submarine" title="Submarine">
+            <Submarine />
           </Tab>
         </Tabs>
       </div>

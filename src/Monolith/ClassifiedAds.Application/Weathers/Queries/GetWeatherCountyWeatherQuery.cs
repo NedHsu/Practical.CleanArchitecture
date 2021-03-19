@@ -6,14 +6,19 @@ using System.Linq;
 
 namespace ClassifiedAds.Application.Weathers.Queries
 {
-    public class GetCountyWeatherQuery : IQuery<CountyResponse>
+    public class GetWeatherCountyWeatherQuery : IQuery<CountyResponse>
     {
-        public Guid Id { get; set; }
-        public bool ThrowNotFoundIfNull { get; set; }
         public string Country { get; set; }
+        public string[] LocationName { get; set; }
+        public string[] ElementName { get; set; }
+        public string Sort { get; set; }
+        public DateTime[] StartTime { get; set; }
+        public DateTime[] DataTime { get; set; }
+        public DateTime? TimeFrom { get; set; }
+        public DateTime? TimeTo { get; set; }
     }
 
-    internal class GetCountyWeatherQueryHandler : IQueryHandler<GetCountyWeatherQuery, CountyResponse>
+    internal class GetCountyWeatherQueryHandler : IQueryHandler<GetWeatherCountyWeatherQuery, CountyResponse>
     {
         private readonly IWeatherService _weatherService;
 
@@ -22,7 +27,7 @@ namespace ClassifiedAds.Application.Weathers.Queries
             _weatherService = weatherService;
         }
 
-        public CountyResponse Handle(GetCountyWeatherQuery query)
+        public CountyResponse Handle(GetWeatherCountyWeatherQuery query)
         {
             return _weatherService.GetByCountry(query);
         }

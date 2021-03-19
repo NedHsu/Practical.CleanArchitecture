@@ -11,8 +11,8 @@ namespace ClassifiedAds.Application.Weathers.DTOs
 
     public class EarthquakeRecord
     {
-        public string Description { get; set; }
-        public List<Earthquake> Earthquakes { get; set; }
+        public string DatasetDescription { get; set; }
+        public List<Earthquake> Earthquake { get; set; }
     }
 
     public class Earthquake
@@ -68,7 +68,7 @@ namespace ClassifiedAds.Application.Weathers.DTOs
         public string AreaName { get; set; }
         public string InfoStatus { get; set; }
         public EarthquakeValue AreaIntensity { get; set; }
-        public List<EqStation> EqStations { get; set; }
+        public List<EqStation> EqStation { get; set; }
     }
 
     public class EqStation

@@ -7,11 +7,10 @@ namespace ClassifiedAds.Application.Weathers.Services
 {
     public interface IWeatherService
     {
-        List<WeatherDTO> GetAll();
-        CountyResponse GetByCountry(GetCountyWeatherQuery query);
-        EarthquakeResponse GetEarthquake(GetEarthquakerQuery query);
-        RecentResponse GetRecent(GetRecentQuery query);
-        TidalResponse GetTida(GetTidalQuery query);
+        CountyResponse GetByCountry(GetWeatherCountyWeatherQuery query);
+        EarthquakeResponse GetEarthquake(GetWeatherEarthquakerQuery query);
+        RecentResponse GetRecent(GetWeatherRecentQuery query);
+        TidalResponse GetTida(GetWeatherTidalQuery query);
         AlarmResponse GetAlarm(GetWeatherAlarmQuery query);
     }
 }

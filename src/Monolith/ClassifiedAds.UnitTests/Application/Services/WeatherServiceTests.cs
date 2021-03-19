@@ -6,7 +6,7 @@ using System;
 using System.Net.Http;
 using Xunit;
 
-namespace ClassifiedAds.UnitTests.Weathers.Services
+namespace ClassifiedAds.UnitTests.Application.Services
 {
     public class WeatherServiceTests
     {
@@ -14,8 +14,7 @@ namespace ClassifiedAds.UnitTests.Weathers.Services
 
         private Mock<HttpClient> mockHttpClient;
         private HttpClient httpClient;
-        private Mock<WeatherServiceConfigs> mockWeatherServiceConfigs;
-        private Mock<ICurrentUser> mockCurrentUser;
+        private WeatherServiceConfigs mockWeatherServiceConfigs;
 
         public WeatherServiceTests()
         {
@@ -24,21 +23,18 @@ namespace ClassifiedAds.UnitTests.Weathers.Services
             this.mockHttpClient = this.mockRepository.Create<HttpClient>();
             this.httpClient = new HttpClient()
             {
-                BaseAddress = new Uri("https://opendata.cwb.gov.tw/api"),
+                BaseAddress = new Uri("https://opendata.cwb.gov.tw"),
+                Timeout = TimeSpan.FromSeconds(60),
             };
 
-            this.mockWeatherServiceConfigs = this.mockRepository.Create<WeatherServiceConfigs>();
-            this.mockWeatherServiceConfigs.Setup(x => x.Key).Returns("CWB-D72F0129-BC81-4E7D-8073-85219CB12EB0");
-
-            this.mockCurrentUser = this.mockRepository.Create<ICurrentUser>();
+            this.mockWeatherServiceConfigs = new WeatherServiceConfigs() { Key = "CWB-D72F0129-BC81-4E7D-8073-85219CB12EB0" };
         }
 
         private WeatherService CreateService()
         {
             return new WeatherService(
                 this.httpClient,
-                this.mockWeatherServiceConfigs.Object,
-                this.mockCurrentUser.Object);
+                this.mockWeatherServiceConfigs);
         }
 
         [Fact]
@@ -46,28 +42,20 @@ namespace ClassifiedAds.UnitTests.Weathers.Services
         {
             // Arrange
             var service = this.CreateService();
-            GetWeatherAlarmQuery query = null;
+            GetWeatherAlarmQuery query = new GetWeatherAlarmQuery()
+            {
+                Limit = 1,
+                Offset = 1,
+                LocationName = new string[] { "花蓮縣", "臺東縣", },
+                Phenomena = new string[] { "大豪雨", "超大豪雨", "陸上強風", },
+            };
 
             // Act
             var result = service.GetAlarm(
                 query);
 
             // Assert
-            Assert.True(false);
-            this.mockRepository.VerifyAll();
-        }
-
-        [Fact]
-        public void GetAll_StateUnderTest_ExpectedBehavior()
-        {
-            // Arrange
-            var service = this.CreateService();
-
-            // Act
-            var result = service.GetAll();
-
-            // Assert
-            Assert.True(false);
+            Assert.True(result.Success == "true");
             this.mockRepository.VerifyAll();
         }
 
@@ -76,14 +64,18 @@ namespace ClassifiedAds.UnitTests.Weathers.Services
         {
             // Arrange
             var service = this.CreateService();
-            GetCountyWeatherQuery query = null;
+            GetWeatherCountyWeatherQuery query = new GetWeatherCountyWeatherQuery()
+            {
+                Country = "F-D0047-087",
+                ElementName = new string[] { "MinCI", "MaxAT", "MaxCI", "MinT", "UVI", "MinAT", "MaxT", "WS", "WD", "Td", "PoP12h", "T", "RH", "Wx", "WeatherDescription" },
+            };
 
             // Act
             var result = service.GetByCountry(
                 query);
 
             // Assert
-            Assert.True(false);
+            Assert.True(result.Success == "true");
             this.mockRepository.VerifyAll();
         }
 
@@ -92,14 +84,16 @@ namespace ClassifiedAds.UnitTests.Weathers.Services
         {
             // Arrange
             var service = this.CreateService();
-            GetEarthquakerQuery query = null;
+            GetWeatherEarthquakerQuery query = new GetWeatherEarthquakerQuery
+            {
+            };
 
             // Act
             var result = service.GetEarthquake(
                 query);
 
             // Assert
-            Assert.True(false);
+            Assert.True(result.Success == "true");
             this.mockRepository.VerifyAll();
         }
 
@@ -108,14 +102,16 @@ namespace ClassifiedAds.UnitTests.Weathers.Services
         {
             // Arrange
             var service = this.CreateService();
-            GetRecentQuery query = null;
+            GetWeatherRecentQuery query = new GetWeatherRecentQuery
+            {
+            };
 
             // Act
             var result = service.GetRecent(
                 query);
 
             // Assert
-            Assert.True(false);
+            Assert.True(result.Success == "true");
             this.mockRepository.VerifyAll();
         }
 
@@ -124,14 +120,16 @@ namespace ClassifiedAds.UnitTests.Weathers.Services
         {
             // Arrange
             var service = this.CreateService();
-            GetTidalQuery query = null;
+            GetWeatherTidalQuery query = new GetWeatherTidalQuery
+            {
+            };
 
             // Act
             var result = service.GetTida(
                 query);
 
             // Assert
-            Assert.True(false);
+            Assert.True(result.Success == "true");
             this.mockRepository.VerifyAll();
         }
 
@@ -140,10 +138,12 @@ namespace ClassifiedAds.UnitTests.Weathers.Services
         {
             // Arrange
             var service = this.CreateService();
-            GetTidalQuery query = null;
+            GetWeatherTidalQuery query = new GetWeatherTidalQuery()
+            {
+            };
 
             // Act
-            var result = service.GetParamters(
+            var result = service.ToParamters(
                 query);
 
             // Assert

@@ -12,21 +12,21 @@ namespace ClassifiedAds.Application.Weathers.DTOs
     public class TidalRecord
     {
         public string Note { get; set; }
-        public List<TidalLocation> Locations { get; set; }
+        public List<TidalLocation> Location { get; set; }
     }
 
     public class TidalLocation
     {
         public string LocationName { get; set; }
         public string StationId { get; set; }
-        public List<TidalValidTime> ValidTimes { get; set; }
+        public List<TidalValidTime> ValidTime { get; set; }
     }
 
     public class TidalValidTime
     {
         public string StartTime { get; set; }
         public string EndTime { get; set; }
-        public List<TidalWeatherElement> WeatherElements { get; set; }
+        public List<TidalWeatherElement> WeatherElement { get; set; }
 
     }
 

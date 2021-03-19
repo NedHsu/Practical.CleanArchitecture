@@ -6,13 +6,13 @@ namespace ClassifiedAds.Application.Weathers.DTOs
     public class RecentResponse
     {
         public string Success { get; set; }
-        public List<RecentRecord> Records { get; set; }
+        public RecentRecord Records { get; set; }
     }
 
     public class RecentRecord
     {
         public string DatasetDescription { get; set; }
-        public List<LocationWeather> Locations { get; set; }
+        public List<LocationWeather> Location { get; set; }
     }
 
     public class LocationWeather
@@ -24,7 +24,7 @@ namespace ClassifiedAds.Application.Weathers.DTOs
     public class WeatherElement
     {
         public string ElementName { get; set; }
-        public List<DateTime> WeatherElementTime { get; set; }
+        public List<WeatherElementTime> Time { get; set; }
     }
 
     public class WeatherElementTime

@@ -1,33 +1,36 @@
 ﻿using ClassifiedAds.Application.Weathers.DTOs;
 using ClassifiedAds.Application.Weathers.Services;
 using ClassifiedAds.CrossCuttingConcerns.Exceptions;
-using ClassifiedAds.Domain.Repositories;
 using System;
 using System.Linq;
 
 namespace ClassifiedAds.Application.Weathers.Queries
 {
-    public class GetWeatherAlarmQuery : IQuery<AlarmResponse>
+    public class GetWeatherRecentQuery : IQuery<RecentResponse>
     {
         public int? Limit { get; set; }
         public int? Offset { get; set; }
         public string Format { get; set; }
         public string[] LocationName { get; set; }
-        public string[] Phenomena { get; set; }
+        public string[] ElementName { get; set; }
+        public string Sort { get; set; }
+        public DateTime[] StartTime { get; set; }
+        public DateTime? TimeFrom { get; set; }
+        public DateTime? TimeTo { get; set; }
     }
 
-    internal class GetWeatherAlarmQueryHandler : IQueryHandler<GetWeatherAlarmQuery, AlarmResponse>
+    internal class GetRecentQueryHandler : IQueryHandler<GetWeatherRecentQuery, RecentResponse>
     {
         private readonly IWeatherService _weatherService;
 
-        public GetWeatherAlarmQueryHandler(IWeatherService weatherService)
+        public GetRecentQueryHandler(IWeatherService weatherService)
         {
             _weatherService = weatherService;
         }
 
-        public AlarmResponse Handle(GetWeatherAlarmQuery query)
+        public RecentResponse Handle(GetWeatherRecentQuery query)
         {
-            return _weatherService.GetAlarm(query);
+            return _weatherService.GetRecent(query);
         }
     }
 }
