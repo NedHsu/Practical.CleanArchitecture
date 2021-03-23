@@ -13,6 +13,8 @@ const initialState = {
   saved: false,
   deleted: false,
   error: null,
+  geoMessage: "",
+  geoLocation: "",
 };
 
 /// Locations

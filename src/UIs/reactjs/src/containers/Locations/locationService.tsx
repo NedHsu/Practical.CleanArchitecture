@@ -1,5 +1,4 @@
 
-
 class LocationService {
     geoFindMe = async (success, error) => {
         var message = "";

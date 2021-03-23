@@ -41,6 +41,11 @@ class Nav extends Component<Props> {
             </NavLink>
           </li>
           <li>
+            <NavLink className="nav-link" to="/locations">
+              Locations
+            </NavLink>
+          </li>
+          <li>
             <NavLink className="nav-link" to="/stocks">
               Stocks
             </NavLink>

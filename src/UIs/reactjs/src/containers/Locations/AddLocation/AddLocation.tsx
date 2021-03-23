@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 
 import * as actions from "../actions";
 import { checkValidity } from "../../../shared/utility";
+import { Button, Modal } from "react-bootstrap";
 
 type Props = {
   resetLocation: any,
@@ -57,9 +58,17 @@ class AddLocation extends Component<Props, any> {
       }
     },
     valid: false,
+    showMapModal: false,
     submitted: false,
     errorMessage: null
   };
+  confirmLocation() {
+
+  }
+
+  closeMap() {
+    this.setState({ showMapModal: false });
+  }
 
   componentDidMount() {
     this.props.resetLocation();
@@ -195,7 +204,7 @@ class AddLocation extends Component<Props, any> {
                   className={
                     "form-control " +
                     (this.state.submitted &&
-                    !this.state.controls["description"].valid
+                      !this.state.controls["description"].valid
                       ? "is-invalid"
                       : "")
                   }
@@ -235,11 +244,32 @@ class AddLocation extends Component<Props, any> {
       </div>
     );
 
+    const mapModal = (
+      <Modal show={this.state.showMapModal} onHide={this.closeMap}>
+        <Modal.Header closeButton>
+          <Modal.Title>Select Location</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={this.closeMap}>
+            No
+          </Button>
+          <Button variant="primary" onClick={this.confirmLocation}>
+            Yes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+
     return this.state.submitted && this.props.saved ? (
       <Redirect to={"/locations/" + this.props.location.id} />
     ) : (
-      form
-    );
+        <div>
+          {form}
+        </div>
+      );
   }
 }
 

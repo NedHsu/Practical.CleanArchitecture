@@ -21,6 +21,9 @@ import ViewMatch from "./containers/Matches/ViewMatch/ViewMatch";
 import ListStocks from "./containers/Stocks/ListStocks/ListStocks";
 import ViewStock from "./containers/Stocks/ViewStock/ViewStock";
 import AddStock from "./containers/Stocks/AddStock/AddStock";
+import AddLocation from "./containers/Locations/AddLocation/AddLocation";
+import ListLocations from "./containers/Locations/ListLocations/ListLocations";
+import Maps from "./components/Map/Map";
 import ViewIllustration from "./containers/Illustrations/ViewIllustration/ViewIllustration";
 
 function App() {
@@ -50,6 +53,10 @@ function App() {
         <Route path="/users/:id" component={ViewUser} />
         <Route path="/users" component={ListUsers} />
         <Route path="/auditlogs" component={AuditLogs} />
+        <Route path="/locations/add" component={AddLocation} />
+        <Route path="/locations/edit/:id" component={AddLocation} />
+        <Route path="/locations" component={ListLocations} />
+        <Route path="/map" component={Maps} />
         <Redirect to="/home" />
       </Switch>
     </div>
