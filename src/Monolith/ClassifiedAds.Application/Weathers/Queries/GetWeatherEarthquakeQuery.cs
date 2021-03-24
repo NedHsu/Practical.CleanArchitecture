@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace ClassifiedAds.Application.Weathers.Queries
 {
-    public class GetWeatherEarthquakerQuery : IQuery<EarthquakeResponse>
+    public class GetWeatherEarthquakeQuery : IQuery<EarthquakeResponse>
     {
         public int? Limit { get; set; }
         public int? Offset { get; set; }
@@ -19,7 +19,7 @@ namespace ClassifiedAds.Application.Weathers.Queries
         public DateTime TimeTo { get; set; }
     }
 
-    internal class GetEarthquakerQueryHandler : IQueryHandler<GetWeatherEarthquakerQuery, EarthquakeResponse>
+    internal class GetEarthquakerQueryHandler : IQueryHandler<GetWeatherEarthquakeQuery, EarthquakeResponse>
     {
         private readonly IWeatherService _weatherService;
 
@@ -28,7 +28,7 @@ namespace ClassifiedAds.Application.Weathers.Queries
             _weatherService = weatherService;
         }
 
-        public EarthquakeResponse Handle(GetWeatherEarthquakerQuery query)
+        public EarthquakeResponse Handle(GetWeatherEarthquakeQuery query)
         {
             return _weatherService.GetEarthquake(query);
         }

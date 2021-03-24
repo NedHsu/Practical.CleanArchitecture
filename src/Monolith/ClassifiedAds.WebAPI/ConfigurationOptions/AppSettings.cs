@@ -1,4 +1,5 @@
-﻿using ClassifiedAds.Infrastructure.Caching;
+﻿using ClassifiedAds.Application.Weathers.Services;
+using ClassifiedAds.Infrastructure.Caching;
 using ClassifiedAds.Infrastructure.Interceptors;
 using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.Infrastructure.MessageBrokers;
@@ -31,5 +32,7 @@ namespace ClassifiedAds.WebAPI.ConfigurationOptions
         public Dictionary<string, string> SecurityHeaders { get; set; }
 
         public InterceptorsOptions Interceptors { get; set; }
+
+        public WeatherServiceConfigs WeatherConfigs { get; set; }
     }
 }

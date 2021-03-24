@@ -33,7 +33,6 @@ namespace ClassifiedAds.UnitTests.Application.Services
         private WeatherService CreateService()
         {
             return new WeatherService(
-                this.httpClient,
                 this.mockWeatherServiceConfigs);
         }
 
@@ -84,7 +83,7 @@ namespace ClassifiedAds.UnitTests.Application.Services
         {
             // Arrange
             var service = this.CreateService();
-            GetWeatherEarthquakerQuery query = new GetWeatherEarthquakerQuery
+            GetWeatherEarthquakeQuery query = new GetWeatherEarthquakeQuery
             {
             };
 

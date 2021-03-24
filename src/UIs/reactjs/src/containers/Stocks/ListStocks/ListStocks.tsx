@@ -5,7 +5,6 @@ import { Modal, Button, Row, Col, Form, FormControl, Card, Spinner } from "react
 
 import logo from "../../../logo.svg";
 import * as actions from "../actions";
-import Star from "../../../components/Star/Star";
 import styles from "./ListStocks.module.scss";
 import * as noteActions from "../../StockNotes/actions";
 import ListNotes from "../../StockNotes/ListStockNotes/ListStockNotes";

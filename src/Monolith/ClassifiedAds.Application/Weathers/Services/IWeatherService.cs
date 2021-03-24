@@ -8,7 +8,7 @@ namespace ClassifiedAds.Application.Weathers.Services
     public interface IWeatherService
     {
         CountyResponse GetByCountry(GetWeatherCountyWeatherQuery query);
-        EarthquakeResponse GetEarthquake(GetWeatherEarthquakerQuery query);
+        EarthquakeResponse GetEarthquake(GetWeatherEarthquakeQuery query);
         RecentResponse GetRecent(GetWeatherRecentQuery query);
         TidalResponse GetTida(GetWeatherTidalQuery query);
         AlarmResponse GetAlarm(GetWeatherAlarmQuery query);

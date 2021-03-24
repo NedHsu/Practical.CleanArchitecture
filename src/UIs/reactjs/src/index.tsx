@@ -33,6 +33,8 @@ import stockDayReducer from "./containers/StockDays/reducer";
 import { watchStockDay } from "./containers/StockDays/sagas";
 import locationReducer from "./containers/Locations/reducer";
 import { watchLocation } from "./containers/Locations/sagas";
+import weatherReducer from "./containers/Weathers/reducer";
+import { watchWeather } from "./containers/Weathers/sagas";
 
 const composeEnhancers =
   (process.env.NODE_ENV === "development"
@@ -52,6 +54,7 @@ const rootReducer = combineReducers({
   stockGroupItem: stockGroupItemReducer,
   stockDay: stockDayReducer,
   location: locationReducer,
+  weather: weatherReducer,
 });
 
 const sagaMiddleware = createSagaMiddleware();
@@ -72,6 +75,7 @@ sagaMiddleware.run(watchStockGroup);
 sagaMiddleware.run(watchStockGroupItem);
 sagaMiddleware.run(watchStockDay);
 sagaMiddleware.run(watchLocation);
+sagaMiddleware.run(watchWeather);
 
 store.dispatch({
   type: "SET_AUTH_SERVICE",

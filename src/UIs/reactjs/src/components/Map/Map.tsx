@@ -4,16 +4,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap } from 're
 import { SearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
 
 import styles from "./Map.module.scss";
-import { LatLng } from "leaflet";
-
-const OTHER_PROPS = [
-  'children',
-  'className',
-  'id',
-  'style',
-  'useFlyTo',
-  'whenReady',
-]
+import L, { LatLng, LatLngLiteral, LatLngTuple } from "leaflet";
 
 type Props = {
   authService: any
@@ -22,62 +13,111 @@ type Props = {
   zoom: any
 }
 
-const searchControl = SearchControl({
-  provider: new OpenStreetMapProvider(),
-  marker: {
-    draggable: true,
-  },
-});
-
-const LocationMarker = () => {
-  const [position, setPosition] = useState<LatLng | null>(null)
-  const map = useMapEvents({
-    load() {
-      console.log("loaded");
-    },
-    click() {
-      map.locate();
-    },
-    locationfound(e) {
-      setPosition(e.latlng)
-      map.flyTo(e.latlng, map.getZoom())
-    },
-  })
-
-  return position === null ? null : (
-    <Marker position={position}>
-      <Popup>You are here</Popup>
-    </Marker>
-  )
-};
-
-const MapControls = () => {
-  const map = useMap();
-  map.addControl(searchControl);
-  return null
+interface MyState {
+  center: LatLng | LatLngLiteral | LatLngTuple | null
+  locationfound: boolean
+  locationPosition: LatLng | LatLngLiteral | LatLngTuple | null
+  selectPosition: LatLng | LatLngLiteral | LatLngTuple | null
 }
-
-class Map extends Component<Props> {
+class Map extends Component<Props, MyState> {
   state = {
     center: { lat: 51.505, lng: -0.09 },
+    locationfound: false,
+    locationPosition: { lat: 51.505, lng: -0.09 },
+    selectPosition: null,
   }
+
   componentDidMount() {
   }
   render() {
-    return (
-      <MapContainer center={this.state.center} zoom={13} scrollWheelZoom={true} className={styles.map_container}>
-        <TileLayer
-          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        <Marker position={this.state.center}>
+    const self = this;
+    const LocationMarker = () => {
+      const map = useMapEvents({
+        locationfound(e) {
+          self.setState({ locationPosition: e.latlng, locationfound: true, selectPosition: e.latlng });
+          map.flyTo(e.latlng, map.getZoom())
+        },
+      })
+      return this.state.locationPosition === null ? null : (
+        <Marker position={this.state.locationPosition}>
+          <Popup>
+            <span onClick={() => self.setState({ selectPosition: self.state.locationPosition })}>You are here<br />Click me to select here</span>
+          </Popup>
+        </Marker>
+      )
+    };
+
+    const markEventHandle = ({
+      dragend(e) {
+        self.setState({ selectPosition: e.target.getLatLng() });
+      },
+    })
+
+    const SelectMark = () => {
+      const map = useMapEvents({
+        unload() {
+        },
+        click(e) {
+          self.setState({ selectPosition: e.latlng });
+        },
+        dragend(e) {
+          console.log(e);
+        },
+        drag(e) {
+          console.log(e);
+        },
+      })
+      return this.state.selectPosition === null ? null : (
+        <Marker position={this.state.selectPosition ?? { lat: 0, lng: 0 }} eventHandlers={markEventHandle} draggable={true}>
           <Popup>
             A pretty CSS3 popup. <br /> Easily customizable.
           </Popup>
         </Marker>
-        <LocationMarker />
-        <MapControls />
-      </MapContainer>
+      )
+    };
+
+    const searchControl = SearchControl({
+      provider: new OpenStreetMapProvider(),
+      marker: {
+        draggable: true,
+      },
+    });
+
+    const MapControls = () => {
+      const map = useMap();
+      if (!self.state.locationfound) {
+        map.addControl(searchControl);
+        map.locate();
+      }
+      return null
+    }
+
+    const WeatherIcon = (weather) => {
+      return (
+        <Marker
+          position={this.state.center}
+          icon={L.divIcon({
+            html: ""
+          })}>
+        </Marker>
+      )
+    }
+
+    return (
+      <div>
+        <MapContainer center={this.state.center} zoom={13} scrollWheelZoom={true} className={styles.map_container}>
+          <TileLayer
+            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          <SelectMark />
+          <LocationMarker />
+          <MapControls />
+        </MapContainer>
+        <div>
+          lat: {(this.state.selectPosition ?? { lat: null }).lat} lng: {(this.state.selectPosition ?? { lng: null }).lng}
+        </div>
+      </div>
     );
   }
 }

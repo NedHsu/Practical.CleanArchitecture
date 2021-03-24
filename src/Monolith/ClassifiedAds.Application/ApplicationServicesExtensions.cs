@@ -6,6 +6,7 @@ using ClassifiedAds.Application.SmsMessages.Services;
 using ClassifiedAds.Application.StockGroupItems.Services;
 using ClassifiedAds.Application.Stocks.Services;
 using ClassifiedAds.Application.Users.Services;
+using ClassifiedAds.Application.Weathers.Services;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Events;
 using System;
@@ -28,6 +29,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddScoped<IProductService, ProductService>()
                 .AddScoped<IMatchService, MatchService>()
                 .AddScoped<IStockService, StockService>()
+                .AddScoped<IWeatherService, WeatherService>()
                 .AddScoped<IStockGroupItemService, StockGroupItemService>()
                 .AddScoped<EmailMessageService>()
                 .AddScoped<SmsMessageService>();

@@ -1,6 +1,7 @@
 ﻿using ClassifiedAds.Application.EmailMessages.DTOs;
 using ClassifiedAds.Application.FileEntries.DTOs;
 using ClassifiedAds.Application.SmsMessages.DTOs;
+using ClassifiedAds.Application.Weathers.Services;
 using ClassifiedAds.Domain.Identity;
 using ClassifiedAds.Infrastructure.Identity;
 using ClassifiedAds.Infrastructure.Monitoring;
@@ -77,7 +78,8 @@ namespace ClassifiedAds.WebAPI
                     })
                     .AddMessageHandlers()
                     .ConfigureInterceptors()
-                    .AddIdentityCore();
+                    .AddIdentityCore()
+                    .AddScoped<IWeatherService>(_ => new WeatherService(AppSettings.WeatherConfigs));
 
             services.AddDataProtection()
                 .PersistKeysToDbContext<AdsDbContext>()

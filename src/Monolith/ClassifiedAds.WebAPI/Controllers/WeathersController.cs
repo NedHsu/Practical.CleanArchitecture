@@ -35,12 +35,43 @@ namespace ClassifiedAds.WebAPI.Controllers
         }
 
         [HttpPost("Tidal")]
-        public ActionResult<IEnumerable<WeatherModel>> GetTidal(GetWeatherTidalQuery query)
+        public ActionResult<TidalResponse> GetTidal(GetWeatherTidalQuery query)
         {
             _logger.LogInformation("Getting all Tidal");
             var weathers = _dispatcher.Dispatch(query);
-            var model = _mapper.Map<IEnumerable<WeatherModel>>(weathers);
-            return Ok(model);
+            return Ok(weathers);
+        }
+
+        [HttpPost("Recent")]
+        public ActionResult<RecentResponse> GetRecent(GetWeatherRecentQuery query)
+        {
+            _logger.LogInformation("Getting all Recent");
+            var weathers = _dispatcher.Dispatch(query);
+            return Ok(weathers);
+        }
+
+        [HttpPost("Alarm")]
+        public ActionResult<AlarmResponse> GetAlarm(GetWeatherAlarmQuery query)
+        {
+            _logger.LogInformation("Getting all Alarm");
+            var weathers = _dispatcher.Dispatch(query);
+            return Ok(weathers);
+        }
+
+        [HttpPost("Earthquake")]
+        public ActionResult<EarthquakeResponse> GetEarthquake(GetWeatherEarthquakeQuery query)
+        {
+            _logger.LogInformation("Getting all Earthquake");
+            var weathers = _dispatcher.Dispatch(query);
+            return Ok(weathers);
+        }
+
+        [HttpPost("County")]
+        public ActionResult<CountyResponse> GetCounty(GetWeatherCountyWeatherQuery query)
+        {
+            _logger.LogInformation("Getting all County");
+            var weathers = _dispatcher.Dispatch(query);
+            return Ok(weathers);
         }
     }
 }

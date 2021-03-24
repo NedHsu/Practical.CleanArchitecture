@@ -18,9 +18,9 @@ namespace ClassifiedAds.Application.Weathers.Services
         private readonly HttpClient _httpClient;
         private readonly WeatherServiceConfigs configs;
 
-        public WeatherService(HttpClient httpClient, WeatherServiceConfigs configs)
+        public WeatherService(WeatherServiceConfigs configs)
         {
-            _httpClient = httpClient;
+            _httpClient = new HttpClient { BaseAddress = new Uri(configs.Server), Timeout = TimeSpan.FromSeconds(configs.Timeout) };
             this.configs = configs;
         }
 
@@ -34,7 +34,6 @@ namespace ClassifiedAds.Application.Weathers.Services
             where TQuery : class
         {
             var response = _httpClient.GetAsync($"/api{api}?Authorization={configs.Key}" + ToParamters(query));
-            var t = response.Result.Content.ReadAsStringAsync().Result;
             return response.Result.Content.ReadAs<TResult>().Result;
         }
 
@@ -43,9 +42,9 @@ namespace ClassifiedAds.Application.Weathers.Services
             return GetResponse<GetWeatherCountyWeatherQuery, CountyResponse>(query, $"/v1/rest/datastore/{query.Country}");
         }
 
-        public EarthquakeResponse GetEarthquake(GetWeatherEarthquakerQuery query)
+        public EarthquakeResponse GetEarthquake(GetWeatherEarthquakeQuery query)
         {
-            return GetResponse<GetWeatherEarthquakerQuery, EarthquakeResponse>(query, "/v1/rest/datastore/E-A0015-001");
+            return GetResponse<GetWeatherEarthquakeQuery, EarthquakeResponse>(query, "/v1/rest/datastore/E-A0015-001");
         }
 
         public RecentResponse GetRecent(GetWeatherRecentQuery query)
