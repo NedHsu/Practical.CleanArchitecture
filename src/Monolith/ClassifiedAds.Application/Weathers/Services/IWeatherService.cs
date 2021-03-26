@@ -12,5 +12,6 @@ namespace ClassifiedAds.Application.Weathers.Services
         RecentResponse GetRecent(GetWeatherRecentQuery query);
         TidalResponse GetTida(GetWeatherTidalQuery query);
         AlarmResponse GetAlarm(GetWeatherAlarmQuery query);
+        ObservationResponse GetObservation(GetWeatherObservationQuery query);
     }
 }

@@ -11,6 +11,6 @@ namespace ClassifiedAds.Application.Weathers.Services
     {
         public string Key { get; set; }
         public string Server { get; set; }
-        public int Timeout { get; set; }
+        public int? Timeout { get; set; }
     }
 }

@@ -8,6 +8,48 @@ export const fetchWeathersSuccess = (weathers) => {
   };
 };
 
+export const fetchWeatherAlarmSuccess = (weathers) => {
+  return {
+    type: actionTypes.FETCH_WEATHER_ALARM_SUCCESS,
+    weathers: weathers,
+  };
+};
+
+export const fetchWeatherCountySuccess = (weathers) => {
+  return {
+    type: actionTypes.FETCH_WEATHER_COUNTY_SUCCESS,
+    weathers: weathers,
+  };
+};
+
+export const fetchWeatherEarthquakeSuccess = (weathers) => {
+  return {
+    type: actionTypes.FETCH_WEATHER_EARTHQUAKE_SUCCESS,
+    weathers: weathers,
+  };
+};
+
+export const fetchWeatherRecentSuccess = (weathers) => {
+  return {
+    type: actionTypes.FETCH_WEATHER_RECENT_SUCCESS,
+    weathers: weathers,
+  };
+};
+
+export const fetchWeatherTidalSuccess = (weathers) => {
+  return {
+    type: actionTypes.FETCH_WEATHER_TIDAL_SUCCESS,
+    weathers: weathers,
+  };
+};
+
+export const fetchWeatherObservationSuccess = (weathers) => {
+  return {
+    type: actionTypes.FETCH_WEATHER_OBSERVATION_SUCCESS,
+    weathers: weathers,
+  };
+};
+
 export const fetchWeathersFail = (error) => {
   return {
     type: actionTypes.FETCH_WEATHERS_FAIL,
@@ -24,6 +66,47 @@ export const fetchWeathersStart = () => {
 export const fetchWeathers = () => {
   return {
     type: actionTypes.FETCH_WEATHERS,
+  };
+};
+
+export const fetchWeatherAlarm = (query) => {
+  return {
+    type: actionTypes.FETCH_WEATHER_ALARM,
+    query: query,
+  };
+};
+
+export const fetchWeatherCounty = (query) => {
+  return {
+    type: actionTypes.FETCH_WEATHER_COUNTY,
+    query: query,
+  };
+};
+
+export const fetchWeatherEarthquake = (query) => {
+  return {
+    type: actionTypes.FETCH_WEATHER_EARTHQUAKE,
+    query: query,
+  };
+};
+
+export const fetchWeatherRecent = (query) => {
+  return {
+    type: actionTypes.FETCH_WEATHER_RECENT,
+    query: query,
+  };
+};
+
+export const fetchWeatherTidal = (query) => {
+  return {
+    type: actionTypes.FETCH_WEATHER_TIDAL,
+    query: query,
+  };
+};
+export const fetchWeatherObservation = (query) => {
+  return {
+    type: actionTypes.FETCH_WEATHER_OBSERVATION,
+    query: query,
   };
 };
 /// WEATHERS
@@ -58,102 +141,9 @@ export const fetchWeather = (id) => {
 /// WEATHER
 
 /// UPDATE WEATHER
-export const updateWeather = (weather) => {
-  return {
-    type: actionTypes.UPDATE_WEATHER,
-    weather: weather,
-  };
-};
-
 export const resetWeather = () => {
   return {
     type: actionTypes.RESET_WEATHER,
   };
 };
 /// UPDATE WEATHER
-
-/// SAVE WEATHER
-export const saveWeatherSuccess = (weather) => {
-  return {
-    type: actionTypes.SAVE_WEATHER_SUCCESS,
-    weather: weather,
-  };
-};
-
-export const saveWeatherFail = (error) => {
-  return {
-    type: actionTypes.SAVE_WEATHER_FAIL,
-    error: error,
-  };
-};
-
-export const saveWeatherStart = () => {
-  return {
-    type: actionTypes.SAVE_WEATHER_START,
-  };
-};
-
-export const saveWeather = (weather) => {
-  return {
-    type: actionTypes.SAVE_WEATHER,
-    weather: weather,
-  };
-};
-/// SAVE WEATHER
-
-/// DELETE WEATHER
-export const deleteWeatherSuccess = (weather) => {
-  return {
-    type: actionTypes.DELETE_WEATHER_SUCCESS,
-  };
-};
-
-export const deleteWeatherFail = (error) => {
-  return {
-    type: actionTypes.DELETE_WEATHER_FAIL,
-    error: error,
-  };
-};
-
-export const deleteWeatherStart = () => {
-  return {
-    type: actionTypes.DELETE_WEATHER_START,
-  };
-};
-
-export const deleteWeather = (weather) => {
-  return {
-    type: actionTypes.DELETE_WEATHER,
-    weather: weather,
-  };
-};
-/// DELETE WEATHER
-
-/// VIEW AUDIT LOGS
-export const fetchAuditLogsSuccess = (auditLogs) => {
-  return {
-    type: actionTypes.FETCH_WEATHER_AUDIT_LOGS_SUCCESS,
-    auditLogs: auditLogs,
-  };
-};
-
-export const fetchAuditLogsFail = (error) => {
-  return {
-    type: actionTypes.FETCH_WEATHER_AUDIT_LOGS_FAIL,
-    error: error,
-  };
-};
-
-export const fetchAuditLogsStart = () => {
-  return {
-    type: actionTypes.FETCH_WEATHER_AUDIT_LOGS_START,
-  };
-};
-
-export const fetchAuditLogs = (weather) => {
-  return {
-    type: actionTypes.FETCH_WEATHER_AUDIT_LOGS,
-    weather: weather,
-  };
-};
-/// VIEW AUDIT LOGS

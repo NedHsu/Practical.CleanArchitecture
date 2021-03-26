@@ -73,5 +73,13 @@ namespace ClassifiedAds.WebAPI.Controllers
             var weathers = _dispatcher.Dispatch(query);
             return Ok(weathers);
         }
+
+        [HttpPost("Observation")]
+        public ActionResult<List<ObservationLocationModel>> GetCounty(GetWeatherObservationQuery query)
+        {
+            _logger.LogInformation("Getting all Observation");
+            var weathers = _dispatcher.Dispatch(query);
+            return Ok(_mapper.Map<List<ObservationLocationModel>>(weathers.Records.Location));
+        }
     }
 }

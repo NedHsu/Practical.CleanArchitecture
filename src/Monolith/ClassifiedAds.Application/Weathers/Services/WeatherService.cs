@@ -17,10 +17,15 @@ namespace ClassifiedAds.Application.Weathers.Services
     {
         private readonly HttpClient _httpClient;
         private readonly WeatherServiceConfigs configs;
+        private static Dictionary<ObservationType, string> observationTypeMap = new Dictionary<ObservationType, string>
+        {
+            { ObservationType.Unmanned, "O-A0001-001" },
+            { ObservationType.Office, "O-A0003-001" },
+        };
 
         public WeatherService(WeatherServiceConfigs configs)
         {
-            _httpClient = new HttpClient { BaseAddress = new Uri(configs.Server), Timeout = TimeSpan.FromSeconds(configs.Timeout) };
+            _httpClient = new HttpClient { BaseAddress = new Uri(configs.Server), Timeout = TimeSpan.FromSeconds(configs.Timeout ?? 60) };
             this.configs = configs;
         }
 
@@ -100,6 +105,11 @@ namespace ClassifiedAds.Application.Weathers.Services
             }
 
             return result;
+        }
+
+        public ObservationResponse GetObservation(GetWeatherObservationQuery query)
+        {
+            return GetResponse<GetWeatherObservationQuery, ObservationResponse>(query, $"/v1/rest/datastore/{observationTypeMap[query.Type]}");
         }
     }
 }

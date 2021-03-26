@@ -12,22 +12,13 @@ namespace ClassifiedAds.UnitTests.Application.Services
     {
         private MockRepository mockRepository;
 
-        private Mock<HttpClient> mockHttpClient;
-        private HttpClient httpClient;
         private WeatherServiceConfigs mockWeatherServiceConfigs;
 
         public WeatherServiceTests()
         {
             this.mockRepository = new MockRepository(MockBehavior.Strict);
 
-            this.mockHttpClient = this.mockRepository.Create<HttpClient>();
-            this.httpClient = new HttpClient()
-            {
-                BaseAddress = new Uri("https://opendata.cwb.gov.tw"),
-                Timeout = TimeSpan.FromSeconds(60),
-            };
-
-            this.mockWeatherServiceConfigs = new WeatherServiceConfigs() { Key = "CWB-D72F0129-BC81-4E7D-8073-85219CB12EB0" };
+            this.mockWeatherServiceConfigs = new WeatherServiceConfigs() { Key = "CWB-D72F0129-BC81-4E7D-8073-85219CB12EB0", Timeout = 60, Server = "https://opendata.cwb.gov.tw" };
         }
 
         private WeatherService CreateService()
@@ -125,6 +116,24 @@ namespace ClassifiedAds.UnitTests.Application.Services
 
             // Act
             var result = service.GetTida(
+                query);
+
+            // Assert
+            Assert.True(result.Success == "true");
+            this.mockRepository.VerifyAll();
+        }
+
+        [Fact]
+        public void GetObservation_StateUnderTest_ExpectedBehavior()
+        {
+            // Arrange
+            var service = this.CreateService();
+            GetWeatherObservationQuery query = new GetWeatherObservationQuery
+            {
+            };
+
+            // Act
+            var result = service.GetObservation(
                 query);
 
             // Assert

@@ -13,6 +13,7 @@ const initialState = {
   saved: false,
   deleted: false,
   error: null,
+  observations: [],
 };
 
 /// Weathers
@@ -23,6 +24,48 @@ const fetchWeathersStart = (state, action) => {
 const fetchWeathersSuccess = (state, action) => {
   return updateObject(state, {
     weathers: action.weathers,
+    loading: false,
+  });
+};
+
+const fetchWeatherTidalSuccess = (state, action) => {
+  return updateObject(state, {
+    tidals: action.weathers,
+    loading: false,
+  });
+};
+
+const fetchWeatherRecentSuccess = (state, action) => {
+  return updateObject(state, {
+    recents: action.weathers,
+    loading: false,
+  });
+};
+
+const fetchWeatherAlarmSuccess = (state, action) => {
+  return updateObject(state, {
+    alarms: action.weathers,
+    loading: false,
+  });
+};
+
+const fetchWeatherEarthquakeSuccess = (state, action) => {
+  return updateObject(state, {
+    earthquakes: action.weathers,
+    loading: false,
+  });
+};
+
+const fetchWeatherCountySuccess = (state, action) => {
+  return updateObject(state, {
+    countys: action.weathers,
+    loading: false,
+  });
+};
+
+const fetchWeatherObservationSuccess = (state, action) => {
+  return updateObject(state, {
+    observations: action.weathers,
     loading: false,
   });
 };
@@ -51,28 +94,24 @@ const fetchWeatherFail = (state, action) => {
 
 /// Weather
 
-const saveWeatherStart = (state, action) => {
-  return updateObject(state, { loading: true, saved: false });
-};
-
-const saveWeatherSuccess = (state, action) => {
-  return updateObject(state, {
-    weather: action.weather,
-    loading: false,
-    saved: true,
-  });
-};
-
-const saveWeatherFail = (state, action) => {
-  return updateObject(state, { loading: false, saved: false });
-};
-
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.FETCH_WEATHERS_START:
       return fetchWeathersStart(state, action);
     case actionTypes.FETCH_WEATHERS_SUCCESS:
       return fetchWeathersSuccess(state, action);
+    case actionTypes.FETCH_WEATHER_ALARM_SUCCESS:
+      return fetchWeatherAlarmSuccess(state, action);
+    case actionTypes.FETCH_WEATHER_COUNTY_SUCCESS:
+      return fetchWeatherCountySuccess(state, action);
+    case actionTypes.FETCH_WEATHER_EARTHQUAKE_SUCCESS:
+      return fetchWeatherEarthquakeSuccess(state, action);
+    case actionTypes.FETCH_WEATHER_OBSERVATION_SUCCESS:
+      return fetchWeatherObservationSuccess(state, action);
+    case actionTypes.FETCH_WEATHER_RECENT_SUCCESS:
+      return fetchWeatherRecentSuccess(state, action);
+    case actionTypes.FETCH_WEATHER_TIDAL_SUCCESS:
+      return fetchWeatherTidalSuccess(state, action);
     case actionTypes.FETCH_WEATHERS_FAIL:
       return fetchWeathersFail(state, action);
     case actionTypes.FETCH_WEATHER_START:
@@ -81,49 +120,8 @@ const reducer = (state = initialState, action) => {
       return fetchWeatherSuccess(state, action);
     case actionTypes.FETCH_WEATHER_FAIL:
       return fetchWeatherFail(state, action);
-    case actionTypes.UPDATE_WEATHER:
-      return updateObject(state, { weather: action.weather });
     case actionTypes.RESET_WEATHER:
       return updateObject(state, initialState);
-    case actionTypes.SAVE_WEATHER_START:
-      return saveWeatherStart(state, action);
-    case actionTypes.SAVE_WEATHER_SUCCESS:
-      return saveWeatherSuccess(state, action);
-    case actionTypes.SAVE_WEATHER_FAIL:
-      return saveWeatherFail(state, action);
-    case actionTypes.DELETE_WEATHER_START:
-      return updateObject(state, {
-        weather: action.weather,
-        loading: true,
-        deleted: false,
-      });
-    case actionTypes.DELETE_WEATHER_SUCCESS:
-      return updateObject(state, {
-        weather: initialState.weather,
-        loading: false,
-        deleted: true,
-      });
-    case actionTypes.DELETE_WEATHER_FAIL:
-      return updateObject(state, {
-        error: action.error,
-        loading: false,
-        deleted: false,
-      });
-    case actionTypes.FETCH_WEATHER_AUDIT_LOGS_START:
-      return updateObject(state, {
-        weather: action.weather,
-        loading: true,
-      });
-    case actionTypes.FETCH_WEATHER_AUDIT_LOGS_SUCCESS:
-      return updateObject(state, {
-        auditLogs: action.auditLogs,
-        loading: false,
-      });
-    case actionTypes.FETCH_WEATHER_AUDIT_LOGS_FAIL:
-      return updateObject(state, {
-        error: action.error,
-        loading: false,
-      });
     default:
       return state;
   }

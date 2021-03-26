@@ -1,3 +1,8 @@
 .map_container {
-    height: 200px;
+    height: calc(100vh - 100px);
+}
+
+.weatherIcon {
+    background-color: unset;
+    border: none;
 }
