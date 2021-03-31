@@ -11,7 +11,6 @@ type Props = {
   fetchWeather: any,
   weather: any,
   saveWeather: any,
-  updateWeather: any,
   saved: any
 }
 
@@ -78,7 +77,6 @@ class AddWeather extends Component<Props, any> {
 
     this.checkFieldValidity(event.target.name, event.target.value);
 
-    this.props.updateWeather(weather);
   };
 
   checkFieldValidity = (name, value) => {
@@ -195,7 +193,7 @@ class AddWeather extends Component<Props, any> {
                   className={
                     "form-control " +
                     (this.state.submitted &&
-                    !this.state.controls["description"].valid
+                      !this.state.controls["description"].valid
                       ? "is-invalid"
                       : "")
                   }
@@ -238,8 +236,8 @@ class AddWeather extends Component<Props, any> {
     return this.state.submitted && this.props.saved ? (
       <Redirect to={"/weathers/" + this.props.weather.id} />
     ) : (
-      form
-    );
+        form
+      );
   }
 }
 
@@ -253,9 +251,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     fetchWeather: id => dispatch(actions.fetchWeather(id)),
-    updateWeather: weather => dispatch(actions.updateWeather(weather)),
     resetWeather: () => dispatch(actions.resetWeather()),
-    saveWeather: weather => dispatch(actions.saveWeather(weather))
   };
 };
 

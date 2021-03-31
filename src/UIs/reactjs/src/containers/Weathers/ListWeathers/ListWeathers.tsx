@@ -40,7 +40,6 @@ class ListWeathers extends Component<any, any> {
   };
 
   viewAuditLogs = (weather) => {
-    this.props.fetchAuditLogs(weather);
     this.setState({ showAuditLogsModal: true });
   };
 
@@ -260,8 +259,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchWeathers: () => dispatch(actions.fetchWeathers()),
-    deleteWeather: (weather) => dispatch(actions.deleteWeather(weather)),
-    fetchAuditLogs: (weather) => dispatch(actions.fetchAuditLogs(weather)),
   };
 };
 

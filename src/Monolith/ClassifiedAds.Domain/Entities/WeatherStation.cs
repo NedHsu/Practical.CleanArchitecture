@@ -16,6 +16,7 @@ namespace ClassifiedAds.Domain.Entities
         public float Lon { get; set; }
         public string County { get; set; }
         public string Address { get; set; }
+        public string Remarks { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
     }
