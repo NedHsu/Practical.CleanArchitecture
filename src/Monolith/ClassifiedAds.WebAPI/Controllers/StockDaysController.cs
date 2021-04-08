@@ -35,15 +35,6 @@ namespace ClassifiedAds.WebAPI.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
-        public ActionResult<IEnumerable<StockDayModel>> Get()
-        {
-            _logger.LogInformation("Getting all stockdays");
-            var stockdays = _dispatcher.Dispatch(new GetStockDaysQuery(){ });
-            var model = _mapper.Map<IEnumerable<StockDayModel>>(stockdays);
-            return Ok(model);
-        }
-
         [HttpGet("{code}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

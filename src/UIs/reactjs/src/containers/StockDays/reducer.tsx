@@ -21,6 +21,16 @@ const fetchStockDaysStart = (state, action) => {
 };
 
 const fetchStockDaysSuccess = (state, action) => {
+  [{
+    stockCode: ""
+  }].reduce((a, b, i) => {
+    if (!a[b.stockCode]) {
+      a[b.stockCode] = [b];
+    } else {
+      a[b.stockCode].push(b);
+    }
+    return a;
+  }, {});
   return updateObject(state, {
     stockdays: action.stockdays,
     loading: false,

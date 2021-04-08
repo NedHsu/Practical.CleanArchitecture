@@ -18,6 +18,7 @@ namespace ClassifiedAds.Persistence {
 
         public virtual DbSet<Stock> Stocks { get; set; }
         public virtual DbSet<StockDay> StockDays { get; set; }
+        public virtual DbSet<StockMargin> StockMargins { get; set; }
         public virtual DbSet<StockFundamental> StockFundamentals { get; set; }
         public virtual DbSet<StockFunder> StockFunders { get; set; }
         public virtual DbSet<StockGroup> StockGroups { get; set; }
@@ -144,6 +145,23 @@ namespace ClassifiedAds.Persistence {
                 entity.ToTable("StockFunder");
 
                 entity.Property(e => e.StockCode)
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Date).HasColumnType("date");
+            });
+
+            modelBuilder.Entity<StockMargin>(entity =>
+            {
+                entity.HasKey(e => new { e.StockCode, e.Date });
+
+                entity.ToTable("StockMargin");
+
+                entity.Property(e => e.StockCode)
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Remark)
                     .HasMaxLength(15)
                     .IsUnicode(false);
 

@@ -21,9 +21,10 @@ export const fetchStockDaysStart = () => {
   };
 };
 
-export const fetchStockDays = () => {
+export const fetchStockDays = (options) => {
   return {
     type: actionTypes.FETCH_STOCK_DAYS,
+    options: options,
   };
 };
 /// STOCK_DAYS
