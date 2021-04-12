@@ -83,6 +83,10 @@ class Map extends Component<Props, MyState> {
         zoomend(e) {
           self.setState({ zoom: e.target._zoom });
         },
+        moveend(e) {
+          e.target.getBounds();
+          console.log(e);
+        },
       })
       return this.state.selectPosition === null ? null : (
         <Marker position={this.state.selectPosition ?? { lat: 0, lng: 0 }} eventHandlers={markEventHandle} draggable={true}>

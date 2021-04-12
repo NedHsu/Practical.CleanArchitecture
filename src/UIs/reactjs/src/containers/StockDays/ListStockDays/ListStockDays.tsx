@@ -204,7 +204,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchStockDays: () => dispatch(actions.fetchStockDays()),
+    fetchStockDays: () => dispatch(actions.fetchStockDays({})),
   };
 };
 
