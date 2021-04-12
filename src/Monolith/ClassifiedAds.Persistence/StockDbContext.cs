@@ -9,16 +9,15 @@ using Microsoft.EntityFrameworkCore.Storage;
 #nullable disable
 
 namespace ClassifiedAds.Persistence {
-    public partial class StockDbContext : DbContext, IUnitOfWork
-    {
+    public partial class StockDbContext : DbContext, IUnitOfWork {
         public StockDbContext() { }
 
-        public StockDbContext(DbContextOptions<StockDbContext> options)
-            : base(options) { }
+        public StockDbContext(DbContextOptions<StockDbContext> options) : base(options) { }
 
         public virtual DbSet<Stock> Stocks { get; set; }
         public virtual DbSet<StockDay> StockDays { get; set; }
         public virtual DbSet<StockMargin> StockMargins { get; set; }
+        public virtual DbSet<StockRevenue> StockRevenues { get; set; }
         public virtual DbSet<StockFundamental> StockFundamentals { get; set; }
         public virtual DbSet<StockFunder> StockFunders { get; set; }
         public virtual DbSet<StockGroup> StockGroups { get; set; }
@@ -37,8 +36,7 @@ namespace ClassifiedAds.Persistence {
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
 
-            modelBuilder.Entity<Stock>(entity =>
-            {
+            modelBuilder.Entity<Stock>(entity => {
                 entity.HasKey(e => e.Code)
                     .HasName("PK_stock_1");
 
@@ -82,8 +80,7 @@ namespace ClassifiedAds.Persistence {
                 entity.Property(e => e.TwentyPrice).HasColumnType("decimal(8, 2)");
             });
 
-            modelBuilder.Entity<StockDay>(entity =>
-            {
+            modelBuilder.Entity<StockDay>(entity => {
                 entity.HasKey(e => new { e.StockCode, e.Date });
 
                 entity.ToTable("StockDay");
@@ -109,8 +106,7 @@ namespace ClassifiedAds.Persistence {
                     .HasConstraintName("FK_stockDay_stock");
             });
 
-            modelBuilder.Entity<StockFundamental>(entity =>
-            {
+            modelBuilder.Entity<StockFundamental>(entity => {
                 entity.HasKey(e => new { e.StockCode, e.Date });
 
                 entity.ToTable("StockFundamental");
@@ -138,8 +134,7 @@ namespace ClassifiedAds.Persistence {
                 entity.Property(e => e.YieldRate).HasColumnType("decimal(5, 2)");
             });
 
-            modelBuilder.Entity<StockFunder>(entity =>
-            {
+            modelBuilder.Entity<StockFunder>(entity => {
                 entity.HasKey(e => new { e.StockCode, e.Date });
 
                 entity.ToTable("StockFunder");
@@ -151,8 +146,7 @@ namespace ClassifiedAds.Persistence {
                 entity.Property(e => e.Date).HasColumnType("date");
             });
 
-            modelBuilder.Entity<StockMargin>(entity =>
-            {
+            modelBuilder.Entity<StockMargin>(entity => {
                 entity.HasKey(e => new { e.StockCode, e.Date });
 
                 entity.ToTable("StockMargin");
@@ -168,8 +162,23 @@ namespace ClassifiedAds.Persistence {
                 entity.Property(e => e.Date).HasColumnType("date");
             });
 
-            modelBuilder.Entity<StockGroup>(entity =>
-            {
+            modelBuilder.Entity<StockRevenue>(entity => {
+                entity.HasKey(e => new { e.StockCode, e.Date });
+
+                entity.ToTable("StockRevenue");
+
+                entity.Property(e => e.StockCode)
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Remarks)
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Date).HasColumnType("date");
+            });
+
+            modelBuilder.Entity<StockGroup>(entity => {
                 entity.ToTable("StockGroup");
 
                 entity.Property(e => e.Id).HasDefaultValueSql("newsequentialid()");
@@ -177,8 +186,7 @@ namespace ClassifiedAds.Persistence {
                 entity.Property(e => e.GroupTitle).HasMaxLength(50);
             });
 
-            modelBuilder.Entity<StockGroupItem>(entity =>
-            {
+            modelBuilder.Entity<StockGroupItem>(entity => {
                 entity.ToTable("StockGroupItem");
 
                 entity.Property(e => e.Id).HasDefaultValueSql("newsequentialid()");
@@ -195,8 +203,7 @@ namespace ClassifiedAds.Persistence {
                     .HasConstraintName("FK_stock_group_items_stock");
             });
 
-            modelBuilder.Entity<StockNote>(entity =>
-            {
+            modelBuilder.Entity<StockNote>(entity => {
                 entity.ToTable("StockNote");
 
                 entity.Property(e => e.Id).HasDefaultValueSql("newsequentialid()");
