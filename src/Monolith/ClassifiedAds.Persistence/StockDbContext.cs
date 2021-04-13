@@ -171,9 +171,17 @@ namespace ClassifiedAds.Persistence {
                     .HasMaxLength(15)
                     .IsUnicode(false);
 
+                entity.Property(e => e.CurrentMonth).HasColumnType("decimal(18, 2)");
+                entity.Property(e => e.MoM).HasColumnType("decimal(18, 2)");
+                entity.Property(e => e.PreMonth).HasColumnType("decimal(18, 2)");
+                entity.Property(e => e.PreYearMonth).HasColumnType("decimal(18, 2)");
+                entity.Property(e => e.PreYearTotal).HasColumnType("decimal(18, 2)");
+                entity.Property(e => e.TotalMoM).HasColumnType("decimal(18, 2)");
+                entity.Property(e => e.YoY).HasColumnType("decimal(18, 2)");
+                entity.Property(e => e.YearTotal).HasColumnType("decimal(18, 2)");
+
                 entity.Property(e => e.Remarks)
-                    .HasMaxLength(15)
-                    .IsUnicode(false);
+                    .HasMaxLength(100);
 
                 entity.Property(e => e.Date).HasColumnType("date");
             });

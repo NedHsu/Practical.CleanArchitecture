@@ -114,14 +114,27 @@ class Map extends Component<Props, MyState> {
     }
 
     const observations = this.state.zoom < 11 ? this.props.observations?.filter(x => x.stationId.startsWith("46")) : this.props.observations;
+
+    const tmpColors = [
+      { tmp: -50, color: "#0040FF" },
+      { tmp: -20, color: "#A54BFF" },
+      { tmp: 0, color: "#fff" },
+      { tmp: 10, color: "#4BFFFF" },
+      { tmp: 20, color: "#A5FF4B" },
+      { tmp: 30, color: "#FF4B4B" },
+      { tmp: 40, color: "#FF00BF" },
+      { tmp: 99, color: "#000" },
+    ];
     const WeatherIcons = observations?.map((item) => {
+      let tmp = item.weatherElement?.TEMP;
+      let color = tmpColors.find(x => x.tmp >= tmp)?.color ?? "#fff";
       return (
         <Marker key={item.stationId}
           position={{ lat: item.lat, lng: item.lon }}
           icon={L.divIcon({
             html: renderToString(
               <div>
-                <IoIosCloudyNight size="2rem" />
+                <IoIosCloudyNight size="2rem" color={color} opacity="0.9" />
                 {item.weatherElement?.TEMP}℃
               </div>
             ),
