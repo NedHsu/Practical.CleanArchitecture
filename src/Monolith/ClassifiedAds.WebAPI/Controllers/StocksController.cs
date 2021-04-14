@@ -78,7 +78,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         public ActionResult<IEnumerable<StockFunderModel>> Get()
         {
             _logger.LogInformation("Getting all stockfunders");
-            var stockfunders = _dispatcher.Dispatch(new GetStockFundersQuery() { });
+            var stockfunders = _dispatcher.Dispatch(new GetCreditStockFundersQuery() { });
             return Ok(stockfunders);
         }
 

@@ -40,7 +40,7 @@ export class GroupModal extends Component<any, any> {
                     type="checkbox"
                     id={`group-check-${item.id}`}
                     label={item.groupTitle}
-                    checked={this.props.stockGroupIds.indexOf(item.id) > -1}
+                    checked={this.props.stockGroupIds?.indexOf(item.id) > -1}
                     value={item.id}
                     onChange={this.groupCheckChanged}
                 />

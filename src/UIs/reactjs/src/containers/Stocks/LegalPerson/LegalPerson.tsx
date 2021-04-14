@@ -57,19 +57,6 @@ class LegalPerson extends Component<any, any> {
     this.setState({ showNotesModal: true });
   };
 
-  deleteStock = (stock) => {
-    this.props.deleteStockGroupItem({ stockCode: stock.code, groupId: this.props.stockGroup.id });
-  };
-
-  deleteCanceled = () => {
-    this.setState({ showDeleteModal: false, deletingStock: null });
-  };
-
-  deleteConfirmed = () => {
-    this.props.deleteStock(this.state.deletingStock);
-    this.setState({ showDeleteModal: false, deletingStock: null });
-  };
-
   formatDateTime = (value) => {
     if (!value) return value;
     var date = new Date(value);
@@ -122,7 +109,7 @@ class LegalPerson extends Component<any, any> {
           ) : null}
         </td>
         <td>
-          <NavLink to={"/stocks/" + stock.code}>({stock.code}){stock.name}</NavLink>
+          <NavLink to={"/stocks/" + stock.stockcode}>({stock.stockcode}){stock.name}</NavLink>
         </td>
         <td>{stock.industry}</td>
         <td className={styles.test}>{stock.closePrice || "--"}</td>

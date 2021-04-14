@@ -23,11 +23,11 @@ namespace ClassifiedAds.Persistence.Repositories
 SELECT TOP 30 
 	s.name, 
 	t.*
-FROM   StockFunder t 
+FROM   StockFunder t WITH(NOLOCK)
 	Join stock s on t.StockCode = s.code
 WHERE  t.CreditSum > 0 
        AND NOT EXISTS(SELECT * 
-                      FROM   StockFunder f
+                      FROM   StockFunder f WITH(NOLOCK)
                       WHERE  f.StockCode = t.StockCode 
                              AND f.CreditSum > 0 
                              AND f.date <> t.date 
