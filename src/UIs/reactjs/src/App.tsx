@@ -21,6 +21,7 @@ import ViewMatch from "./containers/Matches/ViewMatch/ViewMatch";
 import ListStocks from "./containers/Stocks/ListStocks/ListStocks";
 import ViewStock from "./containers/Stocks/ViewStock/ViewStock";
 import AddStock from "./containers/Stocks/AddStock/AddStock";
+import LegalPerson from "./containers/Stocks/LegalPerson/LegalPerson";
 import AddLocation from "./containers/Locations/AddLocation/AddLocation";
 import ListLocations from "./containers/Locations/ListLocations/ListLocations";
 import Maps from "./components/Map/Map";
@@ -45,6 +46,7 @@ function App() {
         <Route path="/matches" component={ListMatches} />
         <Route path="/stocks/edit/:id" component={AddStock} />
         <Route path="/stocks/add" component={AddStock} />
+        <Route path="/legalperson" component={LegalPerson} />
         <Route path="/stocks/:id" component={ViewStock} />
         <Route path="/stocks" component={ListStocks} />
         <Route path="/illustrations" component={ViewIllustration} />

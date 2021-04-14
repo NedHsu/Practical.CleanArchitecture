@@ -2,11 +2,13 @@
 using ClassifiedAds.Application;
 using ClassifiedAds.Application.AuditLogEntries.DTOs;
 using ClassifiedAds.Application.AuditLogEntries.Queries;
+using ClassifiedAds.Application.StockFunders.Queries;
 using ClassifiedAds.Application.Stocks.Commands;
 using ClassifiedAds.Application.Stocks.DTOs;
 using ClassifiedAds.Application.Stocks.Queries;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.WebAPI.Models.Common;
+using ClassifiedAds.WebAPI.Models.StockFunders;
 using ClassifiedAds.WebAPI.Models.Stocks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -70,6 +72,14 @@ namespace ClassifiedAds.WebAPI.Controllers
             var stock = _dispatcher.Dispatch(new GetStocksQuery() { Industry = industry });
             var model = _mapper.Map<List<StockModel>>(stock);
             return Ok(model);
+        }
+
+        [HttpGet("funder")]
+        public ActionResult<IEnumerable<StockFunderModel>> Get()
+        {
+            _logger.LogInformation("Getting all stockfunders");
+            var stockfunders = _dispatcher.Dispatch(new GetStockFundersQuery() { });
+            return Ok(stockfunders);
         }
 
         [HttpGet("{code}")]

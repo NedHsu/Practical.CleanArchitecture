@@ -45,6 +45,35 @@ export const fetchGroupStocks = (group) => {
 };
 /// STOCKS
 
+/// STOCK FUNDERS
+export const fetchStockFundersSuccess = (result) => {
+  return {
+    type: actionTypes.FETCH_STOCK_FUNDERS_SUCCESS,
+    stockfunders: result,
+  };
+};
+
+export const fetchStockFundersFail = (error) => {
+  return {
+    type: actionTypes.FETCH_STOCK_FUNDERS_FAIL,
+    error: error,
+  };
+};
+
+export const fetchStockFundersStart = () => {
+  return {
+    type: actionTypes.FETCH_STOCK_FUNDERS_START,
+  };
+};
+
+export const fetchStockFunders = (options) => {
+  return {
+    type: actionTypes.FETCH_STOCK_FUNDERS,
+    options: options,
+  };
+};
+/// STOCKS
+
 /// STOCK
 export const fetchStockSuccess = (stock) => {
   return {

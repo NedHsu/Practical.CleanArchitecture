@@ -33,6 +33,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 }
             }))
                 .AddScoped(typeof(IBaseDapperRepository<>), typeof(BaseDapperRepository<>))
+                .AddScoped(typeof(IStockFunderRepository), typeof(StockFunderRepository))
                 .AddScoped(typeof(IStockDapperRepository), typeof(StockDapperRepository));
 
             services.AddScoped<IStockDbContext>(_ => new ClassifiedAds.Persistence.DapperContext.StockDbContext(connectionString));

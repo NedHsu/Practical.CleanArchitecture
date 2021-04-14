@@ -2,12 +2,13 @@ import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
 import { Modal, Button, Row, Col, Form, FormControl, Card, Spinner } from "react-bootstrap";
+import ListNotes from "../../StockNotes/ListStockNotes/ListStockNotes";
+import Menu from "../Menu/Menu";
 
 import logo from "../../../logo.svg";
 import * as actions from "../actions";
 import styles from "./ListStocks.module.scss";
 import * as noteActions from "../../StockNotes/actions";
-import ListNotes from "../../StockNotes/ListStockNotes/ListStockNotes";
 import * as groupActions from "../../StockGroups/actions";
 import * as groupItemActions from "../../StockGroupItems/actions";
 import { IoMdAddCircle, IoMdClose, IoMdCheckmark, IoIosTrash } from "react-icons/io"
@@ -173,12 +174,12 @@ class ListStocks extends Component<any, any> {
   }
 
   render() {
-    const filteredStocks = this.state.listFilter && this.props.stockGroup.id
+    const filteredStocks = this.state.listFilter && this.props.stockGroup?.id
       ? this.performFilter(this.state.listFilter)
       : this.props.stocks;
 
     const rows = filteredStocks?.map((stock) => (
-      <tr key={stock.code}>
+      <tr key={"S" + stock.code}>
         <td>
           {this.state.showImage ? (
             <img
@@ -337,14 +338,7 @@ class ListStocks extends Component<any, any> {
       <div>
         <div className="card">
           <div className="card-header">
-            {this.state.pageTitle}
-            <NavLink
-              className="btn btn-primary"
-              style={{ float: "right" }}
-              to="/stocks/add"
-            >
-              Add Stock
-            </NavLink>
+            <Menu />
           </div>
           <div className="card-body">
             <Row>
@@ -405,6 +399,14 @@ class ListStocks extends Component<any, any> {
                   onChange={(event) => this.filterChanged(event)}
                 />
               </div>
+              <div className="col"></div>
+              <NavLink
+                className="btn btn-primary"
+                style={{ float: "right", marginRight: "10px" }}
+                to="/stocks/add"
+              >
+                Add Stock
+              </NavLink>
             </div>
             {this.state.listFilter ? (
               <div className="row">
@@ -443,6 +445,7 @@ const mapStateToProps = (state) => {
     stockGroupItemLoading: state.stockGroupItem.loading,
     stockTotalCount: state.stock.totalCount,
     stockTotalPage: state.stock.totalPage,
+    stockLoading: state.stock.loading,
   };
 };
 

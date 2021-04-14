@@ -3,6 +3,7 @@ import * as actionTypes from "./actionTypes";
 
 const initialState = {
   stocks: [],
+  stockfunders: [],
   totalPage: 0,
   totalCount: 0,
   stock: {
@@ -44,6 +45,25 @@ const fetchStocksFail = (state, action) => {
 };
 
 /// Stocks
+
+/// StockFunders
+const fetchStockFundersStart = (state, action) => {
+  return updateObject(state, { loading: true });
+};
+
+const fetchStockFundersSuccess = (state, action) => {
+  return updateObject(state, {
+    stockfunders: action.stockfunders,
+    loading: false,
+    totalPage: action.totalPage,
+    totalCount: action.totalCount,
+  });
+};
+
+const fetchStockFundersFail = (state, action) => {
+  return updateObject(state, { loading: false });
+};
+/// StockFunders
 
 /// Stock
 const fetchStockStart = (state, action) => {
@@ -93,6 +113,12 @@ const reducer = (state = initialState, action) => {
       return fetchStockStart(state, action);
     case actionTypes.FETCH_STOCK_SUCCESS:
       return fetchStockSuccess(state, action);
+    case actionTypes.FETCH_STOCK_FUNDERS_START:
+      return fetchStockFundersStart(state, action);
+    case actionTypes.FETCH_STOCK_FUNDERS_SUCCESS:
+      return fetchStockFundersSuccess(state, action);
+    case actionTypes.FETCH_STOCK_FUNDERS_FAIL:
+      return fetchStockFundersFail(state, action);
     case actionTypes.FETCH_STOCK_FAIL:
       return fetchStockFail(state, action);
     case actionTypes.UPDATE_STOCK:
