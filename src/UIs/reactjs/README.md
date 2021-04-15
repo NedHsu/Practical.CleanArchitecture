@@ -73,6 +73,18 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/tr
 npm install react-icons --save
 ```
 
+### luxon - instead of momentjs
+
+```
+npm install --save-dev @types/luxon
+```
+
+### D3
+
+```
+
+```
+
 ## TODO
 
 - [V] Sass/Scss: node-sass

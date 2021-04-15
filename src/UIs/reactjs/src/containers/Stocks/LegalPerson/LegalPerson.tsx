@@ -109,7 +109,7 @@ class LegalPerson extends Component<any, any> {
           ) : null}
         </td>
         <td>
-          <NavLink to={"/stocks/" + stock.stockcode}>({stock.stockcode}){stock.name}</NavLink>
+          <NavLink to={"/stocks/" + stock.stockcode}>({stock.stockCode}){stock.name}</NavLink>
         </td>
         <td>{stock.industry}</td>
         <td className={styles.test}>{stock.closePrice || "--"}</td>
