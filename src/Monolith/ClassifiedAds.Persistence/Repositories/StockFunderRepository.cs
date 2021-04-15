@@ -33,7 +33,7 @@ WHERE  t.CreditSum > 0
                              AND f.date <> t.date 
                              AND f.date > Dateadd(day, -20, t.date) 
                              AND f.date < t.date) 
-ORDER  BY date DESC 
+ORDER  BY date DESC, CreditSum DESC
 ";
             return DbContext.Connection.Query<StockFunderDTO>(sql).ToList();
         }
