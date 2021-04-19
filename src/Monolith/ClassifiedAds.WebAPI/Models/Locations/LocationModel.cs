@@ -6,8 +6,6 @@ namespace ClassifiedAds.WebAPI.Models.Locations
     {
         public Guid Id { get; set; }
 
-        public string Code { get; set; }
-
         public string Name { get; set; }
 
         public string Description { get; set; }
@@ -15,5 +13,7 @@ namespace ClassifiedAds.WebAPI.Models.Locations
         public double Longitude { get; internal set; }
 
         public double Latitude { get; internal set; }
+
+        public DateTimeOffset? UpdatedDateTime { get; set; }
     }
 }

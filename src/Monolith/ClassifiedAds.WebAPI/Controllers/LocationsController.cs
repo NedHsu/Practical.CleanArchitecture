@@ -44,12 +44,12 @@ namespace ClassifiedAds.WebAPI.Controllers
             return Ok(model);
         }
 
-        [HttpGet("{code}")]
+        [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<LocationModel> Get(string code)
+        public ActionResult<LocationModel> Get(Guid id)
         {
-            var location = _dispatcher.Dispatch(new GetLocationQuery { ThrowNotFoundIfNull = true });
+            var location = _dispatcher.Dispatch(new GetLocationQuery { Id = id, ThrowNotFoundIfNull = true });
             var model = _mapper.Map<LocationModel>(location);
             return Ok(model);
         }
@@ -62,16 +62,16 @@ namespace ClassifiedAds.WebAPI.Controllers
             var location = _mapper.Map<Location>(model);
             _dispatcher.Dispatch(new AddUpdateLocationCommand { Location = location });
             model = _mapper.Map<LocationModel>(location);
-            return Created($"/api/locations/{model.Code}", model);
+            return Created($"/api/locations/{model.Id}", model);
         }
 
-        [HttpPut("{code}")]
+        [HttpPut("{id}")]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult Put(string code, [FromBody] LocationModel model)
+        public ActionResult Put(Guid id, [FromBody] LocationModel model)
         {
-            var location = _dispatcher.Dispatch(new GetLocationQuery { ThrowNotFoundIfNull = false }) 
+            var location = _dispatcher.Dispatch(new GetLocationQuery { Id = id, ThrowNotFoundIfNull = false }) 
                 ?? new Location { };
 
             location.Latitude = model.Latitude;
@@ -85,12 +85,12 @@ namespace ClassifiedAds.WebAPI.Controllers
             return Ok(model);
         }
 
-        [HttpDelete("{code}")]
+        [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult Delete(string code)
+        public ActionResult Delete(Guid id)
         {
-            var location = _dispatcher.Dispatch(new GetLocationQuery { ThrowNotFoundIfNull = true });
+            var location = _dispatcher.Dispatch(new GetLocationQuery { Id = id, ThrowNotFoundIfNull = true });
 
             _dispatcher.Dispatch(new DeleteLocationCommand { Location = location });
 

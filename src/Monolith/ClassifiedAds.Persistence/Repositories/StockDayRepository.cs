@@ -19,7 +19,9 @@ namespace ClassifiedAds.Persistence.Repositories
         public List<StockDay> GetInStocks(string[] codes, DateTime startDate, DateTime endDate)
         {
             string sql = @"
-
+SELECT * 
+FROM StockDay
+WHERE Date BETWEEN @StartDate AND @EndDate AND StockCode IN @Codes
 ";
 
             Dictionary<string, object> param = new Dictionary<string, object>()

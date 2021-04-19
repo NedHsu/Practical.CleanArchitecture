@@ -5,6 +5,10 @@ export const updateObject = (oldObject, updatedProperties) => {
   };
 };
 
+export const getRandomInt = (max) => {
+  return Math.floor(Math.random() * max);
+}
+
 export const checkValidity = (value, rules) => {
   let rs: any = { isValid: true };
   if (!rules) {

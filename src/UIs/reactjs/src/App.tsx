@@ -26,6 +26,7 @@ import AddLocation from "./containers/Locations/AddLocation/AddLocation";
 import ListLocations from "./containers/Locations/ListLocations/ListLocations";
 import Maps from "./components/Map/Map";
 import ViewIllustration from "./containers/Illustrations/ViewIllustration/ViewIllustration";
+import Svg0 from "./containers/D3s/Svg0/Svg0";
 
 function App() {
   return (
@@ -59,6 +60,7 @@ function App() {
         <Route path="/locations/edit/:id" component={AddLocation} />
         <Route path="/locations" component={ListLocations} />
         <Route path="/map" component={Maps} />
+        <Route path="/D3/svg0" component={Svg0} />
         <Redirect to="/home" />
       </Switch>
     </div>

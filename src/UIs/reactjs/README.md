@@ -82,7 +82,7 @@ npm install --save-dev @types/luxon
 ### D3
 
 ```
-
+npm i d3
 ```
 
 ## TODO
