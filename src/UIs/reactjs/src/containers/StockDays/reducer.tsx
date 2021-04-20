@@ -20,19 +20,16 @@ const fetchStockDaysStart = (state, action) => {
   return updateObject(state, { loading: true });
 };
 
-const fetchStockDaysSuccess = (state, action) => {
-  [{
-    stockCode: ""
-  }].reduce((a, b, i) => {
-    if (!a[b.stockCode]) {
-      a[b.stockCode] = [b];
-    } else {
-      a[b.stockCode].push(b);
-    }
-    return a;
-  }, {});
+const fetchStocksDaysSuccess = (state, action) => {
   return updateObject(state, {
-    stockdays: action.stockdays,
+    stockDayMaps: action.stockDayMaps,
+    loading: false,
+  });
+};
+
+const fetchStockDaysSuccess = (state, action) => {
+  return updateObject(state, {
+    stockDays: action.stockDays,
     loading: false,
   });
 };
@@ -67,6 +64,8 @@ const reducer = (state = initialState, action) => {
       return fetchStockDaysStart(state, action);
     case actionTypes.FETCH_STOCK_DAYS_SUCCESS:
       return fetchStockDaysSuccess(state, action);
+    case actionTypes.FETCH_STOCKS_DAYS_SUCCESS:
+      return fetchStocksDaysSuccess(state, action);
     case actionTypes.FETCH_STOCK_DAYS_FAIL:
       return fetchStockDaysFail(state, action);
     case actionTypes.FETCH_STOCK_DAY_START:

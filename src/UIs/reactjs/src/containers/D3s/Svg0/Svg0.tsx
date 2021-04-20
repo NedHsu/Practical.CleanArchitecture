@@ -4,6 +4,7 @@ import * as d3 from 'd3'
 
 import * as actions from "../actions";
 import { getRandomInt } from "../../../shared/utility";
+import { Spinner } from "react-bootstrap";
 
 class Svg0 extends Component<any, any> {
   state = {

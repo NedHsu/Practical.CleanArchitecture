@@ -48,10 +48,10 @@ namespace ClassifiedAds.WebAPI.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<IEnumerable<StockDayModel>> Get(GetStocksDaysQuery query)
+        public ActionResult<Dictionary<string, List<StockDayModel>>> Get(GetStocksDaysQuery query)
         {
             var stockday = _dispatcher.Dispatch(query);
-            var model = _mapper.Map<IEnumerable<StockDayModel>>(stockday);
+            var model = _mapper.Map<Dictionary<string, List<StockDayModel>>>(stockday.GroupBy(x => x.StockCode).ToDictionary(x => x.Key, x => x.ToList()));
             return Ok(model);
         }
     }

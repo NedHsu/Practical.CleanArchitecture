@@ -8,9 +8,20 @@ import { urlParams } from "../../shared/utility";
 export function* fetchStockDaysSaga(action) {
   yield put(actions.fetchStockDaysStart());
   try {
-    const response = yield axios.get("" + urlParams(action.options));
+    const response = yield axios.get(urlParams(action.options));
     const fetchedStockDays = response.data;
     yield put(actions.fetchStockDaysSuccess(fetchedStockDays));
+  } catch (error) {
+    yield put(actions.fetchStockDaysFail(error));
+  }
+}
+
+export function* fetchStocksDaysSaga(action) {
+  yield put(actions.fetchStockDaysStart());
+  try {
+    const response = yield axios.post("", action.options);
+    const fetchedStockDays = response.data;
+    yield put(actions.fetchStocksDaysSuccess(fetchedStockDays));
   } catch (error) {
     yield put(actions.fetchStockDaysFail(error));
   }
@@ -29,5 +40,6 @@ export function* fetchStockDaySaga(action) {
 
 export function* watchStockDay() {
   yield takeEvery(actionTypes.FETCH_STOCK_DAYS, fetchStockDaysSaga);
+  yield takeEvery(actionTypes.FETCH_STOCKS_DAYS, fetchStocksDaysSaga);
   yield takeEvery(actionTypes.FETCH_STOCK_DAY, fetchStockDaySaga);
 }

@@ -11,6 +11,7 @@ import styles from "./ListStocks.module.scss";
 import * as noteActions from "../../StockNotes/actions";
 import * as groupActions from "../../StockGroups/actions";
 import * as groupItemActions from "../../StockGroupItems/actions";
+import * as daysActions from "../../StockDays/actions";
 import { IoMdAddCircle, IoMdClose, IoMdCheckmark, IoIosTrash } from "react-icons/io"
 
 class ListStocks extends Component<any, any> {
@@ -42,6 +43,17 @@ class ListStocks extends Component<any, any> {
   };
 
   toggleImage = () => {
+    if (!this.state.showImage) {
+      let endDate = new Date();
+      let startDate = new Date();
+      startDate.setMonth(startDate.getMonth() - 6);
+
+      this.props.fetchStocksDays({
+        stockCodes: this.props.stocks.map(x => x.code),
+        startDate: startDate,
+        endDate: endDate,
+      });
+    }
     this.setState({ showImage: !this.state.showImage });
   };
 
@@ -181,12 +193,16 @@ class ListStocks extends Component<any, any> {
     const rows = filteredStocks?.map((stock) => (
       <tr key={"S" + stock.code}>
         <td>
-          {this.state.showImage ? (
-            <img
-              src={stock.imageUrl || logo}
-              title={stock.name}
-              style={{ width: "50px", margin: "2px" }}
-            />
+          {this.state.showImage && this.props.stockDayMaps[stock.code] ? (
+            <div>
+              <img
+                src={stock.imageUrl || logo}
+                title={stock.name}
+                style={{ width: "50px", margin: "2px" }}
+              />
+              {this.props.stockDayMaps[stock.code][0].closePrice}
+              {this.props.stockDayMaps[stock.code].length}
+            </div>
           ) : null}
         </td>
         <td>
@@ -446,6 +462,7 @@ const mapStateToProps = (state) => {
     stockTotalCount: state.stock.totalCount,
     stockTotalPage: state.stock.totalPage,
     stockLoading: state.stock.loading,
+    stockDayMaps: state.stockDay.stockDayMaps,
   };
 };
 
@@ -463,6 +480,7 @@ const mapDispatchToProps = (dispatch) => {
     fetchStockGroupItems: (stock) => dispatch(groupItemActions.fetchStockGroupItems(stock)),
     saveStockGroupItems: (stockCode, groupIds) => dispatch(groupItemActions.saveStockGroupItems(stockCode, groupIds)),
     deleteStockGroupItem: (stockGroupItem) => dispatch(groupItemActions.deleteStockGroupItem(stockGroupItem)),
+    fetchStocksDays: (options) => dispatch(daysActions.fetchStocksDays(options)),
   };
 };
 

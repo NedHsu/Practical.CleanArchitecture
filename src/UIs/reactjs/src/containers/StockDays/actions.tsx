@@ -8,6 +8,13 @@ export const fetchStockDaysSuccess = (stockdays) => {
   };
 };
 
+export const fetchStocksDaysSuccess = (stockDayMaps) => {
+  return {
+    type: actionTypes.FETCH_STOCKS_DAYS_SUCCESS,
+    stockDayMaps: stockDayMaps,
+  };
+};
+
 export const fetchStockDaysFail = (error) => {
   return {
     type: actionTypes.FETCH_STOCK_DAYS_FAIL,
@@ -24,6 +31,13 @@ export const fetchStockDaysStart = () => {
 export const fetchStockDays = (options) => {
   return {
     type: actionTypes.FETCH_STOCK_DAYS,
+    options: options,
+  };
+};
+
+export const fetchStocksDays = (options) => {
+  return {
+    type: actionTypes.FETCH_STOCKS_DAYS,
     options: options,
   };
 };

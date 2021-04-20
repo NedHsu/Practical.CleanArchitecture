@@ -6,6 +6,7 @@ using ClassifiedAds.Application.StockNotes.Commands;
 using ClassifiedAds.Application.StockNotes.DTOs;
 using ClassifiedAds.Application.StockNotes.Queries;
 using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.WebAPI.Models.Common;
 using ClassifiedAds.WebAPI.Models.StockNotes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -41,6 +42,15 @@ namespace ClassifiedAds.WebAPI.Controllers
             _logger.LogInformation("Getting all stocknotes");
             var stocknotes = _dispatcher.Dispatch(new GetStockNotesQuery(){ Code = code });
             var model = _mapper.Map<IEnumerable<StockNoteModel>>(stocknotes);
+            return Ok(model);
+        }
+
+        [HttpGet("paged")]
+        public ActionResult<PagedResultModel<StockNoteModel>> GetPaged(uint pageIndex, uint pageSize)
+        {
+            _logger.LogInformation("Getting paged stocknotes");
+            var stocknotes = _dispatcher.Dispatch(new GetStockNotePagedQuery() { PageIndex = pageIndex, PageSize = pageSize });
+            var model = _mapper.Map<PagedResultModel<StockNoteModel>>(stocknotes);
             return Ok(model);
         }
 
