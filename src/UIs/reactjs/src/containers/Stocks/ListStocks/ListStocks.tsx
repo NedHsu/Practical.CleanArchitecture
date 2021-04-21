@@ -1,9 +1,10 @@
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
 import { Modal, Button, Row, Col, Form, FormControl, Card, Spinner } from "react-bootstrap";
 import ListNotes from "../../StockNotes/ListStockNotes/ListStockNotes";
 import Menu from "../Menu/Menu";
+import TrendLine from "../TrendLine/TrendLine";
 
 import logo from "../../../logo.svg";
 import * as actions from "../actions";
@@ -193,15 +194,9 @@ class ListStocks extends Component<any, any> {
     const rows = filteredStocks?.map((stock) => (
       <tr key={"S" + stock.code}>
         <td>
-          {this.state.showImage && this.props.stockDayMaps[stock.code] ? (
+          {this.state.showImage && this.props.stockDayMaps && this.props.stockDayMaps[stock.code] ? (
             <div>
-              <img
-                src={stock.imageUrl || logo}
-                title={stock.name}
-                style={{ width: "50px", margin: "2px" }}
-              />
-              {this.props.stockDayMaps[stock.code][0].closePrice}
-              {this.props.stockDayMaps[stock.code].length}
+              <TrendLine id={`tl-${stock.code}`} data={this.props.stockDayMaps[stock.code]}></TrendLine>
             </div>
           ) : null}
         </td>
