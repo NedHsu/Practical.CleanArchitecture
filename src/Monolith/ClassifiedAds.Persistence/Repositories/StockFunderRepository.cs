@@ -22,6 +22,7 @@ namespace ClassifiedAds.Persistence.Repositories
             string sql = @"
 SELECT TOP 30 
 	s.name, 
+    s.closePrice,
 	t.*
 FROM   StockFunder t WITH(NOLOCK)
 	Join stock s on t.StockCode = s.code

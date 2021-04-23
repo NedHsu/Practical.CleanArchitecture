@@ -4,6 +4,8 @@ import axios from "./axios";
 import * as actionTypes from "./actionTypes";
 import * as actions from "./actions";
 
+console.log("sagas");
+
 export function* fetchWeathersSaga(action) {
   yield put(actions.fetchWeathersStart());
   try {
@@ -20,7 +22,7 @@ export function* fetchWeatherTidalSaga(action) {
   try {
     const response = yield axios.post("Tidal", action.query);
     const fetchedWeathers = response.data;
-    yield put(actions.fetchWeathersSuccess(fetchedWeathers));
+    yield put(actions.fetchWeatherTidal(fetchedWeathers));
   } catch (error) {
     yield put(actions.fetchWeathersFail(error));
   }
@@ -31,7 +33,7 @@ export function* fetchWeatherRecentSaga(action) {
   try {
     const response = yield axios.post("Recent", action.query);
     const fetchedWeathers = response.data;
-    yield put(actions.fetchWeathersSuccess(fetchedWeathers));
+    yield put(actions.fetchWeatherRecentSuccess(fetchedWeathers));
   } catch (error) {
     yield put(actions.fetchWeathersFail(error));
   }
@@ -42,7 +44,7 @@ export function* fetchWeatherAlarmSaga(action) {
   try {
     const response = yield axios.post("Alarm", action.query);
     const fetchedWeathers = response.data;
-    yield put(actions.fetchWeathersSuccess(fetchedWeathers));
+    yield put(actions.fetchWeatherAlarmSuccess(fetchedWeathers));
   } catch (error) {
     yield put(actions.fetchWeathersFail(error));
   }
@@ -53,7 +55,7 @@ export function* fetchWeatherEarthquakeSaga(action) {
   try {
     const response = yield axios.post("Earthquake", action.query);
     const fetchedWeathers = response.data;
-    yield put(actions.fetchWeathersSuccess(fetchedWeathers));
+    yield put(actions.fetchWeatherEarthquakeSuccess(fetchedWeathers));
   } catch (error) {
     yield put(actions.fetchWeathersFail(error));
   }
@@ -64,7 +66,7 @@ export function* fetchWeatherCountySaga(action) {
   try {
     const response = yield axios.post("County", action.query);
     const fetchedWeathers = response.data;
-    yield put(actions.fetchWeathersSuccess(fetchedWeathers));
+    yield put(actions.fetchWeatherCountySuccess(fetchedWeathers));
   } catch (error) {
     yield put(actions.fetchWeathersFail(error));
   }

@@ -35,11 +35,11 @@ namespace ClassifiedAds.WebAPI.Controllers
         }
 
         [HttpPost("Tidal")]
-        public ActionResult<TidalResponse> GetTidal(GetWeatherTidalQuery query)
+        public ActionResult<List<TidalLocation>> GetTidal(GetWeatherTidalQuery query)
         {
             _logger.LogInformation("Getting all Tidal");
             var weathers = _dispatcher.Dispatch(query);
-            return Ok(weathers);
+            return Ok(weathers.Records.Location);
         }
 
         [HttpPost("Recent")]
@@ -59,11 +59,11 @@ namespace ClassifiedAds.WebAPI.Controllers
         }
 
         [HttpPost("Earthquake")]
-        public ActionResult<EarthquakeResponse> GetEarthquake(GetWeatherEarthquakeQuery query)
+        public ActionResult<List<Earthquake>> GetEarthquake(GetWeatherEarthquakeQuery query)
         {
             _logger.LogInformation("Getting all Earthquake");
             var weathers = _dispatcher.Dispatch(query);
-            return Ok(weathers);
+            return Ok(weathers.Records.Earthquake);
         }
 
         [HttpPost("County")]

@@ -6,7 +6,6 @@ import ListNotes from "../../StockNotes/ListStockNotes/ListStockNotes";
 import Menu from "../Menu/Menu";
 import TrendLine from "../TrendLine/TrendLine";
 
-import logo from "../../../logo.svg";
 import * as actions from "../actions";
 import styles from "./ListStocks.module.scss";
 import * as noteActions from "../../StockNotes/actions";
@@ -25,7 +24,7 @@ class ListStocks extends Component<any, any> {
 
   state = {
     pageTitle: "Stock List",
-    showImage: false,
+    showTrendLine: false,
     showDeleteModal: false,
     deletingStock: {
       name: null
@@ -43,8 +42,8 @@ class ListStocks extends Component<any, any> {
     pageSize: 50,
   };
 
-  toggleImage = () => {
-    if (!this.state.showImage) {
+  toggleTrendLine = () => {
+    if (!this.state.showTrendLine) {
       let endDate = new Date();
       let startDate = new Date();
       startDate.setMonth(startDate.getMonth() - 6);
@@ -55,7 +54,7 @@ class ListStocks extends Component<any, any> {
         endDate: endDate,
       });
     }
-    this.setState({ showImage: !this.state.showImage });
+    this.setState({ showTrendLine: !this.state.showTrendLine });
   };
 
   filterChanged = (event) => {
@@ -84,7 +83,7 @@ class ListStocks extends Component<any, any> {
     } else {
       stockGroupIds.splice(stockGroupIds.indexOf(event.target.value), 1);
     }
-    this.setState({ stockGroupIds: stockGroupIds })
+    this.setState({ stockGroupIds: stockGroupIds });
   };
 
   performFilter(filterBy) {
@@ -167,6 +166,7 @@ class ListStocks extends Component<any, any> {
       });
       this.closeStockGroupEditor();
     }
+    this.setState({ showTrendLine: false });
   }
 
   editGroups = (stock) => {
@@ -194,7 +194,7 @@ class ListStocks extends Component<any, any> {
     const rows = filteredStocks?.map((stock) => (
       <tr key={"S" + stock.code}>
         <td>
-          {this.state.showImage && this.props.stockDayMaps && this.props.stockDayMaps[stock.code] ? (
+          {this.state.showTrendLine && this.props.stockDayMaps && this.props.stockDayMaps[stock.code] ? (
             <div>
               <TrendLine id={`tl-${stock.code}`} data={this.props.stockDayMaps[stock.code]}></TrendLine>
             </div>
@@ -242,8 +242,8 @@ class ListStocks extends Component<any, any> {
         <thead>
           <tr>
             <th>
-              <button className="btn btn-primary" onClick={this.toggleImage}>
-                {this.state.showImage ? "Hide" : "Show"} Image
+              <button className="btn btn-primary" onClick={this.toggleTrendLine}>
+                {this.state.showTrendLine ? "Hide" : "Show"} Lines
               </button>
             </th>
             <th>Stock</th>

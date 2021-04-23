@@ -5,9 +5,10 @@ import { Button } from "react-bootstrap";
 import Menu from "../Menu/Menu";
 import GroupModal from "../GroupModal/GroupModal";
 
-import logo from "../../../logo.svg";
 import * as actions from "../actions";
+import * as daysActions from "../../StockDays/actions";
 import styles from "./LegalPerson.module.scss";
+import TrendLine from "../TrendLine/TrendLine";
 
 class LegalPerson extends Component<any, any> {
   groupTitleField: any;
@@ -18,7 +19,7 @@ class LegalPerson extends Component<any, any> {
 
   state = {
     pageTitle: "Stock List",
-    showImage: false,
+    showTrendLine: false,
     deletingStock: {
       name: null
     },
@@ -33,8 +34,19 @@ class LegalPerson extends Component<any, any> {
     pageSize: 50,
   };
 
-  toggleImage = () => {
-    this.setState({ showImage: !this.state.showImage });
+  toggleTrendLine = () => {
+    if (!this.state.showTrendLine) {
+      let endDate = new Date();
+      let startDate = new Date();
+      startDate.setMonth(startDate.getMonth() - 6);
+
+      this.props.fetchStocksDays({
+        stockCodes: this.props.stockfunders.map(x => x.stockCode),
+        startDate: startDate,
+        endDate: endDate,
+      });
+    }
+    this.setState({ showTrendLine: !this.state.showTrendLine });
   };
 
   groupCheckChanged = (event) => {
@@ -100,23 +112,23 @@ class LegalPerson extends Component<any, any> {
     const rows = stockFunders?.map((stock) => (
       <tr key={"L" + stock.stockCode}>
         <td>
-          {this.state.showImage ? (
-            <img
-              src={stock.imageUrl || logo}
-              title={stock.name}
-              style={{ width: "50px", margin: "2px" }}
-            />
+          {this.state.showTrendLine && this.props.stockDayMaps && this.props.stockDayMaps[stock.stockCode] ? (
+            <div>
+              <TrendLine id={`tl-${stock.stockCode}`} data={this.props.stockDayMaps[stock.stockCode]}></TrendLine>
+            </div>
           ) : null}
         </td>
         <td>
           <NavLink to={"/stocks/" + stock.stockcode}>({stock.stockCode}){stock.name}</NavLink>
         </td>
-        <td>{stock.industry}</td>
         <td className={styles.test}>{stock.closePrice || "--"}</td>
         <td>
-          {stock.fivePrice}/{stock.tenPrice}/{stock.twentyPrice}/{stock.sixtyPrice}
+          <div>C:{stock.creditBuy}/{stock.creditSell}/{stock.creditSum}</div>
+          <div>F:{stock.foreignBuy}/{stock.foreignSelfSell}/{stock.foreignSum}</div>
+          <div>S:{stock.selfBuy}/{stock.selfSell}/{stock.selfSum}</div>
         </td>
-        <td>{stock.fetchDate}</td>
+        <td className={styles.number}>{stock.total}</td>
+        <td>{stock.date}</td>
         <td>
           <Button onClick={() => this.viewNotes(stock)} variant="secondary">
             View Notes
@@ -130,18 +142,18 @@ class LegalPerson extends Component<any, any> {
     ));
 
     const table = this.props.stockfunders ? (
-      <table className="table">
+      <table className={`table ${styles.table}`}>
         <thead>
           <tr>
             <th>
-              <button className="btn btn-primary" onClick={this.toggleImage}>
-                {this.state.showImage ? "Hide" : "Show"} Image
+              <button className="btn btn-primary" onClick={this.toggleTrendLine}>
+                {this.state.showTrendLine ? "Hide" : "Show"} Trend
               </button>
             </th>
             <th>Stock</th>
-            <th>Industry</th>
             <th>Price</th>
-            <th>5/10/20/60</th>
+            <th>Buy/Sell/Sum</th>
+            <th className={styles.number}>Total</th>
             <th>Fetch Date</th>
             <th></th>
           </tr>
@@ -184,12 +196,14 @@ const mapStateToProps = (state) => {
     stockTotalCount: state.stock.totalCount,
     stockTotalPage: state.stock.totalPage,
     stockLoading: state.stock.loading,
+    stockDayMaps: state.stockDay.stockDayMaps,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchStocks: (options) => dispatch(actions.fetchStockFunders(options)),
+    fetchStocksDays: (options) => dispatch(daysActions.fetchStocksDays(options)),
   };
 };
 

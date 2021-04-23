@@ -10,14 +10,17 @@ import { IoIosCloudyNight } from "react-icons/io";
 import { WiDayFog } from "react-icons/wi";
 
 import * as weatherActions from "../../containers/Weathers/actions";
+import { Button, Nav } from "react-bootstrap";
 
 type Props = {
   authService: any
   viewport: any
   center: any
-  zoom: any
   observations: any
   fetchWeatherObservation: any
+  fetchWeatherEarthquake: any
+  fetchWeatherTidal: any
+  fetchWeatherAlarm: any
 }
 
 interface MyState {
@@ -25,7 +28,11 @@ interface MyState {
   locationfound: boolean
   locationPosition: LatLng | LatLngLiteral | LatLngTuple | null
   selectPosition: LatLng | LatLngLiteral | LatLngTuple | null
-  zoom: number
+  zoom: any
+  showObservation: boolean
+  showEarthquake: boolean
+  showTidal: boolean
+  showRainfall: boolean
 }
 class Map extends Component<Props, MyState> {
   state = {
@@ -35,7 +42,36 @@ class Map extends Component<Props, MyState> {
     selectPosition: null,
     observationType: 1,
     zoom: 0,
+    showObservation: true,
+    showEarthquake: false,
+    showTidal: false,
+    showRainfall: false,
   }
+
+  toggleObservation = () => {
+    if (!this.state.showObservation) {
+      this.props.fetchWeatherObservation({});
+    }
+    this.setState({ showObservation: !this.state.showObservation });
+  };
+
+  toggleEarthquake = () => {
+    if (!this.state.showEarthquake) {
+      this.props.fetchWeatherEarthquake({});
+    }
+    this.setState({ showEarthquake: !this.state.showEarthquake });
+  };
+
+  toggleRainfall = () => {
+    this.setState({ showRainfall: !this.state.showRainfall });
+  };
+
+  toggleTidal = () => {
+    if (!this.state.showTidal) {
+      this.props.fetchWeatherTidal({});
+    }
+    this.setState({ showTidal: !this.state.showTidal });
+  };
 
   componentDidMount() {
     this.props.fetchWeatherObservation({ type: this.state.observationType });
@@ -125,7 +161,12 @@ class Map extends Component<Props, MyState> {
       { tmp: 40, color: "#FF00BF" },
       { tmp: 99, color: "#000" },
     ];
-    const WeatherIcons = observations?.map((item) => {
+
+    const weatherIcons = {
+
+    }
+
+    const WeatherMarks = observations?.map((item) => {
       let tmp = item.weatherElement?.TEMP;
       let color = tmpColors.find(x => x.tmp >= tmp)?.color ?? "#fff";
       return (
@@ -151,8 +192,38 @@ class Map extends Component<Props, MyState> {
       );
     });
 
+    const RainfallMarks = observations?.filter(x => x.weatherElement).map((item) => {
+      return (
+        <Marker key={item.stationId}
+          position={{ lat: item.lat, lng: item.lon }}
+          icon={L.divIcon({
+            html: renderToString(
+              <div>
+                {item.weatherElement[this.state.observationType === 1 ? "24R" : "H_24R"]}mm
+              </div>
+            ),
+            className: styles.weatherRainfall
+          })}>
+        </Marker>
+      );
+    });
+
     return (
       <div>
+        <Nav className={styles.weather_menu} as="ul">
+          <Nav.Item as="li">
+            <Button variant="outline-secondary" active={this.state.showObservation} onClick={this.toggleObservation}>觀測</Button>
+          </Nav.Item>
+          <Nav.Item as="li">
+            <Button variant="outline-secondary" active={this.state.showEarthquake} onClick={this.toggleEarthquake}>地震</Button>
+          </Nav.Item>
+          <Nav.Item as="li">
+            <Button variant="outline-secondary" active={this.state.showRainfall} onClick={this.toggleRainfall}>雨量</Button>
+          </Nav.Item>
+          <Nav.Item as="li">
+            <Button variant="outline-secondary" active={this.state.showTidal} onClick={this.toggleTidal}>潮汐</Button>
+          </Nav.Item>
+        </Nav>
         <MapContainer center={this.state.center} zoom={13} scrollWheelZoom={true} className={styles.map_container}>
           <TileLayer
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -162,14 +233,19 @@ class Map extends Component<Props, MyState> {
           <LocationMarker />
           <MapControls />
           <LayersControl position="topright">
-            <LayersControl.Overlay name="Weather" checked={true}>
+            <LayersControl.Overlay name="Weather" checked={this.state.showObservation}>
               <LayerGroup>
-                {WeatherIcons}
+                {WeatherMarks}
+              </LayerGroup>
+            </LayersControl.Overlay>
+            <LayersControl.Overlay name="rainfall" checked={this.state.showRainfall}>
+              <LayerGroup>
+                {RainfallMarks}
               </LayerGroup>
             </LayersControl.Overlay>
           </LayersControl>
         </MapContainer>
-        <div>
+        <div className={styles.coordinate}>
           lat: {(this.state.selectPosition ?? { lat: null }).lat} lng: {(this.state.selectPosition ?? { lng: null }).lng}
         </div>
       </div>
@@ -181,12 +257,18 @@ const mapStateToProps = (state) => {
     user: state.auth.user,
     authService: state.auth.authService,
     observations: state.weather.observations,
+    earthquakes: state.weather.earthquakes,
+    tidals: state.weather.tidals,
+    alarms: state.weather.alarms,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchWeatherObservation: (query) => dispatch(weatherActions.fetchWeatherObservation(query)),
+    fetchWeatherEarthquake: (query) => dispatch(weatherActions.fetchWeatherEarthquake(query)),
+    fetchWeatherTidal: (query) => dispatch(weatherActions.fetchWeatherTidal(query)),
+    fetchWeatherAlarm: (query) => dispatch(weatherActions.fetchWeatherAlarm(query)),
   };
 };
 

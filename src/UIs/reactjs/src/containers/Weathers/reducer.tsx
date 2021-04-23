@@ -1,5 +1,6 @@
 import { updateObject } from "../../shared/utility";
 import * as actionTypes from "./actionTypes";
+console.log("reducer");
 
 const initialState = {
   weathers: [],
@@ -14,6 +15,11 @@ const initialState = {
   deleted: false,
   error: null,
   observations: [],
+  earthquakes: [],
+  tidals: [],
+  recents: [],
+  alarms: [],
+  countys: [],
 };
 
 /// Weathers
