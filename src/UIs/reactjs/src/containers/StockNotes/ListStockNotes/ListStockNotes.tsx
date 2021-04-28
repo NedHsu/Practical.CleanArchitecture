@@ -23,10 +23,6 @@ class ListStockNotes extends Component<any, any> {
     stockNoteId: null,
   };
 
-  toggleImage = () => {
-    this.setState({ showImage: !this.state.showImage });
-  };
-
   toggleAddNote = () => {
     this.setState({ showListNote: this.state.showAddNote, showAddNote: !this.state.showAddNote });
   };
@@ -72,7 +68,7 @@ class ListStockNotes extends Component<any, any> {
   };
 
   componentDidMount() {
-    //this.props.fetchStockNotes();
+    this.props.fetchStockNotes();
   }
 
   render() {
@@ -117,26 +113,6 @@ class ListStockNotes extends Component<any, any> {
       </table>
     ) : null;
 
-    const deleteModal = (
-      <Modal show={this.state.showDeleteModal} onHide={this.deleteCanceled}>
-        <Modal.Header closeButton>
-          <Modal.Title>Delete StockNote</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Are you sure you want to delete
-          <strong> {this.state.deletingStockNote?.name}</strong>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={this.deleteCanceled}>
-            No
-          </Button>
-          <Button variant="primary" onClick={this.deleteConfirmed}>
-            Yes
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    );
-
     const addStockNote = (
       <div hidden={!this.state.showAddNote}>
         <AddStockNote back={() => this.toggleAddNote()} stockNoteId={this.state.stockNoteId}></AddStockNote>
@@ -176,7 +152,6 @@ class ListStockNotes extends Component<any, any> {
             Error: {this.props.errorMessage}
           </div>
         ) : null}
-        {deleteModal}
         {addStockNote}
       </div>
     );

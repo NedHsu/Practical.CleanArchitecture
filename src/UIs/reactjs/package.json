@@ -13,6 +13,7 @@
     "axios": "^0.21.0",
     "bootstrap": "^4.5.3",
     "d3": "^6.7.0",
+    "dayjs": "^1.10.4",
     "font-awesome": "^4.7.0",
     "leaflet": "^1.7.1",
     "leaflet-geosearch": "^3.2.2",

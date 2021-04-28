@@ -5,9 +5,17 @@
 .weatherIcon {
     background-color: unset;
     border: none;
+    > div {
+        width: 50px;
+        margin-top: -30px;
+    }
 }
 
 .weatherRainfall {
+    > div {
+        width: fit-content;
+        background-color: aliceblue;
+    }
 }
 
 .coordinate {
