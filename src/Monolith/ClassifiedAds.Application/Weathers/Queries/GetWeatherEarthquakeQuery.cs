@@ -15,8 +15,8 @@ namespace ClassifiedAds.Application.Weathers.Queries
         public string[] StationName { get; set; }
         public string[] Sort { get; set; }
         public DateTime[] OriginTime { get; set; }
-        public DateTime TimeFrom { get; set; }
-        public DateTime TimeTo { get; set; }
+        public DateTime? TimeFrom { get; set; }
+        public DateTime? TimeTo { get; set; }
     }
 
     internal class GetEarthquakerQueryHandler : IQueryHandler<GetWeatherEarthquakeQuery, EarthquakeResponse>

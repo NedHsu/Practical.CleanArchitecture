@@ -17,14 +17,15 @@ namespace ClassifiedAds.Application.StockGroupItems.Services
 
         public void Update(string stockCode, List<Guid> groupIds)
         {
-            var oldGroupIds = new HashSet<Guid>(Repository.GetAll(x => x.StockCode == stockCode).Select(x => x.GroupId));
+            var oldGroupItems = Repository.GetAll(x => x.StockCode == stockCode).Select(x => new { x.Id, x.GroupId });
+            var oldGroupIds = new HashSet<Guid>(oldGroupItems.Select(x => x.GroupId));
             var newGroupIds = new HashSet<Guid>(groupIds);
 
             var newItems = newGroupIds.Where(x => !oldGroupIds.Contains(x))
                 .Select(x => new StockGroupItem { GroupId = x, Id = Guid.NewGuid(), StockCode = stockCode });
 
-            var deletedItems = oldGroupIds.Where(x => !newGroupIds.Contains(x))
-                .Select(x => new StockGroupItem { Id = x });
+            var deletedItems = oldGroupItems.Where(x => !newGroupIds.Contains(x.GroupId))
+                .Select(x => new StockGroupItem { Id = x.Id });
 
             if (deletedItems.Any())
             {

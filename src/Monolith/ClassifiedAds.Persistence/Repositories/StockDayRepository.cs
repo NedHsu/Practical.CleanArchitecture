@@ -22,6 +22,7 @@ namespace ClassifiedAds.Persistence.Repositories
 SELECT * 
 FROM StockDay
 WHERE Date BETWEEN @StartDate AND @EndDate AND StockCode IN @Codes
+ORDER BY Date
 ";
 
             Dictionary<string, object> param = new Dictionary<string, object>()

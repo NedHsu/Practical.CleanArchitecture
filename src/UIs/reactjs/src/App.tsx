@@ -19,7 +19,7 @@ import ListMatches from "./containers/Matches/ListMatches/ListMatches";
 import AddMatch from "./containers/Matches/AddMatch/AddMatch";
 import ViewMatch from "./containers/Matches/ViewMatch/ViewMatch";
 import ListStocks from "./containers/Stocks/ListStocks/ListStocks";
-import ListStockNotes from "./containers/StockNotes/ListStockNotes/ListStockNotes";
+import StickyStockNotes from "./containers/StockNotes/StickyStockNotes/StickyStockNotes";
 import ViewStock from "./containers/Stocks/ViewStock/ViewStock";
 import AddStock from "./containers/Stocks/AddStock/AddStock";
 import LegalPerson from "./containers/Stocks/LegalPerson/LegalPerson";
@@ -51,7 +51,7 @@ function App() {
         <Route path="/legalperson" component={LegalPerson} />
         <Route path="/stocks/:id" component={ViewStock} />
         <Route path="/stocks" component={ListStocks} />
-        <Route path="/stockNotes" component={ListStockNotes} />
+        <Route path="/stockStickyNotes" component={StickyStockNotes} />
         <Route path="/illustrations" component={ViewIllustration} />
         <Route path="/users/add" component={AddUser} />
         <Route path="/users/edit/:id" component={AddUser} />

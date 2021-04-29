@@ -5,6 +5,7 @@ using ClassifiedAds.Application.AuditLogEntries.Queries;
 using ClassifiedAds.Application.StockNotes.Commands;
 using ClassifiedAds.Application.StockNotes.DTOs;
 using ClassifiedAds.Application.StockNotes.Queries;
+using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.WebAPI.Models.Common;
 using ClassifiedAds.WebAPI.Models.StockNotes;
@@ -72,6 +73,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             var stocknote = _mapper.Map<StockNote>(model);
             stocknote.Id = Guid.NewGuid();
             stocknote.Created = DateTime.Now;
+            stocknote.Creater = User.GetUserId();
             _dispatcher.Dispatch(new AddUpdateStockNoteCommand { StockNote = stocknote });
             model = _mapper.Map<StockNoteModel>(stocknote);
             return Created($"/api/stocknotes/{model.Id}", model);

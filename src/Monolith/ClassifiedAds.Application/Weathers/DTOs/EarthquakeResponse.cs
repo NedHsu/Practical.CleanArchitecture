@@ -26,7 +26,7 @@ namespace ClassifiedAds.Application.Weathers.DTOs
         public string ShakemapImageURI { get; set; }
         public string Web { get; set; }
         public EarthquakeInfo EarthquakeInfo { get; set; }
-        public EarthquakeValue Intensity { get; set; }
+        public EarthquakeIntensity Intensity { get; set; }
     }
 
     public class EarthquakeInfo
@@ -53,8 +53,8 @@ namespace ClassifiedAds.Application.Weathers.DTOs
     public class EarthquakeInfoEpiCenter
     {
         public string Location { get; set; }
-        public EarthquakeIntensity EpiCenterLat { get; set; }
-        public EarthquakeShakingArea EpiCenterLon { get; set; }
+        public EarthquakeValue EpiCenterLat { get; set; }
+        public EarthquakeValue EpiCenterLon { get; set; }
     }
 
     public class EarthquakeIntensity

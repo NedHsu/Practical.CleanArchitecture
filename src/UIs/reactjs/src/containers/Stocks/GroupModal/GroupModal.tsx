@@ -5,21 +5,22 @@ import { Modal, Card, Form, Row, Button, Spinner, Col } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import * as groupItemActions from "../../StockGroupItems/actions";
 
-export class GroupModal extends Component<any, any> {
-    props!: {
-        showGroupsModal: boolean;
-        hide: () => number;
-        stock;
-        stockGroups: any[];
-        stockGroupIds;
-        stockGroupItemLoading;
-        saveStockGroupItems;
-        stockGroupItems;
-    };
+type Props = {
+    showGroupsModal: boolean;
+    hide: () => number;
+    stock;
+    stockGroups: any[];
+    stockGroupIds;
+    stockGroupItemLoading;
+    saveStockGroupItems;
+    stockGroupItems;
+}
+
+export class GroupModal extends Component<Props, any> {
     state = {
         stockGroupIds: Array<string>(),
     };
-    groupCheckChanged(event) {
+    groupCheckChanged = (event) => {
         var stockGroupIds = this.state.stockGroupIds;
         if (event.target.checked) {
             stockGroupIds.push(event.target.value);
@@ -28,9 +29,15 @@ export class GroupModal extends Component<any, any> {
         }
         this.setState({ stockGroupIds: stockGroupIds });
     }
-    saveStockGroups() {
-        this.props.saveStockGroupItems(this.props.stock?.code, this.props.stockGroupIds);
-        this.setState({ showGroupsModal: false, });
+    saveStockGroups = () => {
+        this.props.saveStockGroupItems(this.props.stock?.code, this.state.stockGroupIds);
+        this.props.hide();
+    }
+    componentDidUpdate(prevProps) {
+        if (prevProps.stockGroupItems !== this.props.stockGroupItems) {
+            var stockGroupIds = this.props.stockGroupItems.map(x => x.groupId);
+            this.setState({ stockGroupIds: stockGroupIds });
+        }
     }
     render() {
         const GroupOptions = this.props.stockGroups?.map((item) => (
@@ -40,7 +47,7 @@ export class GroupModal extends Component<any, any> {
                     type="checkbox"
                     id={`group-check-${item.id}`}
                     label={item.groupTitle}
-                    checked={this.props.stockGroupIds?.indexOf(item.id) > -1}
+                    checked={this.state.stockGroupIds?.indexOf(item.id) > -1}
                     value={item.id}
                     onChange={this.groupCheckChanged}
                 />
@@ -62,9 +69,9 @@ export class GroupModal extends Component<any, any> {
                     <Card.Footer>
                         <Button variant="secondary" onClick={() => this.props.hide()}>
                             No
-            </Button>
-            &nbsp;
-            <Button onClick={() => this.saveStockGroups()} disabled={this.props.stockGroupItemLoading}>
+                        </Button>
+                        &nbsp;
+                        <Button onClick={this.saveStockGroups} disabled={this.props.stockGroupItemLoading}>
                             <Spinner
                                 as="span"
                                 animation="grow"
@@ -73,8 +80,8 @@ export class GroupModal extends Component<any, any> {
                                 aria-hidden="true"
                                 hidden={!this.props.stockGroupItemLoading}
                             />
-              Save
-            </Button>
+                            Save
+                        </Button>
                     </Card.Footer>
                 </Card>
             </Modal>
