@@ -23,6 +23,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="templates\Mops\stocks\Funder\stockFunder.go" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="templates\BlazorModule\Templates\Components\" />
   </ItemGroup>
 
