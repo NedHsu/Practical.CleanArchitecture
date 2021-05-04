@@ -19,5 +19,6 @@ namespace ClassifiedAds.Persistence.DapperContext
         IDapperRepository<StockFunder> StockFunder { get; }
         IDapperRepository<StockRevenue> StockRevenue { get; }
         IDapperRepository<StockDay> StockDay { get; }
+        IDapperRepository<StockProfit> StockProfit { get; }
     }
 }
