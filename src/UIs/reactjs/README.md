@@ -79,6 +79,13 @@ npm install react-icons --save
 npm install --save-dev @types/luxon
 ```
 
+### DAY.JS - instead of momentjs
+> lite only 2kb
+
+```
+npm install dayjs --save
+```
+
 ### D3
 
 ```

@@ -43,11 +43,24 @@ namespace ClassifiedAds.WebAPI.Controllers
         }
 
         [HttpPost("Recent")]
-        public ActionResult<RecentResponse> GetRecent(GetWeatherRecentQuery query)
+        public ActionResult<List<RecentLocationModel>> GetRecent(GetWeatherRecentQuery query)
         {
             _logger.LogInformation("Getting all Recent");
             var weathers = _dispatcher.Dispatch(query);
-            return Ok(weathers);
+            var stationMap = _dispatcher.Dispatch(new GetWeatherStationQuery()).ToDictionary(x => x.County, x => x);
+            var locations = weathers.Records?.Location ?? new List<LocationWeather>();
+            return Ok(locations.Select(x =>
+            {
+                var model = _mapper.Map<RecentLocationModel>(x);
+                if (stationMap.ContainsKey(x.LocationName))
+                {
+                    var station = stationMap[x.LocationName];
+                    model.Lat = station.Lat.ToString();
+                    model.Lon = station.Lon.ToString();
+                }
+
+                return model;
+            }));
         }
 
         [HttpPost("Alarm")]

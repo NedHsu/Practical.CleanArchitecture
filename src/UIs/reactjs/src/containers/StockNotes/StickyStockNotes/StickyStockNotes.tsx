@@ -1,13 +1,12 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button, Row, Col } from "react-bootstrap";
 
-import logo from "../../../logo.svg";
 import * as actions from "../actions";
-import Star from "../../../components/Star/Star";
 import AddStockNote from "../AddStockNote/AddStockNote";
-import ViewStockNote from "../ViewStockNote/ViewStockNote";
+import StickyNote from "../../../components/StickyNote/StickyNote";
+import dayjs from "dayjs";
 
 class ListStockNotes extends Component<any, any> {
   state = {
@@ -24,7 +23,7 @@ class ListStockNotes extends Component<any, any> {
   };
 
   toggleAddNote = () => {
-    this.setState({ showListNote: this.state.showAddNote, showAddNote: !this.state.showAddNote });
+    this.setState((prevState, props) => ({ showListNote: prevState.showAddNote, showAddNote: !prevState.showAddNote }));
   };
 
   filterChanged = (event) => {
@@ -68,6 +67,10 @@ class ListStockNotes extends Component<any, any> {
   };
 
   componentDidMount() {
+    this.props.fetchAllStockNotes({
+      pageIndex: 1,
+      pageSize: 50,
+    });
   }
 
   render() {
@@ -75,41 +78,19 @@ class ListStockNotes extends Component<any, any> {
       ? this.performFilter(this.state.listFilter)
       : this.props.stockNotes;
 
-    const rows = filteredStockNotes?.map((stockNote) => (
-      <tr key={stockNote.id}>
-        <td>
-          <NavLink to={"/stockNotes/" + stockNote.id}>{stockNote.title}</NavLink>
-        </td>
-        <td>{stockNote.contents}</td>
-        <td>{stockNote.price || (5).toFixed(2)}</td>
-        <td>
-          <Button variant="primary" onClick={() => this.editStockNote(stockNote)}>
-            Edit
-          </Button>
-          &nbsp;
-          <button
-            type="button"
-            className="btn btn-primary btn-danger"
-            onClick={() => this.deleteStockNote(stockNote)}
-          >
-            Delete
-          </button>
-        </td>
-      </tr>
+    const cols = filteredStockNotes?.map((stockNote) => (
+      <Col key={stockNote.id}>
+        <StickyNote title={stockNote.title} content={stockNote.contents}>
+          {stockNote.contents}<br />
+          <span>{dayjs(stockNote.created).format("YYYY-MM-DD hh:mm")}</span>
+        </StickyNote>
+      </Col>
     ));
 
-    const table = this.props.stockNotes ? (
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Content</th>
-            <th>Price</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>{rows}</tbody>
-      </table>
+    const board = this.props.stockNotes ? (
+      <Row>
+        {cols}
+      </Row>
     ) : null;
 
     const addStockNote = (
@@ -143,7 +124,7 @@ class ListStockNotes extends Component<any, any> {
                 </div>
               </div>
             ) : null}
-            <div className="table-responsive">{table}</div>
+            {board}
           </div>
         </div>
         {this.props.errorMessage ? (
@@ -166,6 +147,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    fetchAllStockNotes: (options) => dispatch(actions.fetchAllStockNotes(options)),
     deleteStockNote: (stockNote) => dispatch(actions.deleteStockNote(stockNote)),
     updateStockNote: stockNote => dispatch(actions.updateStockNote(stockNote)),
     resetStockNote: () => dispatch(actions.resetStockNote()),

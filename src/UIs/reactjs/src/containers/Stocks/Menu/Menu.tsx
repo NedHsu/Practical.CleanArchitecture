@@ -19,6 +19,9 @@ class Menu extends Component<Props> {
         <Nav.Item>
           <NavLink className="nav-link" to="/legalperson">Legal person</NavLink>
         </Nav.Item>
+        <Nav.Item>
+          <NavLink className="nav-link" to="/stockStickyNotes">Notes</NavLink>
+        </Nav.Item>
       </Nav>
     );
   }

@@ -5,6 +5,7 @@ import { Modal, Button, Row, Col, Form, FormControl, Card, Spinner } from "react
 import ListNotes from "../../StockNotes/ListStockNotes/ListStockNotes";
 import Menu from "../Menu/Menu";
 import TrendLine from "../TrendLine/TrendLine";
+import GroupModal from "../GroupModal/GroupModal";
 
 import * as actions from "../actions";
 import styles from "./ListStocks.module.scss";
@@ -93,11 +94,6 @@ class ListStocks extends Component<any, any> {
     );
   }
 
-  onRatingClicked = (event) => {
-    const pageTitle = "Stock List: " + event;
-    this.setState({ pageTitle: pageTitle });
-  };
-
   viewNotes = (stock) => {
     this.props.fetchStockNotes(stock);
     this.setState({ showNotesModal: true });
@@ -114,12 +110,6 @@ class ListStocks extends Component<any, any> {
   deleteConfirmed = () => {
     this.props.deleteStock(this.state.deletingStock);
     this.setState({ showDeleteModal: false, deletingStock: null });
-  };
-
-  formatDateTime = (value) => {
-    if (!value) return value;
-    var date = new Date(value);
-    return date.toLocaleDateString() + " " + date.toLocaleTimeString();
   };
 
   componentDidMount() {
@@ -173,11 +163,6 @@ class ListStocks extends Component<any, any> {
     this.setState({ showGroupsModal: true, stock: stock, });
     this.props.fetchStockGroupItems(stock);
   };
-
-  saveStockGroups() {
-    this.props.saveStockGroupItems(this.state.stock.code, this.state.stockGroupIds);
-    this.setState({ showGroupsModal: false, });
-  }
 
   componentDidUpdate(prevProps) {
     if (prevProps.stockGroupItems !== this.props.stockGroupItems) {
@@ -297,54 +282,6 @@ class ListStocks extends Component<any, any> {
       </Col>
     ));
 
-    const GroupOptions = this.props.stockGroups?.map((item) => (
-      <Col key={`check-${item.id}`} md={4}>
-        <Form.Check
-          custom
-          type="checkbox"
-          id={`group-check-${item.id}`}
-          label={item.groupTitle}
-          checked={this.state.stockGroupIds.indexOf(item.id) > -1}
-          value={item.id}
-          onChange={this.groupCheckChanged}
-        />
-      </Col>
-    ));
-
-    const GroupOptionsModal = (
-      <Modal show={this.state.showGroupsModal} onHide={() => this.setState({ showGroupsModal: false })}>
-        <Card>
-          <Card.Header>
-            ({this.state.stock.code}) {this.state.stock.name}
-          </Card.Header>
-          <Card.Body>
-            <Form>
-              <Row>
-                {GroupOptions}
-              </Row>
-            </Form>
-          </Card.Body>
-          <Card.Footer>
-            <Button variant="secondary" onClick={() => this.setState({ showGroupsModal: false })}>
-              No
-            </Button>
-            &nbsp;
-            <Button onClick={() => this.saveStockGroups()} disabled={this.props.stockGroupItemLoading}>
-              <Spinner
-                as="span"
-                animation="grow"
-                size="sm"
-                role="status"
-                aria-hidden="true"
-                hidden={!this.props.stockGroupItemLoading}
-              />
-              Save
-            </Button>
-          </Card.Footer>
-        </Card>
-      </Modal>
-    );
-
     return (
       <div>
         <div className="card">
@@ -440,7 +377,7 @@ class ListStocks extends Component<any, any> {
         }
         { deleteModal}
         { listNoteModal}
-        { GroupOptionsModal}
+        <GroupModal showGroupsModal={this.state.showGroupsModal} stock={this.state.stock} hide={() => this.setState({ showGroupsModal: false })} />
       </div>
     );
   }
@@ -453,7 +390,6 @@ const mapStateToProps = (state) => {
     stockGroup: state.stockGroup.stockGroup,
     groupLoading: state.stockGroup.loading,
     stockGroupItems: state.stockGroupItem.stockGroupItems,
-    stockGroupItemLoading: state.stockGroupItem.loading,
     stockTotalCount: state.stock.totalCount,
     stockTotalPage: state.stock.totalPage,
     stockLoading: state.stock.loading,
@@ -473,7 +409,6 @@ const mapDispatchToProps = (dispatch) => {
     resetStockGroup: () => dispatch(groupActions.resetStockGroup()),
     deleteStockGroup: (stockGroup) => dispatch(groupActions.deleteStockGroup(stockGroup)),
     fetchStockGroupItems: (stock) => dispatch(groupItemActions.fetchStockGroupItems(stock)),
-    saveStockGroupItems: (stockCode, groupIds) => dispatch(groupItemActions.saveStockGroupItems(stockCode, groupIds)),
     deleteStockGroupItem: (stockGroupItem) => dispatch(groupItemActions.deleteStockGroupItem(stockGroupItem)),
     fetchStocksDays: (options) => dispatch(daysActions.fetchStocksDays(options)),
   };

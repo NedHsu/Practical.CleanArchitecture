@@ -35,5 +35,7 @@ namespace ClassifiedAds.Domain.Entities
         public virtual ICollection<StockDay> StockDays { get; set; }
         public virtual ICollection<StockGroupItem> StockGroupItems { get; set; }
         public virtual ICollection<StockNote> StockNotes { get; set; }
+        public virtual ICollection<StockRevenue> StockRevenues { get; set; }
+        public virtual ICollection<StockProfit> StockProfits { get; set; }
     }
 }

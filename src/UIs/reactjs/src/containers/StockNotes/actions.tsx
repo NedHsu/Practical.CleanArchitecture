@@ -29,9 +29,10 @@ export const fetchStockNotes = (stock) => {
   };
 };
 
-export const fetchAllStockNotes = () => {
+export const fetchAllStockNotes = (options) => {
   return {
     type: actionTypes.FETCH_ALL_STOCK_NOTES,
+    options: options,
   };
 };
 

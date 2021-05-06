@@ -15,6 +15,7 @@ namespace ClassifiedAds.Persistence.DapperContext
         private IDapperRepository<StockFunder> _stockFunderRepository;
         private IDapperRepository<StockRevenue> _stockRevenueRepository;
         private IDapperRepository<StockDay> _stockDayRepository;
+        private IDapperRepository<StockProfit> _stockProfitRepository;
         private IDbTransaction trans;
 
         public StockDbContext(string connection)
@@ -29,6 +30,8 @@ namespace ClassifiedAds.Persistence.DapperContext
         public IDapperRepository<StockFunder> StockFunder => _stockFunderRepository ?? (_stockFunderRepository = new DapperRepository<StockFunder>(Connection));
         public IDapperRepository<StockRevenue> StockRevenue => _stockRevenueRepository ?? (_stockRevenueRepository = new DapperRepository<StockRevenue>(Connection));
         public IDapperRepository<StockDay> StockDay => _stockDayRepository ?? (_stockDayRepository = new DapperRepository<StockDay>(Connection));
+
+        public IDapperRepository<StockProfit> StockProfit => _stockProfitRepository ?? (_stockProfitRepository = new DapperRepository<StockProfit>(Connection));
 
         public void BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
         {

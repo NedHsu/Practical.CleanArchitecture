@@ -23,6 +23,7 @@ namespace ClassifiedAds.Persistence {
         public virtual DbSet<StockGroup> StockGroups { get; set; }
         public virtual DbSet<StockGroupItem> StockGroupItems { get; set; }
         public virtual DbSet<StockNote> StockNotes { get; set; }
+        public virtual DbSet<StockProfit> StockProfits { get; set; }
 
         private IDbContextTransaction _dbContextTransaction;
 
@@ -236,6 +237,24 @@ namespace ClassifiedAds.Persistence {
                     .HasForeignKey(d => d.StockCode)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_stock_note_stock");
+            });
+
+            modelBuilder.Entity<StockProfit>(entity => {
+                entity.HasKey(e => new { e.StockCode, e.Date });
+
+                entity.ToTable("StockProfit");
+
+                entity.Property(e => e.StockCode)
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Revenue).HasColumnType("decimal(18, 2)");
+                entity.Property(e => e.Gross).HasColumnType("decimal(18, 2)");
+                entity.Property(e => e.NetProfit).HasColumnType("decimal(18, 2)");
+                entity.Property(e => e.OperatingProfit).HasColumnType("decimal(18, 2)");
+                entity.Property(e => e.UntaxedNetProfit).HasColumnType("decimal(18, 2)");
+
+                entity.Property(e => e.Date).HasColumnType("date");
             });
 
             OnModelCreatingPartial(modelBuilder);

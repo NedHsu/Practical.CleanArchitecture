@@ -7,14 +7,14 @@ import GroupModal from "../GroupModal/GroupModal";
 
 import * as actions from "../actions";
 import * as daysActions from "../../StockDays/actions";
+import * as groupActions from "../../StockGroups/actions";
+import * as groupItemActions from "../../StockGroupItems/actions";
 import styles from "./LegalPerson.module.scss";
 import TrendLine from "../TrendLine/TrendLine";
 
 class LegalPerson extends Component<any, any> {
-  groupTitleField: any;
   constructor(props) {
     super(props);
-    this.groupTitleField = React.createRef();
   }
 
   state = {
@@ -27,7 +27,7 @@ class LegalPerson extends Component<any, any> {
     showGroupsModal: false,
     stockGroupIds: Array<string>(),
     stock: {
-      code: "",
+      stockCode: "",
       name: "",
     },
     pageIndex: 1,
@@ -49,51 +49,18 @@ class LegalPerson extends Component<any, any> {
     this.setState({ showTrendLine: !this.state.showTrendLine });
   };
 
-  groupCheckChanged = (event) => {
-    var stockGroupIds = this.state.stockGroupIds;
-    if (event.target.checked) {
-      stockGroupIds.push(event.target.value);
-    } else {
-      stockGroupIds.splice(stockGroupIds.indexOf(event.target.value), 1);
-    }
-    this.setState({ stockGroupIds: stockGroupIds })
-  };
-
-  onRatingClicked = (event) => {
-    const pageTitle = "Stock List: " + event;
-    this.setState({ pageTitle: pageTitle });
-  };
-
   viewNotes = (stock) => {
     this.props.fetchStockNotes(stock);
     this.setState({ showNotesModal: true });
   };
 
-  formatDateTime = (value) => {
-    if (!value) return value;
-    var date = new Date(value);
-    return date.toLocaleDateString() + " " + date.toLocaleTimeString();
-  };
-
-  showStockGroupEditor(stockGroup) {
-    this.props.updateStockGroup({ ...this.props.stockGroup, ...stockGroup });
-    this.groupTitleField.current.focus();
-    this.setState({ showGroupEditor: true });
-  }
-
-  closeStockGroupEditor() {
-    this.setState({ showGroupEditor: false });
-  }
-
   editGroups = (stock) => {
+    if (!(this.props.stockGroups?.length > 0)) {
+      this.props.fetchStockGroups();
+    }
     this.setState({ showGroupsModal: true, stock: stock, });
-    this.props.fetchStockGroupItems(stock);
+    this.props.fetchStockGroupItems({ code: stock.stockCode });
   };
-
-  saveStockGroups() {
-    this.props.saveStockGroupItems(this.state.stock.code, this.state.stockGroupIds);
-    this.setState({ showGroupsModal: false, });
-  }
 
   componentDidMount() {
     this.props.fetchStocks({});
@@ -119,7 +86,7 @@ class LegalPerson extends Component<any, any> {
           ) : null}
         </td>
         <td>
-          <NavLink to={"/stocks/" + stock.stockcode}>({stock.stockCode}){stock.name}</NavLink>
+          <NavLink to={"/stocks/" + stock.stockCode}>({stock.stockCode}){stock.name}</NavLink>
         </td>
         <td className={styles.test}>{stock.closePrice || "--"}</td>
         <td>
@@ -184,7 +151,7 @@ class LegalPerson extends Component<any, any> {
             </div>
           ) : null
         }
-        <GroupModal />
+        <GroupModal showGroupsModal={this.state.showGroupsModal} stock={{ name: this.state.stock.name, code: this.state.stock.stockCode }} hide={() => this.setState({ showGroupsModal: false })} />
       </div>
     );
   }
@@ -192,6 +159,7 @@ class LegalPerson extends Component<any, any> {
 
 const mapStateToProps = (state) => {
   return {
+    stockGroups: state.stockGroup.stockGroups,
     stockfunders: state.stock.stockfunders,
     stockTotalCount: state.stock.totalCount,
     stockTotalPage: state.stock.totalPage,
@@ -204,6 +172,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchStocks: (options) => dispatch(actions.fetchStockFunders(options)),
     fetchStocksDays: (options) => dispatch(daysActions.fetchStocksDays(options)),
+    fetchStockGroups: () => dispatch(groupActions.fetchStockGroups()),
+    fetchStockGroupItems: (stock) => dispatch(groupItemActions.fetchStockGroupItems(stock)),
   };
 };
 
