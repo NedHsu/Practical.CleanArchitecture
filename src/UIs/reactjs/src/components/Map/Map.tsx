@@ -241,7 +241,7 @@ class Map extends Component<Props, MyState> {
 
     const RecentButtons = this.props.recents[0]?.times.map((item, i, arr) => {
       return (
-        <Button key={"RecentBtn" + i} variant="light" active={this.state.recentTimeIndex == i} onClick={() => this.setState({ recentTimeIndex: i })}>
+        <Button key={"RecentBtn" + i} variant="light" active={this.state.recentTimeIndex === i} onClick={() => this.setState({ recentTimeIndex: i })}>
           {dayjs(item.startTime).format("MM/DD HH:mm")}{i + 1 === arr.length ? "-" + dayjs(item.endTime).format("MM/DD HH:mm") : null}
         </Button>
       )
@@ -249,7 +249,7 @@ class Map extends Component<Props, MyState> {
 
     const RainfallMarks = observations?.filter(x => x.weatherElement).map((item) => {
       let mm = item.weatherElement[this.state.observationType === 1 ? "24R" : "H_24R"];
-      if (mm == "-99") {
+      if (mm === "-99") {
         return null;
       }
       return (

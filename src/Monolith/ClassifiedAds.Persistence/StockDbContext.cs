@@ -227,7 +227,6 @@ namespace ClassifiedAds.Persistence {
                     .IsUnicode(false);
 
                 entity.Property(e => e.Title)
-                    .IsRequired()
                     .HasMaxLength(50);
 
                 entity.Property(e => e.Updated).HasColumnType("datetime");

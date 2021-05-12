@@ -1,7 +1,7 @@
-import React, { Component, useEffect } from "react";
+import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
-import { Modal, Button, Row, Col, Form, FormControl, Card, Spinner } from "react-bootstrap";
+import { Modal, Button, Row, Col, FormControl } from "react-bootstrap";
 import ListNotes from "../../StockNotes/ListStockNotes/ListStockNotes";
 import Menu from "../Menu/Menu";
 import TrendLine from "../TrendLine/TrendLine";
@@ -164,10 +164,14 @@ class ListStocks extends Component<any, any> {
     this.props.fetchStockGroupItems(stock);
   };
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     if (prevProps.stockGroupItems !== this.props.stockGroupItems) {
       var stockGroupIds = this.props.stockGroupItems.map(x => x.groupId);
       this.setState({ stockGroupIds: stockGroupIds });
+    }
+    if (prevProps.stockGroupItemDeleting && !this.props.stockGroupItemDeleting && this.props.stockGroupItemDeleted && this.props.stockGroupItem) {
+      this.props.removeListStock(this.props.stockGroupItem.stockCode);
+      console.log(this.props.stockGroupItem, "stockGroupItem deleted");
     }
   }
 
@@ -390,6 +394,10 @@ const mapStateToProps = (state) => {
     stockGroup: state.stockGroup.stockGroup,
     groupLoading: state.stockGroup.loading,
     stockGroupItems: state.stockGroupItem.stockGroupItems,
+    stockGroupItemLoading: state.stockGroupItem.loading,
+    stockGroupItem: state.stockGroupItem.stockGroupItem,
+    stockGroupItemDeleting: state.stockGroupItem.deleting,
+    stockGroupItemDeleted: state.stockGroupItem.deleted,
     stockTotalCount: state.stock.totalCount,
     stockTotalPage: state.stock.totalPage,
     stockLoading: state.stock.loading,
@@ -401,6 +409,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchStocks: (options) => dispatch(actions.fetchStocks(options)),
     fetchGroupStocks: (group) => dispatch(actions.fetchGroupStocks(group)),
+    removeListStock: (stockCode) => dispatch(actions.removeListStock(stockCode)),
     deleteStock: (stock) => dispatch(actions.deleteStock(stock)),
     fetchStockNotes: (stock) => dispatch(noteActions.fetchStockNotes(stock)),
     fetchStockGroups: () => dispatch(groupActions.fetchStockGroups()),

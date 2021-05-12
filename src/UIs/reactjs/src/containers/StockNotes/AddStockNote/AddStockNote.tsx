@@ -1,32 +1,37 @@
-import React, { Component } from "react";
+import React, { Component, LegacyRef } from "react";
 import { NavLink, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 
 import * as actions from "../actions";
+import * as stockActions from "../../Stocks/actions";
 import { checkValidity } from "../../../shared/utility";
 import { Button } from "react-bootstrap";
-import { stat } from "fs/promises";
+import AutoComplete from "../../../components/AutoComplete/AutoComplete";
 
 type Props = {
   resetStockNote: any,
   match: any,
   fetchStockNote: any,
+  fetchStockOptions: any,
   stockNote: any,
   saveStockNote: any,
   updateStockNote: any,
   saved: any,
+  loading: boolean,
   back: any,
   stockNoteId: any,
   stock: any,
+  stockOptions: any,
+  optionsLoading: boolean,
 }
 
+const autoComplete = React.createRef<AutoComplete>();
 class AddStockNote extends Component<Props, any> {
   state = {
     controls: {
       title: {
         validation: {
-          required: true,
-          minLength: 3
+          maxLength: 50
         },
         error: {
           required: false,
@@ -65,15 +70,18 @@ class AddStockNote extends Component<Props, any> {
   // }
 
   fieldChanged = event => {
-    const stockNote = {
-      ...this.props.stockNote,
-      [event.target.name]: event.target.value
-    };
-
     this.checkFieldValidity(event.target.name, event.target.value);
 
-    this.props.updateStockNote(stockNote);
+    this.setFieldValue({ [event.target.name]: event.target.value });
   };
+
+  setFieldValue = (values) => {
+    const stockNote = {
+      ...this.props.stockNote,
+      ...values,
+    };
+    this.props.updateStockNote(stockNote);
+  }
 
   checkFieldValidity = (name, value) => {
     const control = this.state.controls[name];
@@ -96,6 +104,20 @@ class AddStockNote extends Component<Props, any> {
     return validationRs.isValid;
   };
 
+  loadStockData = (userInput) => {
+    if (this.filterTimer !== undefined) {
+      clearTimeout(this.filterTimer);
+    }
+
+    this.filterTimer = setTimeout(() => {
+      this.props.fetchStockOptions({
+        pageSize: 15,
+        pageIndex: 1,
+        keyword: userInput,
+      });
+    }, 500);
+  }
+
   onSubmit = async event => {
     event.preventDefault();
     this.setState({ submitted: true });
@@ -107,15 +129,42 @@ class AddStockNote extends Component<Props, any> {
     }
 
     if (isValid) {
-      await this.props.saveStockNote(this.props.stockNote);
-      this.props.back();
+      this.props.saveStockNote(this.props.stockNote);
     }
   };
 
+  componentDidUpdate(prevProps, prevState) {
+    const {
+      props: {
+        stockNote
+      }
+    } = this;
+
+    if (prevProps.stockNote?.stockCode != stockNote?.stockCode) {
+      autoComplete.current?.setValue(stockNote?.stockCode ? { text: `(${stockNote?.stockCode})${stockNote?.stockName}`, value: stockNote?.stockCode } : { text: "", value: "" });
+    }
+
+    if (prevProps.loading && !prevProps.saved && !this.props.loading && this.props.saved) {
+      this.props.back();
+    }
+
+    if (prevProps.optionsLoading && !this.props.optionsLoading) {
+      autoComplete.current?.setItems(this.props.stockOptions.map(s => { return { text: `(${s.code})${s.name}`, value: s.code } }));
+    }
+  }
+
+  filterTimer: NodeJS.Timeout | undefined;
+
   render() {
+    const {
+      props: {
+        stockNote
+      }
+    } = this;
+
     const form = (
       <div className="card">
-        <div className="card-header">{this.props.stockNote?.id ? "Edit StockNote" : "Add StockNote"}</div>
+        <div className="card-header">{stockNote?.id ? "Edit StockNote" : "Add StockNote"}</div>
         <div className="card-body">
           {this.state.errorMessage ? (
             <div
@@ -130,13 +179,14 @@ class AddStockNote extends Component<Props, any> {
                 Code
               </label>
               <div className="col-sm-10">
-                <input
-                  id="stockCode"
-                  name="stockCode"
+                <AutoComplete
+                  suggestions={this.props.stockOptions}
+                  loadData={this.loadStockData}
+                  ref={autoComplete}
+                  disabled={stockNote?.id}
                   className="form-control"
-                  value={this.props.stockNote?.stockCode}
-                  disabled={true}
-                />
+                  onValueChange={newValue => this.setFieldValue({ stockCode: newValue.value, stockName: newValue.text.substr(newValue.text.indexOf(")") + 1) })}
+                ></AutoComplete>
               </div>
             </div>
             <div className="form-group row">
@@ -153,7 +203,7 @@ class AddStockNote extends Component<Props, any> {
                       ? "is-invalid"
                       : "")
                   }
-                  value={this.props.stockNote?.title}
+                  value={stockNote?.title}
                   onChange={event => this.fieldChanged(event)}
                 />
                 <span className="invalid-feedback">
@@ -181,7 +231,7 @@ class AddStockNote extends Component<Props, any> {
                       ? "is-invalid"
                       : "")
                   }
-                  value={this.props.stockNote?.contents}
+                  value={stockNote?.contents}
                   onChange={event => this.fieldChanged(event)}
                 />
                 <span className="invalid-feedback">
@@ -221,7 +271,10 @@ const mapStateToProps = state => {
   return {
     stockNote: state.stockNote.stockNote,
     saved: state.stockNote.saved,
+    loading: state.stockNote.loading,
     stock: state.stockNote.stock,
+    stockOptions: state.stock.stockOptions,
+    optionsLoading: state.stock.optionsLoading,
   };
 };
 
@@ -230,7 +283,8 @@ const mapDispatchToProps = dispatch => {
     fetchStockNote: id => dispatch(actions.fetchStockNote(id)),
     updateStockNote: stockNote => dispatch(actions.updateStockNote(stockNote)),
     resetStockNote: () => dispatch(actions.resetStockNote()),
-    saveStockNote: stockNote => dispatch(actions.saveStockNote(stockNote))
+    saveStockNote: stockNote => dispatch(actions.saveStockNote(stockNote)),
+    fetchStockOptions: (options) => dispatch(stockActions.fetchStockOptions(options)),
   };
 };
 

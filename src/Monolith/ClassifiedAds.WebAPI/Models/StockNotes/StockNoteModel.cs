@@ -11,5 +11,11 @@ namespace ClassifiedAds.WebAPI.Models.StockNotes
         public string Contents { get; set; }
 
         public string StockCode { get; set; }
+
+        public string StockName { get; set; }
+
+        public DateTime? Created { get; set; }
+
+        public DateTime? Updated { get; set; }
     }
 }

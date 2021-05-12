@@ -8,5 +8,6 @@ namespace ClassifiedAds.Domain.Repositories
     {
         List<Stock> GetByGroupId(Guid groupId);
         List<string> GetAllIndustry();
+        Dictionary<string, string> GetStocksName(List<string> codes);
     }
 }

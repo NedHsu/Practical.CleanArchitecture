@@ -4,12 +4,13 @@
   background-color: #f4f39e;
   border-color: #dee184;
   text-align: center;
-  margin: 2.5em 0px;
-  padding: 1.5em 1em;
+  margin: 0.5em 0px;
+  padding: 1em;
   -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
   -moz-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
   font-family: Chalkboard, ‘Comic Sans’;
+  height: calc(100% - 1em);
 }
 
 .sticky.taped:after {

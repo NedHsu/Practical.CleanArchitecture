@@ -37,6 +37,17 @@ const fetchStockNotesSuccess = (state, action) => {
   });
 };
 
+const fetchStockNotePagedSuccess = (state, action) => {
+
+  return updateObject(state, {
+    stockNotes: action.stockPaged.items,
+    totalPages: action.stockPaged.totalPages,
+    pageIndex: action.stockPaged.pageIndex,
+    totalCount: action.stockPaged.totalCount,
+    loading: false,
+  });
+};
+
 const fetchStockNotesFail = (state, action) => {
   return updateObject(state, { loading: false });
 };
@@ -73,6 +84,7 @@ const saveStockNoteSuccess = (state, action) => {
   } else {
     stockNotes = [action.stockNote, ...state.stockNotes]
   }
+  console.log(stockNotes);
   return updateObject(state, {
     stockNote: action.stockNote,
     loading: false,
@@ -100,6 +112,8 @@ const reducer = (state = initialState, action) => {
       return fetchStockNotesStart(state, action);
     case actionTypes.FETCH_STOCK_NOTES_SUCCESS:
       return fetchStockNotesSuccess(state, action);
+    case actionTypes.FETCH_STOCK_NOTE_Paged_SUCCESS:
+      return fetchStockNotePagedSuccess(state, action);
     case actionTypes.FETCH_STOCK_NOTES_FAIL:
       return fetchStockNotesFail(state, action);
     case actionTypes.FETCH_STOCK_NOTE_START:

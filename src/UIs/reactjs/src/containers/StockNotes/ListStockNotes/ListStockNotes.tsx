@@ -3,9 +3,7 @@ import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
 import { Modal, Button } from "react-bootstrap";
 
-import logo from "../../../logo.svg";
 import * as actions from "../actions";
-import Star from "../../../components/Star/Star";
 import AddStockNote from "../AddStockNote/AddStockNote";
 import ViewStockNote from "../ViewStockNote/ViewStockNote";
 
@@ -37,11 +35,6 @@ class ListStockNotes extends Component<any, any> {
       (stockNote) => stockNote.title.toLocaleLowerCase().indexOf(filterBy) !== -1
     );
   }
-
-  onRatingClicked = (event) => {
-    const pageTitle = "StockNote List: " + event;
-    this.setState({ pageTitle: pageTitle });
-  };
 
   deleteStockNote = (stockNote) => {
     this.setState({ showDeleteModal: true, deletingStockNote: stockNote });

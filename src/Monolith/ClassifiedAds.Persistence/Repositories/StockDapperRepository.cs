@@ -43,5 +43,20 @@ ORDER BY COUNT(0) DESC";
 
             return DbContext.Connection.Query<string>(sql).ToList();
         }
+
+        public Dictionary<string, string> GetStocksName(List<string> codes)
+        {
+            string sql = @"
+SELECT Code, Name
+FROM Stock
+WHERE Code IN @Codes
+";
+            Dictionary<string, object> param = new Dictionary<string, object>()
+            {
+                { "@Codes", codes },
+            };
+
+            return DbContext.Connection.Query<Stock>(sql, param).ToDictionary(x => x.Code, x => x.Name);
+        }
     }
 }

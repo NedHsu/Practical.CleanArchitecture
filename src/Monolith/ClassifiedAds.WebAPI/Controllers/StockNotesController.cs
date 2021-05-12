@@ -5,6 +5,7 @@ using ClassifiedAds.Application.AuditLogEntries.Queries;
 using ClassifiedAds.Application.StockNotes.Commands;
 using ClassifiedAds.Application.StockNotes.DTOs;
 using ClassifiedAds.Application.StockNotes.Queries;
+using ClassifiedAds.Application.Stocks.Queries;
 using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.WebAPI.Models.Common;
@@ -51,7 +52,14 @@ namespace ClassifiedAds.WebAPI.Controllers
         {
             _logger.LogInformation("Getting paged stocknotes");
             var stocknotes = _dispatcher.Dispatch(new GetStockNotePagedQuery() { PageIndex = pageIndex, PageSize = pageSize });
+            var stocks = _dispatcher.Dispatch(new GetStocksNameQuery(){ StockCodes = stocknotes.Items.Select(x => x.StockCode).Distinct().ToList() });
             var model = _mapper.Map<PagedResultModel<StockNoteModel>>(stocknotes);
+            model.Items.Where(x => stocks.ContainsKey(x.StockCode))
+                .ToList()
+                .ForEach(x =>
+                {
+                    x.StockName = stocks[x.StockCode];
+                });
             return Ok(model);
         }
 
@@ -70,12 +78,15 @@ namespace ClassifiedAds.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public ActionResult<StockNote> Post([FromBody] StockNoteModel model)
         {
+            var stock = _dispatcher.Dispatch(new GetStockQuery() { Code = model.StockCode, ThrowNotFoundIfNull = true });
+
             var stocknote = _mapper.Map<StockNote>(model);
             stocknote.Id = Guid.NewGuid();
             stocknote.Created = DateTime.Now;
             stocknote.Creater = User.GetUserId();
             _dispatcher.Dispatch(new AddUpdateStockNoteCommand { StockNote = stocknote });
             model = _mapper.Map<StockNoteModel>(stocknote);
+            model.StockName = stock.Name;
             return Created($"/api/stocknotes/{model.Id}", model);
         }
 
@@ -86,6 +97,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         public ActionResult Put(Guid id, [FromBody] StockNoteModel model)
         {
             var stocknote = _dispatcher.Dispatch(new GetStockNoteQuery { Id = id, ThrowNotFoundIfNull = true });
+            var stock = _dispatcher.Dispatch(new GetStockQuery() { Code = model.StockCode, ThrowNotFoundIfNull = true });
 
             stocknote.Title = model.Title;
             stocknote.Contents = model.Contents;
@@ -93,7 +105,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             _dispatcher.Dispatch(new AddUpdateStockNoteCommand { StockNote = stocknote });
 
             model = _mapper.Map<StockNoteModel>(stocknote);
-
+            model.StockName = stock.Name;
             return Ok(model);
         }
 

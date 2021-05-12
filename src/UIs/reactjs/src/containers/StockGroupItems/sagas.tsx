@@ -52,10 +52,10 @@ export function* saveStockGroupItemsSaga(action) {
 }
 
 export function* deleteStockGroupItemSaga(action) {
-  yield put(actions.deleteStockGroupItemStart());
+  yield put(actions.deleteStockGroupItemStart(action.stockGroupItem));
   try {
     const response = yield axios.delete(`?stockCode=${action.stockGroupItem.stockCode}&groupId=${action.stockGroupItem.groupId}`, action.stockGroupItem);
-    yield put(actions.deleteStockGroupItemSuccess(action.stockGroupItem));
+    yield put(actions.deleteStockGroupItemSuccess());
   } catch (error) {
     console.log(error);
     yield put(actions.deleteStockGroupItemFail(error));

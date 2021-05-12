@@ -10,6 +10,7 @@ const initialState = {
   },
   auditLogs: [],
   loading: false,
+  deleting: false,
   saved: false,
   deleted: false,
   error: null,
@@ -92,19 +93,18 @@ const reducer = (state = initialState, action) => {
     case actionTypes.DELETE_STOCK_GROUP_ITEM_START:
       return updateObject(state, {
         stockGroupItem: action.stockGroupItem,
-        loading: true,
+        deleting: true,
         deleted: false,
       });
     case actionTypes.DELETE_STOCK_GROUP_ITEM_SUCCESS:
       return updateObject(state, {
-        stockGroupItem: initialState.stockGroupItem,
-        loading: false,
+        deleting: false,
         deleted: true,
       });
     case actionTypes.DELETE_STOCK_GROUP_ITEM_FAIL:
       return updateObject(state, {
         error: action.error,
-        loading: false,
+        deleting: false,
         deleted: false,
       });
     case actionTypes.FETCH_STOCK_GROUP_ITEM_AUDIT_LOGS_START:

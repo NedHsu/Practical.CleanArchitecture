@@ -8,6 +8,13 @@ export const fetchStockNotesSuccess = (stockNotes) => {
   };
 };
 
+export const fetchStockNotePagedSuccess = (stockPaged) => {
+  return {
+    type: actionTypes.FETCH_STOCK_NOTE_Paged_SUCCESS,
+    stockPaged: stockPaged,
+  };
+};
+
 export const fetchStockNotesFail = (error) => {
   return {
     type: actionTypes.FETCH_STOCK_NOTES_FAIL,

@@ -110,10 +110,9 @@ export const saveStockGroupItem = (stockGroupItem) => {
 /// SAVE STOCK_GROUP_ITEM
 
 /// DELETE STOCK_GROUP_ITEM
-export const deleteStockGroupItemSuccess = (stockGroupItem) => {
+export const deleteStockGroupItemSuccess = () => {
   return {
     type: actionTypes.DELETE_STOCK_GROUP_ITEM_SUCCESS,
-    stockGroupItem: stockGroupItem,
   };
 };
 
@@ -124,8 +123,9 @@ export const deleteStockGroupItemFail = (error) => {
   };
 };
 
-export const deleteStockGroupItemStart = () => {
+export const deleteStockGroupItemStart = (stockGroupItem) => {
   return {
+    stockGroupItem: stockGroupItem,
     type: actionTypes.DELETE_STOCK_GROUP_ITEM_START,
   };
 };

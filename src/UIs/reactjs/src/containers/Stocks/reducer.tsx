@@ -2,7 +2,7 @@ import { updateObject } from "../../shared/utility";
 import * as actionTypes from "./actionTypes";
 
 const initialState = {
-  stocks: [],
+  stocks: new Array<any>(),
   stockfunders: [],
   totalPage: 0,
   totalCount: 0,
@@ -17,6 +17,8 @@ const initialState = {
   saved: false,
   deleted: false,
   error: null,
+  stockOptions: [],
+  optionsLoading: false,
 };
 
 /// Stocks
@@ -44,6 +46,20 @@ const fetchStocksFail = (state, action) => {
   return updateObject(state, { loading: false });
 };
 
+const fetchStockOptionsStart = (state, action) => {
+  return updateObject(state, { optionsLoading: true });
+};
+
+const fetchStockOptionsSuccess = (state, action) => {
+  return updateObject(state, {
+    stockOptions: action.stocks,
+    optionsLoading: false,
+  });
+};
+
+const fetchStockOptionsFail = (state, action) => {
+  return updateObject(state, { optionsLoading: false });
+};
 /// Stocks
 
 /// StockFunders
@@ -109,6 +125,12 @@ const reducer = (state = initialState, action) => {
       return fetchGroupStocksSuccess(state, action);
     case actionTypes.FETCH_STOCKS_FAIL:
       return fetchStocksFail(state, action);
+    case actionTypes.FETCH_STOCK_OPTIONS_START:
+      return fetchStockOptionsStart(state, action);
+    case actionTypes.FETCH_STOCK_OPTIONS_SUCCESS:
+      return fetchStockOptionsSuccess(state, action);
+    case actionTypes.FETCH_STOCK_OPTIONS_FAIL:
+      return fetchStockOptionsFail(state, action);
     case actionTypes.FETCH_STOCK_START:
       return fetchStockStart(state, action);
     case actionTypes.FETCH_STOCK_SUCCESS:
@@ -148,6 +170,10 @@ const reducer = (state = initialState, action) => {
         error: action.error,
         loading: false,
         deleted: false,
+      });
+    case actionTypes.REMOVE_LIST_STOCK:
+      return updateObject(state, {
+        stocks: state.stocks.filter(x => x.code !== action.stockCode)
       });
     case actionTypes.FETCH_STOCK_AUDIT_LOGS_START:
       return updateObject(state, {

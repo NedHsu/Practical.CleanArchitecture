@@ -1,12 +1,14 @@
-import React, { Component } from "react";
-import { NavLink } from "react-router-dom";
+import { Component } from "react";
 import { connect } from "react-redux";
-import { Modal, Button, Row, Col } from "react-bootstrap";
+import { Button, Row, Col } from "react-bootstrap";
 
 import * as actions from "../actions";
 import AddStockNote from "../AddStockNote/AddStockNote";
 import StickyNote from "../../../components/StickyNote/StickyNote";
+import Menu from "../../Stocks/Menu/Menu";
 import dayjs from "dayjs";
+import { GrEdit } from "react-icons/gr";
+import styles from "./StickyStockNotes.module.scss";
 
 class ListStockNotes extends Component<any, any> {
   state = {
@@ -36,11 +38,6 @@ class ListStockNotes extends Component<any, any> {
       (stockNote) => stockNote.title.toLocaleLowerCase().indexOf(filterBy) !== -1
     );
   }
-
-  onRatingClicked = (event) => {
-    const pageTitle = "StockNote List: " + event;
-    this.setState({ pageTitle: pageTitle });
-  };
 
   deleteStockNote = (stockNote) => {
     this.setState({ showDeleteModal: true, deletingStockNote: stockNote });
@@ -74,18 +71,22 @@ class ListStockNotes extends Component<any, any> {
   }
 
   render() {
+    console.log("render");
     const filteredStockNotes = this.state.listFilter
       ? this.performFilter(this.state.listFilter)
       : this.props.stockNotes;
 
-    const cols = filteredStockNotes?.map((stockNote) => (
-      <Col key={stockNote.id}>
-        <StickyNote title={stockNote.title} content={stockNote.contents}>
-          {stockNote.contents}<br />
-          <span>{dayjs(stockNote.created).format("YYYY-MM-DD hh:mm")}</span>
-        </StickyNote>
-      </Col>
-    ));
+    const cols = filteredStockNotes?.map((stockNote) => {
+      return (
+        <Col md="3" key={stockNote.id} onMouseEnter={() => { }}>
+          <StickyNote title={`(${stockNote.stockCode})${stockNote.stockName} ${stockNote.title}`} content={stockNote.contents}>
+            <span className={styles.noteContent}>{stockNote.contents}</span><br />
+            <span className={styles.noteFooter}>{dayjs(stockNote.updated ?? stockNote.created).format("YYYY-MM-DD hh:mm")}</span>
+            <GrEdit className={styles.editIcon} onClick={() => { this.editStockNote(stockNote) }} />
+          </StickyNote>
+        </Col>
+      )
+    });
 
     const board = this.props.stockNotes ? (
       <Row>
@@ -103,8 +104,7 @@ class ListStockNotes extends Component<any, any> {
       <div>
         <div hidden={!this.state.showListNote} className="card">
           <div className="card-header">
-            {this.state.pageTitle}
-            <Button variant="primary" style={{ float: "right" }} onClick={() => { this.props.resetStockNote(); this.toggleAddNote(); }}>Add StockNote</Button>
+            <Menu />
           </div>
           <div className="card-body">
             <div className="row">
@@ -116,6 +116,8 @@ class ListStockNotes extends Component<any, any> {
                   onChange={(event) => this.filterChanged(event)}
                 />
               </div>
+              <div className="col"></div>
+              <Button variant="primary" style={{ float: "right", marginRight: "10px" }} onClick={() => { this.props.resetStockNote(); this.toggleAddNote(); }}>Add StockNote</Button>
             </div>
             {this.state.listFilter ? (
               <div className="row">

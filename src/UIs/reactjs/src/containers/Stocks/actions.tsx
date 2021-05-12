@@ -43,6 +43,36 @@ export const fetchGroupStocks = (group) => {
     group: group,
   };
 };
+
+export const fetchStockOptions = (options) => {
+  return {
+    type: actionTypes.FETCH_STOCK_OPTIONS,
+    options: options,
+  };
+};
+
+export const fetchStockOptionsStart = () => {
+  return {
+    type: actionTypes.FETCH_STOCK_OPTIONS_START,
+  };
+};
+
+
+export const fetchStockOptionsSuccess = (result) => {
+  return {
+    type: actionTypes.FETCH_STOCK_OPTIONS_SUCCESS,
+    stocks: result.items,
+    totalCount: result.totalCount,
+    totalPage: result.totalPage,
+  };
+};
+
+export const fetchStockOptionsFail = (error) => {
+  return {
+    type: actionTypes.FETCH_STOCK_OPTIONS_FAIL,
+    error: error,
+  };
+};
 /// STOCKS
 
 /// STOCK FUNDERS
@@ -153,6 +183,13 @@ export const deleteStockSuccess = (stock) => {
     type: actionTypes.DELETE_STOCK_SUCCESS,
   };
 };
+
+export const removeListStock = (stockCode) => {
+  return {
+    type: actionTypes.REMOVE_LIST_STOCK,
+    stockCode: stockCode
+  }
+}
 
 export const deleteStockFail = (error) => {
   return {

@@ -8,9 +8,9 @@ import { urlParams } from "../../shared/utility";
 export function* fetchAllStockNotesSaga(action) {
   yield put(actions.fetchStockNotesStart({}));
   try {
-    const response = yield axios.get(urlParams(action.options));
+    const response = yield axios.get("paged" + urlParams(action.options));
     const fetchedStockNotes = response.data;
-    yield put(actions.fetchStockNotesSuccess(fetchedStockNotes));
+    yield put(actions.fetchStockNotePagedSuccess(fetchedStockNotes));
   } catch (error) {
     yield put(actions.fetchStockNotesFail(error));
   }

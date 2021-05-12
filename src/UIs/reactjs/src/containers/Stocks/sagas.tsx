@@ -1,4 +1,4 @@
-import { put, takeEvery } from "redux-saga/effects";
+import { put, takeEvery, takeLatest } from "redux-saga/effects";
 import axios from "./axios";
 
 import * as actionTypes from "./actionTypes";
@@ -13,6 +13,18 @@ export function* fetchStocksSaga(action) {
     yield put(actions.fetchStocksSuccess(fetchedStocks));
   } catch (error) {
     yield put(actions.fetchStocksFail(error));
+  }
+}
+
+export function* fetchStockOptionsSaga(action) {
+  yield put(actions.fetchStockOptionsStart());
+  try {
+    const response = yield axios.get(urlParams(action.options));
+    const fetchedStocks = response.data;
+    console.log(fetchedStocks);
+    yield put(actions.fetchStockOptionsSuccess(fetchedStocks));
+  } catch (error) {
+    yield put(actions.fetchStockOptionsFail(error));
   }
 }
 
@@ -99,7 +111,8 @@ export function* fetchAuditLogsSaga(action) {
 export function* watchStock() {
   yield takeEvery(actionTypes.FETCH_INDUSTRYS, fetchIndustrysSaga);
   yield takeEvery(actionTypes.FETCH_GROUP_STOCKS, fetchGroupStocksSaga);
-  yield takeEvery(actionTypes.FETCH_STOCKS, fetchStocksSaga);
+  yield takeLatest(actionTypes.FETCH_STOCKS, fetchStocksSaga);
+  yield takeLatest(actionTypes.FETCH_STOCK_OPTIONS, fetchStockOptionsSaga);
   yield takeEvery(actionTypes.FETCH_STOCK_FUNDERS, fetchStockFundersSaga);
   yield takeEvery(actionTypes.FETCH_STOCK, fetchStockSaga);
   yield takeEvery(actionTypes.SAVE_STOCK, saveStockSaga);
