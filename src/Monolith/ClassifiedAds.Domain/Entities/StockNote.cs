@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using MicroOrm.Dapper.Repositories.Attributes.Joins;
 
-#
-nullable disable
+#nullable disable
 
 namespace ClassifiedAds.Domain.Entities {
     public partial class StockNote {

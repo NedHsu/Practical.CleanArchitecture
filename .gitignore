@@ -369,3 +369,7 @@ MigrationBackup/
 # JetBrains Rider
 .idea/
 *.sln.iml
+
+# Config File
+src/Monolith/ClassifiedAds.WebAPI/appsettings.json
+src/Monolith/tye.yml
