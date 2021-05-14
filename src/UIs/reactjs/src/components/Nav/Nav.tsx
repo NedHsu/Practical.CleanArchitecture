@@ -25,14 +25,29 @@ class Nav extends Component<Props> {
               Home
             </NavLink>
           </li>
-          <li>
+          {/* <li>
             <NavLink className="nav-link" to="/files">
               Files
             </NavLink>
-          </li>
-          <li>
+          </li> */}
+          {/* <li>
             <NavLink className="nav-link" to="/products">
               Products
+            </NavLink>
+          </li> */}
+          <li>
+            <NavLink className="nav-link" to="/stocks">
+              Stocks
+            </NavLink>
+          </li>
+          <li>
+            <NavLink className="nav-link" to="/map">
+              Map
+            </NavLink>
+          </li>
+          <li>
+            <NavLink className="nav-link" to="/illustrations">
+              Illustration
             </NavLink>
           </li>
           <li>
@@ -46,18 +61,13 @@ class Nav extends Component<Props> {
             </NavLink>
           </li>
           <li>
-            <NavLink className="nav-link" to="/stocks">
-              Stocks
+            <NavLink className="nav-link" to="/effects">
+              Effects
             </NavLink>
           </li>
           <li>
-            <NavLink className="nav-link" to="/illustrations">
-              Illustration
-            </NavLink>
-          </li>
-          <li>
-            <NavLink className="nav-link" to="/map">
-              Map
+            <NavLink className="nav-link" to="/D3s">
+              D3s
             </NavLink>
           </li>
           <li>
@@ -65,11 +75,11 @@ class Nav extends Component<Props> {
               Users
             </NavLink>
           </li>
-          <li>
+          {/* <li>
             <NavLink className="nav-link" to="/auditlogs">
               Audit Logs
             </NavLink>
-          </li>
+          </li> */}
 
           {!this.props.authService.isAuthenticated() ? (
             <li>

@@ -26,35 +26,41 @@ class ViewStock extends Component<any, any> {
   };
 
   render() {
-    const page = this.props.stock ? (
+    const {
+      props: {
+        stock
+      }
+    } = this;
+
+    const page = stock ? (
       <div className="card">
         <div className="card-header">
-          {"Stock Detail: " + this.props.stock.name}
+          {"Stock Detail: " + stock.name}
         </div>
 
         <div className="card-body">
           <div className="row">
             <div className="col-md-8">
               <div className="row">
-                <div className="col-md-4">Name:</div>
-                <div className="col-md-8">{this.props.stock.name}</div>
+                <div className="col-md-4">{stock.code}</div>
+                <div className="col-md-8">{stock.name}</div>
               </div>
               <div className="row">
                 <div className="col-md-4">Code:</div>
-                <div className="col-md-8">{this.props.stock.code}</div>
+                <div className="col-md-8">{stock.code}</div>
               </div>
               <div className="row">
                 <div className="col-md-4">Description:</div>
-                <div className="col-md-8">{this.props.stock.description}</div>
+                <div className="col-md-8">{stock.description}</div>
               </div>
               <div className="row">
                 <div className="col-md-4">Price:</div>
-                <div className="col-md-8">{this.props.stock.price || 5}</div>
+                <div className="col-md-8">{stock.price || 5}</div>
               </div>
               <div className="row">
                 <div className="col-md-4">5 Star Rating:</div>
                 <div className="col-md-8">
-                  <Star rating={this.props.stock.starRating || 4} />
+                  <Star rating={stock.starRating || 4} />
                 </div>
               </div>
             </div>
@@ -63,8 +69,8 @@ class ViewStock extends Component<any, any> {
               <img
                 className="center-block img-responsive"
                 style={{ width: "200px", margin: "2px" }}
-                src={this.props.stock.imageUrl || logo}
-                title={this.props.stock.name}
+                src={stock.imageUrl || logo}
+                title={stock.name}
               />
             </div>
           </div>
@@ -81,7 +87,7 @@ class ViewStock extends Component<any, any> {
           &nbsp;
           <NavLink
             className="btn btn-primary"
-            to={"/stocks/edit/" + this.props.stock.code}
+            to={"/stocks/edit/" + stock.code}
           >
             Edit
           </NavLink>

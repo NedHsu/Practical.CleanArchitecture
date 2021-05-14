@@ -28,6 +28,12 @@ import ListLocations from "./containers/Locations/ListLocations/ListLocations";
 import Maps from "./components/Map/Map";
 import ViewIllustration from "./containers/Illustrations/ViewIllustration/ViewIllustration";
 import Svg0 from "./containers/D3s/Svg0/Svg0";
+import ListPageEffects from "./containers/PageEffects/ListPageEffects/ListPageEffects";
+import BackgroundEffects from "./containers/PageEffects/Backgrounds/Background";
+import Transitions from "./containers/PageEffects/Transitions/Transition";
+import Transform3Ds from "./containers/PageEffects/Transform3Ds/Transform3D";
+import ListD3s from "./containers/D3s/ListD3s/ListD3s";
+
 
 function App() {
   return (
@@ -62,7 +68,12 @@ function App() {
         <Route path="/locations/edit/:id" component={AddLocation} />
         <Route path="/locations" component={ListLocations} />
         <Route path="/map" component={Maps} />
-        <Route path="/D3/svg0" component={Svg0} />
+        <Route path="/D3s/svg0" component={Svg0} />
+        <Route path="/D3s" component={ListD3s} />
+        <Route path="/effects/backgrounds" component={BackgroundEffects} />
+        <Route path="/effects/transitions" component={Transitions} />
+        <Route path="/effects/transition3Ds" component={Transform3Ds} />
+        <Route path="/effects" component={ListPageEffects} />
         <Redirect to="/home" />
       </Switch>
     </div>
