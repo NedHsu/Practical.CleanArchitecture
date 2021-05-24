@@ -268,8 +268,9 @@ class ListStocks extends Component<any, any> {
     );
 
     const listNoteModal = (
-      <Modal size="xl" show={this.state.showNotesModal} onHide={() => this.setState({ showNotesModal: false })}>
-        <ListNotes></ListNotes>
+      <Modal size="xl" show={this.state.showNotesModal} onHide={() => this.setState({ showNotesModal: false })} >
+        <ListNotes>
+        </ListNotes>
       </Modal>
     );
 
@@ -309,7 +310,7 @@ class ListStocks extends Component<any, any> {
               {stockGroupTags}
               <Col md={2} hidden={!this.state.showGroupEditor} className={styles.groupTags}>
                 <Row>
-                  <Col md={10}>
+                  <Col md={9}>
                     <FormControl
                       id="groupTitle"
                       name="groupTitle"
@@ -322,7 +323,7 @@ class ListStocks extends Component<any, any> {
                       onKeyPress={(event) => { if (event.charCode === 13) { this.saveStockGroup() } }}>
                     </FormControl>
                   </Col>
-                  <Col md={2}>
+                  <Col md={3}>
                     <Button variant="link" onClick={() => this.saveStockGroup()} style={{ color: "#43A047" }}>
                       <IoMdCheckmark size="1.5rem"></IoMdCheckmark>
                     </Button>
@@ -420,6 +421,7 @@ const mapDispatchToProps = (dispatch) => {
     fetchStockGroupItems: (stock) => dispatch(groupItemActions.fetchStockGroupItems(stock)),
     deleteStockGroupItem: (stockGroupItem) => dispatch(groupItemActions.deleteStockGroupItem(stockGroupItem)),
     fetchStocksDays: (options) => dispatch(daysActions.fetchStocksDays(options)),
+    resetStockNote: () => dispatch(noteActions.resetStockNote()),
   };
 };
 

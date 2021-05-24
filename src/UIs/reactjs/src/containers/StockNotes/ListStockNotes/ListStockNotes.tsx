@@ -60,6 +60,14 @@ class ListStockNotes extends Component<any, any> {
     return date.toLocaleDateString() + " " + date.toLocaleTimeString();
   };
 
+  AddStockNote = () => {
+    this.toggleAddNote();
+    this.props.updateStockNote({
+      stockCode: this.props.stock.code,
+      stockName: this.props.stock.name,
+    });
+  };
+
   componentDidMount() {
   }
 
@@ -116,7 +124,7 @@ class ListStockNotes extends Component<any, any> {
         <div hidden={!this.state.showListNote} className="card">
           <div className="card-header">
             {this.state.pageTitle}
-            <Button variant="primary" style={{ float: "right" }} onClick={() => { this.props.resetStockNote(); this.toggleAddNote(); }}>Add StockNote</Button>
+            <Button variant="primary" style={{ float: "right" }} onClick={this.AddStockNote}>Add StockNote</Button>
           </div>
           <div className="card-body">
             <div className="row">

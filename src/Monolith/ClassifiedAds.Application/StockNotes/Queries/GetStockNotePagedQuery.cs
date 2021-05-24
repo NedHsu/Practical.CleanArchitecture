@@ -27,7 +27,7 @@ namespace ClassifiedAds.Application.StockNotes.Queries
 
         public PagedResult<StockNote> Handle(GetStockNotePagedQuery query)
         {
-            return _stocknoteRepository.GetPaged(query.PageIndex, query.PageSize, null, $"{nameof(StockNote.Updated)} desc ");
+            return _stocknoteRepository.GetPaged(query.PageIndex, query.PageSize, null, $"ISNULL({nameof(StockNote.Updated)}, {nameof(StockNote.Created)}) desc ");
         }
     }
 }

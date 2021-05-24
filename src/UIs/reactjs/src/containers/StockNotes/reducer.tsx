@@ -26,7 +26,7 @@ const initStockNote = (stockCode) => {
 
 
 const fetchStockNotesStart = (state, action) => {
-  return updateObject(state, { loading: true, stock: action.stock, stockNote: initStockNote(action.stock.code) });
+  return updateObject(state, { loading: true, stock: action.stock });
 };
 
 const fetchStockNotesSuccess = (state, action) => {

@@ -91,7 +91,7 @@ class LegalPerson extends Component<any, any> {
         <td className={styles.test}>{stock.closePrice || "--"}</td>
         <td>
           <div>C:{stock.creditBuy}/{stock.creditSell}/{stock.creditSum}</div>
-          <div>F:{stock.foreignBuy}/{stock.foreignSelfSell}/{stock.foreignSum}</div>
+          <div>F:{stock.foreignBuy}/{stock.foreignSell}/{stock.foreignSum}</div>
           <div>S:{stock.selfBuy}/{stock.selfSell}/{stock.selfSum}</div>
         </td>
         <td className={styles.number}>{stock.total}</td>

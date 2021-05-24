@@ -136,12 +136,13 @@ class AddStockNote extends Component<Props, any> {
   componentDidUpdate(prevProps, prevState) {
     const {
       props: {
-        stockNote
+        stockNote,
+        stock,
       }
     } = this;
-
+    console.log(prevProps.stockNote?.stockCode, this.props.stockNote?.stockCode)
     if (prevProps.stockNote?.stockCode != stockNote?.stockCode) {
-      autoComplete.current?.setValue(stockNote?.stockCode ? { text: `(${stockNote?.stockCode})${stockNote?.stockName}`, value: stockNote?.stockCode } : { text: "", value: "" });
+      autoComplete.current?.setValue(stockNote?.stockCode ? { text: `(${stockNote?.stockCode})${stockNote?.stockName ?? stock.name}`, value: stockNote?.stockCode } : { text: "", value: "" });
     }
 
     if (prevProps.loading && !prevProps.saved && !this.props.loading && this.props.saved) {
