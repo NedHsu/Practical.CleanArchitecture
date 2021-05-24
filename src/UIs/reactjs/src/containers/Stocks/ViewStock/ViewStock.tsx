@@ -5,6 +5,9 @@ import { connect } from "react-redux";
 import logo from "../../../logo.svg";
 import Star from "../../../components/Star/Star";
 import * as actions from "../actions";
+import * as profitActions from "../../StockProfits/actions";
+import * as revenueActions from "../../StockRevenues/actions";
+import { Table } from "react-bootstrap";
 
 class ViewStock extends Component<any, any> {
   state = {
@@ -18,7 +21,10 @@ class ViewStock extends Component<any, any> {
   };
 
   componentDidMount() {
-    this.props.fetchStock(this.props.match.params.id);
+    const code = this.props.match.params.id;
+    this.props.fetchStock(code);
+    this.props.fetchStockProfits(code);
+    this.props.fetchStockRevenues(code);
   }
 
   back = () => {
@@ -28,9 +34,73 @@ class ViewStock extends Component<any, any> {
   render() {
     const {
       props: {
-        stock
+        stock,
+        stockProfits,
+        stockRevenues,
       }
     } = this;
+
+    const profitTable = stockProfits?.length > 0 ? (
+      <Table striped bordered hover size="sm">
+        <thead>
+          <tr>
+            <th>年/季</th>
+            <th>營收(百萬元)</th>
+            <th>毛利率(%)</th>
+            <th>營業利益率(%)</th>
+            <th>稅前純益率(%)</th>
+            <th>稅後純益率(%)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {stockProfits.map(x => (
+            <tr key={`pf-${x.date}`}>
+              <td>{x.date}</td>
+              <td>{x.revenue}</td>
+              <td>{x.gross}</td>
+              <td>{x.operatingProfit}</td>
+              <td>{x.untaxedNetProfit}</td>
+              <td>{x.netProfit}</td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+    ) : null;
+
+    const revenueTable = stockRevenues?.length > 0 ? (
+      <Table striped bordered hover size="sm">
+        <thead>
+          <tr>
+            <th>年/月</th>
+            <th>當月營收(千元)</th>
+            <th>上月營收(千元)</th>
+            <th>去年當月營收(千元)</th>
+            <th>上月比較增減(%)</th>
+            <th>去年同月增減(%)</th>
+            <th>當月累計營收</th>
+            <th>去年累計營收</th>
+            <th>前期比較增減(%)</th>
+            <th>備註</th>
+          </tr>
+        </thead>
+        <tbody>
+          {stockRevenues.map(x => (
+            <tr key={`rv-${x.date}`}>
+              <td>{x.date}</td>
+              <td>{x.currentMonth}</td>
+              <td>{x.preMonth}</td>
+              <td>{x.preYearMonth}</td>
+              <td>{x.moM}</td>
+              <td>{x.yoY}</td>
+              <td>{x.yearTotal}</td>
+              <td>{x.preYearTotal}</td>
+              <td>{x.totalMoM}</td>
+              <td>{x.remarks}</td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+    ) : null;
 
     const page = stock ? (
       <div className="card">
@@ -74,6 +144,8 @@ class ViewStock extends Component<any, any> {
               />
             </div>
           </div>
+          {profitTable}
+          {revenueTable}
         </div>
 
         <div className="card-footer">
@@ -100,13 +172,17 @@ class ViewStock extends Component<any, any> {
 
 const mapStateToProps = state => {
   return {
-    stock: state.stock.stock
+    stock: state.stock.stock,
+    stockProfits: state.stockProfit.stockProfits,
+    stockRevenues: state.stockRevenue.stockRevenues,
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchStock: id => dispatch(actions.fetchStock(id))
+    fetchStock: code => dispatch(actions.fetchStock(code)),
+    fetchStockProfits: code => dispatch(profitActions.fetchStockProfits({ stockCode: code })),
+    fetchStockRevenues: code => dispatch(revenueActions.fetchStockRevenues({ stockCode: code })),
   };
 };
 

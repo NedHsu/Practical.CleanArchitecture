@@ -94,6 +94,13 @@ namespace ClassifiedAds.Persistence.Repositories
             return DapperRepository.FindAll(predicate);
         }
 
+        public IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate, string orderBy)
+        {
+            DapperRepository.SetOrderBy(orderBy);
+
+            return DapperRepository.FindAll(predicate);
+        }
+
         public TEntity Get(Expression<Func<TEntity, bool>> predicate)
         {
             return DapperRepository.Find(predicate);

@@ -4,6 +4,7 @@ import * as actionTypes from "./actionTypes";
 const initialState = {
   stocks: new Array<any>(),
   stockfunders: [],
+  stockProfits: [],
   totalPage: 0,
   totalCount: 0,
   stock: {
@@ -81,6 +82,25 @@ const fetchStockFundersFail = (state, action) => {
 };
 /// StockFunders
 
+/// StockProfits
+const fetchStockProfitsStart = (state, action) => {
+  return updateObject(state, { loading: true });
+};
+
+const fetchStockProfitsSuccess = (state, action) => {
+  return updateObject(state, {
+    stockProfits: action.stockProfits,
+    loading: false,
+    totalPage: action.totalPage,
+    totalCount: action.totalCount,
+  });
+};
+
+const fetchStockProfitsFail = (state, action) => {
+  return updateObject(state, { loading: false });
+};
+/// StockProfits
+
 /// Stock
 const fetchStockStart = (state, action) => {
   return updateObject(state, { loading: true });
@@ -141,6 +161,12 @@ const reducer = (state = initialState, action) => {
       return fetchStockFundersSuccess(state, action);
     case actionTypes.FETCH_STOCK_FUNDERS_FAIL:
       return fetchStockFundersFail(state, action);
+    case actionTypes.FETCH_STOCK_PROFITS_START:
+      return fetchStockProfitsStart(state, action);
+    case actionTypes.FETCH_STOCK_PROFITS_SUCCESS:
+      return fetchStockProfitsSuccess(state, action);
+    case actionTypes.FETCH_STOCK_PROFITS_FAIL:
+      return fetchStockProfitsFail(state, action);
     case actionTypes.FETCH_STOCK_FAIL:
       return fetchStockFail(state, action);
     case actionTypes.UPDATE_STOCK:

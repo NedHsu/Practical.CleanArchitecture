@@ -18,6 +18,7 @@ type Props = {
   center: any
   observations: any
   recents: any
+  earthquakes: any
   fetchWeatherObservation: any
   fetchWeatherEarthquake: any
   fetchWeatherTidal: any
@@ -93,6 +94,23 @@ class Map extends Component<Props, MyState> {
   }
   render() {
     const self = this;
+
+    const {
+      props: {
+        earthquakes,
+      },
+      state: {
+        locationPosition,
+        selectPosition,
+        showRecent,
+        showEarthquake,
+        showObservation,
+        showRainfall,
+        showTidal,
+        center,
+      }
+    } = this;
+
     const LocationMarker = () => {
       const map = useMapEvents({
         locationfound(e) {
@@ -100,10 +118,10 @@ class Map extends Component<Props, MyState> {
           map.flyTo(e.latlng, map.getZoom())
         },
       })
-      return this.state.locationPosition === null ? null : (
-        <Marker position={this.state.locationPosition}>
+      return locationPosition === null ? null : (
+        <Marker position={locationPosition}>
           <Popup>
-            <span onClick={() => self.setState({ selectPosition: self.state.locationPosition })}>You are here<br />Click me to select here</span>
+            <span onClick={() => self.setState({ selectPosition: locationPosition })}>You are here<br />Click me to select here</span>
           </Popup>
         </Marker>
       )
@@ -142,8 +160,8 @@ class Map extends Component<Props, MyState> {
           console.log(e);
         },
       })
-      return this.state.selectPosition === null ? null : (
-        <Marker position={this.state.selectPosition ?? { lat: 0, lng: 0 }} eventHandlers={markEventHandle} draggable={true}>
+      return selectPosition === null ? null : (
+        <Marker position={selectPosition ?? { lat: 0, lng: 0 }} eventHandlers={markEventHandle} draggable={true}>
           <Popup>
             select here
           </Popup>
@@ -267,27 +285,47 @@ class Map extends Component<Props, MyState> {
       );
     });
 
+    const EarthquakeMarks = earthquakes?.filter(x => x.earthquakeInfo).map((item) => {
+      return (
+        <Marker key={item.earthquakeNo}
+          position={{ lat: item.earthquakeInfo.epiCenter.epiCenterLat.value, lng: item.earthquakeInfo.epiCenter.epiCenterLon.value }}
+          icon={L.divIcon({
+            html: renderToString(
+              <div>
+                <Icon iconName="RiEarthquakeFill" color="black" />
+              </div>
+            ),
+            className: styles.earthquakeMark
+          })}>
+          <Popup>
+            <a href={item.web}>{item.reportContent} </a>
+            <img src={item.reportImageURI} />
+          </Popup>
+        </Marker>
+      );
+    });
+
     return (
       <div>
         <Nav className={styles.weather_menu} as="ul">
           <Nav.Item as="li">
-            <Button variant="outline-secondary" active={this.state.showObservation} onClick={this.toggleObservation}>觀測</Button>
+            <Button variant="outline-secondary" active={showObservation} onClick={this.toggleObservation}>觀測</Button>
           </Nav.Item>
           <Nav.Item as="li">
-            <Button variant="outline-secondary" active={this.state.showRecent} onClick={this.toggleRecent}>預測</Button>
-            {this.state.showRecent ? (<ButtonGroup className="mb-2">{RecentButtons}</ButtonGroup>) : null}
+            <Button variant="outline-secondary" active={showRecent} onClick={this.toggleRecent}>預測</Button>
+            {showRecent ? (<ButtonGroup className="mb-2">{RecentButtons}</ButtonGroup>) : null}
           </Nav.Item>
           <Nav.Item as="li">
-            <Button variant="outline-secondary" active={this.state.showEarthquake} onClick={this.toggleEarthquake}>地震</Button>
+            <Button variant="outline-secondary" active={showEarthquake} onClick={this.toggleEarthquake}>地震</Button>
           </Nav.Item>
           <Nav.Item as="li">
-            <Button variant="outline-secondary" active={this.state.showRainfall} onClick={this.toggleRainfall}>雨量</Button>
+            <Button variant="outline-secondary" active={showRainfall} onClick={this.toggleRainfall}>雨量</Button>
           </Nav.Item>
           <Nav.Item as="li">
-            <Button variant="outline-secondary" active={this.state.showTidal} onClick={this.toggleTidal}>潮汐</Button>
+            <Button variant="outline-secondary" active={showTidal} onClick={this.toggleTidal}>潮汐</Button>
           </Nav.Item>
         </Nav>
-        <MapContainer center={this.state.center} zoom={13} scrollWheelZoom={true} className={styles.map_container}>
+        <MapContainer center={center} zoom={13} scrollWheelZoom={true} className={styles.map_container}>
           <TileLayer
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -296,17 +334,22 @@ class Map extends Component<Props, MyState> {
           <LocationMarker />
           <MapControls />
           <LayersControl position="topright">
-            <LayersControl.Overlay name="Weather" checked={this.state.showObservation}>
+            <LayersControl.Overlay name="Weather" checked={showObservation}>
               <LayerGroup>
                 {WeatherMarks}
               </LayerGroup>
             </LayersControl.Overlay>
-            <LayersControl.Overlay name="Rainfall" checked={this.state.showRainfall}>
+            <LayersControl.Overlay name="Rainfall" checked={showRainfall}>
               <LayerGroup>
                 {RainfallMarks}
               </LayerGroup>
             </LayersControl.Overlay>
-            <LayersControl.Overlay name="Recent" checked={this.state.showRecent}>
+            <LayersControl.Overlay name="Earthquake" checked={showEarthquake}>
+              <LayerGroup>
+                {EarthquakeMarks}
+              </LayerGroup>
+            </LayersControl.Overlay>
+            <LayersControl.Overlay name="Recent" checked={showRecent}>
               <LayerGroup>
                 {RecentMarks}
               </LayerGroup>
@@ -314,7 +357,7 @@ class Map extends Component<Props, MyState> {
           </LayersControl>
         </MapContainer>
         <div className={styles.coordinate}>
-          lat: {(this.state.selectPosition ?? { lat: null }).lat} lng: {(this.state.selectPosition ?? { lng: null }).lng}
+          lat: {(selectPosition ?? { lat: null }).lat} lng: {(selectPosition ?? { lng: null }).lng}
         </div>
       </div>
     );

@@ -10,6 +10,7 @@ namespace ClassifiedAds.Application.StockProfits.Queries
 {
     public class GetStockProfitsQuery : IQuery<List<StockProfit>>
     {
+        public string StockCode { get; set; }
     }
 
     [AuditLog]
@@ -25,7 +26,7 @@ namespace ClassifiedAds.Application.StockProfits.Queries
 
         public List<StockProfit> Handle(GetStockProfitsQuery query)
         {
-            return _stockprofitRepository.GetAll().ToList();
+            return _stockprofitRepository.GetAll(x => x.StockCode == query.StockCode, " [Date] DESC").Take(12).ToList();
         }
     }
 }

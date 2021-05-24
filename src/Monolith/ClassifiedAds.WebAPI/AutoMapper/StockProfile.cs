@@ -7,6 +7,8 @@ using ClassifiedAds.WebAPI.Models.StockFunders;
 using ClassifiedAds.WebAPI.Models.StockGroupItems;
 using ClassifiedAds.WebAPI.Models.StockGroups;
 using ClassifiedAds.WebAPI.Models.StockNotes;
+using ClassifiedAds.WebAPI.Models.StockProfits;
+using ClassifiedAds.WebAPI.Models.StockRevenues;
 using ClassifiedAds.WebAPI.Models.Stocks;
 
 namespace ClassifiedAds.WebAPI.AutoMapper
@@ -37,6 +39,10 @@ namespace ClassifiedAds.WebAPI.AutoMapper
                 .ForMember(x => x.Total, opt => opt.MapFrom(src => src.Total / 1000.0))
                 .ForMember(x => x.Date, opt => opt.MapFrom(src => src.Date.ToString("yyyy-MM-dd")));
             CreateMap(typeof(PagedResult<>), typeof(PagedResultModel<>));
+            CreateMap<StockProfit, StockProfitModel>()
+                .ForMember(x => x.Date, opt => opt.MapFrom(src => src.Date.AddYears(-1911).ToString("yyy/MM")));
+            CreateMap<StockRevenue, StockRevenueModel>()
+                .ForMember(x => x.Date, opt => opt.MapFrom(src => src.Date.AddYears(-1911).ToString("yyy/MM")));
         }
     }
 }

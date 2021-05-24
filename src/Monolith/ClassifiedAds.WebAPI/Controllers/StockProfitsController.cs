@@ -36,10 +36,10 @@ namespace ClassifiedAds.WebAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<StockProfitModel>> Get()
+        public ActionResult<IEnumerable<StockProfitModel>> Get([FromQuery]GetStockProfitsQuery query)
         {
             _logger.LogInformation("Getting all stockprofits");
-            var stockprofits = _dispatcher.Dispatch(new GetStockProfitsQuery(){ });
+            var stockprofits = _dispatcher.Dispatch(query);
             var model = _mapper.Map<IEnumerable<StockProfitModel>>(stockprofits);
             return Ok(model);
         }

@@ -25,6 +25,10 @@ namespace ClassifiedAds.Domain.Repositories
 
         IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate);
 
+        IEnumerable<TEntity> GetAll<T>(Expression<Func<TEntity, bool>> predicate);
+
+        IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate, string orderBy);
+
         TEntity Get(Expression<Func<TEntity, bool>> predicate);
 
         PagedResult<TEntity> GetPaged(uint pageIndex, uint pageSize, Expression<Func<TEntity, bool>> predicate, string orderBy);

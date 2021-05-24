@@ -16,7 +16,7 @@ export default class TrendLine extends PureComponent<Props> {
         var margin = { top: 1, right: 1, bottom: 1, left: 1 },
             width = 100,
             height = 35;
-        var data = this.data = this.props.data.map((x, i) => { return { y: x.closePrice, x: new Date(x.date) } })
+        var data = this.data = this.props.data.filter(x => x.closePrice > 0).map((x, i) => { return { y: x.closePrice, x: new Date(x.date) } })
         var maxY = d3.max(data, o => o.y);
         var minY = d3.min(data, o => o.y);
         this.svg = d3.select(`#${this.props.id}`)

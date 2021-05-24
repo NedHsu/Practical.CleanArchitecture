@@ -39,6 +39,10 @@ import d3Reducer from "./containers/D3s/reducer";
 import { watchD3 } from "./containers/D3s/sagas";
 import pageEffectReducer from "./containers/PageEffects/reducer";
 import { watchPageEffect } from "./containers/PageEffects/sagas";
+import stockProfitReducer from "./containers/StockProfits/reducer";
+import { watchStockProfit } from "./containers/StockProfits/sagas";
+import stockRevenueReducer from "./containers/StockRevenues/reducer";
+import { watchStockRevenue } from "./containers/StockRevenues/sagas";
 
 const composeEnhancers =
   (process.env.NODE_ENV === "development"
@@ -61,6 +65,8 @@ const rootReducer = combineReducers({
   weather: weatherReducer,
   d3: d3Reducer,
   pageeffect: pageEffectReducer,
+  stockProfit: stockProfitReducer,
+  stockRevenue: stockRevenueReducer,
 });
 
 const sagaMiddleware = createSagaMiddleware();
@@ -84,6 +90,8 @@ sagaMiddleware.run(watchLocation);
 sagaMiddleware.run(watchWeather);
 sagaMiddleware.run(watchD3);
 sagaMiddleware.run(watchPageEffect);
+sagaMiddleware.run(watchStockProfit);
+sagaMiddleware.run(watchStockRevenue);
 
 store.dispatch({
   type: "SET_AUTH_SERVICE",
