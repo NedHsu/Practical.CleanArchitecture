@@ -45,22 +45,22 @@ class ViewStock extends Component<any, any> {
         <thead>
           <tr>
             <th>年/季</th>
-            <th>營收(百萬元)</th>
-            <th>毛利率(%)</th>
-            <th>營業利益率(%)</th>
-            <th>稅前純益率(%)</th>
-            <th>稅後純益率(%)</th>
+            <th className="td-number">營收(百萬元)</th>
+            <th className="td-number">毛利率(%)</th>
+            <th className="td-number">營業利益率(%)</th>
+            <th className="td-number">稅前純益率(%)</th>
+            <th className="td-number">稅後純益率(%)</th>
           </tr>
         </thead>
         <tbody>
           {stockProfits.map(x => (
             <tr key={`pf-${x.date}`}>
               <td>{x.date}</td>
-              <td>{x.revenue}</td>
-              <td>{x.gross}</td>
-              <td>{x.operatingProfit}</td>
-              <td>{x.untaxedNetProfit}</td>
-              <td>{x.netProfit}</td>
+              <td className="td-number">{x.revenue}</td>
+              <td className="td-number">{x.gross}</td>
+              <td className="td-number">{x.operatingProfit}</td>
+              <td className="td-number">{x.untaxedNetProfit}</td>
+              <td className="td-number">{x.netProfit}</td>
             </tr>
           ))}
         </tbody>
@@ -72,14 +72,14 @@ class ViewStock extends Component<any, any> {
         <thead>
           <tr>
             <th>年/月</th>
-            <th>當月營收(千元)</th>
-            <th>上月營收(千元)</th>
-            <th>去年當月營收(千元)</th>
-            <th>上月比較增減(%)</th>
-            <th>去年同月增減(%)</th>
-            <th>當月累計營收</th>
-            <th>去年累計營收</th>
-            <th>前期比較增減(%)</th>
+            <th className="td-number">當月營收(千元)</th>
+            <th className="td-number">上月營收(千元)</th>
+            <th className="td-number">去年當月營收(千元)</th>
+            <th className="td-number">上月比較增減(%)</th>
+            <th className="td-number">去年同月增減(%)</th>
+            <th className="td-number">當月累計營收</th>
+            <th className="td-number">去年累計營收</th>
+            <th className="td-number">前期比較增減(%)</th>
             <th>備註</th>
           </tr>
         </thead>
@@ -87,14 +87,14 @@ class ViewStock extends Component<any, any> {
           {stockRevenues.map(x => (
             <tr key={`rv-${x.date}`}>
               <td>{x.date}</td>
-              <td>{x.currentMonth}</td>
-              <td>{x.preMonth}</td>
-              <td>{x.preYearMonth}</td>
-              <td>{x.moM}</td>
-              <td>{x.yoY}</td>
-              <td>{x.yearTotal}</td>
-              <td>{x.preYearTotal}</td>
-              <td>{x.totalMoM}</td>
+              <td className="td-number">{x.currentMonth}</td>
+              <td className="td-number">{x.preMonth}</td>
+              <td className="td-number">{x.preYearMonth}</td>
+              <td className="td-number">{x.moM}</td>
+              <td className="td-number">{x.yoY}</td>
+              <td className="td-number">{x.yearTotal}</td>
+              <td className="td-number">{x.preYearTotal}</td>
+              <td className="td-number">{x.totalMoM}</td>
               <td>{x.remarks}</td>
             </tr>
           ))}

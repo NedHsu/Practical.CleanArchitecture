@@ -259,9 +259,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchStockRevenues: () => dispatch(actions.fetchStockRevenues()),
+    fetchStockRevenues: () => dispatch(actions.fetchStockRevenues({})),
     deleteStockRevenue: (stockRevenue) => dispatch(actions.deleteStockRevenue(stockRevenue)),
-    fetchAuditLogs: (stockRevenue) => dispatch(actions.fetchAuditLogs(stockRevenue)),
   };
 };
 

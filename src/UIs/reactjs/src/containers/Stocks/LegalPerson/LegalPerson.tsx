@@ -1,12 +1,14 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
-import { Button } from "react-bootstrap";
+import { Button, Modal } from "react-bootstrap";
 import Menu from "../Menu/Menu";
 import GroupModal from "../GroupModal/GroupModal";
+import ListNotes from "../../StockNotes/ListStockNotes/ListStockNotes";
 
 import * as actions from "../actions";
 import * as daysActions from "../../StockDays/actions";
+import * as noteActions from "../../StockNotes/actions";
 import * as groupActions from "../../StockGroups/actions";
 import * as groupItemActions from "../../StockGroupItems/actions";
 import styles from "./LegalPerson.module.scss";
@@ -25,6 +27,7 @@ class LegalPerson extends Component<any, any> {
     },
     showGroupEditor: false,
     showGroupsModal: false,
+    showNotesModal: false,
     stockGroupIds: Array<string>(),
     stock: {
       stockCode: "",
@@ -108,6 +111,13 @@ class LegalPerson extends Component<any, any> {
       </tr>
     ));
 
+    const listNoteModal = (
+      <Modal size="xl" show={this.state.showNotesModal} onHide={() => this.setState({ showNotesModal: false })} >
+        <ListNotes>
+        </ListNotes>
+      </Modal>
+    );
+
     const table = this.props.stockfunders ? (
       <table className={`table ${styles.table}`}>
         <thead>
@@ -151,6 +161,7 @@ class LegalPerson extends Component<any, any> {
             </div>
           ) : null
         }
+        {listNoteModal}
         <GroupModal showGroupsModal={this.state.showGroupsModal} stock={{ name: this.state.stock.name, code: this.state.stock.stockCode }} hide={() => this.setState({ showGroupsModal: false })} />
       </div>
     );
@@ -174,6 +185,7 @@ const mapDispatchToProps = (dispatch) => {
     fetchStocksDays: (options) => dispatch(daysActions.fetchStocksDays(options)),
     fetchStockGroups: () => dispatch(groupActions.fetchStockGroups()),
     fetchStockGroupItems: (stock) => dispatch(groupItemActions.fetchStockGroupItems(stock)),
+    fetchStockNotes: (stock) => dispatch(noteActions.fetchStockNotes(stock)),
   };
 };
 

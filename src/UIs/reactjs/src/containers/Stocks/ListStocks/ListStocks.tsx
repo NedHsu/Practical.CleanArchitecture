@@ -6,6 +6,7 @@ import ListNotes from "../../StockNotes/ListStockNotes/ListStockNotes";
 import Menu from "../Menu/Menu";
 import TrendLine from "../TrendLine/TrendLine";
 import GroupModal from "../GroupModal/GroupModal";
+import Spinner from "../../../components/Spinner/Spinner";
 
 import * as actions from "../actions";
 import styles from "./ListStocks.module.scss";
@@ -156,7 +157,7 @@ class ListStocks extends Component<any, any> {
       });
       this.closeStockGroupEditor();
     }
-    this.setState({ showTrendLine: false });
+    this.setState({ showTrendLine: false, listFilter: "", });
   }
 
   editGroups = (stock) => {
@@ -380,9 +381,10 @@ class ListStocks extends Component<any, any> {
             </div>
           ) : null
         }
-        { deleteModal}
-        { listNoteModal}
+        {deleteModal}
+        {listNoteModal}
         <GroupModal showGroupsModal={this.state.showGroupsModal} stock={this.state.stock} hide={() => this.setState({ showGroupsModal: false })} />
+        <Spinner loading={this.props.stockLoading || this.props.groupLoading || this.props.stockGroupItemLoading} fullscreen />
       </div>
     );
   }
