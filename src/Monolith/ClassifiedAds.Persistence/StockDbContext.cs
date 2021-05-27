@@ -8,11 +8,18 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 #nullable disable
 
-namespace ClassifiedAds.Persistence {
-    public partial class StockDbContext : DbContext, IUnitOfWork {
-        public StockDbContext() { }
+namespace ClassifiedAds.Persistence
+{
+    public partial class StockDbContext : DbContext, IUnitOfWork
+    {
+        public StockDbContext()
+        {
+        }
 
-        public StockDbContext(DbContextOptions<StockDbContext> options) : base(options) { }
+        public StockDbContext(DbContextOptions<StockDbContext> options)
+            : base(options)
+        {
+        }
 
         public virtual DbSet<Stock> Stocks { get; set; }
         public virtual DbSet<StockDay> StockDays { get; set; }
@@ -24,20 +31,24 @@ namespace ClassifiedAds.Persistence {
         public virtual DbSet<StockGroupItem> StockGroupItems { get; set; }
         public virtual DbSet<StockNote> StockNotes { get; set; }
         public virtual DbSet<StockProfit> StockProfits { get; set; }
+        public virtual DbSet<StockSeminar> StockSeminars { get; set; }
 
         private IDbContextTransaction _dbContextTransaction;
 
-        public void BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted) {
+        public void BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
+        {
             _dbContextTransaction = Database.BeginTransaction(isolationLevel);
         }
 
-        public void CommitTransaction() {
+        public void CommitTransaction()
+        {
             _dbContextTransaction.Commit();
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder) {
-
-            modelBuilder.Entity<Stock>(entity => {
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Stock>(entity =>
+            {
                 entity.HasKey(e => e.Code)
                     .HasName("PK_stock_1");
 
@@ -81,7 +92,8 @@ namespace ClassifiedAds.Persistence {
                 entity.Property(e => e.TwentyPrice).HasColumnType("decimal(8, 2)");
             });
 
-            modelBuilder.Entity<StockDay>(entity => {
+            modelBuilder.Entity<StockDay>(entity =>
+            {
                 entity.HasKey(e => new { e.StockCode, e.Date });
 
                 entity.ToTable("StockDay");
@@ -107,7 +119,8 @@ namespace ClassifiedAds.Persistence {
                     .HasConstraintName("FK_stockDay_stock");
             });
 
-            modelBuilder.Entity<StockFundamental>(entity => {
+            modelBuilder.Entity<StockFundamental>(entity =>
+            {
                 entity.HasKey(e => new { e.StockCode, e.Date });
 
                 entity.ToTable("StockFundamental");
@@ -135,7 +148,8 @@ namespace ClassifiedAds.Persistence {
                 entity.Property(e => e.YieldRate).HasColumnType("decimal(5, 2)");
             });
 
-            modelBuilder.Entity<StockFunder>(entity => {
+            modelBuilder.Entity<StockFunder>(entity =>
+            {
                 entity.HasKey(e => new { e.StockCode, e.Date });
 
                 entity.ToTable("StockFunder");
@@ -147,7 +161,8 @@ namespace ClassifiedAds.Persistence {
                 entity.Property(e => e.Date).HasColumnType("date");
             });
 
-            modelBuilder.Entity<StockMargin>(entity => {
+            modelBuilder.Entity<StockMargin>(entity =>
+            {
                 entity.HasKey(e => new { e.StockCode, e.Date });
 
                 entity.ToTable("StockMargin");
@@ -163,7 +178,8 @@ namespace ClassifiedAds.Persistence {
                 entity.Property(e => e.Date).HasColumnType("date");
             });
 
-            modelBuilder.Entity<StockRevenue>(entity => {
+            modelBuilder.Entity<StockRevenue>(entity =>
+            {
                 entity.HasKey(e => new { e.StockCode, e.Date });
 
                 entity.ToTable("StockRevenue");
@@ -187,7 +203,8 @@ namespace ClassifiedAds.Persistence {
                 entity.Property(e => e.Date).HasColumnType("date");
             });
 
-            modelBuilder.Entity<StockGroup>(entity => {
+            modelBuilder.Entity<StockGroup>(entity =>
+            {
                 entity.ToTable("StockGroup");
 
                 entity.Property(e => e.Id).HasDefaultValueSql("newsequentialid()");
@@ -195,7 +212,8 @@ namespace ClassifiedAds.Persistence {
                 entity.Property(e => e.GroupTitle).HasMaxLength(50);
             });
 
-            modelBuilder.Entity<StockGroupItem>(entity => {
+            modelBuilder.Entity<StockGroupItem>(entity =>
+            {
                 entity.ToTable("StockGroupItem");
 
                 entity.Property(e => e.Id).HasDefaultValueSql("newsequentialid()");
@@ -212,7 +230,8 @@ namespace ClassifiedAds.Persistence {
                     .HasConstraintName("FK_stock_group_items_stock");
             });
 
-            modelBuilder.Entity<StockNote>(entity => {
+            modelBuilder.Entity<StockNote>(entity =>
+            {
                 entity.ToTable("StockNote");
 
                 entity.Property(e => e.Id).HasDefaultValueSql("newsequentialid()");
@@ -238,7 +257,8 @@ namespace ClassifiedAds.Persistence {
                     .HasConstraintName("FK_stock_note_stock");
             });
 
-            modelBuilder.Entity<StockProfit>(entity => {
+            modelBuilder.Entity<StockProfit>(entity =>
+            {
                 entity.HasKey(e => new { e.StockCode, e.Date });
 
                 entity.ToTable("StockProfit");
@@ -254,6 +274,26 @@ namespace ClassifiedAds.Persistence {
                 entity.Property(e => e.UntaxedNetProfit).HasColumnType("decimal(18, 2)");
 
                 entity.Property(e => e.Date).HasColumnType("date");
+            });
+
+            modelBuilder.Entity<StockSeminar>(entity =>
+            {
+                entity.HasKey(e => new { e.StockCode, e.Date });
+
+                entity.ToTable("StockSeminar");
+
+                entity.Property(e => e.StockCode)
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Date).HasColumnType("datetime");
+                entity.Property(e => e.Place).HasMaxLength(200);
+                entity.Property(e => e.Message).HasMaxLength(500);
+                entity.Property(e => e.FileZh).HasMaxLength(500);
+                entity.Property(e => e.FileEn).HasMaxLength(500);
+                entity.Property(e => e.Web).HasMaxLength(500);
+                entity.Property(e => e.Video).HasMaxLength(500);
+                entity.Property(e => e.Remark).HasMaxLength(500);
             });
 
             OnModelCreatingPartial(modelBuilder);

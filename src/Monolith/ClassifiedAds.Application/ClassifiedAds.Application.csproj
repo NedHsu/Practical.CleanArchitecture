@@ -9,6 +9,7 @@
     <Folder Include="Decorators\" />
     <Folder Include="StockFunders\Commands\" />
     <Folder Include="StockFunders\EventHandlers\" />
+    <Folder Include="StockMargins\EventHandlers\" />
   </ItemGroup>
 
   <ItemGroup>

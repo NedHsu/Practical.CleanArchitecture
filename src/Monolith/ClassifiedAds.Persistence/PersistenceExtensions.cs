@@ -34,6 +34,7 @@ namespace Microsoft.Extensions.DependencyInjection
             }))
                 .AddScoped(typeof(IBaseDapperRepository<>), typeof(BaseDapperRepository<>))
                 .AddScoped(typeof(IStockDayRepository), typeof(StockDayRepository))
+                .AddScoped(typeof(IStockMarginRepository), typeof(StockMarginRepository))
                 .AddScoped(typeof(IStockFunderRepository), typeof(StockFunderRepository))
                 .AddScoped(typeof(IStockDapperRepository), typeof(StockDapperRepository));
 

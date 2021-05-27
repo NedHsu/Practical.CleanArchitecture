@@ -21,11 +21,7 @@
     <Content Include="templates\**\*" Exclude="templates\**\bin\**;templates\**\obj\**" />
     <Compile Remove="**\*" />
   </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="templates\Mops\stocks\Funder\stockFunder.go" />
-  </ItemGroup>
-
+  
   <ItemGroup>
     <Folder Include="templates\BlazorModule\Templates\Components\" />
   </ItemGroup>

@@ -2,11 +2,11 @@
 using ClassifiedAds.Application;
 using ClassifiedAds.Application.AuditLogEntries.DTOs;
 using ClassifiedAds.Application.AuditLogEntries.Queries;
-using ClassifiedAds.Application.Stocks.Commands;
-using ClassifiedAds.Application.Stocks.DTOs;
-using ClassifiedAds.Application.Stocks.Queries;
+using ClassifiedAds.Application.StockSeminars.Commands;
+using ClassifiedAds.Application.StockSeminars.DTOs;
+using ClassifiedAds.Application.StockSeminars.Queries;
 using ClassifiedAds.Domain.Entities;
-using ClassifiedAds.WebAPI.Models.Stocks;
+using ClassifiedAds.WebAPI.Models.StockSeminars;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,13 +22,13 @@ namespace ClassifiedAds.WebAPI.Controllers
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
-    public class StocksController : ControllerBase
+    public class StockSeminarsController : ControllerBase
     {
         private readonly Dispatcher _dispatcher;
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
 
-        public StocksController(Dispatcher dispatcher, ILogger<StocksController> logger, IMapper mapper)
+        public StockSeminarsController(Dispatcher dispatcher, ILogger<StockSeminarsController> logger, IMapper mapper)
         {
             _dispatcher = dispatcher;
             _logger = logger;
@@ -36,50 +36,49 @@ namespace ClassifiedAds.WebAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<StockModel>> Get()
+        public ActionResult<IEnumerable<StockSeminarModel>> Get()
         {
-            _logger.LogInformation("Getting all stocks");
-            var stocks = _dispatcher.Dispatch(new GetStocksQuery(){ });
-            var model = _mapper.Map<IEnumerable<StockModel>>(stocks);
+            _logger.LogInformation("Getting all stockseminars");
+            var stockseminars = _dispatcher.Dispatch(new GetStockSeminarsQuery(){ });
+            var model = _mapper.Map<IEnumerable<StockSeminarModel>>(stockseminars);
             return Ok(model);
         }
 
         [HttpGet("{code}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<StockModel> Get(string code)
+        public ActionResult<StockSeminarModel> Get(string code)
         {
-            var stock = _dispatcher.Dispatch(new GetStockQuery { Code = code, ThrowNotFoundIfNull = true });
-            var model = _mapper.Map<StockModel>(stock);
+            var stockseminar = _dispatcher.Dispatch(new GetStockSeminarQuery { StockCode = code, ThrowNotFoundIfNull = true });
+            var model = _mapper.Map<StockSeminarModel>(stockseminar);
             return Ok(model);
         }
 
         [HttpPost]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public ActionResult<stock> Post([FromBody] StockModel model)
+        public ActionResult<StockSeminar> Post([FromBody] StockSeminarModel model)
         {
-            var stock = _mapper.Map<stock>(model);
-            _dispatcher.Dispatch(new AddUpdateStockCommand { Stock = stock });
-            model = _mapper.Map<StockModel>(stock);
-            return Created($"/api/stocks/{model.Code}", model);
+            var stockseminar = _mapper.Map<StockSeminar>(model);
+            _dispatcher.Dispatch(new AddUpdateStockSeminarCommand { StockSeminar = stockseminar });
+            model = _mapper.Map<StockSeminarModel>(stockseminar);
+            return Created($"/api/stockseminars/{model.Code}", model);
         }
 
         [HttpPut("{code}")]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult Put(string code, [FromBody] StockModel model)
+        public ActionResult Put(string code, [FromBody] StockSeminarModel model)
         {
-            var stock = _dispatcher.Dispatch(new GetStockQuery { Code = code, ThrowNotFoundIfNull = false }) 
-                ?? new stock { };
+            var stockseminar = _dispatcher.Dispatch(new GetStockSeminarQuery { StockCode = code, ThrowNotFoundIfNull = false })
+                ?? new StockSeminar { };
 
-            stock.code = model.Code;
-            stock.name = model.Name;
+            stockseminar.StockCode = model.Code;
 
-            _dispatcher.Dispatch(new AddUpdateStockCommand { Stock = stock });
+            _dispatcher.Dispatch(new AddUpdateStockSeminarCommand { StockSeminar = stockseminar });
 
-            model = _mapper.Map<StockModel>(stock);
+            model = _mapper.Map<StockSeminarModel>(stockseminar);
 
             return Ok(model);
         }
@@ -89,9 +88,9 @@ namespace ClassifiedAds.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult Delete(string code)
         {
-            var stock = _dispatcher.Dispatch(new GetStockQuery { Code = code, ThrowNotFoundIfNull = true });
+            var stockseminar = _dispatcher.Dispatch(new GetStockSeminarQuery { StockCode = code, ThrowNotFoundIfNull = true });
 
-            _dispatcher.Dispatch(new DeleteStockCommand { Stock = stock });
+            _dispatcher.Dispatch(new DeleteStockSeminarCommand { StockSeminar = stockseminar });
 
             return Ok();
         }
@@ -102,10 +101,10 @@ namespace ClassifiedAds.WebAPI.Controllers
             var logs = _dispatcher.Dispatch(new GetAuditEntriesQuery { ObjectId = id.ToString() });
 
             List<dynamic> entries = new List<dynamic>();
-            StockDTO previous = null;
+            StockSeminarDTO previous = null;
             foreach (var log in logs.OrderBy(x => x.CreatedDateTime))
             {
-                var data = JsonConvert.DeserializeObject<StockDTO>(log.Log);
+                var data = JsonConvert.DeserializeObject<StockSeminarDTO>(log.Log);
                 var highLight = new
                 {
                     Code = previous != null && data.Code != previous.Code,
