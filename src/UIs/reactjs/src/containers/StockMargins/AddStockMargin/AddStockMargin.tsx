@@ -9,7 +9,7 @@ type Props = {
   resetStockMargin: any,
   match: any,
   fetchStockMargin: any,
-  stockmargin: any,
+  stockMargin: any,
   saveStockMargin: any,
   updateStockMargin: any,
   saved: any
@@ -71,14 +71,14 @@ class AddStockMargin extends Component<Props, any> {
   }
 
   fieldChanged = event => {
-    const stockmargin = {
-      ...this.props.stockmargin,
+    const stockMargin = {
+      ...this.props.stockMargin,
       [event.target.name]: event.target.value
     };
 
     this.checkFieldValidity(event.target.name, event.target.value);
 
-    this.props.updateStockMargin(stockmargin);
+    this.props.updateStockMargin(stockMargin);
   };
 
   checkFieldValidity = (name, value) => {
@@ -108,12 +108,12 @@ class AddStockMargin extends Component<Props, any> {
     let isValid = true;
     for (let fieldName in this.state.controls) {
       isValid =
-        this.checkFieldValidity(fieldName, this.props.stockmargin[fieldName]) &&
+        this.checkFieldValidity(fieldName, this.props.stockMargin[fieldName]) &&
         isValid;
     }
 
     if (isValid) {
-      this.props.saveStockMargin(this.props.stockmargin);
+      this.props.saveStockMargin(this.props.stockMargin);
     }
   };
 
@@ -144,7 +144,7 @@ class AddStockMargin extends Component<Props, any> {
                       ? "is-invalid"
                       : "")
                   }
-                  value={this.props.stockmargin?.name}
+                  value={this.props.stockMargin?.name}
                   onChange={event => this.fieldChanged(event)}
                 />
                 <span className="invalid-feedback">
@@ -171,7 +171,7 @@ class AddStockMargin extends Component<Props, any> {
                       ? "is-invalid"
                       : "")
                   }
-                  value={this.props.stockmargin?.code}
+                  value={this.props.stockMargin?.code}
                   onChange={event => this.fieldChanged(event)}
                 />
                 <span className="invalid-feedback">
@@ -195,11 +195,11 @@ class AddStockMargin extends Component<Props, any> {
                   className={
                     "form-control " +
                     (this.state.submitted &&
-                    !this.state.controls["description"].valid
+                      !this.state.controls["description"].valid
                       ? "is-invalid"
                       : "")
                   }
-                  value={this.props.stockmargin?.description}
+                  value={this.props.stockMargin?.description}
                   onChange={event => this.fieldChanged(event)}
                 />
                 <span className="invalid-feedback">
@@ -226,7 +226,7 @@ class AddStockMargin extends Component<Props, any> {
         <div className="card-footer">
           <NavLink
             className="btn btn-outline-secondary"
-            to="/stockmargins"
+            to="/stockMargins"
             style={{ width: "80px" }}
           >
             <i className="fa fa-chevron-left"></i> Back
@@ -236,7 +236,7 @@ class AddStockMargin extends Component<Props, any> {
     );
 
     return this.state.submitted && this.props.saved ? (
-      <Redirect to={"/stockmargins/" + this.props.stockmargin.id} />
+      <Redirect to={"/stockMargins/" + this.props.stockMargin.id} />
     ) : (
       form
     );
@@ -245,17 +245,17 @@ class AddStockMargin extends Component<Props, any> {
 
 const mapStateToProps = state => {
   return {
-    stockmargin: state.stockmargin.stockmargin,
-    saved: state.stockmargin.saved
+    stockMargin: state.stockMargin.stockMargin,
+    saved: state.stockMargin.saved
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     fetchStockMargin: id => dispatch(actions.fetchStockMargin(id)),
-    updateStockMargin: stockmargin => dispatch(actions.updateStockMargin(stockmargin)),
+    updateStockMargin: stockMargin => dispatch(actions.updateStockMargin(stockMargin)),
     resetStockMargin: () => dispatch(actions.resetStockMargin()),
-    saveStockMargin: stockmargin => dispatch(actions.saveStockMargin(stockmargin))
+    saveStockMargin: stockMargin => dispatch(actions.saveStockMargin(stockMargin))
   };
 };
 

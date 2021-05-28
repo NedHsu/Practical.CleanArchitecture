@@ -2,8 +2,9 @@ import { updateObject } from "../../shared/utility";
 import * as actionTypes from "./actionTypes";
 
 const initialState = {
-  stockmargins: [],
-  stockmargin: {
+  stockMargins: [],
+  stockMarginFunders: { date: [], securitiesBalance: [], financingBalance: [], foreignSum: [], creditSum: [], selfSum: [] },
+  stockMargin: {
     name: "",
     code: "",
     description: "",
@@ -22,12 +23,30 @@ const fetchStockMarginsStart = (state, action) => {
 
 const fetchStockMarginsSuccess = (state, action) => {
   return updateObject(state, {
-    stockmargins: action.stockmargins,
+    stockMargins: action.stockMargins,
     loading: false,
   });
 };
 
 const fetchStockMarginsFail = (state, action) => {
+  return updateObject(state, { loading: false });
+};
+
+/// StockMargins
+
+/// StockMarginFunders
+const fetchStockMarginFundersStart = (state, action) => {
+  return updateObject(state, { loading: true });
+};
+
+const fetchStockMarginFundersSuccess = (state, action) => {
+  return updateObject(state, {
+    stockMarginFunders: action.stockMarginFunders,
+    loading: false,
+  });
+};
+
+const fetchStockMarginFundersFail = (state, action) => {
   return updateObject(state, { loading: false });
 };
 
@@ -40,7 +59,7 @@ const fetchStockMarginStart = (state, action) => {
 
 const fetchStockMarginSuccess = (state, action) => {
   return updateObject(state, {
-    stockmargin: action.stockmargin,
+    stockMargin: action.stockMargin,
     loading: false,
   });
 };
@@ -57,7 +76,7 @@ const saveStockMarginStart = (state, action) => {
 
 const saveStockMarginSuccess = (state, action) => {
   return updateObject(state, {
-    stockmargin: action.stockmargin,
+    stockMargin: action.stockMargin,
     loading: false,
     saved: true,
   });
@@ -75,6 +94,12 @@ const reducer = (state = initialState, action) => {
       return fetchStockMarginsSuccess(state, action);
     case actionTypes.FETCH_MARGINS_FAIL:
       return fetchStockMarginsFail(state, action);
+    case actionTypes.FETCH_MARGIN_FUNDERS_START:
+      return fetchStockMarginFundersStart(state, action);
+    case actionTypes.FETCH_MARGIN_FUNDERS_SUCCESS:
+      return fetchStockMarginFundersSuccess(state, action);
+    case actionTypes.FETCH_MARGIN_FUNDERS_FAIL:
+      return fetchStockMarginFundersFail(state, action);
     case actionTypes.FETCH_MARGIN_START:
       return fetchStockMarginStart(state, action);
     case actionTypes.FETCH_MARGIN_SUCCESS:
@@ -82,7 +107,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.FETCH_MARGIN_FAIL:
       return fetchStockMarginFail(state, action);
     case actionTypes.UPDATE_MARGIN:
-      return updateObject(state, { stockmargin: action.stockmargin });
+      return updateObject(state, { stockMargin: action.stockMargin });
     case actionTypes.RESET_MARGIN:
       return updateObject(state, initialState);
     case actionTypes.SAVE_MARGIN_START:
@@ -93,13 +118,13 @@ const reducer = (state = initialState, action) => {
       return saveStockMarginFail(state, action);
     case actionTypes.DELETE_MARGIN_START:
       return updateObject(state, {
-        stockmargin: action.stockmargin,
+        stockMargin: action.stockMargin,
         loading: true,
         deleted: false,
       });
     case actionTypes.DELETE_MARGIN_SUCCESS:
       return updateObject(state, {
-        stockmargin: initialState.stockmargin,
+        stockMargin: initialState.stockMargin,
         loading: false,
         deleted: true,
       });
@@ -111,7 +136,7 @@ const reducer = (state = initialState, action) => {
       });
     case actionTypes.FETCH_MARGIN_AUDIT_LOGS_START:
       return updateObject(state, {
-        stockmargin: action.stockmargin,
+        stockMargin: action.stockMargin,
         loading: true,
       });
     case actionTypes.FETCH_MARGIN_AUDIT_LOGS_SUCCESS:

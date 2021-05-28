@@ -1,10 +1,10 @@
 import * as actionTypes from "./actionTypes";
 
 /// MARGINS
-export const fetchStockMarginsSuccess = (stockmargins) => {
+export const fetchStockMarginsSuccess = (stockMargins) => {
   return {
     type: actionTypes.FETCH_MARGINS_SUCCESS,
-    stockmargins: stockmargins,
+    stockMargins: stockMargins,
   };
 };
 
@@ -28,11 +28,40 @@ export const fetchStockMargins = () => {
 };
 /// MARGINS
 
+/// MARGIN FUNDERS
+export const fetchStockMarginFundersSuccess = (stockMarginFunders) => {
+  return {
+    type: actionTypes.FETCH_MARGIN_FUNDERS_SUCCESS,
+    stockMarginFunders: stockMarginFunders,
+  };
+};
+
+export const fetchStockMarginFundersFail = (error) => {
+  return {
+    type: actionTypes.FETCH_MARGIN_FUNDERS_FAIL,
+    error: error,
+  };
+};
+
+export const fetchStockMarginFundersStart = () => {
+  return {
+    type: actionTypes.FETCH_MARGIN_FUNDERS_START,
+  };
+};
+
+export const fetchStockMarginFunders = (options) => {
+  return {
+    type: actionTypes.FETCH_MARGIN_FUNDERS,
+    options: options,
+  };
+};
+/// MARGINS
+
 /// MARGIN
-export const fetchStockMarginSuccess = (stockmargin) => {
+export const fetchStockMarginSuccess = (stockMargin) => {
   return {
     type: actionTypes.FETCH_MARGIN_SUCCESS,
-    stockmargin: stockmargin,
+    stockMargin: stockMargin,
   };
 };
 
@@ -58,10 +87,10 @@ export const fetchStockMargin = (id) => {
 /// MARGIN
 
 /// UPDATE MARGIN
-export const updateStockMargin = (stockmargin) => {
+export const updateStockMargin = (stockMargin) => {
   return {
     type: actionTypes.UPDATE_MARGIN,
-    stockmargin: stockmargin,
+    stockMargin: stockMargin,
   };
 };
 
@@ -73,10 +102,10 @@ export const resetStockMargin = () => {
 /// UPDATE MARGIN
 
 /// SAVE MARGIN
-export const saveStockMarginSuccess = (stockmargin) => {
+export const saveStockMarginSuccess = (stockMargin) => {
   return {
     type: actionTypes.SAVE_MARGIN_SUCCESS,
-    stockmargin: stockmargin,
+    stockMargin: stockMargin,
   };
 };
 
@@ -93,16 +122,16 @@ export const saveStockMarginStart = () => {
   };
 };
 
-export const saveStockMargin = (stockmargin) => {
+export const saveStockMargin = (stockMargin) => {
   return {
     type: actionTypes.SAVE_MARGIN,
-    stockmargin: stockmargin,
+    stockMargin: stockMargin,
   };
 };
 /// SAVE MARGIN
 
 /// DELETE MARGIN
-export const deleteStockMarginSuccess = (stockmargin) => {
+export const deleteStockMarginSuccess = (stockMargin) => {
   return {
     type: actionTypes.DELETE_MARGIN_SUCCESS,
   };
@@ -121,10 +150,10 @@ export const deleteStockMarginStart = () => {
   };
 };
 
-export const deleteStockMargin = (stockmargin) => {
+export const deleteStockMargin = (stockMargin) => {
   return {
     type: actionTypes.DELETE_MARGIN,
-    stockmargin: stockmargin,
+    stockMargin: stockMargin,
   };
 };
 /// DELETE MARGIN
@@ -150,10 +179,10 @@ export const fetchAuditLogsStart = () => {
   };
 };
 
-export const fetchAuditLogs = (stockmargin) => {
+export const fetchAuditLogs = (stockMargin) => {
   return {
     type: actionTypes.FETCH_MARGIN_AUDIT_LOGS,
-    stockmargin: stockmargin,
+    stockMargin: stockMargin,
   };
 };
 /// VIEW AUDIT LOGS

@@ -5,7 +5,7 @@ import addAuthInterceptors from "../Auth/authInterceptors"
 
 
 const instance = axios.create({
-    baseURL: env.ResourceServer.Endpoint + "stockmargins/",
+    baseURL: env.ResourceServer.Endpoint + "stockMargins/",
 });
 addAuthInterceptors(instance);
 export default instance

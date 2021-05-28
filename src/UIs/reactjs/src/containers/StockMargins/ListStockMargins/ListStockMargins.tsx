@@ -29,8 +29,8 @@ class ListStockMargins extends Component<any, any> {
 
   performFilter(filterBy) {
     filterBy = filterBy.toLocaleLowerCase();
-    return this.props.stockmargins.filter(
-      (stockmargin) => stockmargin.name.toLocaleLowerCase().indexOf(filterBy) !== -1
+    return this.props.stockMargins.filter(
+      (stockMargin) => stockMargin.name.toLocaleLowerCase().indexOf(filterBy) !== -1
     );
   }
 
@@ -39,13 +39,13 @@ class ListStockMargins extends Component<any, any> {
     this.setState({ pageTitle: pageTitle });
   };
 
-  viewAuditLogs = (stockmargin) => {
-    this.props.fetchAuditLogs(stockmargin);
+  viewAuditLogs = (stockMargin) => {
+    this.props.fetchAuditLogs(stockMargin);
     this.setState({ showAuditLogsModal: true });
   };
 
-  deleteStockMargin = (stockmargin) => {
-    this.setState({ showDeleteModal: true, deletingStockMargin: stockmargin });
+  deleteStockMargin = (stockMargin) => {
+    this.setState({ showDeleteModal: true, deletingStockMargin: stockMargin });
   };
 
   deleteCanceled = () => {
@@ -70,35 +70,35 @@ class ListStockMargins extends Component<any, any> {
   render() {
     const filteredStockMargins = this.state.listFilter
       ? this.performFilter(this.state.listFilter)
-      : this.props.stockmargins;
+      : this.props.stockMargins;
 
-    const rows = filteredStockMargins?.map((stockmargin) => (
-      <tr key={stockmargin.id}>
+    const rows = filteredStockMargins?.map((stockMargin) => (
+      <tr key={stockMargin.id}>
         <td>
           {this.state.showImage ? (
             <img
-              src={stockmargin.imageUrl || logo}
-              title={stockmargin.name}
+              src={stockMargin.imageUrl || logo}
+              title={stockMargin.name}
               style={{ width: "50px", margin: "2px" }}
             />
           ) : null}
         </td>
         <td>
-          <NavLink to={"/stockmargins/" + stockmargin.id}>{stockmargin.name}</NavLink>
+          <NavLink to={"/stockMargins/" + stockMargin.id}>{stockMargin.name}</NavLink>
         </td>
-        <td>{stockmargin.code?.toLocaleUpperCase()}</td>
-        <td>{stockmargin.description}</td>
-        <td>{stockmargin.price || (5).toFixed(2)}</td>
+        <td>{stockMargin.code?.toLocaleUpperCase()}</td>
+        <td>{stockMargin.description}</td>
+        <td>{stockMargin.price || (5).toFixed(2)}</td>
         <td>
           <Star
-            rating={stockmargin.starRating || 4}
+            rating={stockMargin.starRating || 4}
             ratingClicked={(event) => this.onRatingClicked(event)}
           ></Star>
         </td>
         <td>
           <NavLink
             className="btn btn-primary"
-            to={"/stockmargins/edit/" + stockmargin.id}
+            to={"/stockMargins/edit/" + stockMargin.id}
           >
             Edit
           </NavLink>
@@ -106,7 +106,7 @@ class ListStockMargins extends Component<any, any> {
           <button
             type="button"
             className="btn btn-primary btn-secondary"
-            onClick={() => this.viewAuditLogs(stockmargin)}
+            onClick={() => this.viewAuditLogs(stockMargin)}
           >
             View Audit Logs
           </button>
@@ -114,7 +114,7 @@ class ListStockMargins extends Component<any, any> {
           <button
             type="button"
             className="btn btn-primary btn-danger"
-            onClick={() => this.deleteStockMargin(stockmargin)}
+            onClick={() => this.deleteStockMargin(stockMargin)}
           >
             Delete
           </button>
@@ -122,7 +122,7 @@ class ListStockMargins extends Component<any, any> {
       </tr>
     ));
 
-    const table = this.props.stockmargins ? (
+    const table = this.props.stockMargins ? (
       <table className="table">
         <thead>
           <tr>
@@ -212,7 +212,7 @@ class ListStockMargins extends Component<any, any> {
             <NavLink
               className="btn btn-primary"
               style={{ float: "right" }}
-              to="/stockmargins/add"
+              to="/stockMargins/add"
             >
               Add StockMargin
             </NavLink>
@@ -252,16 +252,16 @@ class ListStockMargins extends Component<any, any> {
 
 const mapStateToProps = (state) => {
   return {
-    stockmargins: state.stockmargin.stockmargins,
-    auditLogs: state.stockmargin.auditLogs,
+    stockMargins: state.stockMargin.stockMargins,
+    auditLogs: state.stockMargin.auditLogs,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchStockMargins: () => dispatch(actions.fetchStockMargins()),
-    deleteStockMargin: (stockmargin) => dispatch(actions.deleteStockMargin(stockmargin)),
-    fetchAuditLogs: (stockmargin) => dispatch(actions.fetchAuditLogs(stockmargin)),
+    deleteStockMargin: (stockMargin) => dispatch(actions.deleteStockMargin(stockMargin)),
+    fetchAuditLogs: (stockMargin) => dispatch(actions.fetchAuditLogs(stockMargin)),
   };
 };
 

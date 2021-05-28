@@ -43,6 +43,8 @@ import stockProfitReducer from "./containers/StockProfits/reducer";
 import { watchStockProfit } from "./containers/StockProfits/sagas";
 import stockRevenueReducer from "./containers/StockRevenues/reducer";
 import { watchStockRevenue } from "./containers/StockRevenues/sagas";
+import stockMarginReducer from "./containers/StockMargins/reducer";
+import { watchStockMargin } from "./containers/StockMargins/sagas";
 
 const composeEnhancers =
   (process.env.NODE_ENV === "development"
@@ -67,6 +69,7 @@ const rootReducer = combineReducers({
   pageeffect: pageEffectReducer,
   stockProfit: stockProfitReducer,
   stockRevenue: stockRevenueReducer,
+  stockMargin: stockMarginReducer,
 });
 
 const sagaMiddleware = createSagaMiddleware();
@@ -92,6 +95,7 @@ sagaMiddleware.run(watchD3);
 sagaMiddleware.run(watchPageEffect);
 sagaMiddleware.run(watchStockProfit);
 sagaMiddleware.run(watchStockRevenue);
+sagaMiddleware.run(watchStockMargin);
 
 store.dispatch({
   type: "SET_AUTH_SERVICE",
