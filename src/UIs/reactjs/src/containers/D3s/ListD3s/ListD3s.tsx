@@ -11,7 +11,7 @@ class ListD3s extends Component<any, any> {
   };
 
   componentDidMount() {
-    this.props.fetchStockMarginFunders({ stockCode: "0050", startDate: "2021-01-01", endDate: "2021-05-24" });
+    this.props.fetchStockMarginFunders({ stockCode: "2330", startDate: "2021-05-01", endDate: "2021-05-24" });
   }
 
   render() {

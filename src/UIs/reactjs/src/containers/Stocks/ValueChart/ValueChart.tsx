@@ -75,8 +75,8 @@ export default class ValueChart extends PureComponent<Props> {
             .attr("x", (d, i) => x(xz[i]) + x.bandwidth() / n * d[2])
             .attr("width", x.bandwidth() / n)
             .transition()
-            .attr("y", d => y(d[1] - d[0]))
-            .attr("height", d => y(0) - y(d[1] - d[0]));
+            .attr("y", d => d[1] - d[0] > 0 ? y(d[1] - d[0]) : y(0))
+            .attr("height", d => Math.abs(y(0) - y(d[1] - d[0])));
 
         // y.domain([y1Min, y1Max]);
 
