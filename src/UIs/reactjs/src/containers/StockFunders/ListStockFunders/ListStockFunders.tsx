@@ -261,7 +261,6 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchStockFunders: () => dispatch(actions.fetchStockFunders()),
     deleteStockFunder: (stockfunder) => dispatch(actions.deleteStockFunder(stockfunder)),
-    fetchAuditLogs: (stockfunder) => dispatch(actions.fetchAuditLogs(stockfunder)),
   };
 };
 
