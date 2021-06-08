@@ -1,0 +1,17 @@
+.container {
+    svg {
+        // margin-bottom: 20px;
+        margin-left: 20px;
+        .axis {
+            color: slategray;
+            font-size: 0.8px;
+            stroke-width: 0.1px;
+            g {
+                font-size: 0.8px;
+            }
+        }
+        .rectText {
+            font-size: 0.8px;
+        }
+    }
+}

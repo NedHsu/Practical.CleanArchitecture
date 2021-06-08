@@ -31,7 +31,7 @@ class ListD3s extends Component<any, any> {
               k: stockMarginFunders.date,
               n: 5,
               yz: [stockMarginFunders.foreignSum, stockMarginFunders.creditSum, stockMarginFunders.selfSum, stockMarginFunders.securitiesBalance, stockMarginFunders.financingBalance]
-            }} />
+            }} unit={1000} />
           )
         }
       </div>
