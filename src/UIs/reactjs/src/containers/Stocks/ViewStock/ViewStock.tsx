@@ -94,7 +94,7 @@ class ViewStock extends Component<any, any> {
               <td className="td-number">{x.yoY}</td>
               <td className="td-number">{x.yearTotal}</td>
               <td className="td-number">{x.preYearTotal}</td>
-              <td className="td-number">{x.totalMoM}</td>
+              <td className="td-number">{x.totalYoY}</td>
               <td>{x.remarks}</td>
             </tr>
           ))}
