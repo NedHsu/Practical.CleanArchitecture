@@ -3,6 +3,7 @@ using ClassifiedAds.Application;
 using ClassifiedAds.Application.AuditLogEntries.DTOs;
 using ClassifiedAds.Application.AuditLogEntries.Queries;
 using ClassifiedAds.Application.StockFunders.Queries;
+using ClassifiedAds.Application.StockRevenues.Queries;
 using ClassifiedAds.Application.Stocks.Commands;
 using ClassifiedAds.Application.Stocks.DTOs;
 using ClassifiedAds.Application.Stocks.Queries;
@@ -85,10 +86,10 @@ namespace ClassifiedAds.WebAPI.Controllers
         }
 
         [HttpGet("revenue")]
-        public ActionResult<List<StockRevenueModel>> GetRevenue()
+        public ActionResult<List<StockRevenueModel>> GetRevenue([FromQuery] GetTopRevenueStocksQuery query)
         {
             _logger.LogInformation("Getting all stockRevenues");
-            var stockRevenues = _dispatcher.Dispatch(new GetCreditStockFundersQuery() { });
+            var stockRevenues = _dispatcher.Dispatch(query);
             var model = _mapper.Map<List<StockRevenueModel>>(stockRevenues);
             return Ok(model);
         }

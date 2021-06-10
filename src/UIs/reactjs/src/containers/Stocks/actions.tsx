@@ -108,7 +108,7 @@ export const fetchStockFunders = (options) => {
 export const fetchStockRevenuesSuccess = (result) => {
   return {
     type: actionTypes.FETCH_STOCK_REVENUES_SUCCESS,
-    stockfunders: result,
+    stockRevenues: result,
   };
 };
 

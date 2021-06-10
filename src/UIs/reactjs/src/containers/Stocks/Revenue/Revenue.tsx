@@ -13,6 +13,7 @@ import * as groupActions from "../../StockGroups/actions";
 import * as groupItemActions from "../../StockGroupItems/actions";
 import styles from "./Revenue.module.scss";
 import TrendLine from "../TrendLine/TrendLine";
+import { GrNotes, GrList } from "react-icons/gr";
 
 class Revenue extends Component<any, any> {
   constructor(props) {
@@ -44,7 +45,7 @@ class Revenue extends Component<any, any> {
       startDate.setMonth(startDate.getMonth() - 6);
 
       this.props.fetchStocksDays({
-        stockCodes: this.props.stockfunders.map(x => x.stockCode),
+        stockCodes: this.props.stockRevenues.map(x => x.stockCode),
         startDate: startDate,
         endDate: endDate,
       });
@@ -77,9 +78,9 @@ class Revenue extends Component<any, any> {
   }
 
   render() {
-    const stockFunders = this.props.stockfunders;
+    const stockRevenues = this.props.stockRevenues;
 
-    const rows = stockFunders?.map((stock) => (
+    const rows = stockRevenues?.map((stock) => (
       <tr key={"L" + stock.stockCode}>
         <td>
           {this.state.showTrendLine && this.props.stockDayMaps && this.props.stockDayMaps[stock.stockCode] ? (
@@ -91,22 +92,16 @@ class Revenue extends Component<any, any> {
         <td>
           <NavLink to={"/stocks/" + stock.stockCode}>({stock.stockCode}){stock.name}</NavLink>
         </td>
-        <td className={styles.test}>{stock.closePrice || "--"}</td>
+        <td>{stock.industry}</td>
+        <td className={styles.number}>{stock.closePrice || "--"}</td>
+        <td className={styles.number}>{stock.moM}</td>
+        <td className={styles.number}>{stock.yoY}</td>
+        <td className={styles.number}>{stock.totalYoY}</td>
+        <td>{stock.remarks}</td>
         <td>
-          <div>C:{stock.creditBuy}/{stock.creditSell}/{stock.creditSum}</div>
-          <div>F:{stock.foreignBuy}/{stock.foreignSell}/{stock.foreignSum}</div>
-          <div>S:{stock.selfBuy}/{stock.selfSell}/{stock.selfSum}</div>
-        </td>
-        <td className={styles.number}>{stock.total}</td>
-        <td>{stock.date}</td>
-        <td>
-          <Button onClick={() => this.viewNotes(stock)} variant="secondary">
-            View Notes
-          </Button>
+          <GrNotes onClick={() => this.viewNotes(stock)} title="View Notes"></GrNotes>
           &nbsp;
-          <Button onClick={() => this.editGroups(stock)}>
-            Edit Groups
-          </Button>
+          <GrList onClick={() => this.editGroups(stock)} title="Edit Groups"></GrList>
         </td>
       </tr>
     ));
@@ -118,20 +113,20 @@ class Revenue extends Component<any, any> {
       </Modal>
     );
 
-    const table = this.props.stockfunders ? (
+    const table = this.props.stockRevenues ? (
       <table className={`table ${styles.table}`}>
         <thead>
           <tr>
             <th>
-              <button className="btn btn-primary" onClick={this.toggleTrendLine}>
-                {this.state.showTrendLine ? "Hide" : "Show"} Trend
-              </button>
+
             </th>
             <th>Stock</th>
-            <th>Price</th>
-            <th>Buy/Sell/Sum</th>
-            <th className={styles.number}>Total</th>
-            <th>Fetch Date</th>
+            <th>Industry</th>
+            <th className={styles.number}>Price</th>
+            <th className={styles.number}>MoM(%)</th>
+            <th className={styles.number}>YoY(%)</th>
+            <th className={styles.number}>Total YoY(%)</th>
+            <th>Remarks</th>
             <th></th>
           </tr>
         </thead>
@@ -147,7 +142,11 @@ class Revenue extends Component<any, any> {
           </div>
           <div className="card-body">
             <div className="row">
-
+              <div className={styles.tableTools}>
+                <button className="btn btn-primary" onClick={this.toggleTrendLine}>
+                  {this.state.showTrendLine ? "Hide" : "Show"} Trend
+                </button>
+              </div>
             </div>
             <div className="table-responsive">{table}</div>
           </div>

@@ -13,6 +13,7 @@ import * as groupActions from "../../StockGroups/actions";
 import * as groupItemActions from "../../StockGroupItems/actions";
 import styles from "./LegalPerson.module.scss";
 import TrendLine from "../TrendLine/TrendLine";
+import { GrList, GrNotes } from "react-icons/gr";
 
 class LegalPerson extends Component<any, any> {
   constructor(props) {
@@ -100,13 +101,9 @@ class LegalPerson extends Component<any, any> {
         <td className={styles.number}>{stock.total}</td>
         <td>{stock.date}</td>
         <td>
-          <Button onClick={() => this.viewNotes(stock)} variant="secondary">
-            View Notes
-          </Button>
+          <GrNotes onClick={() => this.viewNotes(stock)} title="View Notes"></GrNotes>
           &nbsp;
-          <Button onClick={() => this.editGroups(stock)}>
-            Edit Groups
-          </Button>
+          <GrList onClick={() => this.editGroups(stock)} title="Edit Groups"></GrList>
         </td>
       </tr>
     ));

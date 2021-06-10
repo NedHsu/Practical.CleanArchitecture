@@ -23,10 +23,12 @@ namespace ClassifiedAds.Persistence.Repositories
 SELECT TOP 100 
 	s.name, 
     s.closePrice,
+	s.Industry,
 	r.* 
 FROM StockRevenue r 
 	JOIN Stock s ON r.StockCode = s.Code
-ORDER BY Date DESC, YoY DESC
+WHERE r.TotalYoY > 0
+ORDER BY Date DESC, r.MoM DESC, r.YoY DESC
 ";
             return DbContext.Connection.Query<StockRevenueDTO>(sql).ToList();
         }

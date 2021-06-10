@@ -7,12 +7,27 @@ namespace ClassifiedAds.WebAPI.Models.StockRevenues
         /// <summary>
         /// 證券代號
         /// </summary>
-        public string Code { get; set; }
+        public string StockCode { get; set; }
+
+        /// <summary>
+        /// 公司名
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// 產業
+        /// </summary>
+        public string Industry { get; set; }
+
+        /// <summary>
+        /// 價格
+        /// </summary>
+        public decimal ClosePrice { get; set; }
 
         /// <summary>
         /// 月份
         /// </summary>
-        public string Date { get; set; }
+        public string Month { get; set; }
 
         /// <summary>
         /// 當月營收
@@ -52,7 +67,7 @@ namespace ClassifiedAds.WebAPI.Models.StockRevenues
         /// <summary>
         /// 前期比較增減(%)
         /// </summary>
-        public decimal TotalMoM { get; set; }
+        public decimal TotalYoY { get; set; }
 
         /// <summary>
         /// 備註

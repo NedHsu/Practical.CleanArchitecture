@@ -23,6 +23,7 @@ import StickyStockNotes from "./containers/StockNotes/StickyStockNotes/StickySto
 import ViewStock from "./containers/Stocks/ViewStock/ViewStock";
 import AddStock from "./containers/Stocks/AddStock/AddStock";
 import LegalPerson from "./containers/Stocks/LegalPerson/LegalPerson";
+import RevenueStock from "./containers/Stocks/Revenue/Revenue";
 import AddLocation from "./containers/Locations/AddLocation/AddLocation";
 import ListLocations from "./containers/Locations/ListLocations/ListLocations";
 import Maps from "./components/Map/Map";
@@ -55,6 +56,7 @@ function App() {
         <Route path="/stocks/edit/:id" component={AddStock} />
         <Route path="/stocks/add" component={AddStock} />
         <Route path="/legalperson" component={LegalPerson} />
+        <Route path="/revenues" component={RevenueStock} />
         <Route path="/stocks/:id" component={ViewStock} />
         <Route path="/stocks" component={ListStocks} />
         <Route path="/stockStickyNotes" component={StickyStockNotes} />

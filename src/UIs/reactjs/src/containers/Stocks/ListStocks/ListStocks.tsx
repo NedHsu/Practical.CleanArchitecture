@@ -15,6 +15,7 @@ import * as groupActions from "../../StockGroups/actions";
 import * as groupItemActions from "../../StockGroupItems/actions";
 import * as daysActions from "../../StockDays/actions";
 import { IoMdAddCircle, IoMdClose, IoMdCheckmark, IoIosTrash } from "react-icons/io"
+import { GrList, GrNotes } from "react-icons/gr";
 
 class ListStocks extends Component<any, any> {
   groupTitleField: any;
@@ -216,13 +217,9 @@ class ListStocks extends Component<any, any> {
             Delete
           </button>
           &nbsp;
-          <Button onClick={() => this.viewNotes(stock)} variant="secondary">
-            View Notes
-          </Button>
+          <GrNotes onClick={() => this.viewNotes(stock)} title="View Notes"></GrNotes>
           &nbsp;
-          <Button onClick={() => this.editGroups(stock)}>
-            Edit Groups
-          </Button>
+          <GrList onClick={() => this.editGroups(stock)} title="Edit Groups"></GrList>
         </td>
       </tr>
     ));

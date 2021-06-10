@@ -4,6 +4,7 @@ import * as actionTypes from "./actionTypes";
 const initialState = {
   stocks: new Array<any>(),
   stockfunders: [],
+  stockRevenues: [],
   stockProfits: [],
   totalPage: 0,
   totalCount: 0,
@@ -81,6 +82,25 @@ const fetchStockFundersFail = (state, action) => {
   return updateObject(state, { loading: false });
 };
 /// StockFunders
+
+/// StockRevenues
+const fetchStockRevenuesStart = (state, action) => {
+  return updateObject(state, { loading: true });
+};
+
+const fetchStockRevenuesSuccess = (state, action) => {
+  return updateObject(state, {
+    stockRevenues: action.stockRevenues,
+    loading: false,
+    totalPage: action.totalPage,
+    totalCount: action.totalCount,
+  });
+};
+
+const fetchStockRevenuesFail = (state, action) => {
+  return updateObject(state, { loading: false });
+};
+/// StockRevenues
 
 /// StockProfits
 const fetchStockProfitsStart = (state, action) => {
@@ -161,6 +181,12 @@ const reducer = (state = initialState, action) => {
       return fetchStockFundersSuccess(state, action);
     case actionTypes.FETCH_STOCK_FUNDERS_FAIL:
       return fetchStockFundersFail(state, action);
+    case actionTypes.FETCH_STOCK_REVENUES_START:
+      return fetchStockRevenuesStart(state, action);
+    case actionTypes.FETCH_STOCK_REVENUES_SUCCESS:
+      return fetchStockRevenuesSuccess(state, action);
+    case actionTypes.FETCH_STOCK_REVENUES_FAIL:
+      return fetchStockRevenuesFail(state, action);
     case actionTypes.FETCH_STOCK_PROFITS_START:
       return fetchStockProfitsStart(state, action);
     case actionTypes.FETCH_STOCK_PROFITS_SUCCESS:

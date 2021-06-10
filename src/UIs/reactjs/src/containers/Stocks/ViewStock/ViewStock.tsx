@@ -86,7 +86,7 @@ class ViewStock extends Component<any, any> {
         <tbody>
           {stockRevenues.map(x => (
             <tr key={`rv-${x.date}`}>
-              <td>{x.date}</td>
+              <td>{x.month}</td>
               <td className="td-number">{x.currentMonth}</td>
               <td className="td-number">{x.preMonth}</td>
               <td className="td-number">{x.preYearMonth}</td>

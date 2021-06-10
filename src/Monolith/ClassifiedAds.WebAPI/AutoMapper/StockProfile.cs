@@ -41,11 +41,13 @@ namespace ClassifiedAds.WebAPI.AutoMapper
                 .ForMember(x => x.ForeignSum, opt => opt.MapFrom(src => src.ForeignSum / 1000.0))
                 .ForMember(x => x.Total, opt => opt.MapFrom(src => src.Total / 1000.0))
                 .ForMember(x => x.Date, opt => opt.MapFrom(src => src.Date.ToString("yyyy-MM-dd")));
+            CreateMap<StockRevenueDTO, StockRevenueModel>()
+                .ForMember(x => x.Month, opt => opt.MapFrom(src => src.Date.ToString("yyyy/MM")));
             CreateMap(typeof(PagedResult<>), typeof(PagedResultModel<>));
             CreateMap<StockProfit, StockProfitModel>()
                 .ForMember(x => x.Date, opt => opt.MapFrom(src => src.Date.AddYears(-1911).ToString("yyy/MM")));
             CreateMap<StockRevenue, StockRevenueModel>()
-                .ForMember(x => x.Date, opt => opt.MapFrom(src => src.Date.AddYears(-1911).ToString("yyy/MM")));
+                .ForMember(x => x.Month, opt => opt.MapFrom(src => src.Date.AddYears(-1911).ToString("yyy/MM")));
             CreateMap<List<StockMarginFunderDTO>, StockMarginFundersModel>()
             .ForMember(x => x.Date, opt => opt.MapFrom(src => src.Select(x => x.Date.ToString("yyyy-MM-dd"))))
             .ForMember(x => x.ForeignBuy, opt => opt.MapFrom(src => src.Select(x => x.ForeignBuy)))

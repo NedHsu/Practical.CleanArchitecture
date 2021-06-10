@@ -1,5 +1,6 @@
 ﻿using ClassifiedAds.Application.Decorators.AuditLog;
 using ClassifiedAds.Application.Decorators.DatabaseRetry;
+using ClassifiedAds.Domain.DTOs;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
 using System;
@@ -8,25 +9,24 @@ using System.Linq;
 
 namespace ClassifiedAds.Application.StockRevenues.Queries
 {
-    public class GetStockRevenuesQuery : IQuery<List<StockRevenue>>
+    public class GetTopRevenueStocksQuery : IQuery<List<StockRevenueDTO>>
     {
-        public string StockCode { get; set; }
     }
 
     [AuditLog]
     [DatabaseRetry]
-    internal class GetStockRevenuesQueryHandler : IQueryHandler<GetStockRevenuesQuery, List<StockRevenue>>
+    internal class GetTopStockRevenuesQueryHandler : IQueryHandler<GetTopRevenueStocksQuery, List<StockRevenueDTO>>
     {
         private readonly IStockRevenueRepository _stockrevenueRepository;
 
-        public GetStockRevenuesQueryHandler(IStockRevenueRepository stockrevenueRepository)
+        public GetTopStockRevenuesQueryHandler(IStockRevenueRepository stockrevenueRepository)
         {
             _stockrevenueRepository = stockrevenueRepository;
         }
 
-        public List<StockRevenue> Handle(GetStockRevenuesQuery query)
+        public List<StockRevenueDTO> Handle(GetTopRevenueStocksQuery query)
         {
-            return _stockrevenueRepository.GetAll(x => x.StockCode == query.StockCode, " [Date] DESC").Take(12).ToList();
+            return _stockrevenueRepository.GetTopRevenues();
         }
     }
 }

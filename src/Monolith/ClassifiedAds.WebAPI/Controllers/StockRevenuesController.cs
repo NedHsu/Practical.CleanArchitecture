@@ -62,7 +62,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             var stockrevenue = _mapper.Map<StockRevenue>(model);
             _dispatcher.Dispatch(new AddUpdateStockRevenueCommand { StockRevenue = stockrevenue });
             model = _mapper.Map<StockRevenueModel>(stockrevenue);
-            return Created($"/api/stockrevenues/{model.Code}", model);
+            return Created($"/api/stockrevenues/{model.StockCode}", model);
         }
 
         [HttpPut("{code}")]
@@ -74,7 +74,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             var stockrevenue = _dispatcher.Dispatch(new GetStockRevenueQuery { Code = code, ThrowNotFoundIfNull = false }) 
                 ?? new StockRevenue { };
 
-            stockrevenue.StockCode = model.Code;
+            stockrevenue.StockCode = model.StockCode;
 
             _dispatcher.Dispatch(new AddUpdateStockRevenueCommand { StockRevenue = stockrevenue });
 

@@ -14,10 +14,13 @@ class Menu extends Component<Props> {
     return (
       <Nav variant="pills">
         <Nav.Item>
-          <NavLink className="nav-link" to="/stocks">Stock List</NavLink>
+          <NavLink className="nav-link" to="/stocks">Stocks</NavLink>
         </Nav.Item>
         <Nav.Item>
           <NavLink className="nav-link" to="/legalperson">Legal person</NavLink>
+        </Nav.Item>
+        <Nav.Item>
+          <NavLink className="nav-link" to="/revenues">Revenues</NavLink>
         </Nav.Item>
         <Nav.Item>
           <NavLink className="nav-link" to="/stockStickyNotes">Notes</NavLink>
