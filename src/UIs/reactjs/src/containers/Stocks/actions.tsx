@@ -104,6 +104,35 @@ export const fetchStockFunders = (options) => {
 };
 /// STOCKS
 
+/// STOCK REVENUES
+export const fetchStockRevenuesSuccess = (result) => {
+  return {
+    type: actionTypes.FETCH_STOCK_REVENUES_SUCCESS,
+    stockfunders: result,
+  };
+};
+
+export const fetchStockRevenuesFail = (error) => {
+  return {
+    type: actionTypes.FETCH_STOCK_REVENUES_FAIL,
+    error: error,
+  };
+};
+
+export const fetchStockRevenuesStart = () => {
+  return {
+    type: actionTypes.FETCH_STOCK_REVENUES_START,
+  };
+};
+
+export const fetchStockRevenues = (options) => {
+  return {
+    type: actionTypes.FETCH_STOCK_REVENUES,
+    options: options,
+  };
+};
+/// STOCKS
+
 /// STOCK
 export const fetchStockSuccess = (stock) => {
   return {

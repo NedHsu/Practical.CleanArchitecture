@@ -193,7 +193,7 @@ namespace ClassifiedAds.Persistence
                 entity.Property(e => e.PreMonth).HasColumnType("decimal(18, 2)");
                 entity.Property(e => e.PreYearMonth).HasColumnType("decimal(18, 2)");
                 entity.Property(e => e.PreYearTotal).HasColumnType("decimal(18, 2)");
-                entity.Property(e => e.TotalMoM).HasColumnType("decimal(18, 2)");
+                entity.Property(e => e.TotalYoY).HasColumnType("decimal(18, 2)");
                 entity.Property(e => e.YoY).HasColumnType("decimal(18, 2)");
                 entity.Property(e => e.YearTotal).HasColumnType("decimal(18, 2)");
 

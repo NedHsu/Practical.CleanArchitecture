@@ -9,6 +9,7 @@ using ClassifiedAds.Application.Stocks.Queries;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.WebAPI.Models.Common;
 using ClassifiedAds.WebAPI.Models.StockFunders;
+using ClassifiedAds.WebAPI.Models.StockRevenues;
 using ClassifiedAds.WebAPI.Models.Stocks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -80,6 +81,15 @@ namespace ClassifiedAds.WebAPI.Controllers
             _logger.LogInformation("Getting all stockfunders");
             var stockfunders = _dispatcher.Dispatch(new GetCreditStockFundersQuery() { });
             var model = _mapper.Map<List<StockFunderModel>>(stockfunders);
+            return Ok(model);
+        }
+
+        [HttpGet("revenue")]
+        public ActionResult<List<StockRevenueModel>> GetRevenue()
+        {
+            _logger.LogInformation("Getting all stockRevenues");
+            var stockRevenues = _dispatcher.Dispatch(new GetCreditStockFundersQuery() { });
+            var model = _mapper.Map<List<StockRevenueModel>>(stockRevenues);
             return Ok(model);
         }
 

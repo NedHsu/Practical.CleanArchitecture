@@ -36,6 +36,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddScoped(typeof(IStockDayRepository), typeof(StockDayRepository))
                 .AddScoped(typeof(IStockMarginRepository), typeof(StockMarginRepository))
                 .AddScoped(typeof(IStockFunderRepository), typeof(StockFunderRepository))
+                .AddScoped(typeof(IStockRevenueRepository), typeof(StockRevenueRepository))
                 .AddScoped(typeof(IStockDapperRepository), typeof(StockDapperRepository));
 
             services.AddScoped<IStockDbContext>(_ => new ClassifiedAds.Persistence.DapperContext.StockDbContext(connectionString));

@@ -39,6 +39,17 @@ export function* fetchStockFundersSaga(action) {
   }
 }
 
+export function* fetchStockRevenuesSaga(action) {
+  yield put(actions.fetchStockRevenuesStart());
+  try {
+    const response = yield axios.get("revenue" + urlParams(action.options));
+    const fetchedStockRevenues = response.data;
+    yield put(actions.fetchStockRevenuesSuccess(fetchedStockRevenues));
+  } catch (error) {
+    yield put(actions.fetchStockRevenuesFail(error));
+  }
+}
+
 export function* fetchGroupStocksSaga(action) {
   yield put(actions.fetchStocksStart());
   try {
@@ -114,6 +125,7 @@ export function* watchStock() {
   yield takeLatest(actionTypes.FETCH_STOCKS, fetchStocksSaga);
   yield takeLatest(actionTypes.FETCH_STOCK_OPTIONS, fetchStockOptionsSaga);
   yield takeEvery(actionTypes.FETCH_STOCK_FUNDERS, fetchStockFundersSaga);
+  yield takeEvery(actionTypes.FETCH_STOCK_REVENUES, fetchStockRevenuesSaga);
   yield takeEvery(actionTypes.FETCH_STOCK, fetchStockSaga);
   yield takeEvery(actionTypes.SAVE_STOCK, saveStockSaga);
   yield takeEvery(actionTypes.DELETE_STOCK, deleteStockSaga);

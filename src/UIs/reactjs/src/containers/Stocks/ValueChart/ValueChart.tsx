@@ -98,6 +98,14 @@ export default class ValueChart extends PureComponent<Props> {
             .attr("fill", "black")
             .text(d => (d[1] - d[0]) / unit);
 
+        svg.on('click', (event) => {
+            const xValue = d3.pointer(event)[0] - margin.left;
+            const yValue = d3.pointer(event)[1] - margin.bottom;
+            const targetTime = y.invert(yValue);
+            // 推算出目前hover位置
+            // console.log(d3.bisect(xz, targetTime), xValue);
+        })
+
         //補上文字
         // svg.append("g")
         //     .attr("class", styles.rectText)

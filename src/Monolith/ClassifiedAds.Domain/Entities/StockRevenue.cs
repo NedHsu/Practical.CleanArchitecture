@@ -49,7 +49,7 @@ namespace ClassifiedAds.Domain.Entities
         /// <summary>
         /// 前期比較增減(%)
         /// </summary>
-        public decimal TotalMoM { get; set; }
+        public decimal TotalYoY { get; set; }
         /// <summary>
         /// 備註
         /// </summary>
