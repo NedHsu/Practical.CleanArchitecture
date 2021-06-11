@@ -6,6 +6,7 @@ using ClassifiedAds.Application.StockSeminars.Commands;
 using ClassifiedAds.Application.StockSeminars.DTOs;
 using ClassifiedAds.Application.StockSeminars.Queries;
 using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.WebAPI.Models.Common;
 using ClassifiedAds.WebAPI.Models.StockSeminars;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -36,11 +37,11 @@ namespace ClassifiedAds.WebAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<StockSeminarModel>> Get()
+        public ActionResult<PagedResultModel<StockSeminarModel>> Get([FromQuery]GetStockSeminarsQuery query)
         {
             _logger.LogInformation("Getting all stockseminars");
-            var stockseminars = _dispatcher.Dispatch(new GetStockSeminarsQuery(){ });
-            var model = _mapper.Map<IEnumerable<StockSeminarModel>>(stockseminars);
+            var stockseminars = _dispatcher.Dispatch(query);
+            var model = _mapper.Map<PagedResultModel<StockSeminarModel>>(stockseminars);
             return Ok(model);
         }
 
@@ -62,7 +63,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             var stockseminar = _mapper.Map<StockSeminar>(model);
             _dispatcher.Dispatch(new AddUpdateStockSeminarCommand { StockSeminar = stockseminar });
             model = _mapper.Map<StockSeminarModel>(stockseminar);
-            return Created($"/api/stockseminars/{model.Code}", model);
+            return Created($"/api/stockseminars/{model.StockCode}", model);
         }
 
         [HttpPut("{code}")]
@@ -74,7 +75,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             var stockseminar = _dispatcher.Dispatch(new GetStockSeminarQuery { StockCode = code, ThrowNotFoundIfNull = false })
                 ?? new StockSeminar { };
 
-            stockseminar.StockCode = model.Code;
+            stockseminar.StockCode = model.StockCode;
 
             _dispatcher.Dispatch(new AddUpdateStockSeminarCommand { StockSeminar = stockseminar });
 

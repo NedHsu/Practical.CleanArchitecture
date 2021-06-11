@@ -15,18 +15,23 @@ import EditFile from "./containers/Files/EditFile/EditFile";
 import ListUsers from "./containers/Users/ListUsers/ListUsers";
 import AddUser from "./containers/Users/AddUser/AddUser";
 import ViewUser from "./containers/Users/ViewUser/ViewUser";
+
 import ListMatches from "./containers/Matches/ListMatches/ListMatches";
 import AddMatch from "./containers/Matches/AddMatch/AddMatch";
 import ViewMatch from "./containers/Matches/ViewMatch/ViewMatch";
+
 import ListStocks from "./containers/Stocks/ListStocks/ListStocks";
 import StickyStockNotes from "./containers/StockNotes/StickyStockNotes/StickyStockNotes";
 import ViewStock from "./containers/Stocks/ViewStock/ViewStock";
 import AddStock from "./containers/Stocks/AddStock/AddStock";
 import LegalPerson from "./containers/Stocks/LegalPerson/LegalPerson";
 import RevenueStock from "./containers/Stocks/Revenue/Revenue";
+import ListStockSeminars from "./containers/StockSeminars/ListStockSeminars/ListStockSeminars";
+
 import AddLocation from "./containers/Locations/AddLocation/AddLocation";
 import ListLocations from "./containers/Locations/ListLocations/ListLocations";
 import Maps from "./components/Map/Map";
+
 import ViewIllustration from "./containers/Illustrations/ViewIllustration/ViewIllustration";
 import Svg0 from "./containers/D3s/Svg0/Svg0";
 import ListPageEffects from "./containers/PageEffects/ListPageEffects/ListPageEffects";
@@ -60,6 +65,7 @@ function App() {
         <Route path="/stocks/:id" component={ViewStock} />
         <Route path="/stocks" component={ListStocks} />
         <Route path="/stockStickyNotes" component={StickyStockNotes} />
+        <Route path="/stockSeminars" component={ListStockSeminars} />
         <Route path="/illustrations" component={ViewIllustration} />
         <Route path="/users/add" component={AddUser} />
         <Route path="/users/edit/:id" component={AddUser} />

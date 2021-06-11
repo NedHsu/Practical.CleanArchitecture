@@ -9,7 +9,7 @@ type Props = {
   resetStockSeminar: any,
   match: any,
   fetchStockSeminar: any,
-  stockseminar: any,
+  stockSeminar: any,
   saveStockSeminar: any,
   updateStockSeminar: any,
   saved: any
@@ -71,14 +71,14 @@ class AddStockSeminar extends Component<Props, any> {
   }
 
   fieldChanged = event => {
-    const stockseminar = {
-      ...this.props.stockseminar,
+    const stockSeminar = {
+      ...this.props.stockSeminar,
       [event.target.name]: event.target.value
     };
 
     this.checkFieldValidity(event.target.name, event.target.value);
 
-    this.props.updateStockSeminar(stockseminar);
+    this.props.updateStockSeminar(stockSeminar);
   };
 
   checkFieldValidity = (name, value) => {
@@ -108,12 +108,12 @@ class AddStockSeminar extends Component<Props, any> {
     let isValid = true;
     for (let fieldName in this.state.controls) {
       isValid =
-        this.checkFieldValidity(fieldName, this.props.stockseminar[fieldName]) &&
+        this.checkFieldValidity(fieldName, this.props.stockSeminar[fieldName]) &&
         isValid;
     }
 
     if (isValid) {
-      this.props.saveStockSeminar(this.props.stockseminar);
+      this.props.saveStockSeminar(this.props.stockSeminar);
     }
   };
 
@@ -144,7 +144,7 @@ class AddStockSeminar extends Component<Props, any> {
                       ? "is-invalid"
                       : "")
                   }
-                  value={this.props.stockseminar?.name}
+                  value={this.props.stockSeminar?.name}
                   onChange={event => this.fieldChanged(event)}
                 />
                 <span className="invalid-feedback">
@@ -171,7 +171,7 @@ class AddStockSeminar extends Component<Props, any> {
                       ? "is-invalid"
                       : "")
                   }
-                  value={this.props.stockseminar?.code}
+                  value={this.props.stockSeminar?.code}
                   onChange={event => this.fieldChanged(event)}
                 />
                 <span className="invalid-feedback">
@@ -195,11 +195,11 @@ class AddStockSeminar extends Component<Props, any> {
                   className={
                     "form-control " +
                     (this.state.submitted &&
-                    !this.state.controls["description"].valid
+                      !this.state.controls["description"].valid
                       ? "is-invalid"
                       : "")
                   }
-                  value={this.props.stockseminar?.description}
+                  value={this.props.stockSeminar?.description}
                   onChange={event => this.fieldChanged(event)}
                 />
                 <span className="invalid-feedback">
@@ -226,7 +226,7 @@ class AddStockSeminar extends Component<Props, any> {
         <div className="card-footer">
           <NavLink
             className="btn btn-outline-secondary"
-            to="/stockseminars"
+            to="/stockSeminars"
             style={{ width: "80px" }}
           >
             <i className="fa fa-chevron-left"></i> Back
@@ -236,7 +236,7 @@ class AddStockSeminar extends Component<Props, any> {
     );
 
     return this.state.submitted && this.props.saved ? (
-      <Redirect to={"/stockseminars/" + this.props.stockseminar.id} />
+      <Redirect to={"/stockSeminars/" + this.props.stockSeminar.id} />
     ) : (
       form
     );
@@ -245,17 +245,17 @@ class AddStockSeminar extends Component<Props, any> {
 
 const mapStateToProps = state => {
   return {
-    stockseminar: state.stockseminar.stockseminar,
-    saved: state.stockseminar.saved
+    stockSeminar: state.stockSeminar.stockSeminar,
+    saved: state.stockSeminar.saved
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     fetchStockSeminar: id => dispatch(actions.fetchStockSeminar(id)),
-    updateStockSeminar: stockseminar => dispatch(actions.updateStockSeminar(stockseminar)),
+    updateStockSeminar: stockSeminar => dispatch(actions.updateStockSeminar(stockSeminar)),
     resetStockSeminar: () => dispatch(actions.resetStockSeminar()),
-    saveStockSeminar: stockseminar => dispatch(actions.saveStockSeminar(stockseminar))
+    saveStockSeminar: stockSeminar => dispatch(actions.saveStockSeminar(stockSeminar))
   };
 };
 

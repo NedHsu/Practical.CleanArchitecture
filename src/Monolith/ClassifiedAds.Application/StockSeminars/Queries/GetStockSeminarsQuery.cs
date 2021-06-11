@@ -1,5 +1,6 @@
 ﻿using ClassifiedAds.Application.Decorators.AuditLog;
 using ClassifiedAds.Application.Decorators.DatabaseRetry;
+using ClassifiedAds.Domain.DTOs;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
 using System;
@@ -8,24 +9,28 @@ using System.Linq;
 
 namespace ClassifiedAds.Application.StockSeminars.Queries
 {
-    public class GetStockSeminarsQuery : IQuery<List<StockSeminar>>
+    public class GetStockSeminarsQuery : IQuery<PagedResult<StockSeminarDTO>>
     {
+        public DateTime StartDate { get;set; }
+        public DateTime EndDate { get;set; }
+        public uint PageSize { get; set; }
+        public uint PageIndex { get; set; }
     }
 
     [AuditLog]
     [DatabaseRetry]
-    internal class GetStockSeminarsQueryHandler : IQueryHandler<GetStockSeminarsQuery, List<StockSeminar>>
+    internal class GetStockSeminarsQueryHandler : IQueryHandler<GetStockSeminarsQuery, PagedResult<StockSeminarDTO>>
     {
-        private readonly IBaseDapperRepository<StockSeminar> _stockseminarRepository;
+        private readonly IStockSeminarRepository _stockseminarRepository;
 
-        public GetStockSeminarsQueryHandler(IBaseDapperRepository<StockSeminar> stockseminarRepository)
+        public GetStockSeminarsQueryHandler(IStockSeminarRepository stockseminarRepository)
         {
             _stockseminarRepository = stockseminarRepository;
         }
 
-        public List<StockSeminar> Handle(GetStockSeminarsQuery query)
+        public PagedResult<StockSeminarDTO> Handle(GetStockSeminarsQuery query)
         {
-            return _stockseminarRepository.GetAll().ToList();
+            return _stockseminarRepository.GetWithStockInfo(query.StartDate, query.EndDate, query.PageIndex, query.PageSize);
         }
     }
 }

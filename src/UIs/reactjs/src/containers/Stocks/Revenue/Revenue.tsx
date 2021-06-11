@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
-import { Button, Modal } from "react-bootstrap";
+import { Button, Modal, Table } from "react-bootstrap";
 import Menu from "../Menu/Menu";
 import GroupModal from "../GroupModal/GroupModal";
+import IndustryModal from "../IndustryModal/IndustryModal";
 import ListNotes from "../../StockNotes/ListStockNotes/ListStockNotes";
 
 import * as actions from "../actions";
@@ -114,7 +115,7 @@ class Revenue extends Component<any, any> {
     );
 
     const table = this.props.stockRevenues ? (
-      <table className={`table ${styles.table}`}>
+      <Table hover striped className={`${styles.table}`}>
         <thead>
           <tr>
             <th>
@@ -131,7 +132,7 @@ class Revenue extends Component<any, any> {
           </tr>
         </thead>
         <tbody>{rows}</tbody>
-      </table>
+      </Table>
     ) : null;
 
     return (
@@ -146,6 +147,9 @@ class Revenue extends Component<any, any> {
                 <button className="btn btn-primary" onClick={this.toggleTrendLine}>
                   {this.state.showTrendLine ? "Hide" : "Show"} Trend
                 </button>
+              </div>
+              <div>
+
               </div>
             </div>
             <div className="table-responsive">{table}</div>
@@ -162,6 +166,7 @@ class Revenue extends Component<any, any> {
         }
         {listNoteModal}
         <GroupModal showGroupsModal={this.state.showGroupsModal} stock={{ name: this.state.stock.name, code: this.state.stock.stockCode }} hide={() => this.setState({ showGroupsModal: false })} />
+        <IndustryModal saveStockIndustryItems={() => { }} />
       </div>
     );
   }

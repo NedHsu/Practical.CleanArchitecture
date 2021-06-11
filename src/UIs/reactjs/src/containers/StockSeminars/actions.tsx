@@ -1,10 +1,10 @@
 import * as actionTypes from "./actionTypes";
 
 /// SEMINARS
-export const fetchStockSeminarsSuccess = (stockseminars) => {
+export const fetchStockSeminarsSuccess = (pagedStockSeminar) => {
   return {
     type: actionTypes.FETCH_SEMINARS_SUCCESS,
-    stockseminars: stockseminars,
+    pagedStockSeminar: pagedStockSeminar,
   };
 };
 
@@ -21,18 +21,19 @@ export const fetchStockSeminarsStart = () => {
   };
 };
 
-export const fetchStockSeminars = () => {
+export const fetchStockSeminars = (options) => {
   return {
     type: actionTypes.FETCH_SEMINARS,
+    options: options
   };
 };
 /// SEMINARS
 
 /// SEMINAR
-export const fetchStockSeminarSuccess = (stockseminar) => {
+export const fetchStockSeminarSuccess = (stockSeminar) => {
   return {
     type: actionTypes.FETCH_SEMINAR_SUCCESS,
-    stockseminar: stockseminar,
+    stockSeminar: stockSeminar,
   };
 };
 
@@ -58,10 +59,10 @@ export const fetchStockSeminar = (id) => {
 /// SEMINAR
 
 /// UPDATE SEMINAR
-export const updateStockSeminar = (stockseminar) => {
+export const updateStockSeminar = (stockSeminar) => {
   return {
     type: actionTypes.UPDATE_SEMINAR,
-    stockseminar: stockseminar,
+    stockSeminar: stockSeminar,
   };
 };
 
@@ -73,10 +74,10 @@ export const resetStockSeminar = () => {
 /// UPDATE SEMINAR
 
 /// SAVE SEMINAR
-export const saveStockSeminarSuccess = (stockseminar) => {
+export const saveStockSeminarSuccess = (stockSeminar) => {
   return {
     type: actionTypes.SAVE_SEMINAR_SUCCESS,
-    stockseminar: stockseminar,
+    stockSeminar: stockSeminar,
   };
 };
 
@@ -93,16 +94,16 @@ export const saveStockSeminarStart = () => {
   };
 };
 
-export const saveStockSeminar = (stockseminar) => {
+export const saveStockSeminar = (stockSeminar) => {
   return {
     type: actionTypes.SAVE_SEMINAR,
-    stockseminar: stockseminar,
+    stockSeminar: stockSeminar,
   };
 };
 /// SAVE SEMINAR
 
 /// DELETE SEMINAR
-export const deleteStockSeminarSuccess = (stockseminar) => {
+export const deleteStockSeminarSuccess = (stockSeminar) => {
   return {
     type: actionTypes.DELETE_SEMINAR_SUCCESS,
   };
@@ -121,10 +122,10 @@ export const deleteStockSeminarStart = () => {
   };
 };
 
-export const deleteStockSeminar = (stockseminar) => {
+export const deleteStockSeminar = (stockSeminar) => {
   return {
     type: actionTypes.DELETE_SEMINAR,
-    stockseminar: stockseminar,
+    stockSeminar: stockSeminar,
   };
 };
 /// DELETE SEMINAR

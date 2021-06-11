@@ -3,11 +3,12 @@ import axios from "./axios";
 
 import * as actionTypes from "./actionTypes";
 import * as actions from "./actions";
+import { urlParams } from "../../shared/utility";
 
 export function* fetchStockSeminarsSaga(action) {
   yield put(actions.fetchStockSeminarsStart());
   try {
-    const response = yield axios.get("");
+    const response = yield axios.get(urlParams(action.options));
     const fetchedStockSeminars = response.data;
     yield put(actions.fetchStockSeminarsSuccess(fetchedStockSeminars));
   } catch (error) {
@@ -29,11 +30,11 @@ export function* fetchStockSeminarSaga(action) {
 export function* saveStockSeminarSaga(action) {
   yield put(actions.saveStockSeminarStart());
   try {
-    const response = action.stockseminar.id
-      ? yield axios.put(action.stockseminar.id, action.stockseminar)
-      : yield axios.post("", action.stockseminar);
-    const stockseminar = response.data;
-    yield put(actions.saveStockSeminarSuccess(stockseminar));
+    const response = action.stockSeminar.id
+      ? yield axios.put(action.stockSeminar.id, action.stockSeminar)
+      : yield axios.post("", action.stockSeminar);
+    const stockSeminar = response.data;
+    yield put(actions.saveStockSeminarSuccess(stockSeminar));
   } catch (error) {
     console.log(error);
     yield put(actions.saveStockSeminarFail(error));
@@ -43,9 +44,9 @@ export function* saveStockSeminarSaga(action) {
 export function* deleteStockSeminarSaga(action) {
   yield put(actions.deleteStockSeminarStart());
   try {
-    const response = yield axios.delete(action.stockseminar.id, action.stockseminar);
-    yield put(actions.deleteStockSeminarSuccess(action.stockseminar));
-    yield put(actions.fetchStockSeminars());
+    const response = yield axios.delete(action.stockSeminar.id, action.stockSeminar);
+    yield put(actions.deleteStockSeminarSuccess(action.stockSeminar));
+    yield put(actions.fetchStockSeminars({}));
   } catch (error) {
     console.log(error);
     yield put(actions.deleteStockSeminarFail(error));

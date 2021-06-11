@@ -1,23 +1,23 @@
-import React, { Component } from "react";
-import { NavLink, Redirect } from "react-router-dom";
-import { connect } from "react-redux";
+import React, { Component } from "./react";
+import { NavLink, Redirect } from "./react-router-dom";
+import { connect } from "./react-redux";
 
 import * as actions from "../actions";
 import { checkValidity } from "../../../shared/utility";
 
 type Props = {
-  resetProduct: any,
+  resetTmpItem: any,
   match: any,
-  fetchProduct: any,
-  product: any,
-  saveProduct: any,
-  updateProduct: any,
+  fetchTmpItem: any,
+  tmpItem: any,
+  saveTmpItem: any,
+  updateTmpItem: any,
   saved: any
 }
 
-class AddProduct extends Component<Props, any> {
+class AddTmpItem extends Component<Props, any> {
   state = {
-    title: "Add Product",
+    title: "Add TmpItem",
     controls: {
       name: {
         validation: {
@@ -62,23 +62,23 @@ class AddProduct extends Component<Props, any> {
   };
 
   componentDidMount() {
-    this.props.resetProduct();
+    this.props.resetTmpItem();
     const id = this.props.match?.params?.id;
     if (id) {
-      this.setState({ title: "Edit Product" });
-      this.props.fetchProduct(id);
+      this.setState({ title: "Edit TmpItem" });
+      this.props.fetchTmpItem(id);
     }
   }
 
   fieldChanged = event => {
-    const product = {
-      ...this.props.product,
+    const tmpItem = {
+      ...this.props.tmpItem,
       [event.target.name]: event.target.value
     };
 
     this.checkFieldValidity(event.target.name, event.target.value);
 
-    this.props.updateProduct(product);
+    this.props.updateTmpItem(tmpItem);
   };
 
   checkFieldValidity = (name, value) => {
@@ -108,12 +108,12 @@ class AddProduct extends Component<Props, any> {
     let isValid = true;
     for (let fieldName in this.state.controls) {
       isValid =
-        this.checkFieldValidity(fieldName, this.props.product[fieldName]) &&
+        this.checkFieldValidity(fieldName, this.props.tmpItem[fieldName]) &&
         isValid;
     }
 
     if (isValid) {
-      this.props.saveProduct(this.props.product);
+      this.props.saveTmpItem(this.props.tmpItem);
     }
   };
 
@@ -144,7 +144,7 @@ class AddProduct extends Component<Props, any> {
                       ? "is-invalid"
                       : "")
                   }
-                  value={this.props.product?.name}
+                  value={this.props.tmpItem?.name}
                   onChange={event => this.fieldChanged(event)}
                 />
                 <span className="invalid-feedback">
@@ -171,7 +171,7 @@ class AddProduct extends Component<Props, any> {
                       ? "is-invalid"
                       : "")
                   }
-                  value={this.props.product?.code}
+                  value={this.props.tmpItem?.code}
                   onChange={event => this.fieldChanged(event)}
                 />
                 <span className="invalid-feedback">
@@ -199,7 +199,7 @@ class AddProduct extends Component<Props, any> {
                       ? "is-invalid"
                       : "")
                   }
-                  value={this.props.product?.description}
+                  value={this.props.tmpItem?.description}
                   onChange={event => this.fieldChanged(event)}
                 />
                 <span className="invalid-feedback">
@@ -226,7 +226,7 @@ class AddProduct extends Component<Props, any> {
         <div className="card-footer">
           <NavLink
             className="btn btn-outline-secondary"
-            to="/products"
+            to="/tmpItems"
             style={{ width: "80px" }}
           >
             <i className="fa fa-chevron-left"></i> Back
@@ -236,7 +236,7 @@ class AddProduct extends Component<Props, any> {
     );
 
     return this.state.submitted && this.props.saved ? (
-      <Redirect to={"/products/" + this.props.product.id} />
+      <Redirect to={"/tmpItems/" + this.props.tmpItem.id} />
     ) : (
       form
     );
@@ -245,18 +245,18 @@ class AddProduct extends Component<Props, any> {
 
 const mapStateToProps = state => {
   return {
-    product: state.product.product,
-    saved: state.product.saved
+    tmpItem: state.tmpItem.tmpItem,
+    saved: state.tmpItem.saved
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchProduct: id => dispatch(actions.fetchProduct(id)),
-    updateProduct: product => dispatch(actions.updateProduct(product)),
-    resetProduct: () => dispatch(actions.resetProduct()),
-    saveProduct: product => dispatch(actions.saveProduct(product))
+    fetchTmpItem: id => dispatch(actions.fetchTmpItem(id)),
+    updateTmpItem: tmpItem => dispatch(actions.updateTmpItem(tmpItem)),
+    resetTmpItem: () => dispatch(actions.resetTmpItem()),
+    saveTmpItem: tmpItem => dispatch(actions.saveTmpItem(tmpItem))
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddProduct);
+export default connect(mapStateToProps, mapDispatchToProps)(AddTmpItem);

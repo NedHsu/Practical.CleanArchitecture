@@ -11,6 +11,7 @@ using ClassifiedAds.WebAPI.Models.StockNotes;
 using ClassifiedAds.WebAPI.Models.StockProfits;
 using ClassifiedAds.WebAPI.Models.StockRevenues;
 using ClassifiedAds.WebAPI.Models.Stocks;
+using ClassifiedAds.WebAPI.Models.StockSeminars;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -48,6 +49,7 @@ namespace ClassifiedAds.WebAPI.AutoMapper
                 .ForMember(x => x.Date, opt => opt.MapFrom(src => src.Date.AddYears(-1911).ToString("yyy/MM")));
             CreateMap<StockRevenue, StockRevenueModel>()
                 .ForMember(x => x.Month, opt => opt.MapFrom(src => src.Date.AddYears(-1911).ToString("yyy/MM")));
+            CreateMap<StockSeminarDTO, StockSeminarModel>();
             CreateMap<List<StockMarginFunderDTO>, StockMarginFundersModel>()
             .ForMember(x => x.Date, opt => opt.MapFrom(src => src.Select(x => x.Date.ToString("yyyy-MM-dd"))))
             .ForMember(x => x.ForeignBuy, opt => opt.MapFrom(src => src.Select(x => x.ForeignBuy)))

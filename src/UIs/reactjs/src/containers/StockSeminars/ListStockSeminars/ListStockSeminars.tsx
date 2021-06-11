@@ -2,25 +2,20 @@ import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
 import { Modal, Button } from "react-bootstrap";
+import Menu from "../../Stocks/Menu/Menu";
 
-import logo from "../../../logo.svg";
+import styles from "./ListStockSeminars.module.scss";
 import * as actions from "../actions";
-import Star from "../../../components/Star/Star";
+import dayjs from "dayjs";
 
 class ListStockSeminars extends Component<any, any> {
   state = {
     pageTitle: "StockSeminar List",
-    showImage: false,
     showDeleteModal: false,
     deletingStockSeminar: {
       name: null
     },
     listFilter: "",
-    showAuditLogsModal: false,
-  };
-
-  toggleImage = () => {
-    this.setState({ showImage: !this.state.showImage });
   };
 
   filterChanged = (event) => {
@@ -29,8 +24,8 @@ class ListStockSeminars extends Component<any, any> {
 
   performFilter(filterBy) {
     filterBy = filterBy.toLocaleLowerCase();
-    return this.props.stockseminars.filter(
-      (stockseminar) => stockseminar.name.toLocaleLowerCase().indexOf(filterBy) !== -1
+    return this.props.stockSeminars.filter(
+      (stockSeminar) => (stockSeminar.name + stockSeminar.stockCode).toLocaleLowerCase().indexOf(filterBy) !== -1
     );
   }
 
@@ -39,8 +34,8 @@ class ListStockSeminars extends Component<any, any> {
     this.setState({ pageTitle: pageTitle });
   };
 
-  deleteStockSeminar = (stockseminar) => {
-    this.setState({ showDeleteModal: true, deletingStockSeminar: stockseminar });
+  deleteStockSeminar = (stockSeminar) => {
+    this.setState({ showDeleteModal: true, deletingStockSeminar: stockSeminar });
   };
 
   deleteCanceled = () => {
@@ -59,41 +54,31 @@ class ListStockSeminars extends Component<any, any> {
   };
 
   componentDidMount() {
-    this.props.fetchStockSeminars();
+    dayjs().add(14)
+    this.props.fetchStockSeminars({
+      startDate: dayjs().add(-7, 'day').format('YYYY-MM-DD'),
+      endDate: dayjs().add(14, 'day').format('YYYY-MM-DD'),
+    });
   }
 
   render() {
     const filteredStockSeminars = this.state.listFilter
       ? this.performFilter(this.state.listFilter)
-      : this.props.stockseminars;
+      : this.props.stockSeminars;
 
-    const rows = filteredStockSeminars?.map((stockseminar) => (
-      <tr key={stockseminar.id}>
+    const rows = filteredStockSeminars?.map((stockSeminar, i) => (
+      <tr key={`stockSeminar-${i}`}>
         <td>
-          {this.state.showImage ? (
-            <img
-              src={stockseminar.imageUrl || logo}
-              title={stockseminar.name}
-              style={{ width: "50px", margin: "2px" }}
-            />
-          ) : null}
+          <NavLink to={"/stocks/" + stockSeminar.stockCode}>({stockSeminar.stockCode}){stockSeminar.name}</NavLink>
         </td>
-        <td>
-          <NavLink to={"/stockseminars/" + stockseminar.id}>{stockseminar.name}</NavLink>
-        </td>
-        <td>{stockseminar.code?.toLocaleUpperCase()}</td>
-        <td>{stockseminar.description}</td>
-        <td>{stockseminar.price || (5).toFixed(2)}</td>
-        <td>
-          <Star
-            rating={stockseminar.starRating || 4}
-            ratingClicked={(event) => this.onRatingClicked(event)}
-          ></Star>
-        </td>
+        <td>{dayjs(stockSeminar.date).format("MMM/DD hh:mm A")}</td>
+        <td>{stockSeminar.place}</td>
+        <td>{stockSeminar.message}</td>
+        <td></td>
         <td>
           <NavLink
             className="btn btn-primary"
-            to={"/stockseminars/edit/" + stockseminar.id}
+            to={"/stockSeminars/edit/" + stockSeminar.id}
           >
             Edit
           </NavLink>
@@ -101,7 +86,7 @@ class ListStockSeminars extends Component<any, any> {
           <button
             type="button"
             className="btn btn-primary btn-danger"
-            onClick={() => this.deleteStockSeminar(stockseminar)}
+            onClick={() => this.deleteStockSeminar(stockSeminar)}
           >
             Delete
           </button>
@@ -109,67 +94,20 @@ class ListStockSeminars extends Component<any, any> {
       </tr>
     ));
 
-    const table = this.props.stockseminars ? (
-      <table className="table">
+    const table = this.props.stockSeminars ? (
+      <table className={`table ${styles.table}`}>
         <thead>
           <tr>
-            <th>
-              <button className="btn btn-primary" onClick={this.toggleImage}>
-                {this.state.showImage ? "Hide" : "Show"} Image
-              </button>
-            </th>
-            <th>StockSeminar</th>
-            <th>Code</th>
-            <th>Description</th>
-            <th>Price</th>
-            <th>5 Star Rating</th>
+            <th>Name</th>
+            <th>Time</th>
+            <th>Place</th>
+            <th>Message</th>
             <th></th>
           </tr>
         </thead>
         <tbody>{rows}</tbody>
       </table>
     ) : null;
-    const auditLogRows = this.props.auditLogs?.map((auditLog) => (
-      <tr key={auditLog.id}>
-        <td>{this.formatDateTime(auditLog.createdDateTime)}</td>
-        <td>{auditLog.userName}</td>
-        <td>{auditLog.action}</td>
-        <td style={{ color: auditLog.highLight.code ? "red" : "" }}>
-          {auditLog.data.code}
-        </td>
-        <td style={{ color: auditLog.highLight.name ? "red" : "" }}>
-          {auditLog.data.name}
-        </td>
-        <td style={{ color: auditLog.highLight.description ? "red" : "" }}>
-          {auditLog.data.description}
-        </td>
-      </tr>
-    ));
-    const auditLogsModal = (
-      <Modal
-        size="xl"
-        show={this.state.showAuditLogsModal}
-        onHide={() => this.setState({ showAuditLogsModal: false })}
-      >
-        <Modal.Body>
-          <div className="table-responsive">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>Date Time</th>
-                  <th>User Name</th>
-                  <th>Action</th>
-                  <th>Code</th>
-                  <th>Name</th>
-                  <th>Description</th>
-                </tr>
-              </thead>
-              <tbody>{auditLogRows}</tbody>
-            </table>
-          </div>
-        </Modal.Body>
-      </Modal>
-    );
 
     const deleteModal = (
       <Modal show={this.state.showDeleteModal} onHide={this.deleteCanceled}>
@@ -195,14 +133,14 @@ class ListStockSeminars extends Component<any, any> {
       <div>
         <div className="card">
           <div className="card-header">
-            {this.state.pageTitle}
+            <Menu />
             <NavLink
               className="btn btn-primary"
               style={{ float: "right" }}
-              to="/stockseminars/add"
+              to="/stockSeminars/add"
             >
               Add StockSeminar
-            </NavLink>
+              </NavLink>
           </div>
           <div className="card-body">
             <div className="row">
@@ -231,7 +169,6 @@ class ListStockSeminars extends Component<any, any> {
           </div>
         ) : null}
         {deleteModal}
-        {auditLogsModal}
       </div>
     );
   }
@@ -239,15 +176,15 @@ class ListStockSeminars extends Component<any, any> {
 
 const mapStateToProps = (state) => {
   return {
-    stockseminars: state.stockseminar.stockseminars,
-    auditLogs: state.stockseminar.auditLogs,
+    stockSeminars: state.stockSeminar.stockSeminars,
+    auditLogs: state.stockSeminar.auditLogs,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchStockSeminars: () => dispatch(actions.fetchStockSeminars()),
-    deleteStockSeminar: (stockseminar) => dispatch(actions.deleteStockSeminar(stockseminar)),
+    fetchStockSeminars: (options) => dispatch(actions.fetchStockSeminars(options)),
+    deleteStockSeminar: (stockSeminar) => dispatch(actions.deleteStockSeminar(stockSeminar)),
   };
 };
 

@@ -25,6 +25,12 @@ class Menu extends Component<Props> {
         <Nav.Item>
           <NavLink className="nav-link" to="/stockStickyNotes">Notes</NavLink>
         </Nav.Item>
+        <Nav.Item>
+          <NavLink className="nav-link" to="/stockSeminars">Seminars</NavLink>
+        </Nav.Item>
+        <Nav className="justify-content-end">
+          {this.props.children}
+        </Nav>
       </Nav>
     );
   }

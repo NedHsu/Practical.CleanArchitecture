@@ -6,9 +6,9 @@ import logo from "../../../logo.svg";
 import Star from "../../../components/Star/Star";
 import * as actions from "../actions";
 
-class ViewProduct extends Component<any, any> {
+class ViewTmpItem extends Component<any, any> {
   state = {
-    product: {
+    tmpItem: {
       name: "",
       code: "",
       description: ""
@@ -18,18 +18,18 @@ class ViewProduct extends Component<any, any> {
   };
 
   componentDidMount() {
-    this.props.fetchProduct(this.props.match.params.id);
+    this.props.fetchTmpItem(this.props.match.params.id);
   }
 
   back = () => {
-    this.props.history.push("/products");
+    this.props.history.push("/tmpItems");
   };
 
   render() {
-    const page = this.props.product ? (
+    const page = this.props.tmpItem ? (
       <div className="card">
         <div className="card-header">
-          {"Product Detail: " + this.props.product.name}
+          {"TmpItem Detail: " + this.props.tmpItem.name}
         </div>
 
         <div className="card-body">
@@ -37,24 +37,24 @@ class ViewProduct extends Component<any, any> {
             <div className="col-md-8">
               <div className="row">
                 <div className="col-md-4">Name:</div>
-                <div className="col-md-8">{this.props.product.name}</div>
+                <div className="col-md-8">{this.props.tmpItem.name}</div>
               </div>
               <div className="row">
                 <div className="col-md-4">Code:</div>
-                <div className="col-md-8">{this.props.product.code}</div>
+                <div className="col-md-8">{this.props.tmpItem.code}</div>
               </div>
               <div className="row">
                 <div className="col-md-4">Description:</div>
-                <div className="col-md-8">{this.props.product.description}</div>
+                <div className="col-md-8">{this.props.tmpItem.description}</div>
               </div>
               <div className="row">
                 <div className="col-md-4">Price:</div>
-                <div className="col-md-8">{this.props.product.price || 5}</div>
+                <div className="col-md-8">{this.props.tmpItem.price || 5}</div>
               </div>
               <div className="row">
                 <div className="col-md-4">5 Star Rating:</div>
                 <div className="col-md-8">
-                  <Star rating={this.props.product.starRating || 4} />
+                  <Star rating={this.props.tmpItem.starRating || 4} />
                 </div>
               </div>
             </div>
@@ -63,8 +63,8 @@ class ViewProduct extends Component<any, any> {
               <img
                 className="center-block img-responsive"
                 style={{ width: "200px", margin: "2px" }}
-                src={this.props.product.imageUrl || logo}
-                title={this.props.product.name}
+                src={this.props.tmpItem.imageUrl || logo}
+                title={this.props.tmpItem.name}
               />
             </div>
           </div>
@@ -81,7 +81,7 @@ class ViewProduct extends Component<any, any> {
           &nbsp;
           <NavLink
             className="btn btn-primary"
-            to={"/products/edit/" + this.props.product.id}
+            to={"/tmpItems/edit/" + this.props.tmpItem.id}
           >
             Edit
           </NavLink>
@@ -94,14 +94,14 @@ class ViewProduct extends Component<any, any> {
 
 const mapStateToProps = state => {
   return {
-    product: state.product.product
+    tmpItem: state.tmpItem.tmpItem
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchProduct: id => dispatch(actions.fetchProduct(id))
+    fetchTmpItem: id => dispatch(actions.fetchTmpItem(id))
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ViewProduct);
+export default connect(mapStateToProps, mapDispatchToProps)(ViewTmpItem);

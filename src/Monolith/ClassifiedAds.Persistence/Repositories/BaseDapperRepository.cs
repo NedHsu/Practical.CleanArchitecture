@@ -139,5 +139,22 @@ namespace ClassifiedAds.Persistence.Repositories
 
             return new PagedResult<TEntity>(DapperRepository.FindAll(predicate).ToList(), count, pageIndex, pageSize);
         }
+
+        public PagedResult<TDto> GetPaged<TDto>(uint pageIndex, uint pageSize, string sql, IDictionary<string, object> param = null, string orderBy = "")
+        {
+            uint count = _dbContext.Connection.ExecuteScalar<uint>($"SELECT COUNT(0) FROM ({sql}) as c", param);
+
+            if (!string.IsNullOrWhiteSpace(orderBy))
+            {
+                sql = $"{sql} {orderBy}";
+            }
+
+            if (pageSize > 0)
+            {
+                sql = $"{sql} OFFSET {(pageIndex - 1) * pageSize} ROWS FETCH NEXT {pageSize} ROWS ONLY;";
+            }
+
+            return new PagedResult<TDto>(_dbContext.Connection.Query<TDto>(sql, param).ToList(), count, pageIndex, pageSize);
+        }
     }
 }

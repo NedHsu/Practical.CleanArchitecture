@@ -7,7 +7,7 @@
   ],
   "identity": "ClassifiedAds.UIs.reactjs.Container",
   "name": "ClassifiedAds reactjs container template",
-  "sourceName": "Product",
+  "sourceName": "TmpItem",
   "shortName": "Container",
   "tags": {
     "language": "TypeScript",

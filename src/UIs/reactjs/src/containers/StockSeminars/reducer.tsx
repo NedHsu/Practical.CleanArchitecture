@@ -2,8 +2,8 @@ import { updateObject } from "../../shared/utility";
 import * as actionTypes from "./actionTypes";
 
 const initialState = {
-  stockseminars: [],
-  stockseminar: {
+  stockSeminars: [],
+  stockSeminar: {
     name: "",
     code: "",
     description: "",
@@ -22,7 +22,7 @@ const fetchStockSeminarsStart = (state, action) => {
 
 const fetchStockSeminarsSuccess = (state, action) => {
   return updateObject(state, {
-    stockseminars: action.stockseminars,
+    stockSeminars: action.pagedStockSeminar.items,
     loading: false,
   });
 };
@@ -40,7 +40,7 @@ const fetchStockSeminarStart = (state, action) => {
 
 const fetchStockSeminarSuccess = (state, action) => {
   return updateObject(state, {
-    stockseminar: action.stockseminar,
+    stockSeminar: action.stockSeminar,
     loading: false,
   });
 };
@@ -57,7 +57,7 @@ const saveStockSeminarStart = (state, action) => {
 
 const saveStockSeminarSuccess = (state, action) => {
   return updateObject(state, {
-    stockseminar: action.stockseminar,
+    stockSeminar: action.stockSeminar,
     loading: false,
     saved: true,
   });
@@ -82,7 +82,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.FETCH_SEMINAR_FAIL:
       return fetchStockSeminarFail(state, action);
     case actionTypes.UPDATE_SEMINAR:
-      return updateObject(state, { stockseminar: action.stockseminar });
+      return updateObject(state, { stockSeminar: action.stockSeminar });
     case actionTypes.RESET_SEMINAR:
       return updateObject(state, initialState);
     case actionTypes.SAVE_SEMINAR_START:
@@ -93,13 +93,13 @@ const reducer = (state = initialState, action) => {
       return saveStockSeminarFail(state, action);
     case actionTypes.DELETE_SEMINAR_START:
       return updateObject(state, {
-        stockseminar: action.stockseminar,
+        stockSeminar: action.stockSeminar,
         loading: true,
         deleted: false,
       });
     case actionTypes.DELETE_SEMINAR_SUCCESS:
       return updateObject(state, {
-        stockseminar: initialState.stockseminar,
+        stockSeminar: initialState.stockSeminar,
         loading: false,
         deleted: true,
       });
