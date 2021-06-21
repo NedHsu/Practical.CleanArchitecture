@@ -28,7 +28,7 @@ class ViewStock extends Component<any, any> {
   }
 
   back = () => {
-    this.props.history.push("/stocks");
+    this.props.history.goBack();
   };
 
   render() {
@@ -85,7 +85,7 @@ class ViewStock extends Component<any, any> {
         </thead>
         <tbody>
           {stockRevenues.map(x => (
-            <tr key={`rv-${x.date}`}>
+            <tr key={`rv-${x.month}`}>
               <td>{x.month}</td>
               <td className="td-number">{x.currentMonth}</td>
               <td className="td-number">{x.preMonth}</td>

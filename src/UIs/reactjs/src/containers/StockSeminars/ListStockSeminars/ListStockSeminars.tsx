@@ -54,7 +54,6 @@ class ListStockSeminars extends Component<any, any> {
   };
 
   componentDidMount() {
-    dayjs().add(14)
     this.props.fetchStockSeminars({
       startDate: dayjs().add(-7, 'day').format('YYYY-MM-DD'),
       endDate: dayjs().add(14, 'day').format('YYYY-MM-DD'),
