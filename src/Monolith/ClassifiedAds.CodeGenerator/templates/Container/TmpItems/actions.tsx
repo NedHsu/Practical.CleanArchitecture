@@ -128,32 +128,3 @@ export const deleteTmpItem = (tmpItem) => {
   };
 };
 /// DELETE TMPITEM
-
-/// VIEW AUDIT LOGS
-export const fetchAuditLogsSuccess = (auditLogs) => {
-  return {
-    type: actionTypes.FETCH_TMPITEM_AUDIT_LOGS_SUCCESS,
-    auditLogs: auditLogs,
-  };
-};
-
-export const fetchAuditLogsFail = (error) => {
-  return {
-    type: actionTypes.FETCH_TMPITEM_AUDIT_LOGS_FAIL,
-    error: error,
-  };
-};
-
-export const fetchAuditLogsStart = () => {
-  return {
-    type: actionTypes.FETCH_TMPITEM_AUDIT_LOGS_START,
-  };
-};
-
-export const fetchAuditLogs = (tmpItem) => {
-  return {
-    type: actionTypes.FETCH_TMPITEM_AUDIT_LOGS,
-    tmpItem: tmpItem,
-  };
-};
-/// VIEW AUDIT LOGS

@@ -39,6 +39,7 @@ import BackgroundEffects from "./containers/PageEffects/Backgrounds/Background";
 import Transitions from "./containers/PageEffects/Transitions/Transition";
 import Transform3Ds from "./containers/PageEffects/Transform3Ds/Transform3D";
 import ListD3s from "./containers/D3s/ListD3s/ListD3s";
+import ViewChat from "./containers/Chats/ViewChat/ViewChat";
 
 
 function App() {
@@ -82,6 +83,7 @@ function App() {
         <Route path="/effects/transitions" component={Transitions} />
         <Route path="/effects/transition3Ds" component={Transform3Ds} />
         <Route path="/effects" component={ListPageEffects} />
+        <Route path="/chats/:id" component={ViewChat} />
         <Redirect to="/home" />
       </Switch>
     </div>

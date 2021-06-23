@@ -8,7 +8,6 @@ const initialState = {
     code: "",
     description: "",
   },
-  auditLogs: [],
   loading: false,
   saved: false,
   deleted: false,
@@ -108,21 +107,6 @@ const reducer = (state = initialState, action) => {
         error: action.error,
         loading: false,
         deleted: false,
-      });
-    case actionTypes.FETCH_TMPITEM_AUDIT_LOGS_START:
-      return updateObject(state, {
-        tmpItem: action.tmpItem,
-        loading: true,
-      });
-    case actionTypes.FETCH_TMPITEM_AUDIT_LOGS_SUCCESS:
-      return updateObject(state, {
-        auditLogs: action.auditLogs,
-        loading: false,
-      });
-    case actionTypes.FETCH_TMPITEM_AUDIT_LOGS_FAIL:
-      return updateObject(state, {
-        error: action.error,
-        loading: false,
       });
     default:
       return state;

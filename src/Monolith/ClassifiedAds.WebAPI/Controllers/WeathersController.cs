@@ -1,17 +1,11 @@
 ﻿using AutoMapper;
 using ClassifiedAds.Application;
-using ClassifiedAds.Application.AuditLogEntries.DTOs;
-using ClassifiedAds.Application.AuditLogEntries.Queries;
 using ClassifiedAds.Application.Weathers.DTOs;
 using ClassifiedAds.Application.Weathers.Queries;
-using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.WebAPI.Models.Weathers;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 

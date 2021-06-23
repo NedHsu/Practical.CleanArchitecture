@@ -16,7 +16,6 @@ class ListTmpItems extends Component<any, any> {
       name: null
     },
     listFilter: "",
-    showAuditLogsModal: false,
   };
 
   toggleImage = () => {
@@ -37,11 +36,6 @@ class ListTmpItems extends Component<any, any> {
   onRatingClicked = (event) => {
     const pageTitle = "TmpItem List: " + event;
     this.setState({ pageTitle: pageTitle });
-  };
-
-  viewAuditLogs = (tmpItem) => {
-    this.props.fetchAuditLogs(tmpItem);
-    this.setState({ showAuditLogsModal: true });
   };
 
   deleteTmpItem = (tmpItem) => {
@@ -105,14 +99,6 @@ class ListTmpItems extends Component<any, any> {
           &nbsp;
           <button
             type="button"
-            className="btn btn-primary btn-secondary"
-            onClick={() => this.viewAuditLogs(tmpItem)}
-          >
-            View Audit Logs
-          </button>
-          &nbsp;
-          <button
-            type="button"
             className="btn btn-primary btn-danger"
             onClick={() => this.deleteTmpItem(tmpItem)}
           >
@@ -142,47 +128,6 @@ class ListTmpItems extends Component<any, any> {
         <tbody>{rows}</tbody>
       </table>
     ) : null;
-    const auditLogRows = this.props.auditLogs?.map((auditLog) => (
-      <tr key={auditLog.id}>
-        <td>{this.formatDateTime(auditLog.createdDateTime)}</td>
-        <td>{auditLog.userName}</td>
-        <td>{auditLog.action}</td>
-        <td style={{ color: auditLog.highLight.code ? "red" : "" }}>
-          {auditLog.data.code}
-        </td>
-        <td style={{ color: auditLog.highLight.name ? "red" : "" }}>
-          {auditLog.data.name}
-        </td>
-        <td style={{ color: auditLog.highLight.description ? "red" : "" }}>
-          {auditLog.data.description}
-        </td>
-      </tr>
-    ));
-    const auditLogsModal = (
-      <Modal
-        size="xl"
-        show={this.state.showAuditLogsModal}
-        onHide={() => this.setState({ showAuditLogsModal: false })}
-      >
-        <Modal.Body>
-          <div className="table-responsive">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>Date Time</th>
-                  <th>User Name</th>
-                  <th>Action</th>
-                  <th>Code</th>
-                  <th>Name</th>
-                  <th>Description</th>
-                </tr>
-              </thead>
-              <tbody>{auditLogRows}</tbody>
-            </table>
-          </div>
-        </Modal.Body>
-      </Modal>
-    );
 
     const deleteModal = (
       <Modal show={this.state.showDeleteModal} onHide={this.deleteCanceled}>
@@ -244,7 +189,6 @@ class ListTmpItems extends Component<any, any> {
           </div>
         ) : null}
         {deleteModal}
-        {auditLogsModal}
       </div>
     );
   }
@@ -261,7 +205,6 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchTmpItems: () => dispatch(actions.fetchTmpItems()),
     deleteTmpItem: (tmpItem) => dispatch(actions.deleteTmpItem(tmpItem)),
-    fetchAuditLogs: (tmpItem) => dispatch(actions.fetchAuditLogs(tmpItem)),
   };
 };
 

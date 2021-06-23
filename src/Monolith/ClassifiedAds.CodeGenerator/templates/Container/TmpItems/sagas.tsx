@@ -52,21 +52,9 @@ export function* deleteTmpItemSaga(action) {
   }
 }
 
-export function* fetchAuditLogsSaga(action) {
-  yield put(actions.fetchAuditLogsStart());
-  try {
-    const response = yield axios.get(action.tmpItem.id + "/auditLogs");
-    const fetchedAuditLogs = response.data;
-    yield put(actions.fetchAuditLogsSuccess(fetchedAuditLogs));
-  } catch (error) {
-    yield put(actions.fetchAuditLogsFail(error));
-  }
-}
-
 export function* watchTmpItem() {
   yield takeEvery(actionTypes.FETCH_TMPITEMS, fetchTmpItemsSaga);
   yield takeEvery(actionTypes.FETCH_TMPITEM, fetchTmpItemSaga);
   yield takeEvery(actionTypes.SAVE_TMPITEM, saveTmpItemSaga);
   yield takeEvery(actionTypes.DELETE_TMPITEM, deleteTmpItemSaga);
-  yield takeEvery(actionTypes.FETCH_TMPITEM_AUDIT_LOGS, fetchAuditLogsSaga);
 }

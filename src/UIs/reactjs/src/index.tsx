@@ -4,7 +4,6 @@ import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware, compose, combineReducers } from "redux";
 import createSagaMiddleware from "redux-saga";
-import axios from "axios";
 
 import "./index.css";
 import App from "./App";
@@ -47,6 +46,10 @@ import stockMarginReducer from "./containers/StockMargins/reducer";
 import { watchStockMargin } from "./containers/StockMargins/sagas";
 import stockSeminarReducer from "./containers/StockSeminars/reducer";
 import { watchStockSeminar } from "./containers/StockSeminars/sagas";
+import chatReducer from "./containers/Chats/reducer";
+import { watchChat } from "./containers/Chats/sagas";
+import notificationReducer from "./containers/Notifications/reducer";
+import { watchNotification } from "./containers/Notifications/sagas";
 
 const composeEnhancers =
   (process.env.NODE_ENV === "development"
@@ -73,6 +76,8 @@ const rootReducer = combineReducers({
   stockRevenue: stockRevenueReducer,
   stockMargin: stockMarginReducer,
   stockSeminar: stockSeminarReducer,
+  chat: chatReducer,
+  notification: notificationReducer,
 });
 
 const sagaMiddleware = createSagaMiddleware();
@@ -100,6 +105,8 @@ sagaMiddleware.run(watchStockProfit);
 sagaMiddleware.run(watchStockRevenue);
 sagaMiddleware.run(watchStockMargin);
 sagaMiddleware.run(watchStockSeminar);
+sagaMiddleware.run(watchChat);
+sagaMiddleware.run(watchNotification);
 
 store.dispatch({
   type: "SET_AUTH_SERVICE",
@@ -112,6 +119,9 @@ AuthService.loadUser().then((user) => {
       type: "LOGIN",
       user: user,
     });
+    store.dispatch({
+      type: "CONNECT_NOTIFICATION",
+    })
   }
 
   ReactDOM.render(

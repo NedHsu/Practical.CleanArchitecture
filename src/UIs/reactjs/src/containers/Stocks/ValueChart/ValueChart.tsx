@@ -68,15 +68,16 @@ export default class ValueChart extends PureComponent<Props> {
             .attr("x", (d, i) => x(i))
             .attr("y", y(0))
             .attr("width", x.bandwidth())
-            .attr("height", 0);
+            .attr("height", 0)
+            .on('click', (a, b, c) => { console.log(a, b, c); });
 
+        // Axis
         svg.append("g")
             .attr("class", styles.axis)
             .call(xAxis)
             // .selectAll("text")
             // .attr("y", "2") // 用 tickPadding取代
             ;
-
         svg.append("g")
             .attr("class", styles.axis)
             .attr("transform", `translate(${margin.left},0)`)
@@ -104,7 +105,7 @@ export default class ValueChart extends PureComponent<Props> {
             const targetTime = y.invert(yValue);
             // 推算出目前hover位置
             // console.log(d3.bisect(xz, targetTime), xValue);
-        })
+        });
 
         //補上文字
         // svg.append("g")

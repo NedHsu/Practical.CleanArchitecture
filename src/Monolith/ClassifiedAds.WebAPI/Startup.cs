@@ -8,6 +8,7 @@ using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Infrastructure.Web.Filters;
 using ClassifiedAds.Persistence;
 using ClassifiedAds.WebAPI.ConfigurationOptions;
+using ClassifiedAds.WebAPI.Hubs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
@@ -20,6 +21,7 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.WebAPI
 {
@@ -66,6 +68,12 @@ namespace ClassifiedAds.WebAPI
                     .AllowAnyOrigin()
                     .WithMethods("Get")
                     .WithHeaders("Content-Type"));
+
+                options.AddPolicy("HubPolicy", builder => builder
+                    .WithOrigins(AppSettings.CORS.AllowedOrigins)
+                    .AllowAnyHeader()
+                    .WithMethods("GET", "POST")
+                    .AllowCredentials());
             });
 
             services.AddDateTimeProvider();
@@ -91,6 +99,22 @@ namespace ClassifiedAds.WebAPI
                     options.Authority = AppSettings.IdentityServerAuthentication.Authority;
                     options.Audience = AppSettings.IdentityServerAuthentication.ApiName;
                     options.RequireHttpsMetadata = AppSettings.IdentityServerAuthentication.RequireHttpsMetadata;
+
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var accessToken = context.Request.Query["access_token"];
+
+                            var path = context.HttpContext.Request.Path;
+                            if (!string.IsNullOrEmpty(accessToken) && path.Value.Contains("Hub"))
+                            {
+                                context.Token = accessToken;
+                            }
+
+                            return Task.CompletedTask;
+                        },
+                    };
                 });
 
             services.AddSwaggerGen(setupAction =>
@@ -145,6 +169,11 @@ namespace ClassifiedAds.WebAPI
 
             services.AddStorageManager(AppSettings.Storage);
 
+            services.AddSignalR(hubOptions =>
+            {
+                hubOptions.EnableDetailedErrors = true;
+            });
+
             services.AddMessageBusSender<FileUploadedEvent>(AppSettings.MessageBroker);
             services.AddMessageBusSender<FileDeletedEvent>(AppSettings.MessageBroker);
             services.AddMessageBusSender<EmailMessageCreatedEvent>(AppSettings.MessageBroker);
@@ -192,6 +221,10 @@ namespace ClassifiedAds.WebAPI
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<ChatHub>("/chatHub")
+                    .RequireCors("HubPolicy");
+                endpoints.MapHub<NotificationHub>("/notificationHub")
+                    .RequireCors("HubPolicy");
             });
         }
     }

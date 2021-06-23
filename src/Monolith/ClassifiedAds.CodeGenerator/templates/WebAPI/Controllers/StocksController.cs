@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
 using ClassifiedAds.Application;
-using ClassifiedAds.Application.AuditLogEntries.DTOs;
-using ClassifiedAds.Application.AuditLogEntries.Queries;
 using ClassifiedAds.Application.Stocks.Commands;
 using ClassifiedAds.Application.Stocks.DTOs;
 using ClassifiedAds.Application.Stocks.Queries;
@@ -94,40 +92,6 @@ namespace ClassifiedAds.WebAPI.Controllers
             _dispatcher.Dispatch(new DeleteStockCommand { Stock = stock });
 
             return Ok();
-        }
-
-        [HttpGet("{id}/auditlogs")]
-        public ActionResult<IEnumerable<AuditLogEntryDTO>> GetAuditLogs(Guid id)
-        {
-            var logs = _dispatcher.Dispatch(new GetAuditEntriesQuery { ObjectId = id.ToString() });
-
-            List<dynamic> entries = new List<dynamic>();
-            StockDTO previous = null;
-            foreach (var log in logs.OrderBy(x => x.CreatedDateTime))
-            {
-                var data = JsonConvert.DeserializeObject<StockDTO>(log.Log);
-                var highLight = new
-                {
-                    Code = previous != null && data.Code != previous.Code,
-                    Name = previous != null && data.Name != previous.Name,
-                    Description = previous != null && data.Description != previous.Description,
-                };
-
-                var entry = new
-                {
-                    log.Id,
-                    log.UserName,
-                    Action = log.Action.Replace("_STOCK", string.Empty),
-                    log.CreatedDateTime,
-                    data,
-                    highLight,
-                };
-                entries.Add(entry);
-
-                previous = data;
-            }
-
-            return Ok(entries.OrderByDescending(x => x.CreatedDateTime));
         }
     }
 }

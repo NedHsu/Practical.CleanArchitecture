@@ -92,6 +92,12 @@ npm install dayjs --save
 npm i d3
 ```
 
+### Signalr
+
+```
+npm i --save @microsoft/signalr
+```
+
 ## TODO
 
 - [V] Sass/Scss: node-sass

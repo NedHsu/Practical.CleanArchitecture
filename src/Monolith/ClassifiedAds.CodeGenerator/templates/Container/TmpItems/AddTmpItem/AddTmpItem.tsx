@@ -1,6 +1,6 @@
-import React, { Component } from "./react";
-import { NavLink, Redirect } from "./react-router-dom";
-import { connect } from "./react-redux";
+import React, { Component } from "react";
+import { NavLink, Redirect } from "react-router-dom";
+import { connect } from "react-redux";
 
 import * as actions from "../actions";
 import { checkValidity } from "../../../shared/utility";
