@@ -40,6 +40,8 @@ import Transitions from "./containers/PageEffects/Transitions/Transition";
 import Transform3Ds from "./containers/PageEffects/Transform3Ds/Transform3D";
 import ListD3s from "./containers/D3s/ListD3s/ListD3s";
 import ViewChat from "./containers/Chats/ViewChat/ViewChat";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 function App() {
@@ -86,6 +88,17 @@ function App() {
         <Route path="/chats/:id" component={ViewChat} />
         <Redirect to="/home" />
       </Switch>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import * as actionTypes from "./actionTypes";
 
 /// NOTIFICATIONS
@@ -157,6 +158,15 @@ export const connectNotification = () => {
 };
 
 export const notificationReceived = (notification) => {
+  toast('🦄 Wow so easy!', {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  })
   return {
     type: actionTypes.NOTIFICATION_RECEIVED,
     notification: notification,

@@ -98,6 +98,14 @@ npm i d3
 npm i --save @microsoft/signalr
 ```
 
+### notification
+
+```
+npm i --save react-toastify
+```
+
+###
+
 ## TODO
 
 - [V] Sass/Scss: node-sass

@@ -96,6 +96,8 @@ export function* watchNotification() {
   yield takeEvery(actionTypes.SAVE_NOTIFICATION, saveNotificationSaga);
   yield takeEvery(actionTypes.DELETE_NOTIFICATION, deleteNotificationSaga);
   yield takeEvery(actionTypes.CONNECT_NOTIFICATION, connectNotificationsSaga);
-  const action = yield take(notificationChannel);
-  yield put(action);
+  while (true) {
+    const action = yield take(notificationChannel);
+    yield put(action);
+  }
 }
