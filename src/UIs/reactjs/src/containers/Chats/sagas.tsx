@@ -68,11 +68,11 @@ export function* connectChatsSaga(action) {
 export function* saveChatSaga(action) {
   yield put(actions.saveChatStart());
   try {
-    const response = action.tmpItem.id
-      ? yield axios.put(action.tmpItem.id, action.tmpItem)
-      : yield axios.post("", action.tmpItem);
-    const tmpItem = response.data;
-    yield put(actions.saveChatSuccess(tmpItem));
+    const response = action.chatItem.id
+      ? yield axios.put(action.chatItem.id, action.chatItem)
+      : yield axios.post("", action.chatItem);
+    const chatItem = response.data;
+    yield put(actions.saveChatSuccess(chatItem));
   } catch (error) {
     console.log(error);
     yield put(actions.saveChatFail(error));
@@ -82,8 +82,8 @@ export function* saveChatSaga(action) {
 export function* deleteChatSaga(action) {
   yield put(actions.deleteChatStart());
   try {
-    const response = yield axios.delete(action.tmpItem.id, action.tmpItem);
-    yield put(actions.deleteChatSuccess(action.tmpItem));
+    const response = yield axios.delete(action.chatItem.id, action.chatItem);
+    yield put(actions.deleteChatSuccess(action.chatItem));
     yield put(actions.fetchChats());
   } catch (error) {
     console.log(error);

@@ -9,7 +9,7 @@ type Props = {
   resetNotification: any,
   match: any,
   fetchNotification: any,
-  tmpItem: any,
+  notification: any,
   saveNotification: any,
   updateNotification: any,
   saved: any
@@ -71,14 +71,14 @@ class AddNotification extends Component<Props, any> {
   }
 
   fieldChanged = event => {
-    const tmpItem = {
-      ...this.props.tmpItem,
+    const notification = {
+      ...this.props.notification,
       [event.target.name]: event.target.value
     };
 
     this.checkFieldValidity(event.target.name, event.target.value);
 
-    this.props.updateNotification(tmpItem);
+    this.props.updateNotification(notification);
   };
 
   checkFieldValidity = (name, value) => {
@@ -108,12 +108,12 @@ class AddNotification extends Component<Props, any> {
     let isValid = true;
     for (let fieldName in this.state.controls) {
       isValid =
-        this.checkFieldValidity(fieldName, this.props.tmpItem[fieldName]) &&
+        this.checkFieldValidity(fieldName, this.props.notification[fieldName]) &&
         isValid;
     }
 
     if (isValid) {
-      this.props.saveNotification(this.props.tmpItem);
+      this.props.saveNotification(this.props.notification);
     }
   };
 
@@ -144,7 +144,7 @@ class AddNotification extends Component<Props, any> {
                       ? "is-invalid"
                       : "")
                   }
-                  value={this.props.tmpItem?.name}
+                  value={this.props.notification?.name}
                   onChange={event => this.fieldChanged(event)}
                 />
                 <span className="invalid-feedback">
@@ -171,7 +171,7 @@ class AddNotification extends Component<Props, any> {
                       ? "is-invalid"
                       : "")
                   }
-                  value={this.props.tmpItem?.code}
+                  value={this.props.notification?.code}
                   onChange={event => this.fieldChanged(event)}
                 />
                 <span className="invalid-feedback">
@@ -199,7 +199,7 @@ class AddNotification extends Component<Props, any> {
                       ? "is-invalid"
                       : "")
                   }
-                  value={this.props.tmpItem?.description}
+                  value={this.props.notification?.description}
                   onChange={event => this.fieldChanged(event)}
                 />
                 <span className="invalid-feedback">
@@ -226,7 +226,7 @@ class AddNotification extends Component<Props, any> {
         <div className="card-footer">
           <NavLink
             className="btn btn-outline-secondary"
-            to="/tmpItems"
+            to="/notifications"
             style={{ width: "80px" }}
           >
             <i className="fa fa-chevron-left"></i> Back
@@ -236,7 +236,7 @@ class AddNotification extends Component<Props, any> {
     );
 
     return this.state.submitted && this.props.saved ? (
-      <Redirect to={"/tmpItems/" + this.props.tmpItem.id} />
+      <Redirect to={"/notifications/" + this.props.notification.id} />
     ) : (
       form
     );
@@ -245,17 +245,17 @@ class AddNotification extends Component<Props, any> {
 
 const mapStateToProps = state => {
   return {
-    tmpItem: state.tmpItem.tmpItem,
-    saved: state.tmpItem.saved
+    notification: state.notification.notification,
+    saved: state.notification.saved
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     fetchNotification: id => dispatch(actions.fetchNotification(id)),
-    updateNotification: tmpItem => dispatch(actions.updateNotification(tmpItem)),
+    updateNotification: notification => dispatch(actions.updateNotification(notification)),
     resetNotification: () => dispatch(actions.resetNotification()),
-    saveNotification: tmpItem => dispatch(actions.saveNotification(tmpItem))
+    saveNotification: notification => dispatch(actions.saveNotification(notification))
   };
 };
 

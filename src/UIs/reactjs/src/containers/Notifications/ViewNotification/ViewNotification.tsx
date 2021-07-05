@@ -8,7 +8,7 @@ import * as actions from "../actions";
 
 class ViewNotification extends Component<any, any> {
   state = {
-    tmpItem: {
+    notification: {
       name: "",
       code: "",
       description: ""
@@ -22,14 +22,14 @@ class ViewNotification extends Component<any, any> {
   }
 
   back = () => {
-    this.props.history.push("/tmpItems");
+    this.props.history.push("/notifications");
   };
 
   render() {
-    const page = this.props.tmpItem ? (
+    const page = this.props.notification ? (
       <div className="card">
         <div className="card-header">
-          {"Notification Detail: " + this.props.tmpItem.name}
+          {"Notification Detail: " + this.props.notification.name}
         </div>
 
         <div className="card-body">
@@ -37,24 +37,24 @@ class ViewNotification extends Component<any, any> {
             <div className="col-md-8">
               <div className="row">
                 <div className="col-md-4">Name:</div>
-                <div className="col-md-8">{this.props.tmpItem.name}</div>
+                <div className="col-md-8">{this.props.notification.name}</div>
               </div>
               <div className="row">
                 <div className="col-md-4">Code:</div>
-                <div className="col-md-8">{this.props.tmpItem.code}</div>
+                <div className="col-md-8">{this.props.notification.code}</div>
               </div>
               <div className="row">
                 <div className="col-md-4">Description:</div>
-                <div className="col-md-8">{this.props.tmpItem.description}</div>
+                <div className="col-md-8">{this.props.notification.description}</div>
               </div>
               <div className="row">
                 <div className="col-md-4">Price:</div>
-                <div className="col-md-8">{this.props.tmpItem.price || 5}</div>
+                <div className="col-md-8">{this.props.notification.price || 5}</div>
               </div>
               <div className="row">
                 <div className="col-md-4">5 Star Rating:</div>
                 <div className="col-md-8">
-                  <Star rating={this.props.tmpItem.starRating || 4} />
+                  <Star rating={this.props.notification.starRating || 4} />
                 </div>
               </div>
             </div>
@@ -63,8 +63,8 @@ class ViewNotification extends Component<any, any> {
               <img
                 className="center-block img-responsive"
                 style={{ width: "200px", margin: "2px" }}
-                src={this.props.tmpItem.imageUrl || logo}
-                title={this.props.tmpItem.name}
+                src={this.props.notification.imageUrl || logo}
+                title={this.props.notification.name}
               />
             </div>
           </div>
@@ -81,7 +81,7 @@ class ViewNotification extends Component<any, any> {
           &nbsp;
           <NavLink
             className="btn btn-primary"
-            to={"/tmpItems/edit/" + this.props.tmpItem.id}
+            to={"/notifications/edit/" + this.props.notification.id}
           >
             Edit
           </NavLink>
@@ -94,7 +94,7 @@ class ViewNotification extends Component<any, any> {
 
 const mapStateToProps = state => {
   return {
-    tmpItem: state.tmpItem.tmpItem
+    notification: state.notification.notification
   };
 };
 

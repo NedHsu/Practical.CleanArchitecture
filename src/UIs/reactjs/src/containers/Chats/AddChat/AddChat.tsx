@@ -9,7 +9,7 @@ type Props = {
   resetChat: any,
   match: any,
   fetchChat: any,
-  tmpItem: any,
+  chat: any,
   saveChat: any,
   updateChat: any,
   saved: any
@@ -71,14 +71,14 @@ class AddChat extends Component<Props, any> {
   }
 
   fieldChanged = event => {
-    const tmpItem = {
-      ...this.props.tmpItem,
+    const chat = {
+      ...this.props.chat,
       [event.target.name]: event.target.value
     };
 
     this.checkFieldValidity(event.target.name, event.target.value);
 
-    this.props.updateChat(tmpItem);
+    this.props.updateChat(chat);
   };
 
   checkFieldValidity = (name, value) => {
@@ -108,12 +108,12 @@ class AddChat extends Component<Props, any> {
     let isValid = true;
     for (let fieldName in this.state.controls) {
       isValid =
-        this.checkFieldValidity(fieldName, this.props.tmpItem[fieldName]) &&
+        this.checkFieldValidity(fieldName, this.props.chat[fieldName]) &&
         isValid;
     }
 
     if (isValid) {
-      this.props.saveChat(this.props.tmpItem);
+      this.props.saveChat(this.props.chat);
     }
   };
 
@@ -144,7 +144,7 @@ class AddChat extends Component<Props, any> {
                       ? "is-invalid"
                       : "")
                   }
-                  value={this.props.tmpItem?.name}
+                  value={this.props.chat?.name}
                   onChange={event => this.fieldChanged(event)}
                 />
                 <span className="invalid-feedback">
@@ -171,7 +171,7 @@ class AddChat extends Component<Props, any> {
                       ? "is-invalid"
                       : "")
                   }
-                  value={this.props.tmpItem?.code}
+                  value={this.props.chat?.code}
                   onChange={event => this.fieldChanged(event)}
                 />
                 <span className="invalid-feedback">
@@ -199,7 +199,7 @@ class AddChat extends Component<Props, any> {
                       ? "is-invalid"
                       : "")
                   }
-                  value={this.props.tmpItem?.description}
+                  value={this.props.chat?.description}
                   onChange={event => this.fieldChanged(event)}
                 />
                 <span className="invalid-feedback">
@@ -226,7 +226,7 @@ class AddChat extends Component<Props, any> {
         <div className="card-footer">
           <NavLink
             className="btn btn-outline-secondary"
-            to="/tmpItems"
+            to="/chats"
             style={{ width: "80px" }}
           >
             <i className="fa fa-chevron-left"></i> Back
@@ -236,7 +236,7 @@ class AddChat extends Component<Props, any> {
     );
 
     return this.state.submitted && this.props.saved ? (
-      <Redirect to={"/tmpItems/" + this.props.tmpItem.id} />
+      <Redirect to={"/chats/" + this.props.chat.id} />
     ) : (
       form
     );
@@ -245,17 +245,17 @@ class AddChat extends Component<Props, any> {
 
 const mapStateToProps = state => {
   return {
-    tmpItem: state.tmpItem.tmpItem,
-    saved: state.tmpItem.saved
+    chat: state.chat.chat,
+    saved: state.chat.saved
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     fetchChat: id => dispatch(actions.fetchChat(id)),
-    updateChat: tmpItem => dispatch(actions.updateChat(tmpItem)),
+    updateChat: chat => dispatch(actions.updateChat(chat)),
     resetChat: () => dispatch(actions.resetChat()),
-    saveChat: tmpItem => dispatch(actions.saveChat(tmpItem))
+    saveChat: chat => dispatch(actions.saveChat(chat))
   };
 };
 

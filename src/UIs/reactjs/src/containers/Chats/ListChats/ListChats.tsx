@@ -29,8 +29,8 @@ class ListChats extends Component<any, any> {
 
   performFilter(filterBy) {
     filterBy = filterBy.toLocaleLowerCase();
-    return this.props.tmpItems.filter(
-      (tmpItem) => tmpItem.name.toLocaleLowerCase().indexOf(filterBy) !== -1
+    return this.props.chats.filter(
+      (chat) => chat.name.toLocaleLowerCase().indexOf(filterBy) !== -1
     );
   }
 
@@ -39,13 +39,13 @@ class ListChats extends Component<any, any> {
     this.setState({ pageTitle: pageTitle });
   };
 
-  viewAuditLogs = (tmpItem) => {
-    this.props.fetchAuditLogs(tmpItem);
+  viewAuditLogs = (chat) => {
+    this.props.fetchAuditLogs(chat);
     this.setState({ showAuditLogsModal: true });
   };
 
-  deleteChat = (tmpItem) => {
-    this.setState({ showDeleteModal: true, deletingChat: tmpItem });
+  deleteChat = (chat) => {
+    this.setState({ showDeleteModal: true, deletingChat: chat });
   };
 
   deleteCanceled = () => {
@@ -70,35 +70,35 @@ class ListChats extends Component<any, any> {
   render() {
     const filteredChats = this.state.listFilter
       ? this.performFilter(this.state.listFilter)
-      : this.props.tmpItems;
+      : this.props.chats;
 
-    const rows = filteredChats?.map((tmpItem) => (
-      <tr key={tmpItem.id}>
+    const rows = filteredChats?.map((chat) => (
+      <tr key={chat.id}>
         <td>
           {this.state.showImage ? (
             <img
-              src={tmpItem.imageUrl || logo}
-              title={tmpItem.name}
+              src={chat.imageUrl || logo}
+              title={chat.name}
               style={{ width: "50px", margin: "2px" }}
             />
           ) : null}
         </td>
         <td>
-          <NavLink to={"/tmpItems/" + tmpItem.id}>{tmpItem.name}</NavLink>
+          <NavLink to={"/chats/" + chat.id}>{chat.name}</NavLink>
         </td>
-        <td>{tmpItem.code?.toLocaleUpperCase()}</td>
-        <td>{tmpItem.description}</td>
-        <td>{tmpItem.price || (5).toFixed(2)}</td>
+        <td>{chat.code?.toLocaleUpperCase()}</td>
+        <td>{chat.description}</td>
+        <td>{chat.price || (5).toFixed(2)}</td>
         <td>
           <Star
-            rating={tmpItem.starRating || 4}
+            rating={chat.starRating || 4}
             ratingClicked={(event) => this.onRatingClicked(event)}
           ></Star>
         </td>
         <td>
           <NavLink
             className="btn btn-primary"
-            to={"/tmpItems/edit/" + tmpItem.id}
+            to={"/chats/edit/" + chat.id}
           >
             Edit
           </NavLink>
@@ -106,7 +106,7 @@ class ListChats extends Component<any, any> {
           <button
             type="button"
             className="btn btn-primary btn-secondary"
-            onClick={() => this.viewAuditLogs(tmpItem)}
+            onClick={() => this.viewAuditLogs(chat)}
           >
             View Audit Logs
           </button>
@@ -114,7 +114,7 @@ class ListChats extends Component<any, any> {
           <button
             type="button"
             className="btn btn-primary btn-danger"
-            onClick={() => this.deleteChat(tmpItem)}
+            onClick={() => this.deleteChat(chat)}
           >
             Delete
           </button>
@@ -122,7 +122,7 @@ class ListChats extends Component<any, any> {
       </tr>
     ));
 
-    const table = this.props.tmpItems ? (
+    const table = this.props.chats ? (
       <table className="table">
         <thead>
           <tr>
@@ -212,7 +212,7 @@ class ListChats extends Component<any, any> {
             <NavLink
               className="btn btn-primary"
               style={{ float: "right" }}
-              to="/tmpItems/add"
+              to="/chats/add"
             >
               Add Chat
             </NavLink>
@@ -252,15 +252,15 @@ class ListChats extends Component<any, any> {
 
 const mapStateToProps = (state) => {
   return {
-    tmpItems: state.tmpItem.tmpItems,
-    auditLogs: state.tmpItem.auditLogs,
+    chats: state.chat.chats,
+    auditLogs: state.chat.auditLogs,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchChats: () => dispatch(actions.fetchChats()),
-    deleteChat: (tmpItem) => dispatch(actions.deleteChat(tmpItem)),
+    deleteChat: (chat) => dispatch(actions.deleteChat(chat)),
   };
 };
 

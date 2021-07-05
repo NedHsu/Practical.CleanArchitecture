@@ -29,8 +29,8 @@ class ListNotifications extends Component<any, any> {
 
   performFilter(filterBy) {
     filterBy = filterBy.toLocaleLowerCase();
-    return this.props.tmpItems.filter(
-      (tmpItem) => tmpItem.name.toLocaleLowerCase().indexOf(filterBy) !== -1
+    return this.props.notifications.filter(
+      (notification) => notification.name.toLocaleLowerCase().indexOf(filterBy) !== -1
     );
   }
 
@@ -39,8 +39,8 @@ class ListNotifications extends Component<any, any> {
     this.setState({ pageTitle: pageTitle });
   };
 
-  deleteNotification = (tmpItem) => {
-    this.setState({ showDeleteModal: true, deletingNotification: tmpItem });
+  deleteNotification = (notification) => {
+    this.setState({ showDeleteModal: true, deletingNotification: notification });
   };
 
   deleteCanceled = () => {
@@ -65,35 +65,35 @@ class ListNotifications extends Component<any, any> {
   render() {
     const filteredNotifications = this.state.listFilter
       ? this.performFilter(this.state.listFilter)
-      : this.props.tmpItems;
+      : this.props.notifications;
 
-    const rows = filteredNotifications?.map((tmpItem) => (
-      <tr key={tmpItem.id}>
+    const rows = filteredNotifications?.map((notification) => (
+      <tr key={notification.id}>
         <td>
           {this.state.showImage ? (
             <img
-              src={tmpItem.imageUrl || logo}
-              title={tmpItem.name}
+              src={notification.imageUrl || logo}
+              title={notification.name}
               style={{ width: "50px", margin: "2px" }}
             />
           ) : null}
         </td>
         <td>
-          <NavLink to={"/tmpItems/" + tmpItem.id}>{tmpItem.name}</NavLink>
+          <NavLink to={"/notifications/" + notification.id}>{notification.name}</NavLink>
         </td>
-        <td>{tmpItem.code?.toLocaleUpperCase()}</td>
-        <td>{tmpItem.description}</td>
-        <td>{tmpItem.price || (5).toFixed(2)}</td>
+        <td>{notification.code?.toLocaleUpperCase()}</td>
+        <td>{notification.description}</td>
+        <td>{notification.price || (5).toFixed(2)}</td>
         <td>
           <Star
-            rating={tmpItem.starRating || 4}
+            rating={notification.starRating || 4}
             ratingClicked={(event) => this.onRatingClicked(event)}
           ></Star>
         </td>
         <td>
           <NavLink
             className="btn btn-primary"
-            to={"/tmpItems/edit/" + tmpItem.id}
+            to={"/notifications/edit/" + notification.id}
           >
             Edit
           </NavLink>
@@ -101,7 +101,7 @@ class ListNotifications extends Component<any, any> {
           <button
             type="button"
             className="btn btn-primary btn-danger"
-            onClick={() => this.deleteNotification(tmpItem)}
+            onClick={() => this.deleteNotification(notification)}
           >
             Delete
           </button>
@@ -109,7 +109,7 @@ class ListNotifications extends Component<any, any> {
       </tr>
     ));
 
-    const table = this.props.tmpItems ? (
+    const table = this.props.notifications ? (
       <table className="table">
         <thead>
           <tr>
@@ -158,7 +158,7 @@ class ListNotifications extends Component<any, any> {
             <NavLink
               className="btn btn-primary"
               style={{ float: "right" }}
-              to="/tmpItems/add"
+              to="/notifications/add"
             >
               Add Notification
             </NavLink>
@@ -197,15 +197,15 @@ class ListNotifications extends Component<any, any> {
 
 const mapStateToProps = (state) => {
   return {
-    tmpItems: state.tmpItem.tmpItems,
-    auditLogs: state.tmpItem.auditLogs,
+    notifications: state.notification.notifications,
+    auditLogs: state.notification.auditLogs,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchNotifications: () => dispatch(actions.fetchNotifications()),
-    deleteNotification: (tmpItem) => dispatch(actions.deleteNotification(tmpItem)),
+    deleteNotification: (notification) => dispatch(actions.deleteNotification(notification)),
   };
 };
 

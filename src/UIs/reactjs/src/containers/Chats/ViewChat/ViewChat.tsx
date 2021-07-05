@@ -3,14 +3,17 @@ import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
 
 import * as actions from "../actions";
+import * as notificationActions from "../../Notifications/actions";
+import { Button, Col, Form, Row } from "react-bootstrap";
 
 class ViewChat extends Component<any, any> {
   state = {
-    tmpItem: {
+    messageItem: {
       id: "",
       name: "",
       message: "",
     },
+    message: "",
     submitted: false,
     errorMessage: null
   };
@@ -30,16 +33,18 @@ class ViewChat extends Component<any, any> {
   }
 
   back = () => {
-    this.props.history.push("/tmpItems");
+    this.props.history.push("/messageItems");
   };
 
   render() {
     const {
       state: {
-        tmpItem
+        messageItem,
+        message,
       },
       props: {
-        messages
+        messages,
+        sendNotification,
       }
     } = this;
 
@@ -49,10 +54,10 @@ class ViewChat extends Component<any, any> {
       </div>
     )) : null;
 
-    const page = tmpItem ? (
+    const page = messageItem ? (
       <div className="card">
         <div className="card-header">
-          {"Chat Detail: " + tmpItem.name}
+          {"Chat Detail: " + messageItem.name}
         </div>
 
         <div className="card-body">
@@ -60,11 +65,11 @@ class ViewChat extends Component<any, any> {
             <div className="col-md-8">
               <div className="row">
                 <div className="col-md-4">Name:</div>
-                <div className="col-md-8">{tmpItem.name}</div>
+                <div className="col-md-8">{messageItem.name}</div>
               </div>
               <div className="row">
                 <div className="col-md-4">Code:</div>
-                <div className="col-md-8">{tmpItem.message}</div>
+                <div className="col-md-8">{messageItem.message}</div>
               </div>
             </div>
 
@@ -72,6 +77,16 @@ class ViewChat extends Component<any, any> {
             </div>
           </div>
           {messageBox}
+          <Row>
+            <Col>
+              <Form.Control type="text" placeholder="Message..." name="message" value={message} onChange={(event) => { this.setState({ [event.target.name]: event.target.value }) }} />
+            </Col>
+            <Col>
+              <Button variant="primary" type="submit" onClick={() => { sendNotification({ content: message }) }}>
+                Submit
+              </Button>
+            </Col>
+          </Row>
         </div>
 
         <div className="card-footer">
@@ -85,7 +100,7 @@ class ViewChat extends Component<any, any> {
           &nbsp;
           <NavLink
             className="btn btn-primary"
-            to={"/tmpItems/edit/" + tmpItem.id}
+            to={"/messageItems/edit/" + messageItem.id}
           >
             Edit
           </NavLink>
@@ -105,7 +120,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    connectChat: () => dispatch(actions.connectChat())
+    connectChat: () => dispatch(actions.connectChat()),
+    sendNotification: (notification) => dispatch(notificationActions.sendNotification(notification)),
   };
 };
 

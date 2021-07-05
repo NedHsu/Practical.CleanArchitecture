@@ -1,10 +1,10 @@
 import * as actionTypes from "./actionTypes";
 
 /// CHATS
-export const fetchChatsSuccess = (tmpItems) => {
+export const fetchChatsSuccess = (chatItems) => {
   return {
     type: actionTypes.FETCH_CHATS_SUCCESS,
-    tmpItems: tmpItems,
+    chatItems: chatItems,
   };
 };
 
@@ -93,10 +93,10 @@ export const messageReceived = (message) => {
 /// CHAT
 
 /// UPDATE CHAT
-export const updateChat = (tmpItem) => {
+export const updateChat = (chatItem) => {
   return {
     type: actionTypes.UPDATE_CHAT,
-    tmpItem: tmpItem,
+    chatItem: chatItem,
   };
 };
 
@@ -108,10 +108,10 @@ export const resetChat = () => {
 /// UPDATE CHAT
 
 /// SAVE CHAT
-export const saveChatSuccess = (tmpItem) => {
+export const saveChatSuccess = (chatItem) => {
   return {
     type: actionTypes.SAVE_CHAT_SUCCESS,
-    tmpItem: tmpItem,
+    chatItem: chatItem,
   };
 };
 
@@ -128,16 +128,16 @@ export const saveChatStart = () => {
   };
 };
 
-export const saveChat = (tmpItem) => {
+export const saveChat = (chatItem) => {
   return {
     type: actionTypes.SAVE_CHAT,
-    tmpItem: tmpItem,
+    chatItem: chatItem,
   };
 };
 /// SAVE CHAT
 
 /// DELETE CHAT
-export const deleteChatSuccess = (tmpItem) => {
+export const deleteChatSuccess = (chatItem) => {
   return {
     type: actionTypes.DELETE_CHAT_SUCCESS,
   };
@@ -156,10 +156,10 @@ export const deleteChatStart = () => {
   };
 };
 
-export const deleteChat = (tmpItem) => {
+export const deleteChat = (chatItem) => {
   return {
     type: actionTypes.DELETE_CHAT,
-    tmpItem: tmpItem,
+    chatItem: chatItem,
   };
 };
 /// DELETE CHAT

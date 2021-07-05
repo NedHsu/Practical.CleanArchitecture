@@ -2,8 +2,8 @@ import { updateObject } from "../../shared/utility";
 import * as actionTypes from "./actionTypes";
 
 const initialState = {
-  tmpItems: [],
-  tmpItem: {
+  chats: [],
+  chat: {
     name: "",
     code: "",
     description: "",
@@ -24,7 +24,7 @@ const fetchChatsStart = (state, action) => {
 
 const fetchChatsSuccess = (state, action) => {
   return updateObject(state, {
-    tmpItems: action.tmpItems,
+    chats: action.chats,
     loading: false,
   });
 };
@@ -60,7 +60,7 @@ const connectChatStart = (state, action) => {
 
 const connectChatSuccess = (state, action) => {
   return updateObject(state, {
-    tmpItem: action.tmpItem,
+    chat: action.chat,
     loading: false,
   });
 };
@@ -82,7 +82,7 @@ const saveChatStart = (state, action) => {
 
 const saveChatSuccess = (state, action) => {
   return updateObject(state, {
-    tmpItem: action.tmpItem,
+    chat: action.chat,
     loading: false,
     saved: true,
   });
@@ -115,7 +115,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.MESSAGE_RECEIVED:
       return messageReceived(state, action);
     case actionTypes.UPDATE_CHAT:
-      return updateObject(state, { tmpItem: action.tmpItem });
+      return updateObject(state, { chat: action.chat });
     case actionTypes.RESET_CHAT:
       return updateObject(state, initialState);
     case actionTypes.SAVE_CHAT_START:
@@ -126,13 +126,13 @@ const reducer = (state = initialState, action) => {
       return saveChatFail(state, action);
     case actionTypes.DELETE_CHAT_START:
       return updateObject(state, {
-        tmpItem: action.tmpItem,
+        chat: action.chat,
         loading: true,
         deleted: false,
       });
     case actionTypes.DELETE_CHAT_SUCCESS:
       return updateObject(state, {
-        tmpItem: initialState.tmpItem,
+        chat: initialState.chat,
         loading: false,
         deleted: true,
       });

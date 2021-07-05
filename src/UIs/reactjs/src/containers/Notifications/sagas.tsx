@@ -64,14 +64,24 @@ export function* connectNotificationsSaga(action) {
   }
 }
 
+export function* sendNotificationsSaga(action) {
+  console.log("sendNotificationsSaga");
+  yield put(actions.connectNotificationStart());
+  try {
+    axios.post("", action.notification);
+  } catch (error) {
+    yield put(actions.fetchNotificationFail(error));
+  }
+}
+
 export function* saveNotificationSaga(action) {
   yield put(actions.saveNotificationStart());
   try {
-    const response = action.tmpItem.id
-      ? yield axios.put(action.tmpItem.id, action.tmpItem)
-      : yield axios.post("", action.tmpItem);
-    const tmpItem = response.data;
-    yield put(actions.saveNotificationSuccess(tmpItem));
+    const response = action.notification.id
+      ? yield axios.put(action.notification.id, action.notification)
+      : yield axios.post("", action.notification);
+    const notification = response.data;
+    yield put(actions.saveNotificationSuccess(notification));
   } catch (error) {
     console.log(error);
     yield put(actions.saveNotificationFail(error));
@@ -81,8 +91,8 @@ export function* saveNotificationSaga(action) {
 export function* deleteNotificationSaga(action) {
   yield put(actions.deleteNotificationStart());
   try {
-    const response = yield axios.delete(action.tmpItem.id, action.tmpItem);
-    yield put(actions.deleteNotificationSuccess(action.tmpItem));
+    const response = yield axios.delete(action.notification.id, action.notification);
+    yield put(actions.deleteNotificationSuccess(action.notification));
     yield put(actions.fetchNotifications());
   } catch (error) {
     console.log(error);
@@ -96,6 +106,7 @@ export function* watchNotification() {
   yield takeEvery(actionTypes.SAVE_NOTIFICATION, saveNotificationSaga);
   yield takeEvery(actionTypes.DELETE_NOTIFICATION, deleteNotificationSaga);
   yield takeEvery(actionTypes.CONNECT_NOTIFICATION, connectNotificationsSaga);
+  yield takeEvery(actionTypes.SEND_NOTIFICATION, sendNotificationsSaga);
   while (true) {
     const action = yield take(notificationChannel);
     yield put(action);

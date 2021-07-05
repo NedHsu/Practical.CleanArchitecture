@@ -2,10 +2,10 @@ import { toast } from "react-toastify";
 import * as actionTypes from "./actionTypes";
 
 /// NOTIFICATIONS
-export const fetchNotificationsSuccess = (tmpItems) => {
+export const fetchNotificationsSuccess = (notifications) => {
   return {
     type: actionTypes.FETCH_NOTIFICATIONS_SUCCESS,
-    tmpItems: tmpItems,
+    notifications: notifications,
   };
 };
 
@@ -30,10 +30,10 @@ export const fetchNotifications = () => {
 /// NOTIFICATIONS
 
 /// NOTIFICATION
-export const fetchNotificationSuccess = (tmpItem) => {
+export const fetchNotificationSuccess = (notification) => {
   return {
     type: actionTypes.FETCH_NOTIFICATION_SUCCESS,
-    tmpItem: tmpItem,
+    notification: notification,
   };
 };
 
@@ -59,10 +59,10 @@ export const fetchNotification = (id) => {
 /// NOTIFICATION
 
 /// UPDATE NOTIFICATION
-export const updateNotification = (tmpItem) => {
+export const updateNotification = (notification) => {
   return {
     type: actionTypes.UPDATE_NOTIFICATION,
-    tmpItem: tmpItem,
+    notification: notification,
   };
 };
 
@@ -74,10 +74,10 @@ export const resetNotification = () => {
 /// UPDATE NOTIFICATION
 
 /// SAVE NOTIFICATION
-export const saveNotificationSuccess = (tmpItem) => {
+export const saveNotificationSuccess = (notification) => {
   return {
     type: actionTypes.SAVE_NOTIFICATION_SUCCESS,
-    tmpItem: tmpItem,
+    notification: notification,
   };
 };
 
@@ -94,16 +94,16 @@ export const saveNotificationStart = () => {
   };
 };
 
-export const saveNotification = (tmpItem) => {
+export const saveNotification = (notification) => {
   return {
     type: actionTypes.SAVE_NOTIFICATION,
-    tmpItem: tmpItem,
+    notification: notification,
   };
 };
 /// SAVE NOTIFICATION
 
 /// DELETE NOTIFICATION
-export const deleteNotificationSuccess = (tmpItem) => {
+export const deleteNotificationSuccess = (notification) => {
   return {
     type: actionTypes.DELETE_NOTIFICATION_SUCCESS,
   };
@@ -122,10 +122,10 @@ export const deleteNotificationStart = () => {
   };
 };
 
-export const deleteNotification = (tmpItem) => {
+export const deleteNotification = (notification) => {
   return {
     type: actionTypes.DELETE_NOTIFICATION,
-    tmpItem: tmpItem,
+    notification: notification,
   };
 };
 /// DELETE NOTIFICATION
@@ -158,7 +158,8 @@ export const connectNotification = () => {
 };
 
 export const notificationReceived = (notification) => {
-  toast('🦄 Wow so easy!', {
+  console.log(notification);
+  toast(notification.notification, {
     position: "top-right",
     autoClose: 5000,
     hideProgressBar: false,
@@ -169,6 +170,13 @@ export const notificationReceived = (notification) => {
   })
   return {
     type: actionTypes.NOTIFICATION_RECEIVED,
+    notification: notification,
+  };
+};
+
+export const sendNotification = (notification) => {
+  return {
+    type: actionTypes.SEND_NOTIFICATION,
     notification: notification,
   };
 };
