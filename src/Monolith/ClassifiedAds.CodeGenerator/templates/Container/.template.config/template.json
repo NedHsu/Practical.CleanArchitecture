@@ -12,5 +12,27 @@
   "tags": {
     "language": "TypeScript",
     "type": "item"
+  },
+  "symbols": {
+    "sourceNameUpper": {
+      "type": "generated",
+      "generator": "casing",
+      "parameters": {
+        "source": "name",
+        "toLower": false
+      },
+      "replaces": "TMPITEM"
+    },
+    "sourceNameLower": {
+      "type": "generated",
+      "generator": "casing",
+      "parameters": {
+        "source": "name",
+        "toLower": true
+      },
+      "replaces": "tmpItem"
+    }
+  },
+  "forms": {
   }
 }
