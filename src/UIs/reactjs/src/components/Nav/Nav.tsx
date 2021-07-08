@@ -80,6 +80,11 @@ class Nav extends Component<Props> {
               Chat
             </NavLink>
           </li>
+          <li>
+            <NavLink className="nav-link" to="/calendars">
+              Calendar
+            </NavLink>
+          </li>
           {/* <li>
             <NavLink className="nav-link" to="/auditlogs">
               Audit Logs

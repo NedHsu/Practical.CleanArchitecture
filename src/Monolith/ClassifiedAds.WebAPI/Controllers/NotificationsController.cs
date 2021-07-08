@@ -65,7 +65,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         {
             //var notification = _mapper.Map<Notification>(model);
             //_dispatcher.Dispatch(new AddUpdateNotificationCommand { Notification = notification });
-            _hubContext.Clients.All.SendAsync("notificationReceived", model.Content);
+            _hubContext.Clients.All.SendAsync("notificationReceived", "test", model.Content);
             return Created($"/api/notifications/{model.Id}", model);
         }
 
