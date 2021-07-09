@@ -2,6 +2,7 @@ import React from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 
 import "./App.scss";
+import './i18n/config';
 import Nav from "./components/Nav/Nav";
 import Home from "./containers/Home/Home";
 import OidcLoginRedirect from "./containers/Auth/OidcLoginRedirect";

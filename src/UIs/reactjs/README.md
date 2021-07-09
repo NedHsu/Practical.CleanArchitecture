@@ -104,6 +104,18 @@ npm i --save @microsoft/signalr
 npm i --save react-toastify
 ```
 
+### calendar
+
+```
+npm i --save tui-calendar
+```
+
+### i18n
+
+```
+npm install react-i18next i18next --save
+```
+
 ###
 
 ## TODO

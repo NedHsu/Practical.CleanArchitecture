@@ -22,6 +22,9 @@ class ViewCalendar extends Component<any, any> {
     errorMessage: null
   };
 
+  private readonly beforeUpdateSchedule = event => {
+  };
+
   componentDidMount() {
     var calendar = new Calendar('calendar', {
       defaultView: 'month',
@@ -58,24 +61,21 @@ class ViewCalendar extends Component<any, any> {
       }
     });
 
-    calendar.on('beforeCreateSchedule', function (event) {
+    calendar.on('beforeCreateSchedule', (event) => {
       var calendarId = '1';
-      var startTime = event.start;
-      var endTime = event.end;
-      var isAllDay = event.isAllDay;
-      var guide = event.guide;
-
       calendar.createSchedules([{
-        id: guide,
+        id: event.guide,
         calendarId: calendarId,
-        isAllDay: isAllDay,
-        start: startTime,
-        end: endTime,
+        title: event.title,
+        isAllDay: event.isAllDay,
+        start: event.start,
+        end: event.end,
+        category: "time",
         isVisible: true,
-        color: "black",
-        bgColor: "red",
       }]);
     });
+
+    calendar.on('beforeUpdateSchedule', this.beforeUpdateSchedule);
     calendar.createSchedules([{
       id: "test",
       calendarId: "1",
@@ -84,9 +84,8 @@ class ViewCalendar extends Component<any, any> {
       body: "123",
       start: new Date('2021-07-08T09:00:00'),
       end: new Date('2021-07-09T18:00:00'),
+      category: "time",
       isVisible: true,
-      color: "black",
-      bgColor: "red",
     }]);
     console.log(calendar);
   }
