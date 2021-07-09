@@ -15,7 +15,7 @@ import * as groupActions from "../../StockGroups/actions";
 import * as groupItemActions from "../../StockGroupItems/actions";
 import * as daysActions from "../../StockDays/actions";
 import { IoMdAddCircle, IoMdClose, IoMdCheckmark, IoIosTrash } from "react-icons/io"
-import { GrList, GrNotes } from "react-icons/gr";
+import { GrEdit, GrList, GrNotes, GrTrash } from "react-icons/gr";
 
 class ListStocks extends Component<any, any> {
   groupTitleField: any;
@@ -202,25 +202,15 @@ class ListStocks extends Component<any, any> {
         </td>
         <td>{stock.fetchDate}</td>
         <td>
-          <NavLink
-            className="btn btn-primary"
-            to={"/stocks/edit/" + stock.code}
-          >
-            Edit
+          <NavLink to={"/stocks/edit/" + stock.code}>
+            <GrEdit></GrEdit>
           </NavLink>
           &nbsp;
-          <button
-            hidden={!this.props.stockGroup.id}
-            type="button"
-            className="btn btn-primary btn-danger"
-            onClick={() => this.deleteStock(stock)}
-          >
-            Delete
-          </button>
+          <GrNotes cursor="pointer" onClick={() => this.viewNotes(stock)} title="View Notes"></GrNotes>
           &nbsp;
-          <GrNotes onClick={() => this.viewNotes(stock)} title="View Notes"></GrNotes>
+          <GrList cursor="pointer" onClick={() => this.editGroups(stock)} title="Edit Groups"></GrList>
           &nbsp;
-          <GrList onClick={() => this.editGroups(stock)} title="Edit Groups"></GrList>
+          {this.props.stockGroup.id ? <GrTrash cursor="pointer" onClick={() => this.deleteStock(stock)} title="Remove Stock"></GrTrash> : null}
         </td>
       </tr>
     ));
