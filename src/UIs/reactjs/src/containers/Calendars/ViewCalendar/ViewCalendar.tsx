@@ -22,11 +22,36 @@ class ViewCalendar extends Component<any, any> {
     errorMessage: null
   };
 
+  private readonly beforeCreateSchedule = event => {
+    var calendarId = '1';
+    ViewCalendar.calendar.createSchedules([{
+      id: event.guide,
+      calendarId: calendarId,
+      title: event.title,
+      isAllDay: event.isAllDay,
+      start: event.start,
+      end: event.end,
+      category: "time",
+      isVisible: true,
+    }]);
+  };
   private readonly beforeUpdateSchedule = event => {
   };
+  private readonly beforeDeleteSchedule = event => {
+  };
+  private readonly clickDayname = event => {
+  };
+  private readonly clickMore = event => {
+  };
+  private readonly clickSchedule = event => {
+  };
+  private readonly clickTimezonesCollapseBtn = event => {
+  };
+
+  private static calendar: Calendar;
 
   componentDidMount() {
-    var calendar = new Calendar('calendar', {
+    ViewCalendar.calendar = new Calendar('#calendar', {
       defaultView: 'month',
       useCreationPopup: true,
       useDetailPopup: true,
@@ -61,22 +86,15 @@ class ViewCalendar extends Component<any, any> {
       }
     });
 
-    calendar.on('beforeCreateSchedule', (event) => {
-      var calendarId = '1';
-      calendar.createSchedules([{
-        id: event.guide,
-        calendarId: calendarId,
-        title: event.title,
-        isAllDay: event.isAllDay,
-        start: event.start,
-        end: event.end,
-        category: "time",
-        isVisible: true,
-      }]);
-    });
-
-    calendar.on('beforeUpdateSchedule', this.beforeUpdateSchedule);
-    calendar.createSchedules([{
+    ViewCalendar.calendar.on('beforeCreateSchedule', this.beforeCreateSchedule);
+    ViewCalendar.calendar.on('beforeUpdateSchedule', this.beforeUpdateSchedule);
+    ViewCalendar.calendar.on('beforeDeleteSchedule', this.beforeDeleteSchedule);
+    ViewCalendar.calendar.on('clickDayname', this.clickDayname);
+    ViewCalendar.calendar.on('clickMore', this.clickMore);
+    ViewCalendar.calendar.on('clickSchedule', this.clickSchedule);
+    ViewCalendar.calendar.on('clickTimezonesCollapseBtn', this.clickTimezonesCollapseBtn);
+    ViewCalendar.calendar.on('afterRenderSchedule', this.clickTimezonesCollapseBtn);
+    ViewCalendar.calendar.createSchedules([{
       id: "test",
       calendarId: "1",
       title: "1234",
@@ -87,7 +105,7 @@ class ViewCalendar extends Component<any, any> {
       category: "time",
       isVisible: true,
     }]);
-    console.log(calendar);
+    console.log(ViewCalendar.calendar);
   }
 
   render() {
