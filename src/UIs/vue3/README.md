@@ -29,9 +29,9 @@ Run `Volar: Switch TS Plugin on/off` from VSCode command palette.
 
 # Scaling Up
 
-## Routing
+## Routing - 
 
-### vue-router
+### vue-router - [Document](https://next.router.vuejs.org/guide/)
 
 ```
 npm install vue-router@4
@@ -39,6 +39,30 @@ npm install vue-router@4
 
 ## State Management
 
-### Vuex
+### Vuex - [Document](https://next.vuex.vuejs.org/)
 
-## UI Framework
+```
+npm install vuex@next --save
+```
+
+## Http client
+
+### Axios - [Document](https://axios-http.com/docs/intro)
+
+```
+npm install axios
+```
+
+## UI
+
+### Notification
+
+```
+
+```
+
+## SCSS/SASS
+
+``` 
+npm install -D sass
+```

@@ -1,4 +1,18 @@
 import { createApp } from 'vue'
+import router from './router'
+import store from './store'
 import App from './App.vue'
+import authService from './auth/authService'
 
-createApp(App).mount('#app')
+authService.loadUser().then(user => {
+    store.dispatch("tryAutoLogin", authService);
+    if (authService.isAuthenticated()) {
+
+    }
+    const app = createApp(App)
+
+    app.use(router)
+    app.use(store)
+
+    app.mount('#app')
+});
