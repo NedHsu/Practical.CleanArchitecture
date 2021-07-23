@@ -55,6 +55,13 @@ npm install axios
 
 ## UI
 
+### PrimeVue 3
+
+```
+npm install primevue@^3.5.1 --save
+npm install primeicons --save
+```
+
 ### Notification
 
 ```
