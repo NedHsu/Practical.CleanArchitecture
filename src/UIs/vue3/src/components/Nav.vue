@@ -9,16 +9,36 @@
             />
             <a class="navbar-brand" href="/">{{ pageTitle }}</a>
         </template>
+        <template #end>
+            <Avatar
+                image="https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png"
+                class="p-mr-2"
+                size="large"
+                shape="circle"
+            />
+        </template>
     </Menubar>
 </template>
 <script lang="ts">
 import { version } from 'vue'
+import store from '../store';
+import { PrimeIcons } from 'primevue/api';
 
 export default {
+    computed: {
+        isAuthenticated() {
+            return store.state.authService.isAuthenticated();
+        },
+    },
     data() {
         return {
             pageTitle: `ClassifiedAds.Vue ${version}`,
             items: [
+                {
+                    label: 'Products',
+                    icon: PrimeIcons.LIST,
+                    to: '/products',
+                },
                 {
                     label: 'File',
                     icon: 'pi pi-fw pi-file',
@@ -46,7 +66,10 @@ export default {
                         },
                         {
                             label: 'Export',
-                            icon: 'pi pi-fw pi-external-link'
+                            icon: 'pi pi-fw pi-external-link',
+                            command: () => {
+                                this.$router.push("/porducts");
+                            }
                         }
                     ]
                 },

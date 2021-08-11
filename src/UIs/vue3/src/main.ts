@@ -12,6 +12,8 @@ import Column from 'primevue/column';
 import ColumnGroup from 'primevue/columngroup';
 import Rating from 'primevue/Rating';
 import Menubar from 'primevue/menubar';
+import Avatar from 'primevue/avatar';
+import AvatarGroup from 'primevue/avatargroup';
 
 authService.loadUser().then(user => {
     store.dispatch("tryAutoLogin", authService);
@@ -32,6 +34,8 @@ authService.loadUser().then(user => {
     app.component('ColumnGroup', ColumnGroup);
     app.component('Rating', Rating);
     app.component('Menubar', Menubar);
+    app.component('Avatar', Avatar);
+    app.component('AvatarGroup', AvatarGroup);
 
-    app.mount('#app')
+    app.mount('#app');
 });
