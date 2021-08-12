@@ -5,7 +5,7 @@
     "dev": "node ./node_modules/vite-ssr/cli.js --port 8080 --force",
     "dev:spa": "vite --port 8080 --force",
     "build": "rm -rf dist && node ./node_modules/vite-ssr/cli.js build",
-    "serve:node": "node ../node-server/index vue"
+    "serve:node": "node ../node-server/index vue3vitessr"
   },
   "dependencies": {
     "@vueuse/head": "^0.6.0",

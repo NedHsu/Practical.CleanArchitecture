@@ -10,7 +10,10 @@
 
   <RouterView v-slot="{ Component }">
     <Suspense>
-      <component :is="Component" />
+      <template #default>
+        <component :is="Component" />
+      </template>
+      <template #fallback>Loading...</template>
     </Suspense>
   </RouterView>
 </template>

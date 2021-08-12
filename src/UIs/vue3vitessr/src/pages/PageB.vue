@@ -3,6 +3,7 @@
 </template>
   
   <script>
+import { useHead } from '@vueuse/head'
 export default {
     name: 'PageB',
     props: {
@@ -10,5 +11,10 @@ export default {
         server: Boolean,
         name: String,
     },
+    setup() {
+        useHead({
+            title: 'PageB',
+        })
+    }
 }
 </script>
