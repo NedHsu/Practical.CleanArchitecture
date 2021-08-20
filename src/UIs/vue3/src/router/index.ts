@@ -19,6 +19,7 @@ const routes = [
           index: 1
         }
     },
+    //--routes
     {
         path: "/oidc-login-redirect",
         name: "OidcLoginRedirect",
