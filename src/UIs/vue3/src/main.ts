@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
-import router from './router'
+import { setupI18n } from './i18n'
+import { setupRouter } from './router'
 import store from './store'
 import App from './App.vue'
 import authService from './auth/authService'
@@ -15,16 +16,30 @@ import Menubar from 'primevue/menubar';
 import Avatar from 'primevue/avatar';
 import AvatarGroup from 'primevue/avatargroup';
 
+import en from './locales/en.yaml';
+import 'primeflex/primeflex.css';
+
 authService.loadUser().then(user => {
     store.dispatch("tryAutoLogin", authService);
     if (authService.isAuthenticated()) {
-
+        store.dispatch("LOGIN", user);
     }
-    const app = createApp(App)
 
-    app.use(router)
-    app.use(store)
+    const i18nInstance = setupI18n({
+        legacy: false,
+        locale: 'en',
+        fallbackLocale: 'en',
+        messages: {
+            en
+        }
+    });
+    const router = setupRouter(i18nInstance);
+    const app = createApp(App);
+
+    app.use(store);
     app.use(PrimeVue);
+    app.use(i18nInstance);
+    app.use(router);
 
     app.component('Dialog', Dialog);
     app.component('Toolbar', Toolbar);

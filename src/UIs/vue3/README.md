@@ -60,6 +60,8 @@ npm install axios
 ```
 npm install primevue@^3.5.1 --save
 npm install primeicons --save
+
+npm install primeflex@2.0.0 --save
 ```
 
 ### Notification
@@ -72,4 +74,11 @@ npm install primeicons --save
 
 ``` 
 npm install -D sass
+```
+
+## i18n
+
+```
+npm install vue-i18n@next
+npm i --save-dev @intlify/vite-plugin-vue-i18n
 ```

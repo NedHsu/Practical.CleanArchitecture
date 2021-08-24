@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" v-if="isRouterAlive">
     <Nav1></Nav1>
     <router-view class="router-view" v-slot="{ Component }">
       <transition :name="transitionName">
@@ -10,11 +10,11 @@
 </template>
 
 <script lang="ts">
-import { reactive, toRefs } from 'vue'
+import { defineComponent, nextTick, provide, reactive, ref, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
 import Nav1 from './components/Nav.vue'
 
-export default {
+export default defineComponent({
   components: {
     Nav1
   },
@@ -23,6 +23,7 @@ export default {
     const state = reactive({
       transitionName: 'slide-left'
     })
+    const isRouterAlive = ref(true);
     router.beforeEach((to: any, from: any) => {
       if (to.meta?.index > from.meta?.index) {
         state.transitionName = 'slide-left' // 向左滑動
@@ -33,11 +34,24 @@ export default {
         state.transitionName = ''   // 同級無過場效果
       }
     })
+
+    const reload = () => {
+      isRouterAlive.value = false;
+      nextTick(() => { isRouterAlive.value = true });
+    }
+    provide('reload', reload)
     return {
+      isRouterAlive,
       ...toRefs(state)
     }
+  },
+  data() {
+    return {
+    }
+  },
+  methods: {
   }
-}
+});
 </script>
 
 <style>
@@ -53,7 +67,7 @@ body {
   margin: 0;
 }
 
-.router-view{
+.router-view {
   width: 100%;
   height: auto;
   position: absolute;
@@ -65,26 +79,26 @@ body {
 .slide-right-enter-active,
 .slide-right-leave-active,
 .slide-left-enter-active,
-.slide-left-leave-active{
+.slide-left-leave-active {
   height: 100%;
   will-change: transform;
   transition: all 500ms;
   position: absolute;
   backface-visibility: hidden;
 }
-.slide-right-enter{
+.slide-right-enter {
   opacity: 0;
   transform: translate3d(-100%, 0, 0);
 }
-.slide-right-leave-active{
+.slide-right-leave-active {
   opacity: 0;
   transform: translate3d(100%, 0, 0);
 }
-.slide-left-enter{
+.slide-left-enter {
   opacity: 0;
   transform: translate3d(100%, 0, 0);
 }
-.slide-left-leave-active{
+.slide-left-leave-active {
   opacity: 0;
   transform: translate3d(-100%, 0, 0);
 }

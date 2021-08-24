@@ -1,0 +1,9 @@
+pages:
+  home: 'This page is home page'
+  about: 'This page is about page'
+navigations:
+  home: 'Home'
+  about: 'About'
+  product: '產品'
+labels:
+  language: '語系'

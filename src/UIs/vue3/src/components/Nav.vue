@@ -7,37 +7,110 @@
                 height="40"
                 class="p-mr-2"
             />
-            <a class="navbar-brand" href="/">{{ pageTitle }}</a>
+            <Button :label="pageTitle" class="p-button-link" />
         </template>
         <template #end>
-            <Avatar
-                image="https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png"
-                class="p-mr-2"
-                size="large"
-                shape="circle"
-            />
+            <div class="p-grid p-ai-center vertical-container">
+                <div class="p-col">
+                    <Avatar
+                        image="https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png"
+                        size="large"
+                        shape="circle"
+                    />
+                </div>
+                <div></div>
+                <div class="p-col">
+                    <form class="language">
+                        <select id="locale-select" v-model="currentLocale">
+                            <option
+                                v-for="optionLocale in supportLocales"
+                                :key="optionLocale"
+                                :value="optionLocale"
+                            >{{ optionLocale }}</option>
+                        </select>
+                    </form>
+                </div>
+            </div>
         </template>
     </Menubar>
 </template>
 <script lang="ts">
-import { version } from 'vue'
+import { defineComponent, ref, version, watch, inject } from 'vue'
 import store from '../store';
 import { PrimeIcons } from 'primevue/api';
+import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
+import { SUPPORT_LOCALES } from '../i18n';
 
-export default {
+export default defineComponent({
+    setup() {
+        const router = useRouter()
+        const { t, locale } = useI18n({ useScope: 'global' })
+        /**
+         * select locale value for language select form
+         *
+         * If you use the vue-i18n composer `locale` property directly, it will be re-rendering component when this property is changed,
+         * before dynamic import was used to asynchronously load and apply locale messages
+         * To avoid this, use the another locale reactive value.
+         */
+        const currentLocale = ref(locale.value)
+        // sync to switch locale from router locale path
+        watch(router.currentRoute, route => {
+            currentLocale.value = route.params.locale as string
+        })
+        /**
+         * when change the locale, go to locale route
+         *
+         * when the changes are detected, load the locale message and set the language via vue-router navigation guard.
+         * change the vue-i18n locale too.
+         */
+        const reload = inject('reload') as any;
+        watch(currentLocale, val => {
+            router.push({
+                name: router.currentRoute.value.name!,
+                params: { locale: val }
+            })
+            reload();
+        })
+        return { t, locale, currentLocale, supportLocales: SUPPORT_LOCALES }
+    },
     computed: {
         isAuthenticated() {
             return store.state.authService.isAuthenticated();
         },
+        user() {
+            return store.state.authService
+        }
     },
     data() {
+        const router = useRouter()
+        const { t, locale } = useI18n({ useScope: 'global' })
         return {
             pageTitle: `ClassifiedAds.Vue ${version}`,
             items: [
                 {
-                    label: 'Products',
+                    label: t('navigations.product'),
                     icon: PrimeIcons.LIST,
-                    to: '/products',
+                    command: () => {
+                        router.push({
+                            name: "Products",
+                            params: {
+                                locale: locale.value
+                            }
+                        });
+                    }
+                },
+                {
+                    label: 'Events',
+                    icon: 'pi pi-fw pi-calendar',
+                    command: () => {
+                        router.push({
+                            name: "Events",
+                            params: {
+                                locale: locale.value
+                            }
+                        });
+                    }
                 },
                 {
                     label: 'File',
@@ -68,7 +141,9 @@ export default {
                             label: 'Export',
                             icon: 'pi pi-fw pi-external-link',
                             command: () => {
-                                this.$router.push("/porducts");
+                                router.push({
+                                    name: "porducts"
+                                });
                             }
                         }
                     ]
@@ -133,44 +208,13 @@ export default {
                     ]
                 },
                 {
-                    label: 'Events',
-                    icon: 'pi pi-fw pi-calendar',
-                    items: [
-                        {
-                            label: 'Edit',
-                            icon: 'pi pi-fw pi-pencil',
-                            items: [
-                                {
-                                    label: 'Save',
-                                    icon: 'pi pi-fw pi-calendar-plus'
-                                },
-                                {
-                                    label: 'Delete',
-                                    icon: 'pi pi-fw pi-calendar-minus'
-                                },
-
-                            ]
-                        },
-                        {
-                            label: 'Archieve',
-                            icon: 'pi pi-fw pi-calendar-times',
-                            items: [
-                                {
-                                    label: 'Remove',
-                                    icon: 'pi pi-fw pi-calendar-minus'
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
                     label: 'Quit',
                     icon: 'pi pi-fw pi-power-off'
                 }
-            ],
+            ]
         }
     }
-}
+});
 </script>
 <style lang="scss">
 </style>
