@@ -39,6 +39,14 @@ export function setupRouter(i18n: I18n): Router {
             redirect: () => `/${locale}`
         },
         //--routes
+    {
+        path: "/calendarEvents",
+        name: "CalendarEvents",
+        component: () => import("../views/CalendarEvents.vue"),
+        meta: {
+            index: 1
+        }
+    },
     ]
 
     // create router instance

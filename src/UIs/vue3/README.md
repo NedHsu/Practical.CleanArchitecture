@@ -82,3 +82,16 @@ npm install -D sass
 npm install vue-i18n@next
 npm i --save-dev @intlify/vite-plugin-vue-i18n
 ```
+
+### DAY.JS - instead of momentjs
+> lite only 2kb
+
+```
+npm install dayjs --save
+```
+
+### calendar
+
+```
+npm i --save tui-calendar
+```

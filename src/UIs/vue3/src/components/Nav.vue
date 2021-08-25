@@ -142,7 +142,7 @@ export default defineComponent({
                     icon: 'pi pi-fw pi-calendar',
                     command: () => {
                         router.push({
-                            name: "Events",
+                            name: "CalendarEvents",
                             params: {
                                 locale: locale.value
                             }
