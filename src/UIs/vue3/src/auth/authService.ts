@@ -1,6 +1,6 @@
 import { UserManager, User, WebStorageStateStore } from "oidc-client";
 
-import env from "../../environments";
+import env from "../environments";
 
 class AuthService {
     _userManager: UserManager;

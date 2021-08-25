@@ -14,7 +14,7 @@ export default {
         },
     },
     actions: {
-        tryAutoLogin({ commit }, authService) {
+        TRY_AUTO_LOGIN({ commit }, authService) {
             commit('setAuthService', authService)
         },
         LOGIN({ commit }, user) {

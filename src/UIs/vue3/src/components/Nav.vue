@@ -57,6 +57,7 @@ export default defineComponent({
         const router = useRouter()
         const { t, locale } = useI18n({ useScope: 'global' })
         const menu = ref(Menu)
+        
         /**
          * select locale value for language select form
          *

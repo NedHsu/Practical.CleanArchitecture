@@ -16,14 +16,16 @@ import Menubar from 'primevue/menubar';
 import Avatar from 'primevue/avatar';
 import AvatarGroup from 'primevue/avatargroup';
 import Menu from 'primevue/menu';
+import ToastService from 'primevue/toastservice';
 
 import en from './locales/en.yaml';
 import 'primeflex/primeflex.css';
 
 authService.loadUser().then(user => {
-    store.dispatch("tryAutoLogin", authService);
+    store.dispatch("TRY_AUTO_LOGIN", authService);
     if (authService.isAuthenticated()) {
         store.dispatch("LOGIN", user);
+        store.dispatch("notification/CONNECT_NOTIFICATION_HUB");
     }
 
     const i18nInstance = setupI18n({
@@ -41,6 +43,7 @@ authService.loadUser().then(user => {
     app.use(PrimeVue);
     app.use(i18nInstance);
     app.use(router);
+    app.use(ToastService);
 
     app.component('Dialog', Dialog);
     app.component('Toolbar', Toolbar);

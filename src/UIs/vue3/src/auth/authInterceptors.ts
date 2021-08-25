@@ -1,4 +1,4 @@
-import env from "../../environments";
+import env from "../environments";
 import authService from "./authService";
 import { AxiosInstance } from "axios";
 

@@ -95,3 +95,9 @@ npm install dayjs --save
 ```
 npm i --save tui-calendar
 ```
+
+### Signalr
+
+```
+npm i --save @microsoft/signalr
+```
