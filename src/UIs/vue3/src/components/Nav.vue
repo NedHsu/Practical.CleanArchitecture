@@ -7,18 +7,27 @@
                 height="40"
                 class="p-mr-2"
             />
-            <Button :label="pageTitle" class="p-button-link" />
+            <Button
+                :label="pageTitle"
+                class="p-button-link"
+                @click="goHome"
+            />
         </template>
         <template #end>
             <div class="p-grid p-ai-center vertical-container">
-                <div class="p-col">
+                <div class="p-col user-profile" v-if="isAuthenticated">
                     <Avatar
                         image="https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png"
                         size="large"
                         shape="circle"
+                        @click="toggleMenu"
                     />
+                    <span>{{ user.profile.name }}</span>
+                    <Menu ref="menu" :model="userMenu" :popup="true" />
                 </div>
-                <div></div>
+                <div v-else>
+                    <Button type="button" @click="login">Login</Button>
+                </div>
                 <div class="p-col">
                     <form class="language">
                         <select id="locale-select" v-model="currentLocale">
@@ -41,11 +50,13 @@ import { PrimeIcons } from 'primevue/api';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { SUPPORT_LOCALES } from '../i18n';
+import Menu from 'primevue/menu';
 
 export default defineComponent({
     setup() {
         const router = useRouter()
         const { t, locale } = useI18n({ useScope: 'global' })
+        const menu = ref(Menu)
         /**
          * select locale value for language select form
          *
@@ -64,7 +75,7 @@ export default defineComponent({
          * when the changes are detected, load the locale message and set the language via vue-router navigation guard.
          * change the vue-i18n locale too.
          */
-        const reload = inject('reload') as any;
+        let reload = inject<any>('reload');
         watch(currentLocale, val => {
             router.push({
                 name: router.currentRoute.value.name!,
@@ -72,14 +83,31 @@ export default defineComponent({
             })
             reload();
         })
-        return { t, locale, currentLocale, supportLocales: SUPPORT_LOCALES }
+        return { menu, t, router, locale, currentLocale, supportLocales: SUPPORT_LOCALES }
     },
     computed: {
         isAuthenticated() {
-            return store.state.authService.isAuthenticated();
+            return store.state.authService.authService.isAuthenticated();
         },
         user() {
-            return store.state.authService
+            return store.state.authService.user;
+        }
+    },
+    methods: {
+        toggleMenu(event: Event) {
+            this.menu.toggle(event);
+            console.log(this.user);
+        },
+        login() {
+            store.state.authService.authService.login();
+        },
+        goHome() {
+            this.router.push({
+                name: 'Home',
+                params: {
+                    locale: this.locale
+                }
+            })
         }
     },
     data() {
@@ -87,6 +115,15 @@ export default defineComponent({
         const { t, locale } = useI18n({ useScope: 'global' })
         return {
             pageTitle: `ClassifiedAds.Vue ${version}`,
+            userMenu: [
+                {
+                    label: 'Quit',
+                    icon: 'pi pi-fw pi-power-off',
+                    command: () => {
+                        store.dispatch('LOGOUT');
+                    }
+                }
+            ],
             items: [
                 {
                     label: t('navigations.product'),
@@ -206,15 +243,25 @@ export default defineComponent({
                             ]
                         }
                     ]
-                },
-                {
-                    label: 'Quit',
-                    icon: 'pi pi-fw pi-power-off'
                 }
             ]
         }
     }
 });
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
+.user-profile {
+    display: flex;
+    div {
+        margin: auto;
+    }
+    .p-avatar {
+        cursor: pointer;
+    }
+    span {
+        margin: auto;
+        padding: 0 5px;
+        cursor: pointer;
+    }
+}
 </style>

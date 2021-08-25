@@ -15,6 +15,7 @@ import Rating from 'primevue/Rating';
 import Menubar from 'primevue/menubar';
 import Avatar from 'primevue/avatar';
 import AvatarGroup from 'primevue/avatargroup';
+import Menu from 'primevue/menu';
 
 import en from './locales/en.yaml';
 import 'primeflex/primeflex.css';
@@ -51,6 +52,7 @@ authService.loadUser().then(user => {
     app.component('Menubar', Menubar);
     app.component('Avatar', Avatar);
     app.component('AvatarGroup', AvatarGroup);
+    app.component('Menu', Menu);
 
     app.mount('#app');
 });

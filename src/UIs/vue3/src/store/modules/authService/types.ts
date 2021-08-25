@@ -1,4 +1,5 @@
-export interface AuthService {
+
+export interface AuthServiceState {
     user: any;
     authService: any;
 }

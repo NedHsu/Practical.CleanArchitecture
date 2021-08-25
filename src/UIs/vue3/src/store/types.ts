@@ -1,11 +1,9 @@
 import { ProductState } from "./modules/product/types";
+import { AuthServiceState } from "./modules/authService/types";
 //--import
-export interface AuthService {
-
-}
 
 export interface RootState {
-    authService: AuthService,
+    authService: AuthServiceState,
     product: ProductState,
     //--RootState
 }

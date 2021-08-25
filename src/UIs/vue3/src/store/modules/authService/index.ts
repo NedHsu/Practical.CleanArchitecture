@@ -1,6 +1,6 @@
 
 import { Module } from 'vuex'
-import { AuthService as AuthServiceState } from './types';
+import { AuthServiceState } from './types';
 
 export default {
     state: {} as AuthServiceState,
@@ -10,6 +10,7 @@ export default {
         },
         setUser(state, user) {
             state.user = user;
+            console.log(user);
         },
     },
     actions: {
@@ -18,8 +19,14 @@ export default {
         },
         LOGIN({ commit }, user) {
             commit('setUser', user)
+        },
+        LOGOUT({ }) {
+            this.state.authService.authService.logout();
         }
     },
+    getters: {
+        
+    }
 } as Module<AuthServiceState, any>
 
 
