@@ -171,6 +171,10 @@ namespace IdentityServerHost.Quickstart.UI
             {
                 emailClaim = externalUser.FindFirst(ClaimTypes.Email);
             }
+            else if (provider == "Line")
+            {
+                emailClaim = externalUser.FindFirst(ClaimTypes.Email);
+            }
 
             // remove the user id claim so we don't include it as an extra claim if/when we provision the user
             var claims = externalUser.Claims.ToList();

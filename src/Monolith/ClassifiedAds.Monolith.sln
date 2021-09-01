@@ -55,7 +55,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.BlazorServerS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.CodeGenerator", "ClassifiedAds.CodeGenerator\ClassifiedAds.CodeGenerator.csproj", "{8CA380DF-BBF4-46ED-8C5D-C41417FCC82D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifiedAds.VueWeb", "ClassifiedAds.VueWeb\ClassifiedAds.VueWeb.csproj", "{6C543E14-C1FC-41B1-B5C1-CC282AB20B4E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassifiedAds.VueWeb", "ClassifiedAds.VueWeb\ClassifiedAds.VueWeb.csproj", "{6C543E14-C1FC-41B1-B5C1-CC282AB20B4E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

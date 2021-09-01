@@ -9,5 +9,7 @@
         public GoogleOptions Google { get; set; }
 
         public FacebookOptions Facebook { get; set; }
+
+        public LineOptions Line { get; set; }
     }
 }

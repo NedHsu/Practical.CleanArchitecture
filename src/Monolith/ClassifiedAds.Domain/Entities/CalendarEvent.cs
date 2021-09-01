@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ClassifiedAds.Domain.Entities {
-    public class CalendarEvent : AggregateRoot<Guid> {
+namespace ClassifiedAds.Domain.Entities
+{
+    public class CalendarEvent : AggregateRoot<Guid>
+    {
         public DateTime StartTime { get; set; }
 
         public DateTime EndTime { get; set; }
@@ -12,7 +14,7 @@ namespace ClassifiedAds.Domain.Entities {
         public string Content { get; set; }
 
         public Guid CreaterId { get; set; }
-        public User Creater { get; set; }
 
+        public User Creater { get; set; }
     }
 }

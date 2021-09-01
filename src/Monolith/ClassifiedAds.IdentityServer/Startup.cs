@@ -142,6 +142,16 @@ namespace ClassifiedAds.IdentityServer
                 });
             }
 
+            if (AppSettings?.ExternalLogin?.Line?.IsEnabled ?? false)
+            {
+                authenBuilder.AddLine(options =>
+                {
+                    options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                    options.ClientId = AppSettings.ExternalLogin.Line.ClientId;
+                    options.ClientSecret = AppSettings.ExternalLogin.Line.ClientSecret;
+                });
+            }
+
             services.AddMessageBusSender<EmailMessageCreatedEvent>(AppSettings.MessageBroker);
             services.AddMessageBusSender<SmsMessageCreatedEvent>(AppSettings.MessageBroker);
         }
