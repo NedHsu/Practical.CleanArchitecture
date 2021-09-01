@@ -13,6 +13,7 @@ import Calendar from 'tui-calendar';
 import "tui-calendar/dist/tui-calendar.css";
 import 'tui-date-picker/dist/tui-date-picker.css';
 import 'tui-time-picker/dist/tui-time-picker.css';
+import { useI18n } from "vue-i18n";
 
 export default defineComponent({
     computed: {
@@ -28,6 +29,7 @@ export default defineComponent({
 
     },
     setup() {
+        const { t } = useI18n({ useScope: 'global' })
         const store = useStore()
         const calendar = new Calendar('#calendar', {
             defaultView: 'month',
@@ -50,10 +52,10 @@ export default defineComponent({
                     return '<span class="calendar-week-dayname-name">' + dayname.label + '</span>';
                 },
                 popupSave: () => {
-                    return "儲存";
+                    return t('labels.save');
                 },
                 popupDelete: () => {
-                    return "刪除";
+                    return t('delete');
                 },
                 schedule: (schedule) => {
                     return '<span class="calendar-font-icon ic-milestone-b"></span> <span style="background-color: ' + schedule.bgColor + '">' + schedule.title + '</span>';

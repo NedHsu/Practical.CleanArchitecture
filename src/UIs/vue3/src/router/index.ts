@@ -39,22 +39,22 @@ export function setupRouter(i18n: I18n): Router {
             redirect: () => `/${locale}`
         },
         //--routes
-    {
-        path: "/notifications",
-        name: "Notifications",
-        component: () => import("../views/Notifications.vue"),
-        meta: {
-            index: 1
-        }
-    },
-    {
-        path: "/calendarEvents",
-        name: "CalendarEvents",
-        component: () => import("../views/CalendarEvents.vue"),
-        meta: {
-            index: 1
-        }
-    },
+        {
+            path: "/:locale/notifications",
+            name: "Notifications",
+            component: () => import("../views/Notifications.vue"),
+            meta: {
+                index: 1
+            }
+        },
+        {
+            path: "/:locale/calendarEvents",
+            name: "CalendarEvents",
+            component: () => import("../views/CalendarEvents.vue"),
+            meta: {
+                index: 1
+            }
+        },
     ]
 
     // create router instance
@@ -65,9 +65,8 @@ export function setupRouter(i18n: I18n): Router {
 
     // navigation guards
     router.beforeEach(async to => {
-        if (to.path.includes('oidc-login-redirect'))
-        {
-            return 
+        if (to.path.includes('oidc-login-redirect')) {
+            return
         }
 
         const paramsLocale = to.params.locale as string

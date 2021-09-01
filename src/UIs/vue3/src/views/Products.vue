@@ -1,7 +1,5 @@
 <template>
     <div>
-        <div v-if="loading">loading</div>
-
         <DataTable :value="products" stripedRows responsiveLayout="scroll">
             <template #header>
                 <div class="table-header">Products</div>
@@ -33,13 +31,16 @@
             </Column>
             <template #footer>In total there are {{ products ? products.length : 0 }} products.</template>
         </DataTable>
+        <Spinner :loading="loading" :fullscreen="true"></Spinner>
     </div>
 </template>
 <script lang="ts">import { onMounted, onUnmounted, withCtx } from "@vue/runtime-core";
 import { useStore } from 'vuex'
 import { mapActions, mapGetters, mapState } from 'vuex';
+import Spinner from "../components/Spinner.vue";
 
 export default {
+    components: { Spinner },
     computed: {
         ...mapGetters("product", [
             // "products"

@@ -7,3 +7,6 @@ navigations:
   product: 'Product'
 labels:
   language: 'Languages'
+  save: 'Save'
+  delete: 'Delete'
+  

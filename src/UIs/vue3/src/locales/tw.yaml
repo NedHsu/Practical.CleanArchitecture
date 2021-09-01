@@ -7,3 +7,5 @@ navigations:
   product: '產品'
 labels:
   language: '語系'
+  save: '儲存'
+  delete: '刪除'
