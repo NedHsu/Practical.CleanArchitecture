@@ -7,11 +7,7 @@
                 height="40"
                 class="p-mr-2"
             />
-            <Button
-                :label="pageTitle"
-                class="p-button-link"
-                @click="goHome"
-            />
+            <Button :label="pageTitle" class="p-button-link" @click="goHome" />
         </template>
         <template #end>
             <div class="p-grid p-ai-center vertical-container">
@@ -42,22 +38,45 @@
             </div>
         </template>
     </Menubar>
+    <Toast position="bottom-center" group="bc">
+        <template #message="slotProps">
+            <div class="p-d-flex p-flex-column">
+                <div class="p-text-center">
+                    <i class="pi pi-exclamation-triangle" style="font-size: 3rem"></i>
+                    <h4>{{ slotProps.message.summary }}</h4>
+                    <p>{{ slotProps.message.detail }}</p>
+                </div>
+                <div class="p-grid p-fluid">
+                    <div class="p-col-6">
+                        <Button class="p-button-success" label="Yes"></Button>
+                    </div>
+                    <div class="p-col-6">
+                        <Button class="p-button-secondary" label="No"></Button>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </Toast>
 </template>
 <script lang="ts">
-import { defineComponent, ref, version, watch, inject } from 'vue'
+import { defineComponent, ref, version, watch, inject, onMounted } from 'vue'
 import store from '../store';
 import { PrimeIcons } from 'primevue/api';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { SUPPORT_LOCALES } from '../i18n';
-import Menu from 'primevue/menu';
+import { useToast } from "primevue/usetoast";
 
 export default defineComponent({
     setup() {
         const router = useRouter()
         const { t, locale } = useI18n({ useScope: 'global' })
-        const menu = ref(Menu)
-        
+        const menu = ref()
+        const toast = useToast();
+
+        onMounted(() => {
+        })
+
         /**
          * select locale value for language select form
          *
@@ -84,7 +103,7 @@ export default defineComponent({
             })
             reload();
         })
-        return { menu, t, router, locale, currentLocale, supportLocales: SUPPORT_LOCALES }
+        return { menu, t, router, locale, currentLocale, supportLocales: SUPPORT_LOCALES, toast }
     },
     computed: {
         isAuthenticated() {
@@ -98,6 +117,7 @@ export default defineComponent({
         toggleMenu(event: Event) {
             this.menu.toggle(event);
             console.log(this.user);
+            this.toast.add({ severity: 'warn', summary: 'Info Message', detail: 'Message Content', life: 3000, group: 'bc' })
         },
         login() {
             store.state.authService.authService.login();

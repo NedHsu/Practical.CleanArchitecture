@@ -1,11 +1,14 @@
+locale: tw
 pages:
-  home: 'This page is home page'
-  about: 'This page is about page'
+ home: 這是首頁
+ about: 這是關於頁
 navigations:
-  home: 'Home'
-  about: 'About'
-  product: '產品'
+ home: 首頁
+ about: 關於
+ product: 產品
 labels:
-  language: '語系'
-  save: '儲存'
-  delete: '刪除'
+ language: 語系
+ save: 儲存
+ delete: 刪除
+ test:
+  test: twtest

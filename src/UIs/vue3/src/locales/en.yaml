@@ -1,12 +1,14 @@
+locale: en
 pages:
-  home: 'This page is home page'
-  about: 'This page is about page'
+ home: This page is home page
+ about: This page is about page
 navigations:
-  home: 'Home'
-  about: 'About'
-  product: 'Product'
+ home: Home
+ about: About
+ product: Product
 labels:
-  language: 'Languages'
-  save: 'Save'
-  delete: 'Delete'
-  
+ language: Languages
+ save: Save
+ delete: Delete
+ test:
+  test: entest

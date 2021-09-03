@@ -16,6 +16,8 @@ import Menubar from 'primevue/menubar';
 import Avatar from 'primevue/avatar';
 import AvatarGroup from 'primevue/avatargroup';
 import Menu from 'primevue/menu';
+import Toast from 'primevue/toast';
+import SelectButton from 'primevue/selectbutton';
 import ToastService from 'primevue/toastservice';
 
 import en from './locales/en.yaml';
@@ -56,6 +58,8 @@ authService.loadUser().then(user => {
     app.component('Avatar', Avatar);
     app.component('AvatarGroup', AvatarGroup);
     app.component('Menu', Menu);
+    app.component('Toast', Toast);
+    app.component('SelectButton', SelectButton);
 
     app.mount('#app');
 });

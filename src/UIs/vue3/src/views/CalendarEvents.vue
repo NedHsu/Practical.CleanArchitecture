@@ -1,5 +1,15 @@
 <template>
     <div>
+        <Toolbar class="calendar-toolbar">
+            <template #left>
+                <SelectButton v-model="calendarView" :options="calendarViews" optionLabel="name" @click="calendarViewSelected" />
+            </template>
+            <template #right>
+                <Button label="Today" class="p-button-rounded p-button-outlined" />
+                <Button icon="pi pi-angle-left" class="p-button-rounded p-button-outlined" />
+                <Button icon="pi pi-angle-right" class="p-button-rounded p-button-outlined" />
+            </template>
+        </Toolbar>
         <div v-if="loading">loading</div>
         <div id="calendar"></div>
     </div>
@@ -83,6 +93,7 @@ export default defineComponent({
         const beforeDeleteSchedule = (event: any) => {
         };
         const clickDayname = (event: any) => {
+            console.log(event);
         };
         const clickMore = (event: any) => {
         };
@@ -119,8 +130,25 @@ export default defineComponent({
         deleteCalendarEvent(id: string) {
             console.log(id);
         },
-    }
+        calendarViewSelected() {
+            this.calendar.changeView(this.calendarView.value, true);
+        }
+    },
+    data() {
+        return {
+            calendarView: { name: 'Monthly', value: 'month' },
+            calendarViews: [
+                { name: 'Monthly', value: 'month' },
+                { name: 'Weekly', value: 'week'},
+            ]
+        }
+    },
 });
 </script>
 <style lang="scss" scoped>
+.calendar-toolbar {
+    button {
+        margin-left: 5px;
+    }
+}
 </style>
