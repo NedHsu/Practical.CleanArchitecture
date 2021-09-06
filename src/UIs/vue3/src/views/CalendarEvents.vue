@@ -1,15 +1,29 @@
 <template>
     <div>
-        <Toolbar class="calendar-toolbar">
-            <template #left>
-                <SelectButton v-model="calendarView" :options="calendarViews" optionLabel="name" @click="calendarViewSelected" />
-            </template>
-            <template #right>
+        <div class="calendar-toolbar">
+            <div class="left">
+                <SelectButton
+                    v-model="calendarView"
+                    :options="calendarViews"
+                    optionLabel="name"
+                    @click="calendarViewSelected"
+                />
+            </div>
+            <div class="center">{{ dateStart }} ~ {{ dateEnd }}</div>
+            <div class="right">
                 <Button label="Today" class="p-button-rounded p-button-outlined" />
-                <Button icon="pi pi-angle-left" class="p-button-rounded p-button-outlined" />
-                <Button icon="pi pi-angle-right" class="p-button-rounded p-button-outlined" />
-            </template>
-        </Toolbar>
+                <Button
+                    icon="pi pi-angle-left"
+                    class="p-button-rounded p-button-outlined"
+                    @click="calendarViewPrev"
+                />
+                <Button
+                    icon="pi pi-angle-right"
+                    class="p-button-rounded p-button-outlined"
+                    @click="calendarViewNext"
+                />
+            </div>
+        </div>
         <div v-if="loading">loading</div>
         <div id="calendar"></div>
     </div>
@@ -24,6 +38,7 @@ import "tui-calendar/dist/tui-calendar.css";
 import 'tui-date-picker/dist/tui-date-picker.css';
 import 'tui-time-picker/dist/tui-time-picker.css';
 import { useI18n } from "vue-i18n";
+import dayjs from "dayjs";
 
 export default defineComponent({
     computed: {
@@ -34,6 +49,14 @@ export default defineComponent({
             "calendarEvents",
             "loading"
         ]),
+        dateStart() {
+            console.log(this.calendarState);
+            return dayjs(this.calendar.getDateRangeStart().toDate()).format("YYYY-MM-DD");
+        },
+        dateEnd() {
+            this.calendarState;
+            return dayjs(this.calendar.getDateRangeEnd().toDate()).format("YYYY-MM-DD");
+        }
     },
     props: {
 
@@ -57,6 +80,13 @@ export default defineComponent({
                     dragBgColor: '#585858',
                 },
             ],
+            week: {
+                // narrowWeekend: true,
+                // timezonesCollapsed: true,
+                // showTimezoneCollapseButton: true,
+                // hourStart: 6,
+                // hourEnd: 24
+            },
             template: {
                 monthDayname: function (dayname) {
                     return '<span class="calendar-week-dayname-name">' + dayname.label + '</span>';
@@ -89,8 +119,10 @@ export default defineComponent({
             }]);
         };
         const beforeUpdateSchedule = (event: any) => {
+
         };
         const beforeDeleteSchedule = (event: any) => {
+
         };
         const clickDayname = (event: any) => {
             console.log(event);
@@ -98,6 +130,7 @@ export default defineComponent({
         const clickMore = (event: any) => {
         };
         const clickSchedule = (event: any) => {
+            console.log(event);
         };
         const clickTimezonesCollapseBtn = (event: any) => {
         };
@@ -109,7 +142,6 @@ export default defineComponent({
         calendar.on('clickSchedule', clickSchedule);
         calendar.on('clickTimezonesCollapseBtn', clickTimezonesCollapseBtn);
         calendar.on('afterRenderSchedule', clickTimezonesCollapseBtn);
-
         onMounted(() => {
             store.dispatch("calendarEvent/FETCH_CALENDAR_EVENTS").then(() => {
                 console.log(store.state.calendarEvent.calendarEvents)
@@ -132,14 +164,24 @@ export default defineComponent({
         },
         calendarViewSelected() {
             this.calendar.changeView(this.calendarView.value, true);
+            this.calendarState++;
+        },
+        calendarViewNext() {
+            this.calendar.next();
+            this.calendarState++;
+        },
+        calendarViewPrev() {
+            this.calendar.prev()
+            this.calendarState++;
         }
     },
     data() {
         return {
+            calendarState: 0,
             calendarView: { name: 'Monthly', value: 'month' },
             calendarViews: [
                 { name: 'Monthly', value: 'month' },
-                { name: 'Weekly', value: 'week'},
+                { name: 'Weekly', value: 'week' },
             ]
         }
     },
@@ -147,8 +189,35 @@ export default defineComponent({
 </script>
 <style lang="scss" scoped>
 .calendar-toolbar {
+    display: flex;
+    padding: 10px;
+    // background: ;
     button {
         margin-left: 5px;
     }
+    .left {
+        float: left;
+    }
+    .right {
+        float: right;
+    }
+    .center {
+        display: inline-block;
+        margin: auto;
+    }
+}
+</style>
+
+<style>
+div::-webkit-scrollbar-thumb {
+    background-color: #8070d4;
+    border-radius: 100px;
+}
+div::-webkit-scrollbar-track {
+    background-color: #e4e4e4;
+    border-radius: 100px;
+}
+div::-webkit-scrollbar {
+    width: 8px;
 }
 </style>

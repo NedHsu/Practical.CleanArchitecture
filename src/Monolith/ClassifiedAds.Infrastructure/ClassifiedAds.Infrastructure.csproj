@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <None Include="..\.editorconfig" Link=".editorconfig" />
     <PackageReference Include="App.Metrics" Version="4.1.0" />
     <PackageReference Include="App.Metrics.AspNetCore.Mvc" Version="4.1.0" />
     <PackageReference Include="App.Metrics.AspNetCore.Tracking" Version="4.1.0" />

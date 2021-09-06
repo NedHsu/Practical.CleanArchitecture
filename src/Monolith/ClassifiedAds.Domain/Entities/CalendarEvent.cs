@@ -13,6 +13,10 @@ namespace ClassifiedAds.Domain.Entities
 
         public string Content { get; set; }
 
+        public Guid? CalendarId { get; set; }
+
+        public Calendar? Calendar { get; set; }
+
         public Guid CreaterId { get; set; }
 
         public User Creater { get; set; }

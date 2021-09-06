@@ -32,8 +32,10 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddScoped<IWeatherService, WeatherService>()
                 .AddScoped<IStockGroupItemService, StockGroupItemService>()
                 .AddScoped<EmailMessageService>()
-                .AddScoped<SmsMessageService>();
+                .AddScoped<SmsMessageService>()
 
+                //--AddScoped
+                ;
             if (configureInterceptor != null)
             {
                 var aggregateRootTypes = typeof(AggregateRoot<>).Assembly.GetTypes().Where(x => x.BaseType == typeof(AggregateRoot<Guid>)).ToList();
@@ -46,6 +48,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 configureInterceptor(typeof(IProductService), typeof(ProductService), ServiceLifetime.Scoped);
                 configureInterceptor(typeof(IMatchService), typeof(MatchService), ServiceLifetime.Scoped);
                 configureInterceptor(typeof(IStockService), typeof(StockService), ServiceLifetime.Scoped);
+
+                //--configureInterceptor
             }
 
             return services;
