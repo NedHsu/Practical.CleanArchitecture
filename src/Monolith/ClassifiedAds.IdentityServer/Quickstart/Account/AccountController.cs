@@ -3,6 +3,7 @@
 
 
 using ClassifiedAds.Application;
+using ClassifiedAds.Application.Users.Queries;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.IdentityServer.Models;
 using IdentityModel;
@@ -117,7 +118,7 @@ namespace IdentityServerHost.Quickstart.UI
 
             if (ModelState.IsValid)
             {
-                var user = await _userManager.FindByNameAsync(model.Username);
+                var user = _dispatcher.Dispatch(new GetUserQuery { UserName = model.Username, IncludeUserRoles = true, IncludeRoles = true });
 
                 if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
                 {
@@ -131,14 +132,15 @@ namespace IdentityServerHost.Quickstart.UI
                         props = new AuthenticationProperties
                         {
                             IsPersistent = true,
-                            ExpiresUtc = DateTimeOffset.UtcNow.Add(AccountOptions.RememberMeLoginDuration)
+                            ExpiresUtc = DateTimeOffset.UtcNow.Add(AccountOptions.RememberMeLoginDuration),
                         };
-                    };
+                    }
 
                     // issue authentication cookie with subject ID and username
                     var isuser = new IdentityServerUser(user.Id.ToString())
                     {
                         DisplayName = user.UserName,
+                        AdditionalClaims = user.UserRoles?.Select(x => new System.Security.Claims.Claim("role", x.Role.Name)).ToList(),
                     };
 
                     await HttpContext.SignInAsync(isuser, props);
@@ -180,7 +182,6 @@ namespace IdentityServerHost.Quickstart.UI
             var vm = await BuildLoginViewModelAsync(model);
             return View(vm);
         }
-
         
         /// <summary>
         /// Show logout page

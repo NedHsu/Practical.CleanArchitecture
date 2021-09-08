@@ -20,5 +20,9 @@ namespace ClassifiedAds.Domain.Entities
         public Guid CreaterId { get; set; }
 
         public User Creater { get; set; }
+
+        public bool IsAllDay { get; set; }
+
+        public bool IsVisible { get; set; }
     }
 }

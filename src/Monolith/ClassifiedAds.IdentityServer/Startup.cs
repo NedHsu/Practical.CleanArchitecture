@@ -5,9 +5,11 @@ using ClassifiedAds.Application.EmailMessages.DTOs;
 using ClassifiedAds.Application.SmsMessages.DTOs;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.IdentityServer.ConfigurationOptions;
+using ClassifiedAds.IdentityServer.Services;
 using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Persistence;
 using IdentityServer4;
+using IdentityServer4.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -154,6 +156,7 @@ namespace ClassifiedAds.IdentityServer
 
             services.AddMessageBusSender<EmailMessageCreatedEvent>(AppSettings.MessageBroker);
             services.AddMessageBusSender<SmsMessageCreatedEvent>(AppSettings.MessageBroker);
+            services.AddScoped<IProfileService, ProfileService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

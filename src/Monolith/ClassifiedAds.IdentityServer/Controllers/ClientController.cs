@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using ClassifiedAds.IdentityServer.Models.ClientModels;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClassifiedAds.IdentityServer.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ClientController : Controller
     {
         private readonly ConfigurationDbContext _configurationDbContext;

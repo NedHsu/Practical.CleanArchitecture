@@ -12,15 +12,7 @@ namespace ClassifiedAds.Persistence.DapperContext
 {
     public interface IStockDbContext : IDapperDbContext, IUnitOfWork
     {
-        IDapperRepository<Stock> Stock { get; }
-        IDapperRepository<StockNote> StockNote { get; }
-        IDapperRepository<StockGroup> StockGroup { get; }
-        IDapperRepository<StockGroupItem> StockGroupItem { get; }
-        IDapperRepository<StockFunder> StockFunder { get; }
-        IDapperRepository<StockRevenue> StockRevenue { get; }
-        IDapperRepository<StockDay> StockDay { get; }
-        IDapperRepository<StockProfit> StockProfit { get; }
-        IDapperRepository<StockSeminar> StockSeminar { get; }
-        IDapperRepository<StockMargin> StockMargin { get; }
+        IDapperRepository<TEntity> GetRepository<TEntity>()
+            where TEntity : class;
     }
 }

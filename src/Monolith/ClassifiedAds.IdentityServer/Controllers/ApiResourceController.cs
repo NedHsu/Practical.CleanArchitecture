@@ -1,6 +1,7 @@
 ﻿using ClassifiedAds.IdentityServer.Models.ApiResourceModels;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -10,6 +11,7 @@ using System.Linq;
 
 namespace ClassifiedAds.IdentityServer.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ApiResourceController : Controller
     {
         private readonly ConfigurationDbContext _configurationDbContext;

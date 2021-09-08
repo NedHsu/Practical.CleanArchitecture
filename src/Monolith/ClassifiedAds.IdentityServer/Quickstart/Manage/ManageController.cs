@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ClassifiedAds.IdentityServer.Quickstart.Manage
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class ManageController : Controller
     {
         private readonly UserManager<User> _userManager;

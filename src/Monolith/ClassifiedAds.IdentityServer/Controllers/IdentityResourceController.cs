@@ -5,12 +5,14 @@ using System.Threading.Tasks;
 using ClassifiedAds.IdentityServer.Models.IdentityResourceModels;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace ClassifiedAds.IdentityServer.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class IdentityResourceController : Controller
     {
         private readonly ConfigurationDbContext _configurationDbContext;

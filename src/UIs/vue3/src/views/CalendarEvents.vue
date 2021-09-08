@@ -24,29 +24,34 @@
                 />
             </div>
         </div>
-        <div v-if="loading">loading</div>
         <div id="calendar"></div>
+        <Spinner :loading="loading" :fullscreen="true"></Spinner>
     </div>
 </template>
 <script lang="ts">
 import { onMounted, onUnmounted } from "@vue/runtime-core";
 import { defineComponent } from "vue";
 import { mapActions, mapGetters, mapState, useStore } from 'vuex';
-
+import Spinner from '../components/Spinner.vue';
 import Calendar from 'tui-calendar';
 import "tui-calendar/dist/tui-calendar.css";
 import 'tui-date-picker/dist/tui-date-picker.css';
 import 'tui-time-picker/dist/tui-time-picker.css';
 import { useI18n } from "vue-i18n";
 import dayjs from "dayjs";
+import ACTIONS from '../store/modules/calendarEvent/actionTypes';
 
 export default defineComponent({
+    components: {
+        Spinner
+    },
     computed: {
         ...mapGetters("calendarEvent", [
             // "calendarEvents"
         ]),
         ...mapState("calendarEvent", [
             "calendarEvents",
+            "calendarEvent",
             "loading"
         ]),
         dateStart() {
@@ -105,10 +110,9 @@ export default defineComponent({
                 }
             }
         });
-        const beforeCreateSchedule = (event: any) => {
-            var calendarId = '1';
-            calendar.createSchedules([{
-                id: event.guide,
+        const beforeCreateSchedule = async (event: any) => {
+            let calendarId = '1';
+            let calendarEvent = {
                 calendarId: calendarId,
                 title: event.title,
                 isAllDay: event.isAllDay,
@@ -116,7 +120,8 @@ export default defineComponent({
                 end: event.end,
                 category: "time",
                 isVisible: true,
-            }]);
+            }
+            calendar.createSchedules([await store.dispatch(`calendarEvent/${ACTIONS.ADD_CALENDAR_EVENTS}`, calendarEvent)]);
         };
         const beforeUpdateSchedule = (event: any) => {
 
@@ -156,9 +161,6 @@ export default defineComponent({
         return { calendar }
     },
     methods: {
-        ...mapActions("calendarEvent", [
-            "FETCH_CALENDAR_EVENTS"
-        ]),
         deleteCalendarEvent(id: string) {
             console.log(id);
         },

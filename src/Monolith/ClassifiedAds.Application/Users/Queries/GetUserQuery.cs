@@ -7,6 +7,7 @@ namespace ClassifiedAds.Application.Users.Queries
 {
     public class GetUserQuery : IQuery<User>
     {
+        public string UserName { get; set; }
         public Guid Id { get; set; }
         public bool IncludeClaims { get; set; }
         public bool IncludeUserRoles { get; set; }
@@ -33,7 +34,7 @@ namespace ClassifiedAds.Application.Users.Queries
                 AsNoTracking = query.AsNoTracking,
             });
 
-            return db.FirstOrDefault(x => x.Id == query.Id);
+            return string.IsNullOrWhiteSpace(query.UserName) ? db.FirstOrDefault(x => x.Id == query.Id) : db.FirstOrDefault(x => x.UserName == query.UserName);
         }
     }
 }

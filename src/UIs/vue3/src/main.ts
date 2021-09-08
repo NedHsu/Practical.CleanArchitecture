@@ -19,6 +19,7 @@ import Menu from 'primevue/menu';
 import Toast from 'primevue/toast';
 import SelectButton from 'primevue/selectbutton';
 import ToastService from 'primevue/toastservice';
+import InputText from 'primevue/inputtext';
 
 import en from './locales/en.yaml';
 import 'primeflex/primeflex.css';
@@ -60,6 +61,7 @@ authService.loadUser().then(user => {
     app.component('Menu', Menu);
     app.component('Toast', Toast);
     app.component('SelectButton', SelectButton);
+    app.component('InputText', InputText);
 
     app.mount('#app');
 });

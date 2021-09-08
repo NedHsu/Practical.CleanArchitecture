@@ -5,10 +5,12 @@ using ClassifiedAds.Application.Roles.Commands;
 using ClassifiedAds.Application.Roles.Queries;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.IdentityServer.Models.RoleModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClassifiedAds.IdentityServer.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class RoleController : Controller
     {
         private readonly Dispatcher _dispatcher;

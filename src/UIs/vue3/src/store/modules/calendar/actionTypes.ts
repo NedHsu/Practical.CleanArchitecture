@@ -1,0 +1,4 @@
+export default {
+    FETCH_CALENDARS: "FETCH_CALENDARS",
+    ADD_CALENDARS: "ADD_CALENDARS",
+};

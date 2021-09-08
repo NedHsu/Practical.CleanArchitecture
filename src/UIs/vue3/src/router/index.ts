@@ -40,6 +40,14 @@ export function setupRouter(i18n: I18n): Router {
         },
         //--routes
         {
+            path: "/:locale/calendars",
+            name: "Calendars",
+            component: () => import("../views/Calendars.vue"),
+            meta: {
+                index: 1
+            }
+        },
+        {
             path: "/:locale/notifications",
             name: "Notifications",
             component: () => import("../views/Notifications.vue"),

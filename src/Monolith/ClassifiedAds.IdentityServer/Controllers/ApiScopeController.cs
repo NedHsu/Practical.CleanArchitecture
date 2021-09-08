@@ -1,6 +1,7 @@
 ﻿using ClassifiedAds.IdentityServer.Models.ApiScopeModels;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -9,6 +10,7 @@ using System.Linq;
 
 namespace ClassifiedAds.IdentityServer.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ApiScopeController : Controller
     {
         private readonly ConfigurationDbContext _configurationDbContext;
@@ -55,7 +57,6 @@ namespace ClassifiedAds.IdentityServer.Controllers
             {
                 api = new ApiScope
                 {
-
                 };
             }
             else

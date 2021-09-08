@@ -5,6 +5,7 @@ using ClassifiedAds.Application.Users.Queries;
 using ClassifiedAds.CrossCuttingConcerns.OS;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.IdentityServer.Models.UserModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -14,6 +15,7 @@ using System.Threading.Tasks;
 
 namespace ClassifiedAds.IdentityServer.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class UserController : Controller
     {
         private readonly Dispatcher _dispatcher;

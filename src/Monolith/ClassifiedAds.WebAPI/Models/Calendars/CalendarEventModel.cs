@@ -6,10 +6,18 @@ namespace ClassifiedAds.WebAPI.Models.CalendarEvents
     {
         public Guid Id { get; set; }
 
-        public string Code { get; set; }
+        public DateTime Start { get; set; }
 
-        public string Name { get; set; }
+        public DateTime End { get; set; }
 
-        public string Description { get; set; }
+        public string Title { get; set; }
+
+        public string Content { get; set; }
+
+        public bool IsAllDay { get; set; }
+
+        public bool IsVisible { get; set; }
+
+        public string Category { get; set; }
     }
 }

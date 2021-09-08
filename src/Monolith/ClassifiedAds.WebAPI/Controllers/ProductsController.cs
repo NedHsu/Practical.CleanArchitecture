@@ -17,7 +17,7 @@ using System.Linq;
 
 namespace ClassifiedAds.WebAPI.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]

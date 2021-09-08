@@ -2,3 +2,6 @@
 
 # CS8632: 可為 Null 的參考型別註釋應只用於 '#nullable' 註釋內容中的程式碼。
 dotnet_diagnostic.CS8632.severity = none
+
+# SA1028: Code should not contain trailing whitespace
+dotnet_diagnostic.SA1028.severity = none

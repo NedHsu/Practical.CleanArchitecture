@@ -28,37 +28,44 @@
             </a>
         </h3>
 
-        <!--Menu item -->
-        <div class="menu-item my-2 my-md-0 mr-md-3 dropdown">
-            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                Configuration
-            </button>
-            <div class="dropdown-menu">
-                <a class="dropdown-item" asp-area="" asp-controller="Client" asp-action="Index">Clients</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" asp-area="" asp-controller="IdentityResource" asp-action="Index">Identity Resources</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" asp-area="" asp-controller="ApiResource" asp-action="Index">Api Resources</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" asp-area="" asp-controller="Grants" asp-action="Index">Persisted Grants</a>
+        @if (User.IsInRole("Admin"))
+        {
+            <!--Menu item -->
+            <div class="menu-item my-2 my-md-0 mr-md-3 dropdown">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                    Configuration
+                </button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" asp-area="" asp-controller="Client" asp-action="Index">Clients</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" asp-area="" asp-controller="IdentityResource" asp-action="Index">Identity Resources</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" asp-area="" asp-controller="ApiResource" asp-action="Index">Api Resources</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" asp-area="" asp-controller="Grants" asp-action="Index">Persisted Grants</a>
+                </div>
             </div>
-        </div>
 
-        <!--Menu item -->
-        <div class="menu-item my-2 my-md-0 mr-md-3 dropdown">
-            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                User Management
-            </button>
-            <div class="dropdown-menu">
-                <a class="dropdown-item" asp-area="" asp-controller="User" asp-action="Index">Users</a>
-                <a class="dropdown-item" asp-area="" asp-controller="Role" asp-action="Index">Roles</a>
+            <!--Menu item -->
+            <div class="menu-item my-2 my-md-0 mr-md-3 dropdown">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                    User Management
+                </button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" asp-area="" asp-controller="User" asp-action="Index">Users</a>
+                    <a class="dropdown-item" asp-area="" asp-controller="Role" asp-action="Index">Roles</a>
+                </div>
             </div>
-        </div>
+        }
 
         <!--Menu item -->
         @if (User.Identity.IsAuthenticated)
         {
-            <a class="menu-item my-2 btn btn-outline-primary" asp-action="Logout" asp-controller="Account">@User.GetDisplayName() - Logout</a>
+            <a class="menu-item my-2 btn btn-outline-primary" asp-action="Logout" asp-controller="Account">@name - Logout</a>
+        }
+        else
+        {
+            <a class="menu-item my-2 btn btn-outline-primary" asp-controller="Account" asp-action="Login">Login</a>
         }
     </div>
     <div class="container body-content">

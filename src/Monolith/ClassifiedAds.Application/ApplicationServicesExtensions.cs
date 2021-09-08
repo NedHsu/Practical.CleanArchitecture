@@ -1,7 +1,11 @@
-﻿using ClassifiedAds.Application;
+﻿using System;
+using System.Linq;
+using System.Reflection;
+using ClassifiedAds.Application;
 using ClassifiedAds.Application.EmailMessages.Services;
 using ClassifiedAds.Application.Matchs.Services;
 using ClassifiedAds.Application.Products.Services;
+using ClassifiedAds.Application.Services;
 using ClassifiedAds.Application.SmsMessages.Services;
 using ClassifiedAds.Application.StockGroupItems.Services;
 using ClassifiedAds.Application.Stocks.Services;
@@ -9,9 +13,6 @@ using ClassifiedAds.Application.Users.Services;
 using ClassifiedAds.Application.Weathers.Services;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Events;
-using System;
-using System.Linq;
-using System.Reflection;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -35,6 +36,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddScoped<SmsMessageService>()
 
                 //--AddScoped
+                .AddScoped<ICalendarService, CalendarService>()
                 ;
             if (configureInterceptor != null)
             {
@@ -50,6 +52,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 configureInterceptor(typeof(IStockService), typeof(StockService), ServiceLifetime.Scoped);
 
                 //--configureInterceptor
+                configureInterceptor(typeof(ICalendarService), typeof(CalendarService), ServiceLifetime.Scoped);
             }
 
             return services;

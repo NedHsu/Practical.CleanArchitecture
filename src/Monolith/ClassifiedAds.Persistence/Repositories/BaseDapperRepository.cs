@@ -33,7 +33,7 @@ namespace ClassifiedAds.Persistence.Repositories
             var t = typeof(TEntity);
             TableName = t.GetCustomAttributesData().FirstOrDefault(x => x.AttributeType == typeof(TableAttribute))?.ConstructorArguments[0].Value.ToString() ?? t.Name;
             TableKeys = t.GetProperties().Where(p => p.IsDefined(typeof(KeyAttribute), false)).ToArray();
-            DapperRepository = (IDapperRepository<TEntity>)typeof(IStockDbContext).GetProperty(TableName).GetValue(_dbContext);
+            DapperRepository = _dbContext.GetRepository<TEntity>();
         }
 
         protected IStockDbContext DbContext => _dbContext;

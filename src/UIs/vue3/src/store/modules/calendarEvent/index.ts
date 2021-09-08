@@ -18,9 +18,13 @@ export default {
         [TYPES.FETCH_CALENDAR_EVENTS_FAIL](state: CalendarEventState) {
             state.loading = false;
         },
+        [TYPES.ADD_CALENDAR_EVENTS_SUCCESS](state: CalendarEventState, data: any) {
+            state.calendarEvent = data;
+            state.loading = false;
+        }
     },
     actions: {
-        async [ACTIONS.FETCH_CALENDAR_EVENTS]({ commit }) {
+        async [ACTIONS.FETCH_CALENDAR_EVENTS]({ commit, state }) {
             commit(TYPES.FETCH_CALENDAR_EVENTS_START);
             await request.get("calendarEvents")
                 .then((rs) => {
@@ -29,6 +33,18 @@ export default {
                 .catch((error) => {
                     commit(TYPES.FETCH_CALENDAR_EVENTS_FAIL, error);
                 });
+            return state.calendarEvents;
+        },
+        async [ACTIONS.ADD_CALENDAR_EVENTS]({ commit, state }) {
+            commit(TYPES.FETCH_CALENDAR_EVENTS_START);
+            await request.post("calendarEvents")
+                .then((rs) => {
+                    commit(TYPES.ADD_CALENDAR_EVENTS_SUCCESS, rs.data);
+                })
+                .catch((error) => {
+                    commit(TYPES.FETCH_CALENDAR_EVENTS_FAIL, error);
+                });
+            return state.calendarEvent;
         }
     },
     getters: {
