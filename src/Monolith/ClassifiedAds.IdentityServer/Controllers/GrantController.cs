@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ClassifiedAds.IdentityServer.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     public class GrantController : Controller
     {
         public IActionResult Index()
