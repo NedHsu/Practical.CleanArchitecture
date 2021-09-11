@@ -36,6 +36,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddScoped<SmsMessageService>()
 
                 //--AddScoped
+                .AddScoped<ICalendarCategoryService, CalendarCategoryService>()
                 .AddScoped<ICalendarService, CalendarService>()
                 ;
             if (configureInterceptor != null)
@@ -52,6 +53,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 configureInterceptor(typeof(IStockService), typeof(StockService), ServiceLifetime.Scoped);
 
                 //--configureInterceptor
+                configureInterceptor(typeof(ICalendarCategoryService), typeof(CalendarCategoryService), ServiceLifetime.Scoped);
                 configureInterceptor(typeof(ICalendarService), typeof(CalendarService), ServiceLifetime.Scoped);
             }
 

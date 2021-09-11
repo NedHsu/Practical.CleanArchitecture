@@ -11,7 +11,10 @@
             </div>
             <div class="center">{{ dateStart }} ~ {{ dateEnd }}</div>
             <div class="right">
-                <Button label="Today" class="p-button-rounded p-button-outlined" />
+                <Button
+                    label="Today"
+                    class="p-button-rounded p-button-outlined"
+                />
                 <Button
                     icon="pi pi-angle-left"
                     class="p-button-rounded p-button-outlined"
@@ -22,28 +25,45 @@
                     class="p-button-rounded p-button-outlined"
                     @click="calendarViewNext"
                 />
+                <Button
+                    icon="pi pi-ellipsis-h"
+                    class="p-button-rounded p-button-text p-button-plain"
+                    @click="visibleRightTools = true"
+                />
             </div>
         </div>
         <div id="calendar"></div>
-        <Spinner :loading="loading" :fullscreen="true"></Spinner>
+        <Sidebar
+            v-model:visible="visibleRightTools"
+            :modal="false"
+            position="right"
+        >
+            <Menu :model="menuItems" style="width: auto" />
+        </Sidebar>
     </div>
+    <Spinner :loading="loading" :fullscreen="true"></Spinner>
 </template>
 <script lang="ts">
 import { onMounted, onUnmounted } from "@vue/runtime-core";
-import { defineComponent } from "vue";
-import { mapActions, mapGetters, mapState, useStore } from 'vuex';
-import Spinner from '../components/Spinner.vue';
-import Calendar from 'tui-calendar';
+import { defineComponent, ref } from "vue";
+import { mapGetters, mapState, useStore } from "vuex";
+import Spinner from "../components/Spinner.vue";
+import Calendar, {
+    IEventObject,
+    IEventScheduleObject,
+    ISchedule,
+    TZDate,
+} from "tui-calendar";
 import "tui-calendar/dist/tui-calendar.css";
-import 'tui-date-picker/dist/tui-date-picker.css';
-import 'tui-time-picker/dist/tui-time-picker.css';
+import "tui-date-picker/dist/tui-date-picker.css";
+import "tui-time-picker/dist/tui-time-picker.css";
 import { useI18n } from "vue-i18n";
 import dayjs from "dayjs";
-import ACTIONS from '../store/modules/calendarEvent/actionTypes';
+import ACTIONS from "../store/modules/calendarEvent/actionTypes";
 
 export default defineComponent({
     components: {
-        Spinner
+        Spinner,
     },
     computed: {
         ...mapGetters("calendarEvent", [
@@ -52,39 +72,34 @@ export default defineComponent({
         ...mapState("calendarEvent", [
             "calendarEvents",
             "calendarEvent",
-            "loading"
+            "loading",
         ]),
+        ...mapState("calendar", ["calendars"]),
         dateStart() {
-            console.log(this.calendarState);
-            return dayjs(this.calendar.getDateRangeStart().toDate()).format("YYYY-MM-DD");
+            this.calendarState;
+            return dayjs(this.calendar.getDateRangeStart().toDate()).format(
+                "YYYY-MM-DD"
+            );
         },
         dateEnd() {
             this.calendarState;
-            return dayjs(this.calendar.getDateRangeEnd().toDate()).format("YYYY-MM-DD");
-        }
+            return dayjs(this.calendar.getDateRangeEnd().toDate()).format(
+                "YYYY-MM-DD"
+            );
+        },
     },
-    props: {
-
-    },
+    props: {},
     setup() {
-        const { t } = useI18n({ useScope: 'global' })
-        const store = useStore()
-        const calendar = new Calendar('#calendar', {
-            defaultView: 'month',
+        const visibleRightTools = ref(false);
+        const { t } = useI18n({ useScope: "global" });
+        const store = useStore();
+        const calendar = new Calendar("#calendar", {
+            defaultView: "month",
             useCreationPopup: true,
             useDetailPopup: true,
             taskView: true,
             scheduleView: true,
-            calendars: [
-                {
-                    id: "1",
-                    name: "事件",
-                    color: '#e8e8e8',
-                    bgColor: '#585858',
-                    borderColor: '#a1b56c',
-                    dragBgColor: '#585858',
-                },
-            ],
+            calendars: [],
             week: {
                 // narrowWeekend: true,
                 // timezonesCollapsed: true,
@@ -94,71 +109,116 @@ export default defineComponent({
             },
             template: {
                 monthDayname: function (dayname) {
-                    return '<span class="calendar-week-dayname-name">' + dayname.label + '</span>';
+                    return (
+                        '<span class="calendar-week-dayname-name">' +
+                        dayname.label +
+                        "</span>"
+                    );
                 },
                 popupSave: () => {
-                    return t('labels.save');
+                    return t("labels.save");
                 },
                 popupDelete: () => {
-                    return t('delete');
+                    return t("delete");
                 },
                 schedule: (schedule) => {
-                    return '<span class="calendar-font-icon ic-milestone-b"></span> <span style="background-color: ' + schedule.bgColor + '">' + schedule.title + '</span>';
+                    return (
+                        '<span class="calendar-font-icon ic-milestone-b"></span> <span style="background-color: ' +
+                        schedule.bgColor +
+                        '">' +
+                        schedule.title +
+                        "</span>"
+                    );
                 },
                 task: (schedule) => {
                     return "123" + schedule.title;
-                }
-            }
+                },
+            },
         });
-        const beforeCreateSchedule = async (event: any) => {
-            let calendarId = '1';
+
+        const beforeCreateSchedule = async (event: ISchedule) => {
             let calendarEvent = {
-                calendarId: calendarId,
+                calendarId: event.calendarId,
                 title: event.title,
                 isAllDay: event.isAllDay,
-                start: event.start,
-                end: event.end,
+                start: (event.start as TZDate).toDate(),
+                end: (event.end as TZDate).toDate(),
                 category: "time",
                 isVisible: true,
-            }
-            calendar.createSchedules([await store.dispatch(`calendarEvent/${ACTIONS.ADD_CALENDAR_EVENTS}`, calendarEvent)]);
+            };
+            let result = await store.dispatch(
+                "calendarEvent/" + ACTIONS.ADD_CALENDAR_EVENTS,
+                calendarEvent
+            );
+            console.log(result);
+            calendar.createSchedules([result]);
         };
-        const beforeUpdateSchedule = (event: any) => {
-
+        const beforeUpdateSchedule = async (event: IEventObject) => {
+            let schedule = {
+                ...event.schedule,
+                ...event.changes,
+            };
+            await store.dispatch(
+                "calendarEvent/" + ACTIONS.UPDATE_CALENDAR_EVENT,
+                {
+                    id: schedule.id,
+                    calendarId: schedule.calendarId,
+                    title: schedule.title,
+                    isAllDay: schedule.isAllDay,
+                    start: (schedule.start as TZDate).toDate(),
+                    end: (schedule.end as TZDate).toDate(),
+                    category: "time",
+                    isVisible: true,
+                }
+            );
+            calendar.updateSchedule(schedule.id!, schedule.calendarId!, schedule);
         };
-        const beforeDeleteSchedule = (event: any) => {
-
+        const beforeDeleteSchedule = (event: IEventScheduleObject) => {
+            console.log(event);
+            store
+                .dispatch(
+                    "calendarEvent/" + ACTIONS.DEL_CALENDAR_EVENT,
+                    event.schedule.id
+                )
+                .then(() =>
+                    calendar.deleteSchedule(
+                        event.schedule.id!,
+                        event.schedule.calendarId!
+                    )
+                );
         };
         const clickDayname = (event: any) => {
             console.log(event);
         };
-        const clickMore = (event: any) => {
-        };
+        const clickMore = (event: any) => {};
         const clickSchedule = (event: any) => {
             console.log(event);
         };
-        const clickTimezonesCollapseBtn = (event: any) => {
-        };
-        calendar.on('beforeCreateSchedule', beforeCreateSchedule);
-        calendar.on('beforeUpdateSchedule', beforeUpdateSchedule);
-        calendar.on('beforeDeleteSchedule', beforeDeleteSchedule);
-        calendar.on('clickDayname', clickDayname);
-        calendar.on('clickMore', clickMore);
-        calendar.on('clickSchedule', clickSchedule);
-        calendar.on('clickTimezonesCollapseBtn', clickTimezonesCollapseBtn);
-        calendar.on('afterRenderSchedule', clickTimezonesCollapseBtn);
+        const clickTimezonesCollapseBtn = (event: any) => {};
+        calendar.on("beforeCreateSchedule", beforeCreateSchedule);
+        calendar.on("beforeUpdateSchedule", beforeUpdateSchedule);
+        calendar.on("beforeDeleteSchedule", beforeDeleteSchedule);
+        calendar.on("clickDayname", clickDayname);
+        calendar.on("clickMore", clickMore);
+        calendar.on("clickSchedule", clickSchedule);
+        calendar.on("clickTimezonesCollapseBtn", clickTimezonesCollapseBtn);
+        calendar.on("afterRenderSchedule", clickTimezonesCollapseBtn);
+
         onMounted(() => {
-            store.dispatch("calendarEvent/FETCH_CALENDAR_EVENTS").then(() => {
-                console.log(store.state.calendarEvent.calendarEvents)
-            })
+            store
+                .dispatch("calendarEvent/" + ACTIONS.FETCH_CALENDAR_EVENTS)
+                .then(() => {
+                    console.log(store.state.calendarEvent.calendarEvents);
+                });
+            store.dispatch("calendar/FETCH_CALENDARS");
             console.log("onMounted");
-        })
+        });
 
         onUnmounted(() => {
             calendar.destroy();
-        })
+        });
 
-        return { calendar }
+        return { calendar, visibleRightTools };
     },
     methods: {
         deleteCalendarEvent(id: string) {
@@ -173,19 +233,58 @@ export default defineComponent({
             this.calendarState++;
         },
         calendarViewPrev() {
-            this.calendar.prev()
+            this.calendar.prev();
             this.calendarState++;
-        }
+        },
+    },
+    watch: {
+        calendars(newValue) {
+            console.log(newValue);
+            this.calendar.setCalendars(
+                newValue.map((x: any) => {
+                    return {
+                        ...x,
+                        bgColor: "#" + x.bgColor,
+                        borderColor: "#" + x.borderColor,
+                        color: "#" + x.color,
+                        dragBgColor: "#" + x.dragBgColor,
+                    };
+                })
+            );
+        },
+        calendarEvents(newValue) {
+            this.calendar.createSchedules(newValue);
+        },
     },
     data() {
         return {
             calendarState: 0,
-            calendarView: { name: 'Monthly', value: 'month' },
+            calendarView: { name: "Monthly", value: "month" },
             calendarViews: [
-                { name: 'Monthly', value: 'month' },
-                { name: 'Weekly', value: 'week' },
-            ]
-        }
+                { name: "Monthly", value: "month" },
+                { name: "Weekly", value: "week" },
+            ],
+            menuItems: [
+                {
+                    label: "New Calendar",
+                    icon: "pi pi-calendar-plus",
+                    command: () => {
+                        this.$router.push({
+                            name: "CalendarAdd",
+                        });
+                    },
+                },
+                {
+                    label: "Calendar List",
+                    icon: "pi pi-calendar-minus",
+                    command: () => {
+                        this.$router.push({
+                            name: "Calendars",
+                        });
+                    },
+                },
+            ],
+        };
     },
 });
 </script>
@@ -207,6 +306,10 @@ export default defineComponent({
         display: inline-block;
         margin: auto;
     }
+}
+.sidebar-link {
+    width: 100%;
+    cursor: pointer;
 }
 </style>
 

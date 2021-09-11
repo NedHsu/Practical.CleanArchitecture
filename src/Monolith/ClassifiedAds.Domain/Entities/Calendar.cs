@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ClassifiedAds.Domain.Entities
 {
+    [Table("Calendars")]
     public class Calendar : AggregateRoot<Guid>
     {
         public string Name { get; set; }
@@ -17,10 +19,10 @@ namespace ClassifiedAds.Domain.Entities
 
         public int CategoryId { get; set; }
 
-        public CalendarCategory Category { get; set; }
+        public virtual CalendarCategory Category { get; set; }
 
         public Guid CreaterId { get; set; }
 
-        public User Creater { get; set; }
+        public virtual User Creater { get; set; }
     }
 }

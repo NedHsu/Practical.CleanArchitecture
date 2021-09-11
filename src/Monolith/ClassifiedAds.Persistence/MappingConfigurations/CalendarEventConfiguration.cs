@@ -12,7 +12,7 @@ namespace ClassifiedAds.Persistence.MappingConfigurations
         {
             builder.ToTable("CalendarEvents");
             builder.Property(x => x.Id).HasDefaultValueSql("newsequentialid()");
-
+            builder.Property(x => x.Category).HasColumnType("varchar(10)");
             // builder.HasData(new List<CalendarEvent> {
             //     new CalendarEvent {
             //         Id = Guid.NewGuid(),

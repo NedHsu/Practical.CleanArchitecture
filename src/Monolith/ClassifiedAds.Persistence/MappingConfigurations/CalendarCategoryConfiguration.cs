@@ -12,6 +12,7 @@ namespace ClassifiedAds.Persistence.MappingConfigurations
         {
             builder.ToTable("CalendarCategorys");
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
+            builder.Property(x => x.Name).HasMaxLength(20);
 
             // builder.HasData(new List<CalendarEvent> {
             //     new CalendarEvent {

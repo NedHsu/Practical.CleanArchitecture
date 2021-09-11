@@ -16,16 +16,16 @@ namespace ClassifiedAds.Application.Calendars.Queries
     [DatabaseRetry]
     internal class GetCalendarsQueryHandler : IQueryHandler<GetCalendarsQuery, List<Calendar>>
     {
-        private readonly IRepository<Calendar, Guid> _calendarRepository;
+        private readonly ICalendarRepository _calendarRepository;
 
-        public GetCalendarsQueryHandler(IRepository<Calendar, Guid> calendarRepository)
+        public GetCalendarsQueryHandler(ICalendarRepository calendarRepository)
         {
             _calendarRepository = calendarRepository;
         }
 
         public List<Calendar> Handle(GetCalendarsQuery query)
         {
-            return _calendarRepository.GetAll().ToList();
+            return _calendarRepository.Get(new CalendarQueryOptions { IncludeCategory = true }).ToList();
         }
     }
 }

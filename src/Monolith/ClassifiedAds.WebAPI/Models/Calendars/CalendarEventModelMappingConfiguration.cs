@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ClassifiedAds.WebAPI.Models.CalendarEvents
+namespace ClassifiedAds.WebAPI.Models.Calendars
 {
     public static class CalendarEventModelMappingConfiguration
     {

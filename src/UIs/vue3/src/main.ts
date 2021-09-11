@@ -20,6 +20,11 @@ import Toast from 'primevue/toast';
 import SelectButton from 'primevue/selectbutton';
 import ToastService from 'primevue/toastservice';
 import InputText from 'primevue/inputtext';
+import ColorPicker from 'primevue/colorpicker';
+import Card from 'primevue/card';
+import Dropdown from 'primevue/dropdown';
+import Divider from 'primevue/divider';
+import Sidebar from 'primevue/sidebar';
 
 import en from './locales/en.yaml';
 import 'primeflex/primeflex.css';
@@ -62,6 +67,11 @@ authService.loadUser().then(user => {
     app.component('Toast', Toast);
     app.component('SelectButton', SelectButton);
     app.component('InputText', InputText);
-
+    app.component('ColorPicker', ColorPicker);
+    app.component('Card', Card);
+    app.component('Dropdown', Dropdown);
+    app.component('Divider', Divider);
+    app.component('Sidebar', Sidebar);
+    
     app.mount('#app');
 });

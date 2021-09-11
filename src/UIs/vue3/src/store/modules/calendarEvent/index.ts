@@ -21,6 +21,14 @@ export default {
         [TYPES.ADD_CALENDAR_EVENTS_SUCCESS](state: CalendarEventState, data: any) {
             state.calendarEvent = data;
             state.loading = false;
+        },
+        [TYPES.UPDATE_CALENDAR_EVENT_SUCCESS](state: CalendarEventState, data: any) {
+            state.calendarEvent = data;
+            state.loading = false;
+        },
+        [TYPES.DEL_CALENDAR_EVENTS_SUCCESS](state: CalendarEventState, id: string) {
+            state.calendarEvents = state.calendarEvents.filter(x => x.id === id);
+            state.loading = false;
         }
     },
     actions: {
@@ -35,9 +43,9 @@ export default {
                 });
             return state.calendarEvents;
         },
-        async [ACTIONS.ADD_CALENDAR_EVENTS]({ commit, state }) {
+        async [ACTIONS.ADD_CALENDAR_EVENTS]({ commit, state }, calendarEvent) {
             commit(TYPES.FETCH_CALENDAR_EVENTS_START);
-            await request.post("calendarEvents")
+            await request.post("calendarEvents", calendarEvent)
                 .then((rs) => {
                     commit(TYPES.ADD_CALENDAR_EVENTS_SUCCESS, rs.data);
                 })
@@ -45,6 +53,27 @@ export default {
                     commit(TYPES.FETCH_CALENDAR_EVENTS_FAIL, error);
                 });
             return state.calendarEvent;
+        },
+        async [ACTIONS.UPDATE_CALENDAR_EVENT]({ commit, state }, calendarEvent) {
+            commit(TYPES.FETCH_CALENDAR_EVENTS_START);
+            await request.put("calendarEvents/" + calendarEvent.id, calendarEvent)
+                .then((rs) => {
+                    commit(TYPES.UPDATE_CALENDAR_EVENT_SUCCESS, rs.data);
+                })
+                .catch((error) => {
+                    commit(TYPES.FETCH_CALENDAR_EVENTS_FAIL, error);
+                });
+            return state.calendarEvent;
+        },
+        [ACTIONS.DEL_CALENDAR_EVENT]({ commit }, id) {
+            commit(TYPES.FETCH_CALENDAR_EVENTS_START);
+            return request.delete("calendarEvents/" + id)
+                .then((rs) => {
+                    commit(TYPES.DEL_CALENDAR_EVENTS_SUCCESS, rs.data);
+                })
+                .catch((error) => {
+                    commit(TYPES.FETCH_CALENDAR_EVENTS_FAIL, error);
+                });
         }
     },
     getters: {

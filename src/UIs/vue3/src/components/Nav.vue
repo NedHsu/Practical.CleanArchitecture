@@ -125,10 +125,7 @@ export default defineComponent({
         goHome() {
             this.router.push({
                 name: 'Home',
-                params: {
-                    locale: this.locale
-                }
-            })
+            });
         }
     },
     data() {
@@ -152,9 +149,6 @@ export default defineComponent({
                     command: () => {
                         router.push({
                             name: "Products",
-                            params: {
-                                locale: locale.value
-                            }
                         });
                     }
                 },
@@ -164,9 +158,6 @@ export default defineComponent({
                     command: () => {
                         router.push({
                             name: "CalendarEvents",
-                            params: {
-                                locale: locale.value
-                            }
                         });
                     }
                 },

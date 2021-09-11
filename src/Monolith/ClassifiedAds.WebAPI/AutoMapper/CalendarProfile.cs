@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using ClassifiedAds.Domain.Entities;
-using ClassifiedAds.WebAPI.Models.CalendarEvents;
+using ClassifiedAds.WebAPI.Models.Calendars;
 
 namespace ClassifiedAds.WebAPI.AutoMapper
 {
@@ -16,6 +16,12 @@ namespace ClassifiedAds.WebAPI.AutoMapper
                 .ForMember(x => x.StartTime, opt => opt.MapFrom(src => src.Start))
                 .ForMember(x => x.EndTime, opt => opt.MapFrom(src => src.End))
                 ;
+            CreateMap<CalendarModel, Calendar>();
+            CreateMap<Calendar, CalendarModel>()
+                .ForMember(x => x.CategoryName, opt => opt.MapFrom(src => src.Category == null ? string.Empty : src.Category.Name))
+                ;
+            CreateMap<CalendarCategory, CalendarCategoryModel>();
+            CreateMap<CalendarCategoryModel, CalendarCategory>();
         }
     }
 }

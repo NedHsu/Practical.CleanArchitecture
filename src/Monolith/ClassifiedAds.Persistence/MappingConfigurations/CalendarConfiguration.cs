@@ -14,10 +14,10 @@ namespace ClassifiedAds.Persistence.MappingConfigurations
 
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
             builder.Property(x => x.Name).HasMaxLength(20);
-            builder.Property(x => x.Color).HasMaxLength(20);
-            builder.Property(x => x.BgColor).HasMaxLength(20);
-            builder.Property(x => x.BorderColor).HasMaxLength(20);
-            builder.Property(x => x.DragBgColor).HasMaxLength(20);
+            builder.Property(x => x.Color).HasColumnType("varchar(6)");
+            builder.Property(x => x.BgColor).HasColumnType("varchar(6)");
+            builder.Property(x => x.BorderColor).HasColumnType("varchar(6)");
+            builder.Property(x => x.DragBgColor).HasColumnType("varchar(6)");
 
             // builder.HasData(new List<CalendarEvent> {
             //     new CalendarEvent {

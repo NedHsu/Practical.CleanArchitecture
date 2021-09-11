@@ -3,6 +3,7 @@ using ClassifiedAds.Application;
 using ClassifiedAds.Application.Calendars.Commands;
 using ClassifiedAds.Application.Calendars.DTOs;
 using ClassifiedAds.Application.Calendars.Queries;
+using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.WebAPI.Models.Calendars;
 using Microsoft.AspNetCore.Authorization;
@@ -36,9 +37,9 @@ namespace ClassifiedAds.WebAPI.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<CalendarModel>> Get()
         {
-            _logger.LogInformation("Getting all tmpitems");
-            var tmpitems = _dispatcher.Dispatch(new GetCalendarsQuery() { });
-            var model = _mapper.Map<IEnumerable<CalendarModel>>(tmpitems);
+            _logger.LogInformation("Getting all calendars");
+            var calendars = _dispatcher.Dispatch(new GetCalendarsQuery() { });
+            var model = _mapper.Map<IEnumerable<CalendarModel>>(calendars);
             return Ok(model);
         }
 
@@ -47,8 +48,8 @@ namespace ClassifiedAds.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<CalendarModel> Get(Guid id)
         {
-            var tmpitem = _dispatcher.Dispatch(new GetCalendarQuery { Id = id, ThrowNotFoundIfNull = true });
-            var model = _mapper.Map<CalendarModel>(tmpitem);
+            var calendar = _dispatcher.Dispatch(new GetCalendarQuery { Id = id, ThrowNotFoundIfNull = true });
+            var model = _mapper.Map<CalendarModel>(calendar);
             return Ok(model);
         }
 
@@ -57,10 +58,12 @@ namespace ClassifiedAds.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public ActionResult<Calendar> Post([FromBody] CalendarModel model)
         {
-            var tmpitem = _mapper.Map<Calendar>(model);
-            _dispatcher.Dispatch(new AddUpdateCalendarCommand { Calendar = tmpitem });
-            model = _mapper.Map<CalendarModel>(tmpitem);
-            return Created($"/api/tmpitems/{model.Code}", model);
+            var calendar = _mapper.Map<Calendar>(model);
+            calendar.CreatedDateTime = DateTime.Now;
+            calendar.CreaterId = User.GetUserId();
+            _dispatcher.Dispatch(new AddUpdateCalendarCommand { Calendar = calendar });
+            model = _mapper.Map<CalendarModel>(calendar);
+            return Created($"/api/calendars/{model.Id}", model);
         }
 
         [HttpPut("{id}")]
@@ -69,14 +72,14 @@ namespace ClassifiedAds.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult Put(Guid id, [FromBody] CalendarModel model)
         {
-            var tmpitem = _dispatcher.Dispatch(new GetCalendarQuery { Id = id, ThrowNotFoundIfNull = false })
+            var calendar = _dispatcher.Dispatch(new GetCalendarQuery { Id = id, ThrowNotFoundIfNull = false })
                 ?? new Calendar { };
 
-            tmpitem.Name = model.Name;
+            calendar.Name = model.Name;
 
-            _dispatcher.Dispatch(new AddUpdateCalendarCommand { Calendar = tmpitem });
+            _dispatcher.Dispatch(new AddUpdateCalendarCommand { Calendar = calendar });
 
-            model = _mapper.Map<CalendarModel>(tmpitem);
+            model = _mapper.Map<CalendarModel>(calendar);
 
             return Ok(model);
         }
@@ -86,9 +89,9 @@ namespace ClassifiedAds.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult Delete(Guid id)
         {
-            var tmpitem = _dispatcher.Dispatch(new GetCalendarQuery { Id = id, ThrowNotFoundIfNull = true });
+            var calendar = _dispatcher.Dispatch(new GetCalendarQuery { Id = id, ThrowNotFoundIfNull = true });
 
-            _dispatcher.Dispatch(new DeleteCalendarCommand { Calendar = tmpitem });
+            _dispatcher.Dispatch(new DeleteCalendarCommand { Calendar = calendar });
 
             return Ok();
         }

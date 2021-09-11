@@ -71,8 +71,8 @@ body {
   width: 100%;
   height: auto;
   position: relative;
-  margin: 10 auto;
+  margin: 0 auto;
+  padding: 10px;
   -webkit-overflow-scrolling: touch;
 }
-
 </style>

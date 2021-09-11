@@ -8,6 +8,7 @@ export interface CalendarEventState {
 }
 
 export interface CalendarEvent {
+    id: string;
     name: string;
     code: string;
     description: string;

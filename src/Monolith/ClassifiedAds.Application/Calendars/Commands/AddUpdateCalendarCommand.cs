@@ -9,9 +9,9 @@ namespace ClassifiedAds.Application.Calendars.Commands
 
     internal class AddUpdateCalendarCommandHandler : ICommandHandler<AddUpdateCalendarCommand>
     {
-        private readonly IDapperCrudService<Calendar> _calendarService;
+        private readonly ICrudService<Calendar> _calendarService;
 
-        public AddUpdateCalendarCommandHandler(IDapperCrudService<Calendar> calendarService)
+        public AddUpdateCalendarCommandHandler(ICrudService<Calendar> calendarService)
         {
             _calendarService = calendarService;
         }

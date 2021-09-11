@@ -1,4 +1,5 @@
 export interface CalendarState {
+    calendarCategories: any;
     calendars: Calendar[];
     calendar: Calendar;
     loading: boolean;
@@ -8,6 +9,7 @@ export interface CalendarState {
 }
 
 export interface Calendar {
+    id: string;
     name: string;
     code: string;
     description: string;

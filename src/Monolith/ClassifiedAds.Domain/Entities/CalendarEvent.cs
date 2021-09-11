@@ -5,9 +5,9 @@ namespace ClassifiedAds.Domain.Entities
 {
     public class CalendarEvent : AggregateRoot<Guid>
     {
-        public DateTime StartTime { get; set; }
+        public DateTimeOffset StartTime { get; set; }
 
-        public DateTime EndTime { get; set; }
+        public DateTimeOffset EndTime { get; set; }
 
         public string Title { get; set; }
 
@@ -24,5 +24,7 @@ namespace ClassifiedAds.Domain.Entities
         public bool IsAllDay { get; set; }
 
         public bool IsVisible { get; set; }
+
+        public string Category { get; set; }
     }
 }

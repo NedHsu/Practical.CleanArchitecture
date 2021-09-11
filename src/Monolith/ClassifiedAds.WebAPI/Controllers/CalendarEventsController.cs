@@ -1,11 +1,13 @@
-﻿using ClassifiedAds.Application;
+﻿using AutoMapper;
+using ClassifiedAds.Application;
 using ClassifiedAds.Application.AuditLogEntries.DTOs;
 using ClassifiedAds.Application.AuditLogEntries.Queries;
 using ClassifiedAds.Application.CalendarEvents.Commands;
 using ClassifiedAds.Application.CalendarEvents.DTOs;
 using ClassifiedAds.Application.CalendarEvents.Queries;
+using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
 using ClassifiedAds.Domain.Entities;
-using ClassifiedAds.WebAPI.Models.CalendarEvents;
+using ClassifiedAds.WebAPI.Models.Calendars;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -25,19 +27,21 @@ namespace ClassifiedAds.WebAPI.Controllers
     {
         private readonly Dispatcher _dispatcher;
         private readonly ILogger _logger;
+        private readonly IMapper _mapper;
 
-        public CalendarEventsController(Dispatcher dispatcher, ILogger<CalendarEventsController> logger)
+        public CalendarEventsController(Dispatcher dispatcher, ILogger<CalendarEventsController> logger, IMapper mapper)
         {
             _dispatcher = dispatcher;
             _logger = logger;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<CalendarEvent>> Get()
+        public ActionResult<IEnumerable<CalendarEventModel>> Get()
         {
             _logger.LogInformation("Getting all calendarevents");
             var calendarevents = _dispatcher.Dispatch(new GetCalendarEventsQuery());
-            var model = calendarevents.ToDTOs();
+            var model = _mapper.Map<List<CalendarEventModel>>(calendarevents);
             return Ok(model);
         }
 
@@ -54,11 +58,12 @@ namespace ClassifiedAds.WebAPI.Controllers
         [HttpPost]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public ActionResult<CalendarEvent> Post([FromBody] CalendarEventModel model)
+        public ActionResult<CalendarEventModel> Post([FromBody] CalendarEventModel model)
         {
-            var calendarevent = model.ToEntity();
+            var calendarevent = _mapper.Map<CalendarEvent>(model);
+            calendarevent.CreaterId = User.GetUserId();
             _dispatcher.Dispatch(new AddUpdateCalendarEventCommand { CalendarEvent = calendarevent });
-            model = calendarevent.ToDTO();
+            model = _mapper.Map<CalendarEventModel>(calendarevent);
             return Created($"/api/calendarevents/{model.Id}", model);
         }
 
@@ -70,6 +75,10 @@ namespace ClassifiedAds.WebAPI.Controllers
         {
             var calendarevent = _dispatcher.Dispatch(new GetCalendarEventQuery { Id = id, ThrowNotFoundIfNull = true });
 
+            calendarevent.Title = model.Title;
+            calendarevent.StartTime = model.Start;
+            calendarevent.EndTime = model.End;
+            calendarevent.IsAllDay = model.IsAllDay;
 
             _dispatcher.Dispatch(new AddUpdateCalendarEventCommand { CalendarEvent = calendarevent });
 
