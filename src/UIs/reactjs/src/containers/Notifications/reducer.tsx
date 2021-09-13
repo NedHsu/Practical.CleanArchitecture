@@ -8,6 +8,7 @@ const initialState = {
     code: "",
     description: "",
   },
+  connection: null,
   auditLogs: [],
   loading: false,
   saved: false,
@@ -58,7 +59,7 @@ const connectNotificationStart = (state, action) => {
 
 const connectNotificationSuccess = (state, action) => {
   return updateObject(state, {
-    notification: action.notification,
+    connection: action.connection,
     loading: false,
   });
 };

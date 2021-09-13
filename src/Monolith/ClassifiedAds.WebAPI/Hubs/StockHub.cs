@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 namespace ClassifiedAds.WebAPI.Hubs
 {
     [Authorize]
-    public class ChatHub : Hub
+    public class StockHub : Hub
     {
         private readonly Dispatcher _dispatcher;
 
-        public ChatHub(Dispatcher dispatcher)
+        public StockHub(Dispatcher dispatcher)
         {
             _dispatcher = dispatcher;
         }
@@ -30,16 +30,10 @@ namespace ClassifiedAds.WebAPI.Hubs
             await NewMessage(Context.User.GetUserId(), "Disconnected");
         }
 
-        [HubMethodName("SendMessageToUser")]
+        [HubMethodName("SendMessage")]
         public async Task NewMessage(Guid userId, string message)
         {
             await Clients.All.SendAsync("messageReceived", _dispatcher.Dispatch(new GetUserQuery() { Id = userId }).UserName, message).ConfigureAwait(false);
-        }
-
-        [HubMethodName("SendMessageSelf")]
-        public async Task NewMessage(string message)
-        {
-            await Clients.Client(Context.ConnectionId).SendAsync("messageReceived", _dispatcher.Dispatch(new GetUserQuery() { Id = Guid.Parse(Context.UserIdentifier) }).UserName, message).ConfigureAwait(false);
         }
     }
 }

@@ -225,6 +225,8 @@ namespace ClassifiedAds.WebAPI
                     .RequireCors("HubPolicy");
                 endpoints.MapHub<NotificationHub>("/notificationHub")
                     .RequireCors("HubPolicy");
+                endpoints.MapHub<StockHub>("/stockHub")
+                    .RequireCors("HubPolicy");
             });
         }
     }

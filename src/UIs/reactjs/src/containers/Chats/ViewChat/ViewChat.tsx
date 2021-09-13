@@ -25,7 +25,6 @@ class ViewChat extends Component<any, any> {
         connectChat,
       },
     } = this;
-    console.log(connection);
     if (!connection) {
       connectChat();
     }
@@ -45,11 +44,12 @@ class ViewChat extends Component<any, any> {
       props: {
         messages,
         sendNotification,
+        sendMessage,
+        connection,
       }
     } = this;
-
     const messageBox = messages?.length > 0 ? messages.map(x => (
-      <div key={x.time}>
+      <div key={x.key}>
         {x.username}: {x.message}
       </div>
     )) : null;
@@ -82,7 +82,10 @@ class ViewChat extends Component<any, any> {
               <Form.Control type="text" placeholder="Message..." name="message" value={message} onChange={(event) => { this.setState({ [event.target.name]: event.target.value }) }} />
             </Col>
             <Col>
-              <Button variant="primary" type="submit" onClick={() => { sendNotification({ content: message }) }}>
+              <Button variant="primary" type="submit" onClick={() => {
+                sendNotification({ content: message });
+                sendMessage(connection, { content: message });
+              }}>
                 Submit
               </Button>
             </Col>
@@ -122,6 +125,7 @@ const mapDispatchToProps = dispatch => {
   return {
     connectChat: () => dispatch(actions.connectChat()),
     sendNotification: (notification) => dispatch(notificationActions.sendNotification(notification)),
+    sendMessage: (connection, chatItem) => dispatch(actions.sendMessage(connection, chatItem)),
   };
 };
 

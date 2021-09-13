@@ -59,8 +59,9 @@ const connectChatStart = (state, action) => {
 };
 
 const connectChatSuccess = (state, action) => {
+  console.log("connectChatSuccess", action.connection);
   return updateObject(state, {
-    chat: action.chat,
+    connection: action.connection,
     loading: false,
   });
 };
@@ -70,7 +71,7 @@ const connectChatError = (state, action) => {
 };
 
 const messageReceived = (state, action) => {
-  console.log("messageReceived");
+  console.log("messageReceived", [...state.messages, action.message]);
   return updateObject(state, { messages: [...state.messages, action.message] });
 };
 
@@ -87,6 +88,21 @@ const saveChatSuccess = (state, action) => {
     saved: true,
   });
 };
+
+const sendMessage = (state, action) => {
+  return updateObject(state, {
+    chat: action.chatItem,
+    loading: false,
+  });
+}
+
+const sendMessageSuccess = (state, action) => {
+  return updateObject(state, {
+    chat: action.chatItem,
+    loading: false,
+  });
+}
+
 
 const saveChatFail = (state, action) => {
   return updateObject(state, { loading: false, saved: false });
@@ -142,9 +158,14 @@ const reducer = (state = initialState, action) => {
         loading: false,
         deleted: false,
       });
+    case actionTypes.SEND_MESSAGE:
+      return sendMessage(state, action);
+    case actionTypes.SEND_MESSAGE_SUCCESS:
+      return sendMessageSuccess(state, action);
     default:
       return state;
   }
 };
 
 export default reducer;
+

@@ -131,10 +131,10 @@ export const deleteNotification = (notification) => {
 /// DELETE NOTIFICATION
 
 /// NOTIFICATION
-export const connectNotificationSuccess = (info) => {
+export const connectNotificationSuccess = (connection) => {
   return {
     type: actionTypes.CONNECT_NOTIFICATION_SUCCESS,
-    info: info,
+    connection: connection,
   };
 };
 

@@ -54,12 +54,15 @@ SELECT ISNULL(sf.stockcode, sm.stockcode) StockCode,
        [securitieslimit],
        [offset],
        [remark]
-FROM   StockMargin sm
-       FULL JOIN StockFunder sf
-              ON sf.stockcode = sm.stockcode
-                 AND sf.date = sm.date)
+FROM   (SELECT * 
+        FROM StockMargin
+        WHERE StockCode = @Code AND [Date] BETWEEN @StartDate AND @EndDate) sm
+       FULL JOIN 
+       (SELECT *
+        FROM StockFunder
+        WHERE StockCode = @Code AND [Date] BETWEEN @StartDate AND @EndDate) sf
+    ON sf.stockcode = sm.stockcode AND sf.date = sm.date)
 SELECT * FROM t 
-WHERE StockCode = @Code AND [Date] BETWEEN @StartDate AND @EndDate
 ";
 
             Dictionary<string, object> param = new Dictionary<string, object>()

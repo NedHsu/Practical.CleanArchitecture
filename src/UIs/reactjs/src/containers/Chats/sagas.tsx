@@ -46,19 +46,18 @@ export function* connectChatsSaga(action) {
       .build();
 
     connection.on("messageReceived", (username: string, message: string) => {
-      console.log("messageReceived");
+      let now = dayjs();
       messageChannel.put(actions.messageReceived({
         username,
         message,
-        time: dayjs().format("YYYY-MM-DD HH:mm"),
+        time: now.format("YYYY-MM-DD HH:mm"),
+        key: now.valueOf()
       }));
     });
 
-    connection.start()
-      .catch(err => console.log(err))
-      .then(() => {
-        put(actions.connectChatSuccess(connection));
-      });
+    yield connection.start()
+      .catch(err => console.log(err));
+    yield put(actions.connectChatSuccess(connection));
     // yield put(actions.fetchChatSuccess(fetchedChat));
   } catch (error) {
     yield put(actions.fetchChatFail(error));
@@ -91,12 +90,28 @@ export function* deleteChatSaga(action) {
   }
 }
 
+export function* sendMessageSaga(action) {
+  if (!action.chatItem || !action.connection) {
+    return;
+  }
+  try {
+    yield action.connection.invoke("SendMessageSelf", action.chatItem.content).catch(err => console.error(err));;
+    yield put(actions.sendMessageSuccess(action.chatItem));
+  } catch (error) {
+    console.log(error);
+    yield put(actions.deleteChatFail(error));
+  }
+}
+
 export function* watchChat() {
   yield takeEvery(actionTypes.CONNECT_CHAT, connectChatsSaga);
   yield takeEvery(actionTypes.FETCH_CHATS, fetchChatsSaga);
   yield takeEvery(actionTypes.FETCH_CHAT, fetchChatSaga);
   yield takeEvery(actionTypes.SAVE_CHAT, saveChatSaga);
   yield takeEvery(actionTypes.DELETE_CHAT, deleteChatSaga);
-  const action = yield take(messageChannel);
-  yield put(action);
+  yield takeEvery(actionTypes.SEND_MESSAGE, sendMessageSaga);
+  while (true) {
+    const action = yield take(messageChannel);
+    yield put(action);
+  }
 }

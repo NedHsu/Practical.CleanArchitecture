@@ -58,10 +58,10 @@ export const fetchChat = (id) => {
 /// CHAT
 
 /// CHAT
-export const connectChatSuccess = (info) => {
+export const connectChatSuccess = (connection) => {
   return {
     type: actionTypes.CONNECT_CHAT_SUCCESS,
-    info: info,
+    connection: connection,
   };
 };
 
@@ -159,6 +159,21 @@ export const deleteChatStart = () => {
 export const deleteChat = (chatItem) => {
   return {
     type: actionTypes.DELETE_CHAT,
+    chatItem: chatItem,
+  };
+};
+
+export const sendMessage = (connection, chatItem) => {
+  return {
+    type: actionTypes.SEND_MESSAGE,
+    chatItem: chatItem,
+    connection: connection,
+  };
+};
+
+export const sendMessageSuccess = (chatItem) => {
+  return {
+    type: actionTypes.SEND_MESSAGE_SUCCESS,
     chatItem: chatItem,
   };
 };

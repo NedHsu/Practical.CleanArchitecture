@@ -117,6 +117,8 @@ namespace ClassifiedAds.Persistence
                     .HasForeignKey(d => d.StockCode)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_stockDay_stock");
+
+                entity.HasIndex("Date");
             });
 
             modelBuilder.Entity<StockFundamental>(entity =>
@@ -146,6 +148,8 @@ namespace ClassifiedAds.Persistence
                 entity.Property(e => e.Updated).HasColumnType("datetime");
 
                 entity.Property(e => e.YieldRate).HasColumnType("decimal(5, 2)");
+
+                entity.HasIndex("Date");
             });
 
             modelBuilder.Entity<StockFunder>(entity =>
@@ -159,6 +163,8 @@ namespace ClassifiedAds.Persistence
                     .IsUnicode(false);
 
                 entity.Property(e => e.Date).HasColumnType("date");
+
+                entity.HasIndex("Date");
             });
 
             modelBuilder.Entity<StockMargin>(entity =>
@@ -176,6 +182,9 @@ namespace ClassifiedAds.Persistence
                     .IsUnicode(false);
 
                 entity.Property(e => e.Date).HasColumnType("date");
+
+                entity.HasIndex("Date");
+
             });
 
             modelBuilder.Entity<StockRevenue>(entity =>
@@ -201,6 +210,8 @@ namespace ClassifiedAds.Persistence
                     .HasMaxLength(100);
 
                 entity.Property(e => e.Date).HasColumnType("date");
+
+                entity.HasIndex("Date");
             });
 
             modelBuilder.Entity<StockGroup>(entity =>
@@ -274,6 +285,8 @@ namespace ClassifiedAds.Persistence
                 entity.Property(e => e.UntaxedNetProfit).HasColumnType("decimal(18, 2)");
 
                 entity.Property(e => e.Date).HasColumnType("date");
+
+                entity.HasIndex("Date");
             });
 
             modelBuilder.Entity<StockSeminar>(entity =>
@@ -294,6 +307,8 @@ namespace ClassifiedAds.Persistence
                 entity.Property(e => e.Web).HasMaxLength(500);
                 entity.Property(e => e.Video).HasMaxLength(500);
                 entity.Property(e => e.Remark).HasMaxLength(500);
+
+                entity.HasIndex("Date");
             });
 
             OnModelCreatingPartial(modelBuilder);
