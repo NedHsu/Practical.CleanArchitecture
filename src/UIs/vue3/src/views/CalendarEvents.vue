@@ -1,38 +1,40 @@
 <template>
     <div>
-        <div class="calendar-toolbar">
-            <div class="left">
-                <SelectButton
-                    v-model="calendarView"
-                    :options="calendarViews"
-                    optionLabel="name"
-                    @click="calendarViewSelected"
-                />
+        <div class="calendar-container">
+            <div class="calendar-toolbar">
+                <div class="left">
+                    <SelectButton
+                        v-model="calendarView"
+                        :options="calendarViews"
+                        optionLabel="name"
+                        @click="calendarViewSelected"
+                    />
+                </div>
+                <div class="center">{{ dateStart }} ~ {{ dateEnd }}</div>
+                <div class="right">
+                    <Button
+                        label="Today"
+                        class="p-button-rounded p-button-outlined"
+                    />
+                    <Button
+                        icon="pi pi-angle-left"
+                        class="p-button-rounded p-button-outlined"
+                        @click="calendarViewPrev"
+                    />
+                    <Button
+                        icon="pi pi-angle-right"
+                        class="p-button-rounded p-button-outlined"
+                        @click="calendarViewNext"
+                    />
+                    <Button
+                        icon="pi pi-ellipsis-h"
+                        class="p-button-rounded p-button-text p-button-plain"
+                        @click="visibleRightTools = true"
+                    />
+                </div>
             </div>
-            <div class="center">{{ dateStart }} ~ {{ dateEnd }}</div>
-            <div class="right">
-                <Button
-                    label="Today"
-                    class="p-button-rounded p-button-outlined"
-                />
-                <Button
-                    icon="pi pi-angle-left"
-                    class="p-button-rounded p-button-outlined"
-                    @click="calendarViewPrev"
-                />
-                <Button
-                    icon="pi pi-angle-right"
-                    class="p-button-rounded p-button-outlined"
-                    @click="calendarViewNext"
-                />
-                <Button
-                    icon="pi pi-ellipsis-h"
-                    class="p-button-rounded p-button-text p-button-plain"
-                    @click="visibleRightTools = true"
-                />
-            </div>
+            <div id="calendar" ref="refCalendar"></div>
         </div>
-        <div id="calendar"></div>
         <Sidebar
             v-model:visible="visibleRightTools"
             :modal="false"
@@ -77,134 +79,149 @@ export default defineComponent({
         ...mapState("calendar", ["calendars"]),
         dateStart() {
             this.calendarState;
-            return dayjs(this.calendar.getDateRangeStart().toDate()).format(
-                "YYYY-MM-DD"
-            );
+            return this.tuiCalendarRef
+                ? dayjs(
+                      this.tuiCalendarRef.getDateRangeStart().toDate()
+                  ).format("YYYY-MM-DD")
+                : "";
         },
         dateEnd() {
             this.calendarState;
-            return dayjs(this.calendar.getDateRangeEnd().toDate()).format(
-                "YYYY-MM-DD"
-            );
+            return this.tuiCalendarRef
+                ? dayjs(this.tuiCalendarRef.getDateRangeEnd().toDate()).format(
+                      "YYYY-MM-DD"
+                  )
+                : "";
         },
     },
     props: {},
     setup() {
         const visibleRightTools = ref(false);
+        const refCalendar = ref();
         const { t } = useI18n({ useScope: "global" });
         const store = useStore();
-        const calendar = new Calendar("#calendar", {
-            defaultView: "month",
-            useCreationPopup: true,
-            useDetailPopup: true,
-            taskView: true,
-            scheduleView: true,
-            calendars: [],
-            week: {
-                // narrowWeekend: true,
-                // timezonesCollapsed: true,
-                // showTimezoneCollapseButton: true,
-                // hourStart: 6,
-                // hourEnd: 24
-            },
-            template: {
-                monthDayname: function (dayname) {
-                    return (
-                        '<span class="calendar-week-dayname-name">' +
-                        dayname.label +
-                        "</span>"
-                    );
-                },
-                popupSave: () => {
-                    return t("labels.save");
-                },
-                popupDelete: () => {
-                    return t("delete");
-                },
-                schedule: (schedule) => {
-                    return (
-                        '<span class="calendar-font-icon ic-milestone-b"></span> <span style="background-color: ' +
-                        schedule.bgColor +
-                        '">' +
-                        schedule.title +
-                        "</span>"
-                    );
-                },
-                task: (schedule) => {
-                    return "123" + schedule.title;
-                },
-            },
-        });
-
-        const beforeCreateSchedule = async (event: ISchedule) => {
-            let calendarEvent = {
-                calendarId: event.calendarId,
-                title: event.title,
-                isAllDay: event.isAllDay,
-                start: (event.start as TZDate).toDate(),
-                end: (event.end as TZDate).toDate(),
-                category: "time",
-                isVisible: true,
-            };
-            let result = await store.dispatch(
-                "calendarEvent/" + ACTIONS.ADD_CALENDAR_EVENTS,
-                calendarEvent
-            );
-            console.log(result);
-            calendar.createSchedules([result]);
-        };
-        const beforeUpdateSchedule = async (event: IEventObject) => {
-            let schedule = {
-                ...event.schedule,
-                ...event.changes,
-            };
-            await store.dispatch(
-                "calendarEvent/" + ACTIONS.UPDATE_CALENDAR_EVENT,
-                {
-                    id: schedule.id,
-                    calendarId: schedule.calendarId,
-                    title: schedule.title,
-                    isAllDay: schedule.isAllDay,
-                    start: (schedule.start as TZDate).toDate(),
-                    end: (schedule.end as TZDate).toDate(),
-                    category: "time",
-                    isVisible: true,
-                }
-            );
-            calendar.updateSchedule(schedule.id!, schedule.calendarId!, schedule);
-        };
-        const beforeDeleteSchedule = (event: IEventScheduleObject) => {
-            console.log(event);
-            store
-                .dispatch(
-                    "calendarEvent/" + ACTIONS.DEL_CALENDAR_EVENT,
-                    event.schedule.id
-                )
-                .then(() =>
-                    calendar.deleteSchedule(
-                        event.schedule.id!,
-                        event.schedule.calendarId!
-                    )
-                );
-        };
-        const clickDayname = (event: any) => {
-            console.log(event);
-        };
-        const clickMore = (event: any) => {};
-        const clickSchedule = (event: any) => {
-            console.log(event);
-        };
-        const clickTimezonesCollapseBtn = (event: any) => {};
-        calendar.on("beforeCreateSchedule", beforeCreateSchedule);
-        calendar.on("beforeUpdateSchedule", beforeUpdateSchedule);
-        calendar.on("beforeDeleteSchedule", beforeDeleteSchedule);
-        calendar.on("clickDayname", clickDayname);
-        calendar.on("clickMore", clickMore);
-        calendar.on("clickSchedule", clickSchedule);
-        calendar.on("clickTimezonesCollapseBtn", clickTimezonesCollapseBtn);
-        calendar.on("afterRenderSchedule", clickTimezonesCollapseBtn);
+        let tuiCalendarRef = ref<Calendar>();
 
         onMounted(() => {
+            const tuiCalendar = new Calendar(refCalendar.value, {
+                defaultView: "month",
+                useCreationPopup: true,
+                useDetailPopup: true,
+                taskView: true,
+                scheduleView: true,
+                calendars: [],
+                week: {
+                    // narrowWeekend: true,
+                    // timezonesCollapsed: true,
+                    // showTimezoneCollapseButton: true,
+                    // hourStart: 6,
+                    // hourEnd: 24
+                },
+                template: {
+                    monthDayname: function (dayname) {
+                        return (
+                            '<span class="calendar-week-dayname-name">' +
+                            dayname.label +
+                            "</span>"
+                        );
+                    },
+                    popupSave: () => {
+                        return t("labels.save");
+                    },
+                    popupDelete: () => {
+                        return t("delete");
+                    },
+                    schedule: (schedule) => {
+                        return (
+                            '<span class="calendar-font-icon ic-milestone-b"></span> <span style="background-color: ' +
+                            schedule.bgColor +
+                            '">' +
+                            schedule.title +
+                            "</span>"
+                        );
+                    },
+                    task: (schedule) => {
+                        return "123" + schedule.title;
+                    },
+                },
+            });
+
+            const beforeCreateSchedule = async (event: ISchedule) => {
+                let calendarEvent = {
+                    calendarId: event.calendarId,
+                    title: event.title,
+                    isAllDay: event.isAllDay,
+                    start: (event.start as TZDate).toDate(),
+                    end: (event.end as TZDate).toDate(),
+                    category: "time",
+                    isVisible: true,
+                };
+                let result = await store.dispatch(
+                    "calendarEvent/" + ACTIONS.ADD_CALENDAR_EVENTS,
+                    calendarEvent
+                );
+                console.log(result);
+                tuiCalendar.createSchedules([result]);
+            };
+            const beforeUpdateSchedule = async (event: IEventObject) => {
+                let schedule = {
+                    ...event.schedule,
+                    ...event.changes,
+                };
+                await store.dispatch(
+                    "calendarEvent/" + ACTIONS.UPDATE_CALENDAR_EVENT,
+                    {
+                        id: schedule.id,
+                        calendarId: schedule.calendarId,
+                        title: schedule.title,
+                        isAllDay: schedule.isAllDay,
+                        start: (schedule.start as TZDate).toDate(),
+                        end: (schedule.end as TZDate).toDate(),
+                        category: "time",
+                        isVisible: true,
+                    }
+                );
+                tuiCalendar.updateSchedule(
+                    schedule.id!,
+                    schedule.calendarId!,
+                    schedule
+                );
+            };
+            const beforeDeleteSchedule = (event: IEventScheduleObject) => {
+                console.log(event);
+                store
+                    .dispatch(
+                        "calendarEvent/" + ACTIONS.DEL_CALENDAR_EVENT,
+                        event.schedule.id
+                    )
+                    .then(() =>
+                        tuiCalendar.deleteSchedule(
+                            event.schedule.id!,
+                            event.schedule.calendarId!
+                        )
+                    );
+            };
+            const clickDayname = (event: any) => {
+                console.log(event);
+            };
+            const clickMore = () => {};
+            const clickSchedule = (event: any) => {
+                console.log(event);
+            };
+            const clickTimezonesCollapseBtn = () => {};
+            tuiCalendar.on("beforeCreateSchedule", beforeCreateSchedule);
+            tuiCalendar.on("beforeUpdateSchedule", beforeUpdateSchedule);
+            tuiCalendar.on("beforeDeleteSchedule", beforeDeleteSchedule);
+            tuiCalendar.on("clickDayname", clickDayname);
+            tuiCalendar.on("clickMore", clickMore);
+            tuiCalendar.on("clickSchedule", clickSchedule);
+            tuiCalendar.on(
+                "clickTimezonesCollapseBtn",
+                clickTimezonesCollapseBtn
+            );
+            tuiCalendar.on("afterRenderSchedule", clickTimezonesCollapseBtn);
+            tuiCalendarRef.value = tuiCalendar;
+
             store
                 .dispatch("calendarEvent/" + ACTIONS.FETCH_CALENDAR_EVENTS)
                 .then(() => {
@@ -215,32 +232,32 @@ export default defineComponent({
         });
 
         onUnmounted(() => {
-            calendar.destroy();
+            tuiCalendarRef.value?.destroy();
         });
 
-        return { calendar, visibleRightTools };
+        return { refCalendar, visibleRightTools, tuiCalendarRef };
     },
     methods: {
         deleteCalendarEvent(id: string) {
             console.log(id);
         },
         calendarViewSelected() {
-            this.calendar.changeView(this.calendarView.value, true);
+            this.tuiCalendarRef!.changeView(this.calendarView.value, true);
             this.calendarState++;
         },
         calendarViewNext() {
-            this.calendar.next();
+            this.tuiCalendarRef!.next();
             this.calendarState++;
         },
         calendarViewPrev() {
-            this.calendar.prev();
+            this.tuiCalendarRef!.prev();
             this.calendarState++;
         },
     },
     watch: {
         calendars(newValue) {
             console.log(newValue);
-            this.calendar.setCalendars(
+            this.tuiCalendarRef?.setCalendars(
                 newValue.map((x: any) => {
                     return {
                         ...x,
@@ -253,7 +270,7 @@ export default defineComponent({
             );
         },
         calendarEvents(newValue) {
-            this.calendar.createSchedules(newValue);
+            this.tuiCalendarRef?.createSchedules(newValue);
         },
     },
     data() {

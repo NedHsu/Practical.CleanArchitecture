@@ -79,6 +79,14 @@ export function setupRouter(i18n: I18n): Router {
                 index: 1
             }
         },
+        {
+            path: "/:locale/fullCalendar",
+            name: "FullCalendars",
+            component: () => import("../views/FullCalendar.vue"),
+            meta: {
+                index: 1
+            }
+        },
     ]
 
     // create router instance
