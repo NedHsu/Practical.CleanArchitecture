@@ -175,9 +175,31 @@ export default defineComponent({
                 {
                     label: "Events",
                     icon: "pi pi-fw pi-calendar",
+                    items: [
+                        {
+                            label: "Tui Calendar",
+                            command: () => {
+                                router.push({
+                                    name: "CalendarEvents",
+                                });
+                            },
+                        },
+                        {
+                            label: "Full Calendar",
+                            command: () => {
+                                router.push({
+                                    name: "FullCalendars",
+                                });
+                            },
+                        },
+                    ],
+                },
+                {
+                    label: "Awesomes",
+                    icon: "pi pi-fw pi-book",
                     command: () => {
                         router.push({
-                            name: "CalendarEvents",
+                            name: "AwesomePages",
                         });
                     },
                 },

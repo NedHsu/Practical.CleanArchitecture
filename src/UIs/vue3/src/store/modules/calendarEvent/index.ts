@@ -3,7 +3,7 @@ import { Module } from 'vuex';
 import request from '../../../utils/request';
 import TYPES from './mutationTypes';
 import ACTIONS from './actionTypes';
-import { CalendarEventState } from './types';
+import { CalendarEvent, CalendarEventState } from './types';
 
 export default {
     namespaced: true,
@@ -29,6 +29,17 @@ export default {
         [TYPES.DEL_CALENDAR_EVENTS_SUCCESS](state: CalendarEventState, id: string) {
             state.calendarEvents = state.calendarEvents.filter(x => x.id === id);
             state.loading = false;
+        },
+        [TYPES.OPEN_CALENDAR_EVENT](state: CalendarEventState, calendarEvent: CalendarEvent) {
+            state.calendarEvent = calendarEvent;
+            state.opened = 1;
+        },
+        [TYPES.CLOSE_CALENDAR_EVENT](state: CalendarEventState) {
+            state.calendarEvent = {} as CalendarEvent;
+            state.opened = 0;
+        },
+        [TYPES.EDIT_CALENDAR_EVENT](state: CalendarEventState) {
+            state.opened = 2;
         }
     },
     actions: {
@@ -78,6 +89,8 @@ export default {
     },
     getters: {
         calendarEvents: (state) => state.calendarEvents,
+        detailOpened: (state) => state.opened == 1,
+        editorOpened: (state) => state.opened == 2,
     },
 } as Module<CalendarEventState, any>;
 

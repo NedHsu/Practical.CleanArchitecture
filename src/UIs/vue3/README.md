@@ -101,3 +101,12 @@ npm i --save tui-calendar
 ```
 npm i --save @microsoft/signalr
 ```
+
+### Playwright - [Document](https://playwright.dev/docs/intro)
+> End to End Test
+
+``` bash
+npm i -D @playwright/test
+# install supported browsers
+npx playwright install
+```

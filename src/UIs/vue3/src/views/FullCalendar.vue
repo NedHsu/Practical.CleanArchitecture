@@ -1,5 +1,7 @@
 <template>
-    <FullCalendar :options="options" :events="eventTest" ref="calendarRef" />
+    <FullCalendar :options="options" ref="calendarRef" />
+    <event-detail />
+    <event-editor />
 </template>
 <script lang="ts">
 import { defineComponent, onMounted, ref } from "vue";
@@ -20,15 +22,21 @@ import FullCalendar, {
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
-import { mapState, useStore } from "vuex";
+import { mapGetters, mapState, useStore } from "vuex";
 import ACTIONS from "../store/modules/calendarEvent/actionTypes";
+import CALENDAR_ACTIONS from "../store/modules/calendar/actionTypes";
+import EventDetail from "../components/calendar/EventDetail.vue";
+import EventEditor from "../components/calendar/EventEditor.vue";
 
 export default defineComponent({
     components: {
         FullCalendar,
+        EventDetail,
+        EventEditor,
     },
     computed: {
         ...mapState("calendarEvent", ["calendarEvents"]),
+        ...mapGetters("calendar", ["calendarMap"]),
     },
     setup() {
         const store = useStore();
@@ -48,6 +56,10 @@ export default defineComponent({
             initialEvents: [],
             events: calendarEventsRef,
             eventClick: (arg: EventClickArg) => {
+                store.commit(
+                    "calendarEvent/OPEN_CALENDAR_EVENT",
+                    arg.event.extendedProps.calendarEvent
+                );
                 console.log(arg);
             },
             select: (arg: DateSelectArg) => {
@@ -86,81 +98,65 @@ export default defineComponent({
         });
 
         onMounted(async () => {
-            await store.dispatch(
-                "calendarEvent/" + ACTIONS.FETCH_CALENDAR_EVENTS
-            );
+            store.dispatch("calendar/" + CALENDAR_ACTIONS.FETCH_CALENDARS);
+            store.dispatch("calendarEvent/" + ACTIONS.FETCH_CALENDAR_EVENTS);
         });
 
-        return { options, calendarRef, calendarEventsRef };
+        return { options, calendarRef, calendarEventsRef, store };
     },
     watch: {
-        calendarEvents(newVal) {
-            console.log(newVal);
-            this.calendarEventsRef = newVal.map((x: any) => {
-                return {
-                    id: x.id,
-                    title: x.title,
-                    start: x.start,
-                    end: x.end,
-                };
-            });
+        calendarEvents() {
+            this.mapCalendarEvents();
+        },
+        calendarMap() {
+            this.mapCalendarEvents();
         },
     },
     data() {
         return {
-            eventTest: [
-                { id: 1, title: "All Day Event", start: "2017-02-01" },
-                {
-                    id: 2,
-                    title: "Long Event",
-                    start: "2017-02-07",
-                    end: "2017-02-10",
-                },
-                {
-                    id: 3,
-                    title: "Repeating Event",
-                    start: "2017-02-09T16:00:00",
-                },
-                {
-                    id: 4,
-                    title: "Repeating Event",
-                    start: "2017-02-16T16:00:00",
-                },
-                {
-                    id: 5,
-                    title: "Conference",
-                    start: "2017-02-11",
-                    end: "2017-02-13",
-                },
-                {
-                    id: 6,
-                    title: "Meeting",
-                    start: "2017-02-12T10:30:00",
-                    end: "2017-02-12T12:30:00",
-                },
-                { id: 7, title: "Lunch", start: "2017-02-12T12:00:00" },
-                { id: 8, title: "Meeting", start: "2017-02-12T14:30:00" },
-                {
-                    id: 9,
-                    title: "Happy Hour",
-                    start: "2017-02-12T17:30:00",
-                },
-                { id: 10, title: "Dinner", start: "2017-02-12T20:00:00" },
-                {
-                    id: 11,
-                    title: "Birthday Party",
-                    start: "2017-02-13T07:00:00",
-                },
-                {
-                    id: 12,
-                    title: "Click for Google",
-                    url: "https://www.google.com/",
-                    start: "2017-02-28",
-                },
-            ],
+            eventDetailVisible: false,
         };
+    },
+    methods: {
+        mapCalendarEvents() {
+            if (
+                this.calendarEvents?.length > 0 &&
+                Object.keys(this.calendarMap).length > 0
+            ) {
+                this.calendarEventsRef = this.calendarEvents.map((x: any) => {
+                    const calendar = this.calendarMap[x.calendarId] ?? {
+                        color: "",
+                        borderColor: "",
+                        bgColor: "",
+                    };
+                    return {
+                        id: x.id,
+                        title: x.title,
+                        start: x.start,
+                        end: x.end,
+                        allDay: x.isAllDay,
+                        textColor: "#" + calendar.color,
+                        borderColor: "#" + calendar.borderColor,
+                        backgroundColor: "#" + calendar.bgColor,
+                        classNames: [],
+                        editable: true,
+                        startEditable: true,
+                        durationEditable: true,
+                        resourceEditable: true,
+                        calendarEvent: x,
+                        // url: "",
+                    };
+                });
+            }
+        },
+        closeEvent() {
+            this.store.commit("calendarEvent/CLOSE_CALENDAR_EVENT");
+        },
     },
 });
 </script>
-<style lang="scss" scoped>
+
+
+<style lang="scss">
+
 </style>

@@ -25,6 +25,7 @@ import Card from 'primevue/card';
 import Dropdown from 'primevue/dropdown';
 import Divider from 'primevue/divider';
 import Sidebar from 'primevue/sidebar';
+import TabMenu from 'primevue/tabmenu';
 
 import en from './locales/en.yaml';
 import 'primeflex/primeflex.css';
@@ -72,6 +73,7 @@ authService.loadUser().then(user => {
     app.component('Dropdown', Dropdown);
     app.component('Divider', Divider);
     app.component('Sidebar', Sidebar);
+    app.component('TabMenu', TabMenu);
     
     app.mount('#app');
 });

@@ -41,7 +41,6 @@ export default {
             commit(TYPES.FETCH_CALENDARS_START);
             request.get("calendars")
                 .then((rs) => {
-                    console.log(rs.data);
                     commit(TYPES.FETCH_CALENDARS_SUCCESS, rs.data);
                 })
                 .catch((error) => {
@@ -96,6 +95,7 @@ export default {
     },
     getters: {
         calendars: (state) => state.calendars,
+        calendarMap: (state) => state.calendars?.reduce((p, c) => { return { [c.id]: c, ...p}}, {}) ?? {},
     },
 } as Module<CalendarState, any>;
 
