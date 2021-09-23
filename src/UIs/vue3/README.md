@@ -110,3 +110,13 @@ npm i -D @playwright/test
 # install supported browsers
 npx playwright install
 ```
+
+### Test
+
+```
+npm install @babel/core @babel/preset-env @testing-library/jest-dom @types/jest @vue/test-utils@next @babel/preset-typescript @vue/babel-plugin-jsx vue-jest@next -D
+
+// 下面三個包的版本需要固定，有些版本和 vue-test 的對應不上，則會出錯
+
+npm install babel-jest@26.0.0 jest@26.0.0 ts-jest@26.4.4 -D
+```

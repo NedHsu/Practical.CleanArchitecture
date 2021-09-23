@@ -7,10 +7,9 @@
                 height="40"
                 class="p-mr-2"
             />
-            <Button :label="pageTitle" class="p-button-link" @click="goHome" />
         </template>
         <template #end>
-            <div class="p-grid p-ai-center vertical-container">
+            <div class="p-grid p-ai-center vertical-container user-container">
                 <div class="p-col user-profile" v-if="isAuthenticated">
                     <Avatar
                         image="https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png"
@@ -24,7 +23,7 @@
                 <div v-else>
                     <Button type="button" @click="login">Login</Button>
                 </div>
-                <div class="p-col">
+                <div class="p-col language-container">
                     <form class="language">
                         <select id="locale-select" v-model="currentLocale">
                             <option
@@ -142,11 +141,6 @@ export default defineComponent({
         login() {
             store.state.authService.authService.login();
         },
-        goHome() {
-            this.router.push({
-                name: "Home",
-            });
-        },
     },
     data() {
         const router = useRouter();
@@ -163,6 +157,14 @@ export default defineComponent({
                 },
             ],
             items: [
+                {
+                    label: `ClassifiedAds.Vue ${version}`,
+                    command: () => {
+                        router.push({
+                            name: "Home",
+                        });
+                    },
+                },
                 {
                     label: t("navigations.product"),
                     icon: PrimeIcons.LIST,
@@ -313,6 +315,15 @@ export default defineComponent({
         margin: auto;
         padding: 0 5px;
         cursor: pointer;
+    }
+}
+
+@media screen and (max-width: 960px) {
+    .user-container {
+        margin: 0px;
+    }
+    .language-container {
+        width: 3rem;
     }
 }
 </style>
