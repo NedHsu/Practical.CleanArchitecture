@@ -15,7 +15,6 @@
             </template>
         </TabMenu>
         <component :is="displayComponentId"></component>
-        <Button @click="showDialog">Show</Button>
     </div>
 </template>
 <script lang="ts">

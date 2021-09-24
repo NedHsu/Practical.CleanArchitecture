@@ -47,7 +47,7 @@
 </template>
 <script lang="ts">
 import { onMounted, onUnmounted } from "@vue/runtime-core";
-import { defineComponent, ref } from "vue";
+import { defineComponent, Ref, ref, watchEffect } from "vue";
 import { mapGetters, mapState, useStore } from "vuex";
 import Spinner from "../components/Spinner.vue";
 import Calendar, {
@@ -77,22 +77,6 @@ export default defineComponent({
             "loading",
         ]),
         ...mapState("calendar", ["calendars"]),
-        dateStart() {
-            this.calendarState;
-            return this.tuiCalendarRef
-                ? dayjs(
-                      this.tuiCalendarRef.getDateRangeStart().toDate()
-                  ).format("YYYY-MM-DD")
-                : "";
-        },
-        dateEnd() {
-            this.calendarState;
-            return this.tuiCalendarRef
-                ? dayjs(this.tuiCalendarRef.getDateRangeEnd().toDate()).format(
-                      "YYYY-MM-DD"
-                  )
-                : "";
-        },
     },
     props: {},
     setup() {
@@ -100,7 +84,20 @@ export default defineComponent({
         const refCalendar = ref();
         const { t } = useI18n({ useScope: "global" });
         const store = useStore();
+        const dateStart = ref("");
+        const dateEnd = ref("");
         let tuiCalendarRef = ref<Calendar>();
+
+        const setCalendarRange = (calendar: Calendar) => {
+            if (calendar) {
+                dateStart.value = dayjs(
+                    calendar.getDateRangeStart().toDate()
+                ).format("YYYY-MM-DD");
+                dateEnd.value = dayjs(
+                    calendar.getDateRangeEnd().toDate()
+                ).format("YYYY-MM-DD");
+            }
+        };
 
         onMounted(() => {
             const tuiCalendar = new Calendar(refCalendar.value, {
@@ -145,6 +142,7 @@ export default defineComponent({
                     },
                 },
             });
+            setCalendarRange(tuiCalendar);
 
             const beforeCreateSchedule = async (event: ISchedule) => {
                 let calendarEvent = {
@@ -228,6 +226,7 @@ export default defineComponent({
                     console.log(store.state.calendarEvent.calendarEvents);
                 });
             store.dispatch("calendar/FETCH_CALENDARS");
+
             console.log("onMounted");
         });
 
@@ -235,7 +234,14 @@ export default defineComponent({
             tuiCalendarRef.value?.destroy();
         });
 
-        return { refCalendar, visibleRightTools, tuiCalendarRef };
+        return {
+            refCalendar,
+            visibleRightTools,
+            tuiCalendarRef,
+            dateStart,
+            dateEnd,
+            setCalendarRange,
+        };
     },
     methods: {
         deleteCalendarEvent(id: string) {
@@ -271,6 +277,9 @@ export default defineComponent({
         },
         calendarEvents(newValue) {
             this.tuiCalendarRef?.createSchedules(newValue);
+        },
+        calendarState() {
+            this.setCalendarRange(this.tuiCalendarRef!);
         },
     },
     data() {
@@ -322,6 +331,25 @@ export default defineComponent({
     .center {
         display: inline-block;
         margin: auto;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .calendar-toolbar {
+        display: grid;
+        .left {
+            width: 100vw;
+            text-align: start;
+        }
+        .right {
+            width: 100vw;
+            text-align: end;
+        }
+        .center {
+            width: 100vw;
+            text-align: start;
+            line-height: 3rem;
+        }
     }
 }
 .sidebar-link {
