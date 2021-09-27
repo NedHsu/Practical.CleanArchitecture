@@ -77,6 +77,7 @@ class ListStockFunders extends Component<any, any> {
         <td>
           {this.state.showImage ? (
             <img
+              alt=""
               src={stockfunder.imageUrl || logo}
               title={stockfunder.name}
               style={{ width: "50px", margin: "2px" }}
@@ -259,7 +260,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchStockFunders: () => dispatch(actions.fetchStockFunders()),
+    fetchStockFunders: (code, start, end) => dispatch(actions.fetchStockFunders(code, start, end)),
     deleteStockFunder: (stockfunder) => dispatch(actions.deleteStockFunder(stockfunder)),
   };
 };

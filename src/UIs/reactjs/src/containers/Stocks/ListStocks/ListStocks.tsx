@@ -264,7 +264,7 @@ class ListStocks extends Component<any, any> {
     );
 
     const stockGroupTags = this.props.stockGroups?.map((item) => (
-      <Col key={item.id} md={1} className={styles.groupTags}>
+      <Col key={item.id} lg={1} md={2} sm={3} className={styles.groupTags}>
         <Button
           variant="outline-dark"
           active={this.props.stockGroup?.id === item.id}
@@ -287,7 +287,7 @@ class ListStocks extends Component<any, any> {
               <Col md={1} className={styles.groupTags}>
                 Groups:
               </Col>
-              <Col md={1} className={styles.groupTags}>
+              <Col lg={1} md={2} sm={3} className={styles.groupTags}>
                 <Button
                   variant="outline-dark"
                   active={!this.props.stockGroup?.id}

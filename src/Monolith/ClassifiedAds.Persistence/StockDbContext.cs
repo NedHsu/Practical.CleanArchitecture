@@ -165,6 +165,25 @@ namespace ClassifiedAds.Persistence
                 entity.Property(e => e.Date).HasColumnType("date");
 
                 entity.HasIndex("Date");
+                entity.HasIndex(x => x.CreditSum).IncludeProperties(x => new
+                {
+                    x.ForeignBuy,
+                    x.ForeignSell,
+                    x.ForeignSum,
+                    x.ForeignSelfBuy,
+                    x.ForeignSelfSell,
+                    x.ForeignSelfSum,
+                    x.CreditBuy,
+                    x.CreditSell,
+                    x.SelfBuySell,
+                    x.SelfBuy,
+                    x.SelfSell,
+                    x.SelfSum,
+                    x.SelfHedgingBuy,
+                    x.SelfHedgingSell,
+                    x.SelfHedgingSum,
+                    x.Total
+                });
             });
 
             modelBuilder.Entity<StockMargin>(entity =>

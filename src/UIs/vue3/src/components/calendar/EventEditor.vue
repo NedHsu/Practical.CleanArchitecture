@@ -8,23 +8,29 @@
         header="Editor"
     >
         <Divider />
-        <div class="calendar-event-form">
-            <div class="p-fluid">
-                <div class="p-formgroup-inline">
-                    <div class="p-field p-grid">
-                        <label
-                            for="title"
-                            class="p-col-12 p-mb-2 p-md-2 p-mb-md-0"
-                            >Title</label
-                        >
-                        <div class="p-col-12 p-md-2">
-                            <InputText
-                                id="title"
-                                type="text"
-                                v-model="calendarEvent.title"
-                            />
-                        </div>
-                    </div>
+        <div class="calendar-event-form p-fluid">
+            <div class="p-field p-grid">
+                <label for="title" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0"
+                    >Title</label
+                >
+                <div class="p-col-12 p-md-10">
+                    <InputText
+                        id="title"
+                        type="text"
+                        v-model="calendarEvent.title"
+                    />
+                </div>
+            </div>
+            <div class="p-field p-grid">
+                <label for="startDate" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Start</label>
+                <div class="p-col-12 p-md-10">
+                    <Calendar id="startDate" v-model="calendarEvent.start" :showTime="true" dateFormat="yy-mm-dd" />
+                </div>
+            </div>
+            <div class="p-field p-grid">
+                <label for="endDate" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">End</label>
+                <div class="p-col-12 p-md-10">
+                    <Calendar id="endDate" v-model="calendarEvent.end" :showTime="true" dateFormat="yy-mm-dd" />
                 </div>
             </div>
         </div>
@@ -53,6 +59,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .calendar-event-form {
     width: 800px;
+    margin: 1rem;
 }
 
 @media screen and (max-width: 900px) {
@@ -60,5 +67,4 @@ export default defineComponent({
         width: calc(100vw - 5rem);
     }
 }
-
 </style>

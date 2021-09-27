@@ -21,7 +21,18 @@ export const fetchStockFundersStart = () => {
   };
 };
 
-export const fetchStockFunders = () => {
+export const fetchStockFunders = (code: string, startDate, endDate) => {
+  return {
+    type: actionTypes.FETCH_FUNDERS,
+    code: code,
+    options: {
+      startDate,
+      endDate
+    }
+  };
+};
+
+export const fetchAllStockFunders = () => {
   return {
     type: actionTypes.FETCH_FUNDERS,
   };

@@ -10,6 +10,11 @@ namespace ClassifiedAds.Application.StockFunders.Queries
 {
     public class GetStockFundersQuery : IQuery<List<StockFunder>>
     {
+        public DateTime StartDate { get; set; }
+
+        public DateTime EndDate { get; set; }
+
+        public string StockCode { get; set; }
     }
 
     [AuditLog]
@@ -25,7 +30,7 @@ namespace ClassifiedAds.Application.StockFunders.Queries
 
         public List<StockFunder> Handle(GetStockFundersQuery query)
         {
-            return _stockFunderRepository.GetAll().ToList();
+            return _stockFunderRepository.GetAll(x => x.Date >= query.StartDate && x.Date <= query.EndDate && x.StockCode == query.StockCode).ToList();
         }
     }
 }

@@ -18,7 +18,7 @@ class ViewStockFunder extends Component<any, any> {
   };
 
   componentDidMount() {
-    this.props.fetchStockFunder(this.props.match.params.id);
+    this.props.fetchStockFunder(this.props.match.params.code);
   }
 
   back = () => {
@@ -61,6 +61,7 @@ class ViewStockFunder extends Component<any, any> {
 
             <div className="col-md-4">
               <img
+                alt=""
                 className="center-block img-responsive"
                 style={{ width: "200px", margin: "2px" }}
                 src={this.props.stockfunder.imageUrl || logo}
@@ -100,7 +101,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchStockFunder: id => dispatch(actions.fetchStockFunder(id))
+    fetchStockFunder: (code, startDate, endDate) => dispatch(actions.fetchStockFunders(code, startDate, endDate))
   };
 };
 

@@ -15,4 +15,6 @@ export interface CalendarEvent {
     name: string;
     code: string;
     description: string;
+    start: Date;
+    end: Date;
 }

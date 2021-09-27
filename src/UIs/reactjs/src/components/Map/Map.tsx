@@ -214,7 +214,9 @@ class Map extends Component<Props, MyState> {
             html: renderToString(
               <div>
                 <Icon iconName={item.icon ?? "RiMapPin3Fill"} color={color} />
-                {item.weatherElement?.TEMP}℃
+                <span>
+                  {item.weatherElement?.TEMP}℃
+                </span>
               </div>
             ),
             className: styles.weatherIcon
@@ -298,8 +300,10 @@ class Map extends Component<Props, MyState> {
             className: styles.earthquakeMark
           })}>
           <Popup>
-            <a href={item.web}>{item.reportContent} </a>
-            <img src={item.reportImageURI} />
+            <div className={styles.earthquakePopup}>
+              <a href={item.web}>{item.reportContent} </a>
+              <img src={item.reportImageURI} alt="" />
+            </div>
           </Popup>
         </Marker>
       );

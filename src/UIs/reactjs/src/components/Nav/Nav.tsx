@@ -3,17 +3,34 @@ import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
 import Submarine from "../Submarine/Submarine";
 
-import classes from "./Nav.module.css";
+import classes from "./Nav.module.scss";
 
 type Props = {
   authService: any
 }
 
 class Nav extends Component<Props> {
+  prevScrollpos: number = 0;
+  navRef: any = React.createRef();
+  componentDidMount() {
+    const self = this;
+    self.prevScrollpos = window.pageYOffset;
+
+    window.onscroll = function () {
+      var currentScrollPos = window.pageYOffset;
+      let nav = self.navRef.current;
+      if (self.prevScrollpos > currentScrollPos) {
+        nav.style.top = "0";
+      } else {
+        nav.style.top = "-50px";
+      }
+      self.prevScrollpos = currentScrollPos;
+    }
+  }
   render() {
     const pageTitle = "ClassifiedAds.React";
     return (
-      <nav
+      <nav ref={this.navRef}
         className={"navbar navbar-expand navbar-dark " + classes.Nav}
       >
         <a className="navbar-brand" href="/">

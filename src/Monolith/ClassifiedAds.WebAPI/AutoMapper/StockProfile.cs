@@ -84,6 +84,26 @@ namespace ClassifiedAds.WebAPI.AutoMapper
             .ForMember(x => x.Offset, opt => opt.MapFrom(src => src.Select(x => x.Offset)))
             .ForMember(x => x.Remark, opt => opt.MapFrom(src => src.Select(x => x.Remark)))
             ;
+            CreateMap<List<StockFunder>, StockFunderDayModel>()
+            .ForMember(x => x.Date, opt => opt.MapFrom(src => src.Select(x => x.Date.ToString("yyyy-MM-dd"))))
+            .ForMember(x => x.ForeignBuy, opt => opt.MapFrom(src => src.Select(x => x.ForeignBuy)))
+            .ForMember(x => x.ForeignSell, opt => opt.MapFrom(src => src.Select(x => x.ForeignSell)))
+            .ForMember(x => x.ForeignSum, opt => opt.MapFrom(src => src.Select(x => x.ForeignSum)))
+            .ForMember(x => x.ForeignSelfBuy, opt => opt.MapFrom(src => src.Select(x => x.ForeignSelfBuy)))
+            .ForMember(x => x.ForeignSelfSell, opt => opt.MapFrom(src => src.Select(x => x.ForeignSelfSell)))
+            .ForMember(x => x.ForeignSelfSum, opt => opt.MapFrom(src => src.Select(x => x.ForeignSelfSum)))
+            .ForMember(x => x.CreditBuy, opt => opt.MapFrom(src => src.Select(x => x.CreditBuy)))
+            .ForMember(x => x.CreditSell, opt => opt.MapFrom(src => src.Select(x => x.CreditSell)))
+            .ForMember(x => x.CreditSum, opt => opt.MapFrom(src => src.Select(x => x.CreditSum)))
+            .ForMember(x => x.SelfBuySell, opt => opt.MapFrom(src => src.Select(x => x.SelfBuySell)))
+            .ForMember(x => x.SelfBuy, opt => opt.MapFrom(src => src.Select(x => x.SelfBuy)))
+            .ForMember(x => x.SelfSell, opt => opt.MapFrom(src => src.Select(x => x.SelfSell)))
+            .ForMember(x => x.SelfSum, opt => opt.MapFrom(src => src.Select(x => x.SelfSum)))
+            .ForMember(x => x.SelfHedgingBuy, opt => opt.MapFrom(src => src.Select(x => x.SelfHedgingBuy)))
+            .ForMember(x => x.SelfHedgingSell, opt => opt.MapFrom(src => src.Select(x => x.SelfHedgingSell)))
+            .ForMember(x => x.SelfHedgingSum, opt => opt.MapFrom(src => src.Select(x => x.SelfHedgingSum)))
+            .ForMember(x => x.Total, opt => opt.MapFrom(src => src.Select(x => x.Total)))
+            ;
         }
     }
 }

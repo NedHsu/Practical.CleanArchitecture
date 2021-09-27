@@ -3,11 +3,12 @@ import axios from "./axios";
 
 import * as actionTypes from "./actionTypes";
 import * as actions from "./actions";
+import { urlParams } from "../../shared/utility";
 
 export function* fetchStockFundersSaga(action) {
   yield put(actions.fetchStockFundersStart());
   try {
-    const response = yield axios.get("");
+    const response = yield axios.get(action.code + urlParams(action.options));
     const fetchedStockFunders = response.data;
     yield put(actions.fetchStockFundersSuccess(fetchedStockFunders));
   } catch (error) {
@@ -45,7 +46,6 @@ export function* deleteStockFunderSaga(action) {
   try {
     const response = yield axios.delete(action.stockfunder.id, action.stockfunder);
     yield put(actions.deleteStockFunderSuccess(action.stockfunder));
-    yield put(actions.fetchStockFunders());
   } catch (error) {
     console.log(error);
     yield put(actions.deleteStockFunderFail(error));
