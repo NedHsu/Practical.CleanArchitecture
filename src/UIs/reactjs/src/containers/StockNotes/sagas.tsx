@@ -3,12 +3,11 @@ import axios from "./axios";
 
 import * as actionTypes from "./actionTypes";
 import * as actions from "./actions";
-import { urlParams } from "../../shared/utility";
 
 export function* fetchAllStockNotesSaga(action) {
   yield put(actions.fetchStockNotesStart({}));
   try {
-    const response = yield axios.get("paged" + urlParams(action.options));
+    const response = yield axios.get("paged", { params: action.options });
     const fetchedStockNotes = response.data;
     yield put(actions.fetchStockNotePagedSuccess(fetchedStockNotes));
   } catch (error) {

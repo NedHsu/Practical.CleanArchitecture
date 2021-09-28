@@ -3,12 +3,11 @@ import axios from "./axios";
 
 import * as actionTypes from "./actionTypes";
 import * as actions from "./actions";
-import { urlParams } from "../../shared/utility";
 
 export function* fetchStockSeminarsSaga(action) {
   yield put(actions.fetchStockSeminarsStart());
   try {
-    const response = yield axios.get(urlParams(action.options));
+    const response = yield axios.get("", { params: action.options });
     const fetchedStockSeminars = response.data;
     yield put(actions.fetchStockSeminarsSuccess(fetchedStockSeminars));
   } catch (error) {

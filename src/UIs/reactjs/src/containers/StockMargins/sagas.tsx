@@ -3,7 +3,6 @@ import axios from "./axios";
 
 import * as actionTypes from "./actionTypes";
 import * as actions from "./actions";
-import { urlParams } from "../../shared/utility";
 
 export function* fetchStockMarginsSaga(action) {
   yield put(actions.fetchStockMarginsStart());
@@ -19,7 +18,7 @@ export function* fetchStockMarginsSaga(action) {
 export function* fetchStockMarginFundersSaga(action) {
   yield put(actions.fetchStockMarginFundersStart());
   try {
-    const response = yield axios.get("funders" + urlParams(action.options));
+    const response = yield axios.get("funders", { params: action.options });
     const fetchedStockMargins = response.data;
     yield put(actions.fetchStockMarginFundersSuccess(fetchedStockMargins));
   } catch (error) {

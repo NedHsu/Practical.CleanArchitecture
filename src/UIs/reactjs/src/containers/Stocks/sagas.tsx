@@ -3,12 +3,11 @@ import axios from "./axios";
 
 import * as actionTypes from "./actionTypes";
 import * as actions from "./actions";
-import { urlParams } from "../../shared/utility";
 
 export function* fetchStocksSaga(action) {
   yield put(actions.fetchStocksStart());
   try {
-    const response = yield axios.get(urlParams(action.options));
+    const response = yield axios.get("", { params: action.options });
     const fetchedStocks = response.data;
     yield put(actions.fetchStocksSuccess(fetchedStocks));
   } catch (error) {
@@ -19,7 +18,7 @@ export function* fetchStocksSaga(action) {
 export function* fetchStockOptionsSaga(action) {
   yield put(actions.fetchStockOptionsStart());
   try {
-    const response = yield axios.get(urlParams(action.options));
+    const response = yield axios.get("", { params: action.options });
     const fetchedStocks = response.data;
     console.log(fetchedStocks);
     yield put(actions.fetchStockOptionsSuccess(fetchedStocks));
@@ -31,7 +30,7 @@ export function* fetchStockOptionsSaga(action) {
 export function* fetchStockFundersSaga(action) {
   yield put(actions.fetchStockFundersStart());
   try {
-    const response = yield axios.get("funder" + urlParams(action.options));
+    const response = yield axios.get("funder", { params: action.options });
     const fetchedStockFunders = response.data;
     yield put(actions.fetchStockFundersSuccess(fetchedStockFunders));
   } catch (error) {
@@ -42,7 +41,7 @@ export function* fetchStockFundersSaga(action) {
 export function* fetchStockRevenuesSaga(action) {
   yield put(actions.fetchStockRevenuesStart());
   try {
-    const response = yield axios.get("revenue" + urlParams(action.options));
+    const response = yield axios.get("revenue", { params: action.options });
     const fetchedStockRevenues = response.data;
     yield put(actions.fetchStockRevenuesSuccess(fetchedStockRevenues));
   } catch (error) {
