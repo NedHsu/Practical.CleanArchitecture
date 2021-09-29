@@ -52,6 +52,8 @@
 import { defineComponent } from "vue";
 import { mapGetters, mapState, useStore } from "vuex";
 import { displayFullTime } from "../../utils/date";
+import ACTIONTYPES from "../../store/modules/calendarEvent/actionTypes";
+import TYPES from "../../store/modules/calendarEvent/mutationTypes";
 
 export default defineComponent({
     computed: {
@@ -64,11 +66,13 @@ export default defineComponent({
     },
     methods: {
         editEvent() {
-            this.store.commit("calendarEvent/EDIT_CALENDAR_EVENT");
+            this.store.commit("calendarEvent/" + TYPES.EDIT_CALENDAR_EVENT);
         },
-        deleteEvent() {},
+        deleteEvent() {
+            this.store.dispatch("calendarEvent/" + ACTIONTYPES.DEL_CALENDAR_EVENT, this.calendarEvent.id);
+        },
         closeEvent() {
-            this.store.commit("calendarEvent/CLOSE_CALENDAR_EVENT");
+            this.store.commit("calendarEvent/" + TYPES.CLOSE_CALENDAR_EVENT);
         },
         displayFullTime,
     },

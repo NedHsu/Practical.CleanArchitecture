@@ -10,6 +10,9 @@ namespace ClassifiedAds.Application.CalendarEvents.Queries
 {
     public class GetCalendarEventsQuery : IQuery<List<CalendarEvent>>
     {
+        public DateTime? Start { get; set; }
+
+        public DateTime? End { get; set; }
     }
 
     [AuditLog]
@@ -25,7 +28,18 @@ namespace ClassifiedAds.Application.CalendarEvents.Queries
 
         public List<CalendarEvent> Handle(GetCalendarEventsQuery query)
         {
-            return _calendareventRepository.GetAll().ToList();
+            var result = _calendareventRepository.GetAll();
+            if (query.Start.HasValue)
+            {
+                result = result.Where(x => x.EndTime.Date >= query.Start);
+            }
+
+            if (query.End.HasValue)
+            {
+                result = result.Where(x => x.StartTime.Date <= query.End);
+            }
+
+            return result.ToList();
         }
     }
 }

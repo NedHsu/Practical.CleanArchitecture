@@ -37,10 +37,10 @@ namespace ClassifiedAds.WebAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<CalendarEventModel>> Get()
+        public ActionResult<IEnumerable<CalendarEventModel>> Get([FromQuery] GetCalendarEventsQuery query)
         {
             _logger.LogInformation("Getting all calendarevents");
-            var calendarevents = _dispatcher.Dispatch(new GetCalendarEventsQuery());
+            var calendarevents = _dispatcher.Dispatch(query);
             var model = _mapper.Map<List<CalendarEventModel>>(calendarevents);
             return Ok(model);
         }
@@ -62,6 +62,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         {
             var calendarevent = _mapper.Map<CalendarEvent>(model);
             calendarevent.CreaterId = User.GetUserId();
+            calendarevent.IsVisible = true;
             _dispatcher.Dispatch(new AddUpdateCalendarEventCommand { CalendarEvent = calendarevent });
             model = _mapper.Map<CalendarEventModel>(calendarevent);
             return Created($"/api/calendarevents/{model.Id}", model);
@@ -79,12 +80,11 @@ namespace ClassifiedAds.WebAPI.Controllers
             calendarevent.StartTime = model.Start;
             calendarevent.EndTime = model.End;
             calendarevent.IsAllDay = model.IsAllDay;
+            calendarevent.Content = model.Content;
 
             _dispatcher.Dispatch(new AddUpdateCalendarEventCommand { CalendarEvent = calendarevent });
 
-            model = calendarevent.ToDTO();
-
-            return Ok(model);
+            return Ok(_mapper.Map<CalendarEventModel>(calendarevent));
         }
 
         [HttpDelete("{id}")]

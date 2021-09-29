@@ -155,7 +155,7 @@ export default defineComponent({
                     isVisible: true,
                 };
                 let result = await store.dispatch(
-                    "calendarEvent/" + ACTIONS.ADD_CALENDAR_EVENTS,
+                    "calendarEvent/" + ACTIONS.ADD_CALENDAR_EVENT,
                     calendarEvent
                 );
                 console.log(result);

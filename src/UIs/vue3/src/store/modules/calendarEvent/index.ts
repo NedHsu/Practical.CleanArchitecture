@@ -18,16 +18,23 @@ export default {
         [TYPES.FETCH_CALENDAR_EVENTS_FAIL](state: CalendarEventState) {
             state.loading = false;
         },
-        [TYPES.ADD_CALENDAR_EVENTS_SUCCESS](state: CalendarEventState, data: any) {
-            state.calendarEvent = data;
+        [TYPES.ADD_CALENDAR_EVENT_SUCCESS](state: CalendarEventState, data: any) {
+            state.calendarEvents = [...state.calendarEvents, data];
+            state.opened = 0;
             state.loading = false;
         },
         [TYPES.UPDATE_CALENDAR_EVENT_SUCCESS](state: CalendarEventState, data: any) {
-            state.calendarEvent = data;
+            let oldEvent = state.calendarEvents.find(x => x.id == data.id);
+            oldEvent = {
+                ...oldEvent,
+                ...data
+            };
+            state.opened = 0;
             state.loading = false;
         },
         [TYPES.DEL_CALENDAR_EVENTS_SUCCESS](state: CalendarEventState, id: string) {
-            state.calendarEvents = state.calendarEvents.filter(x => x.id === id);
+            state.calendarEvents = state.calendarEvents.filter(x => x.id !== id);
+            state.opened = 0;
             state.loading = false;
         },
         [TYPES.OPEN_CALENDAR_EVENT](state: CalendarEventState, calendarEvent: CalendarEvent) {
@@ -38,14 +45,17 @@ export default {
             state.calendarEvent = {} as CalendarEvent;
             state.opened = 0;
         },
-        [TYPES.EDIT_CALENDAR_EVENT](state: CalendarEventState) {
+        [TYPES.EDIT_CALENDAR_EVENT](state: CalendarEventState, calendarEvent: CalendarEvent) {
+            if (calendarEvent) {
+                state.calendarEvent = calendarEvent;
+            }
             state.opened = 2;
         }
     },
     actions: {
-        async [ACTIONS.FETCH_CALENDAR_EVENTS]({ commit, state }) {
+        async [ACTIONS.FETCH_CALENDAR_EVENTS]({ commit, state }, query) {
             commit(TYPES.FETCH_CALENDAR_EVENTS_START);
-            await request.get("calendarEvents")
+            await request.get("calendarEvents", { params: query })
                 .then((rs) => {
                     commit(TYPES.FETCH_CALENDAR_EVENTS_SUCCESS, rs.data);
                 })
@@ -54,11 +64,11 @@ export default {
                 });
             return state.calendarEvents;
         },
-        async [ACTIONS.ADD_CALENDAR_EVENTS]({ commit, state }, calendarEvent) {
+        async [ACTIONS.ADD_CALENDAR_EVENT]({ commit, state }, calendarEvent) {
             commit(TYPES.FETCH_CALENDAR_EVENTS_START);
             await request.post("calendarEvents", calendarEvent)
                 .then((rs) => {
-                    commit(TYPES.ADD_CALENDAR_EVENTS_SUCCESS, rs.data);
+                    commit(TYPES.ADD_CALENDAR_EVENT_SUCCESS, rs.data);
                 })
                 .catch((error) => {
                     commit(TYPES.FETCH_CALENDAR_EVENTS_FAIL, error);
@@ -80,7 +90,7 @@ export default {
             commit(TYPES.FETCH_CALENDAR_EVENTS_START);
             return request.delete("calendarEvents/" + id)
                 .then((rs) => {
-                    commit(TYPES.DEL_CALENDAR_EVENTS_SUCCESS, rs.data);
+                    commit(TYPES.DEL_CALENDAR_EVENTS_SUCCESS, id);
                 })
                 .catch((error) => {
                     commit(TYPES.FETCH_CALENDAR_EVENTS_FAIL, error);

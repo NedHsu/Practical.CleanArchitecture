@@ -17,4 +17,5 @@ export interface CalendarEvent {
     description: string;
     start: Date;
     end: Date;
+    isAllDay: boolean;
 }

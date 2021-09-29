@@ -27,6 +27,7 @@ import ACTIONS from "../store/modules/calendarEvent/actionTypes";
 import CALENDAR_ACTIONS from "../store/modules/calendar/actionTypes";
 import EventDetail from "../components/calendar/EventDetail.vue";
 import EventEditor from "../components/calendar/EventEditor.vue";
+import { CalendarEvent } from "../store/modules/calendarEvent/types";
 
 export default defineComponent({
     components: {
@@ -41,7 +42,7 @@ export default defineComponent({
     setup() {
         const store = useStore();
         const calendarRef = ref();
-        const calendarEventsRef = ref([]);
+        const calendarEventsRef = ref(Array<CalendarEvent>());
         const options = ref({
             plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
             headerToolbar: {
@@ -63,6 +64,11 @@ export default defineComponent({
                 console.log(arg);
             },
             select: (arg: DateSelectArg) => {
+                store.commit("calendarEvent/EDIT_CALENDAR_EVENT", {
+                    start: arg.start,
+                    end: arg.end,
+                    isAllDay: arg.allDay,
+                });
                 console.log(arg);
             },
             datesSet: (arg: DatesSetArg) => {
@@ -75,6 +81,19 @@ export default defineComponent({
                 console.log(arg);
             },
             eventChange: (arg: EventChangeArg) => {
+                let oldEvent = calendarEventsRef.value.find(
+                    (x) => x.id == arg.event.id
+                );
+                store.dispatch(
+                    "calendarEvent/" + ACTIONS.UPDATE_CALENDAR_EVENT,
+                    {
+                        ...oldEvent,
+                        ...{
+                            start: arg.event.start,
+                            end: arg.event.end,
+                        },
+                    }
+                );
                 console.log(arg);
             },
             eventRemove: (arg: EventRemoveArg) => {
@@ -119,10 +138,13 @@ export default defineComponent({
     },
     methods: {
         mapCalendarEvents() {
+            console.log("mapCalendarEvents");
             if (
                 this.calendarEvents?.length > 0 &&
                 Object.keys(this.calendarMap).length > 0
             ) {
+                console.log("mapCalendarEvents");
+
                 this.calendarEventsRef = this.calendarEvents.map((x: any) => {
                     const calendar = this.calendarMap[x.calendarId] ?? {
                         color: "",
@@ -158,5 +180,4 @@ export default defineComponent({
 
 
 <style lang="scss">
-
 </style>
