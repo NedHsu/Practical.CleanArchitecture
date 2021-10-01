@@ -24,11 +24,14 @@ export default {
             state.loading = false;
         },
         [TYPES.UPDATE_CALENDAR_EVENT_SUCCESS](state: CalendarEventState, data: any) {
-            let oldEvent = state.calendarEvents.find(x => x.id == data.id);
-            oldEvent = {
+            let oldEventIndex = state.calendarEvents.findIndex(x => x.id == data.id);
+            let oldEvent = state.calendarEvents[oldEventIndex];
+            state.calendarEvents.splice(oldEventIndex, 1)
+            state.calendarEvents = [...state.calendarEvents, {
                 ...oldEvent,
                 ...data
-            };
+            }];
+            console.log(state.calendarEvents);
             state.opened = 0;
             state.loading = false;
         },

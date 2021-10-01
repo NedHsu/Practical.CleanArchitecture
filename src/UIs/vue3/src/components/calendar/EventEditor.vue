@@ -6,8 +6,11 @@
         class="dialog-no-padding"
         :closeOnEscape="true"
         header="Editor"
+        :dismissableMask="true"
     >
-        <Divider />
+        <template #header>
+            <div class="header">Editor</div>
+        </template>
         <Card>
             <template #content>
                 <div class="calendar-event-form p-fluid">
@@ -75,6 +78,7 @@
                                 type="text"
                                 v-model="formData.title"
                             />
+                            <!-- <span>{{ formError.titleError.value }}</span> -->
                         </div>
                     </div>
                     <div class="p-field p-grid">
@@ -152,10 +156,13 @@
 </template>
 <script lang="ts">
 import dayjs from "dayjs";
-import { defineComponent } from "vue";
+import { defineComponent, reactive } from "vue";
 import { mapActions, mapGetters, mapMutations, mapState, useStore } from "vuex";
 import actionTypes from "../../store/modules/calendarEvent/actionTypes";
 import mutationTypes from "../../store/modules/calendarEvent/mutationTypes";
+import { useField } from 'vee-validate';
+import * as yup from 'yup';
+import { Calendar } from "../../store/modules/calendar/types";
 
 export default defineComponent({
     computed: {
@@ -165,6 +172,34 @@ export default defineComponent({
     },
     setup() {
         const store = useStore();
+
+        const { value: start, errorMessage: startError } = useField<Date>('start');
+        const { value: end, errorMessage: endError } = useField<Date>('end');
+        const { value: title, errorMessage: titleError } = useField<string>('title', yup.string().required());
+        const { value: content, errorMessage: contentError } = useField<string>('content');
+        const { value: calendarId, errorMessage: calendarIdError } = useField<string>('calendarId', yup.string().required());
+
+        // init
+        start.value = end.value = new Date();
+
+        const formData = reactive({
+            id: "",
+            isAllDay: true,
+            start: start,
+            end: end,
+            title: title,
+            content: content,
+            calendarId: calendarId,
+        });
+
+        const formError = {
+            startError,
+            endError,
+            titleError,
+            contentError,
+            calendarIdError,
+        }
+
         return { store };
     },
     methods: {
@@ -186,7 +221,9 @@ export default defineComponent({
     },
     watch: {
         calendarEvent(newVal) {
-            this.formData = newVal;
+            this.formData = {
+                ...newVal
+            };
             if (this.formData.start && this.formData.end) {
                 this.formData.start = dayjs(this.formData.start).toDate();
                 this.formData.end = dayjs(this.formData.end).toDate();
@@ -196,16 +233,19 @@ export default defineComponent({
                 this.selectedCalendar = this.calendars.find(
                     (x: any) => x.id == this.formData.calendarId
                 );
+            } else if (this.selectedCalendar) {
+                this.formData.calendarId = this.selectedCalendar.id;
             }
+            console.log("watch calendarEvent");
         },
         selectedCalendar(newVal) {
             this.formData.calendarId = newVal ? newVal.id : "";
-            console.log(this.formData.calendarId)
+            console.log("watch selectedCalendar");
         },
     },
     data() {
         return {
-            selectedCalendar: null,
+            selectedCalendar: null as unknown as Calendar,
             formData: {
                 id: "",
                 isAllDay: true,
@@ -213,7 +253,7 @@ export default defineComponent({
                 end: new Date(),
                 title: "",
                 content: "",
-                calendarId: null,
+                calendarId: "",
             },
         };
     },
@@ -229,6 +269,13 @@ export default defineComponent({
 .calendar-event-form {
     width: 800px;
     margin: 1rem;
+}
+
+.dialog-no-padding {
+    .header {
+        width: 100%;
+        text-align: center;
+    }
 }
 
 @media screen and (max-width: 900px) {

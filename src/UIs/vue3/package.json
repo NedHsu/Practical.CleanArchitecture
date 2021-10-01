@@ -21,10 +21,12 @@
     "primeicons": "^4.1.0",
     "primevue": "^3.5.1",
     "tui-calendar": "^1.14.1",
+    "vee-validate": "^4.5.2",
     "vue": "^3.0.5",
     "vue-i18n": "^9.1.7",
     "vue-router": "^4.0.10",
-    "vuex": "^4.0.2"
+    "vuex": "^4.0.2",
+    "yup": "^0.32.9"
   },
   "devDependencies": {
     "@babel/core": "^7.15.5",

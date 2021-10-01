@@ -25,6 +25,6 @@ namespace ClassifiedAds.Domain.Entities
 
         public bool IsVisible { get; set; }
 
-        public string Category { get; set; }
+        public string Category { get; set; } = "time";
     }
 }

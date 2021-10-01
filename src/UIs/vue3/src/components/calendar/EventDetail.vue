@@ -6,6 +6,7 @@
         :closeOnEscape="true"
         :header="calendarEvent?.title"
         class="dialog-no-padding"
+        :dismissableMask="true"
     >
         <template #header>
             <div class="p-dialog-title">
@@ -13,8 +14,7 @@
                 {{ calendarEvent?.title }}
             </div>
         </template>
-        <Divider />
-        <Card style="width: 25em">
+        <Card class="event-detail-card">
             <template #subtitle>
                 <div>
                     Start:&nbsp;{{ displayFullTime(calendarEvent.start) }}
@@ -88,5 +88,16 @@ export default defineComponent({
 }
 :deep(.p-card-content) {
     color: red;
+}
+
+
+.event-detail-card {
+    width: 800px;
+}
+
+@media screen and (max-width: 900px) {
+    .event-detail-card {
+        width: calc(100vw - 5rem);
+    }
 }
 </style>

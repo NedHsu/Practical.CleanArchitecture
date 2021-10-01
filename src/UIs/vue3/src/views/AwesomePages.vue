@@ -46,9 +46,14 @@ export default defineComponent({
     mounted() {
         console.log(this.components);
     },
+    updated() {
+        if (this.$route.query.componentId) {
+            this.displayComponentId = this.$route.query.componentId;
+        }
+    },
     data() {
         return {
-            displayComponentId: "AwesomePage1",
+            displayComponentId: this.$route.query.componentId ?? "AwesomePage1",
             components: [
                 { label: "AwesomePage1", componentId: "AwesomePage1" },
                 { label: "AwesomePage2", componentId: "AwesomePage2" },
@@ -65,6 +70,11 @@ export default defineComponent({
     methods: {
         displayComponent(componentId: string) {
             this.displayComponentId = componentId;
+            this.$router.push({
+                query: {
+                    componentId: componentId,
+                },
+            });
         },
     },
 });
@@ -81,8 +91,8 @@ export default defineComponent({
     }
 }
 .p-highlight {
-    background: transparent!important;
-    color: var(--primary-color)!important;
-    border-bottom: 1px solid var(--primary-color)!important;
+    background: transparent !important;
+    color: var(--primary-color) !important;
+    border-bottom: 1px solid var(--primary-color) !important;
 }
 </style>

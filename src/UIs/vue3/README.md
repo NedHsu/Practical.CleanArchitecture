@@ -120,3 +120,9 @@ npm install @babel/core @babel/preset-env @testing-library/jest-dom @types/jest 
 
 npm install babel-jest@26.0.0 jest@26.0.0 ts-jest@26.4.4 -D
 ```
+
+### Valid
+
+```
+npm install vee-validate@next --save
+```

@@ -27,6 +27,7 @@ SELECT TOP 30
 FROM   StockFunder t WITH(NOLOCK)
 	Join stock s on t.StockCode = s.code
 WHERE  t.CreditSum > 0 
+       AND t.Date >= DATEADD(DAY, -100, GETDATE())
        AND NOT EXISTS(SELECT * 
                       FROM   StockFunder f WITH(NOLOCK)
                       WHERE  f.StockCode = t.StockCode 

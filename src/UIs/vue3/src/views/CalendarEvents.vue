@@ -207,6 +207,7 @@ export default defineComponent({
                 console.log(event);
             };
             const clickTimezonesCollapseBtn = () => {};
+            tuiCalendar.on("afterRenderSchedule", clickTimezonesCollapseBtn);
             tuiCalendar.on("beforeCreateSchedule", beforeCreateSchedule);
             tuiCalendar.on("beforeUpdateSchedule", beforeUpdateSchedule);
             tuiCalendar.on("beforeDeleteSchedule", beforeDeleteSchedule);
@@ -217,11 +218,10 @@ export default defineComponent({
                 "clickTimezonesCollapseBtn",
                 clickTimezonesCollapseBtn
             );
-            tuiCalendar.on("afterRenderSchedule", clickTimezonesCollapseBtn);
             tuiCalendarRef.value = tuiCalendar;
 
             store
-                .dispatch("calendarEvent/" + ACTIONS.FETCH_CALENDAR_EVENTS)
+                .dispatch("calendarEvent/" + ACTIONS.FETCH_CALENDAR_EVENTS, { start: dateStart, end: dateEnd })
                 .then(() => {
                     console.log(store.state.calendarEvent.calendarEvents);
                 });

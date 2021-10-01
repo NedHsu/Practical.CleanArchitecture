@@ -1,4 +1,16 @@
 <template>
+    <Toolbar class="">
+        <template #left>
+            <div>
+                
+            </div>
+        </template>
+        <template #right>
+            <div>
+                
+            </div>
+        </template>
+    </Toolbar>
     <FullCalendar :options="options" ref="calendarRef" />
     <event-detail />
     <event-editor />
@@ -17,17 +29,20 @@ import FullCalendar, {
     EventClickArg,
     EventHoveringArg,
     EventRemoveArg,
+    MoreLinkArg,
     ViewApi,
 } from "@fullcalendar/vue3";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
-import { mapGetters, mapState, useStore } from "vuex";
+import { mapActions, mapGetters, mapState, useStore } from "vuex";
 import ACTIONS from "../store/modules/calendarEvent/actionTypes";
+import MUTATION from "../store/modules/calendarEvent/mutationTypes";
 import CALENDAR_ACTIONS from "../store/modules/calendar/actionTypes";
 import EventDetail from "../components/calendar/EventDetail.vue";
 import EventEditor from "../components/calendar/EventEditor.vue";
 import { CalendarEvent } from "../store/modules/calendarEvent/types";
+import dayjs from "dayjs";
 
 export default defineComponent({
     components: {
@@ -43,6 +58,9 @@ export default defineComponent({
         const store = useStore();
         const calendarRef = ref();
         const calendarEventsRef = ref(Array<CalendarEvent>());
+        const dateStart = ref<Date>();
+        const dateEnd = ref<Date>();
+
         const options = ref({
             plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
             headerToolbar: {
@@ -58,13 +76,13 @@ export default defineComponent({
             events: calendarEventsRef,
             eventClick: (arg: EventClickArg) => {
                 store.commit(
-                    "calendarEvent/OPEN_CALENDAR_EVENT",
+                    "calendarEvent/" + MUTATION.OPEN_CALENDAR_EVENT,
                     arg.event.extendedProps.calendarEvent
                 );
                 console.log(arg);
             },
             select: (arg: DateSelectArg) => {
-                store.commit("calendarEvent/EDIT_CALENDAR_EVENT", {
+                store.commit("calendarEvent/" + MUTATION.EDIT_CALENDAR_EVENT, {
                     start: arg.start,
                     end: arg.end,
                     isAllDay: arg.allDay,
@@ -72,6 +90,21 @@ export default defineComponent({
                 console.log(arg);
             },
             datesSet: (arg: DatesSetArg) => {
+                if (
+                    dateStart == null ||
+                    dayjs(arg.start).isBefore(dateStart.value) ||
+                    dayjs(arg.end).isAfter(dateEnd.value)
+                ) {
+                    dateStart.value = arg.start;
+                    dateEnd.value = arg.end;
+                    store.dispatch(
+                        "calendarEvent/" + ACTIONS.FETCH_CALENDAR_EVENTS,
+                        {
+                            start: arg.startStr,
+                            end: arg.endStr,
+                        }
+                    );
+                }
                 console.log(arg);
             },
             eventsSet: (args: EventApi[]) => {
@@ -114,11 +147,9 @@ export default defineComponent({
             loading: (isLoading: boolean) => {
                 console.log(isLoading);
             },
-        });
-
-        onMounted(async () => {
-            store.dispatch("calendar/" + CALENDAR_ACTIONS.FETCH_CALENDARS);
-            store.dispatch("calendarEvent/" + ACTIONS.FETCH_CALENDAR_EVENTS);
+            moreLinkClick: (arg: MoreLinkArg) => {
+                console.log(arg);
+            }
         });
 
         return { options, calendarRef, calendarEventsRef, store };
@@ -136,15 +167,17 @@ export default defineComponent({
             eventDetailVisible: false,
         };
     },
+    mounted() {
+        this.FETCH_CALENDARS();
+    },
     methods: {
+        ...mapActions("calendarEvent", ACTIONS),
+        ...mapActions("calendar", CALENDAR_ACTIONS),
         mapCalendarEvents() {
-            console.log("mapCalendarEvents");
             if (
                 this.calendarEvents?.length > 0 &&
                 Object.keys(this.calendarMap).length > 0
             ) {
-                console.log("mapCalendarEvents");
-
                 this.calendarEventsRef = this.calendarEvents.map((x: any) => {
                     const calendar = this.calendarMap[x.calendarId] ?? {
                         color: "",
@@ -172,12 +205,18 @@ export default defineComponent({
             }
         },
         closeEvent() {
-            this.store.commit("calendarEvent/CLOSE_CALENDAR_EVENT");
+            this.store.commit("calendarEvent/" + MUTATION.CLOSE_CALENDAR_EVENT);
         },
     },
 });
 </script>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
+:deep(.fc-header-toolbar) {
+    margin: 1.5em 0.5em;
+}
+:deep(.fc-more-popover) {
+    z-index: 100;
+}
 </style>
