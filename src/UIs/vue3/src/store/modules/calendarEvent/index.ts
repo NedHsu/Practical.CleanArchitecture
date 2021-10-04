@@ -19,20 +19,19 @@ export default {
             state.loading = false;
         },
         [TYPES.ADD_CALENDAR_EVENT_SUCCESS](state: CalendarEventState, data: any) {
-            state.calendarEvents = [...state.calendarEvents, data];
+            state.calendarEvents.push(data);
             state.opened = 0;
+            state.calendarEvent = data;
             state.loading = false;
         },
         [TYPES.UPDATE_CALENDAR_EVENT_SUCCESS](state: CalendarEventState, data: any) {
             let oldEventIndex = state.calendarEvents.findIndex(x => x.id == data.id);
-            let oldEvent = state.calendarEvents[oldEventIndex];
-            state.calendarEvents.splice(oldEventIndex, 1)
-            state.calendarEvents = [...state.calendarEvents, {
-                ...oldEvent,
+            state.calendarEvents[oldEventIndex] = {
+                ...state.calendarEvents[oldEventIndex],
                 ...data
-            }];
-            console.log(state.calendarEvents);
+            };
             state.opened = 0;
+            state.calendarEvent = data;
             state.loading = false;
         },
         [TYPES.DEL_CALENDAR_EVENTS_SUCCESS](state: CalendarEventState, id: string) {

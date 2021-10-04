@@ -32,6 +32,7 @@ import Checkbox from 'primevue/checkbox';
 
 import en from './locales/en.yaml';
 import 'primeflex/primeflex.css';
+import './assets/style.scss';
 
 authService.loadUser().then(user => {
     store.dispatch("TRY_AUTO_LOGIN", authService);

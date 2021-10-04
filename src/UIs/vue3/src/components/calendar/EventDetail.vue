@@ -69,7 +69,10 @@ export default defineComponent({
             this.store.commit("calendarEvent/" + TYPES.EDIT_CALENDAR_EVENT);
         },
         deleteEvent() {
-            this.store.dispatch("calendarEvent/" + ACTIONTYPES.DEL_CALENDAR_EVENT, this.calendarEvent.id);
+            this.store.dispatch(
+                "calendarEvent/" + ACTIONTYPES.DEL_CALENDAR_EVENT,
+                this.calendarEvent.id
+            );
         },
         closeEvent() {
             this.store.commit("calendarEvent/" + TYPES.CLOSE_CALENDAR_EVENT);
@@ -80,17 +83,15 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-:deep(.p-dialog-header) {
+::v-deep(.dialog-no-padding) {
     div {
         padding: 0.5rem;
     }
+    color: red !important;
+}
+::v-deep(.p-card-content) {
     color: red;
 }
-:deep(.p-card-content) {
-    color: red;
-}
-
-
 .event-detail-card {
     width: 800px;
 }

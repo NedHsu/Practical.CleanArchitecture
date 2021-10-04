@@ -99,7 +99,7 @@ export default defineComponent({
             }
         };
 
-        onMounted(() => {
+        onMounted(async () => {
             const tuiCalendar = new Calendar(refCalendar.value, {
                 defaultView: "month",
                 useCreationPopup: true,
@@ -221,11 +221,11 @@ export default defineComponent({
             tuiCalendarRef.value = tuiCalendar;
 
             store
-                .dispatch("calendarEvent/" + ACTIONS.FETCH_CALENDAR_EVENTS, { start: dateStart, end: dateEnd })
+                .dispatch("calendarEvent/" + ACTIONS.FETCH_CALENDAR_EVENTS, { start: dateStart.value, end: dateEnd.value })
                 .then(() => {
                     console.log(store.state.calendarEvent.calendarEvents);
                 });
-            store.dispatch("calendar/FETCH_CALENDARS");
+            await store.dispatch("calendar/FETCH_CALENDARS");
 
             console.log("onMounted");
         });
@@ -275,8 +275,10 @@ export default defineComponent({
                 })
             );
         },
-        calendarEvents(newValue) {
-            this.tuiCalendarRef?.createSchedules(newValue);
+        calendarEvents: {
+            handler(newValue) {
+                this.tuiCalendarRef?.createSchedules(newValue, true);
+            },
         },
         calendarState() {
             this.setCalendarRange(this.tuiCalendarRef!);

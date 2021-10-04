@@ -160,8 +160,6 @@ import { defineComponent, reactive } from "vue";
 import { mapActions, mapGetters, mapMutations, mapState, useStore } from "vuex";
 import actionTypes from "../../store/modules/calendarEvent/actionTypes";
 import mutationTypes from "../../store/modules/calendarEvent/mutationTypes";
-import { useField } from 'vee-validate';
-import * as yup from 'yup';
 import { Calendar } from "../../store/modules/calendar/types";
 
 export default defineComponent({
@@ -172,33 +170,6 @@ export default defineComponent({
     },
     setup() {
         const store = useStore();
-
-        const { value: start, errorMessage: startError } = useField<Date>('start');
-        const { value: end, errorMessage: endError } = useField<Date>('end');
-        const { value: title, errorMessage: titleError } = useField<string>('title', yup.string().required());
-        const { value: content, errorMessage: contentError } = useField<string>('content');
-        const { value: calendarId, errorMessage: calendarIdError } = useField<string>('calendarId', yup.string().required());
-
-        // init
-        start.value = end.value = new Date();
-
-        const formData = reactive({
-            id: "",
-            isAllDay: true,
-            start: start,
-            end: end,
-            title: title,
-            content: content,
-            calendarId: calendarId,
-        });
-
-        const formError = {
-            startError,
-            endError,
-            titleError,
-            contentError,
-            calendarIdError,
-        }
 
         return { store };
     },

@@ -1,14 +1,10 @@
 <template>
     <Toolbar class="">
         <template #left>
-            <div>
-                
-            </div>
+            <div></div>
         </template>
         <template #right>
-            <div>
-                
-            </div>
+            <div></div>
         </template>
     </Toolbar>
     <FullCalendar :options="options" ref="calendarRef" />
@@ -149,14 +145,17 @@ export default defineComponent({
             },
             moreLinkClick: (arg: MoreLinkArg) => {
                 console.log(arg);
-            }
+            },
         });
 
         return { options, calendarRef, calendarEventsRef, store };
     },
     watch: {
-        calendarEvents() {
-            this.mapCalendarEvents();
+        calendarEvents: {
+            handler(val) {
+                this.mapCalendarEvents();
+            },
+            deep: true,
         },
         calendarMap() {
             this.mapCalendarEvents();
