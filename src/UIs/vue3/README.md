@@ -121,8 +121,24 @@ npm install @babel/core @babel/preset-env @testing-library/jest-dom @types/jest 
 npm install babel-jest@26.0.0 jest@26.0.0 ts-jest@26.4.4 -D
 ```
 
+#### Cypress
+```
+npm install cypress --save-dev
+```
+
 ### Valid
 
 ```
 npm install vee-validate@next --save
+```
+
+```
+npm install --save simple-vue3-validator
+```
+
+``` js
+import SimpleVueValidator from 'simple-vue3-validator'
+
+...
+app.use(SimpleVueValidator)
 ```
