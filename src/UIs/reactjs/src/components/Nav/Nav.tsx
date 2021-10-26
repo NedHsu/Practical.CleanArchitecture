@@ -114,7 +114,7 @@ class Nav extends Component<Props> {
                 className="nav-link"
                 to="/login"
                 onClick={this.props.authService.login}
-                href="javascript:void(0)"
+                href=""
               >
                 Login
               </NavLink>
@@ -127,7 +127,7 @@ class Nav extends Component<Props> {
                 className="nav-link"
                 to="/logout"
                 onClick={this.props.authService.logout}
-                href="javascript:void(0)"
+                href=""
               >
                 Logout
               </NavLink>

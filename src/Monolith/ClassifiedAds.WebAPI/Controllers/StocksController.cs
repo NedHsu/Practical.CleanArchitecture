@@ -77,11 +77,11 @@ namespace ClassifiedAds.WebAPI.Controllers
         }
 
         [HttpGet("funder")]
-        public ActionResult<List<StockFunderModel>> Get()
+        public ActionResult<List<StockFunderModel>> GetFunder([FromQuery] GetCreditStockFunderPagedQuery query)
         {
             _logger.LogInformation("Getting all stockfunders");
-            var stockfunders = _dispatcher.Dispatch(new GetCreditStockFundersQuery() { });
-            var model = _mapper.Map<List<StockFunderModel>>(stockfunders);
+            var stockfunders = _dispatcher.Dispatch(query);
+            var model = _mapper.Map<PagedResultModel<StockFunderModel>>(stockfunders);
             return Ok(model);
         }
 

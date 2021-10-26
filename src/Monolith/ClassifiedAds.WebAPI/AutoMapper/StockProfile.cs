@@ -46,7 +46,7 @@ namespace ClassifiedAds.WebAPI.AutoMapper
                 .ForMember(x => x.Month, opt => opt.MapFrom(src => src.Date.ToString("yyyy/MM")));
             CreateMap(typeof(PagedResult<>), typeof(PagedResultModel<>));
             CreateMap<StockProfit, StockProfitModel>()
-                .ForMember(x => x.Date, opt => opt.MapFrom(src => src.Date.AddYears(-1911).ToString("yyy/MM")));
+                .ForMember(x => x.Date, opt => opt.MapFrom(src => src.Date.AddYears(-1911).AddMonths(-(src.Date.Month / 3) * 2).ToString("yyy/MM")));
             CreateMap<StockRevenue, StockRevenueModel>()
                 .ForMember(x => x.Month, opt => opt.MapFrom(src => src.Date.AddYears(-1911).ToString("yyy/MM")));
             CreateMap<StockSeminarDTO, StockSeminarModel>();

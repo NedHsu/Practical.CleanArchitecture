@@ -16,10 +16,6 @@ import TrendLine from "../TrendLine/TrendLine";
 import { GrList, GrNotes } from "react-icons/gr";
 
 class LegalPerson extends Component<any, any> {
-  constructor(props) {
-    super(props);
-  }
-
   state = {
     pageTitle: "Stock List",
     showTrendLine: false,
@@ -45,7 +41,7 @@ class LegalPerson extends Component<any, any> {
       startDate.setMonth(startDate.getMonth() - 6);
 
       this.props.fetchStocksDays({
-        stockCodes: this.props.stockfunders.map(x => x.stockCode),
+        stockCodes: this.props.stockfunders.items.map(x => x.stockCode),
         startDate: startDate,
         endDate: endDate,
       });
@@ -80,7 +76,7 @@ class LegalPerson extends Component<any, any> {
   render() {
     const stockFunders = this.props.stockfunders;
 
-    const rows = stockFunders?.map((stock) => (
+    const rows = stockFunders?.items?.map((stock) => (
       <tr key={"L" + stock.stockCode}>
         <td>
           {this.state.showTrendLine && this.props.stockDayMaps && this.props.stockDayMaps[stock.stockCode] ? (

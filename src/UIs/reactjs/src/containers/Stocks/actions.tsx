@@ -7,6 +7,7 @@ export const fetchStocksSuccess = (result) => {
     stocks: result.items,
     totalCount: result.totalCount,
     totalPage: result.totalPage,
+    pageIndex: result.pageIndex,
   };
 };
 

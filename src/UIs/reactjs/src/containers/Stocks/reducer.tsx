@@ -34,6 +34,7 @@ const fetchStocksSuccess = (state, action) => {
     loading: false,
     totalPage: action.totalPage,
     totalCount: action.totalCount,
+    pageIndex: action.pageIndex,
   });
 };
 

@@ -39,5 +39,28 @@ ORDER  BY date DESC, CreditSum DESC
 ";
             return DbContext.Connection.Query<StockFunderDTO>(sql).ToList();
         }
+
+        public PagedResult<StockFunderDTO> GetCreditBuyPaged(uint pageIndex, uint pageSize)
+        {
+            string sql = @"
+SELECT
+	s.name, 
+    s.closePrice,
+	t.*
+FROM   StockFunder t WITH(NOLOCK)
+	Join stock s on t.StockCode = s.code
+WHERE  t.CreditSum > 0 
+       AND t.Date >= DATEADD(DAY, -100, GETDATE())
+       AND NOT EXISTS(SELECT * 
+                      FROM   StockFunder f WITH(NOLOCK)
+                      WHERE  f.StockCode = t.StockCode 
+                             AND f.CreditSum > 0 
+                             AND f.date <> t.date 
+                             AND f.date > Dateadd(day, -20, t.date) 
+                             AND f.date < t.date)
+";
+            string orderby = "ORDER  BY date DESC, CreditSum DESC";
+            return GetPaged<StockFunderDTO>(pageIndex, pageSize, sql, orderBy: orderby);
+        }
     }
 }
