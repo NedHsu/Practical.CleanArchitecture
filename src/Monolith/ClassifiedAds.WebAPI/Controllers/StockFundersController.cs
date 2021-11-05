@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ClassifiedAds.Application;
 using ClassifiedAds.Application.StockFunders.Queries;
+using ClassifiedAds.Domain.DTOs;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.WebAPI.Models.StockFunders;
 using Microsoft.AspNetCore.Authorization;
@@ -37,6 +38,15 @@ namespace ClassifiedAds.WebAPI.Controllers
             _logger.LogInformation("Getting all stockFunders");
             var stockFunders = _dispatcher.Dispatch(new GetStockFundersQuery() { });
             var model = _mapper.Map<IEnumerable<StockFunderModel>>(stockFunders);
+            return Ok(model);
+        }
+
+        [HttpGet("score")]
+        public ActionResult<IEnumerable<StockFunderScoreDTO>> Get([FromQuery] GetStockFunderScoreQuery query)
+        {
+            _logger.LogInformation("Getting stock funder Score");
+            var stockFunders = _dispatcher.Dispatch(query);
+            var model = _mapper.Map<IEnumerable<StockFunderScoreDTO>>(stockFunders);
             return Ok(model);
         }
 

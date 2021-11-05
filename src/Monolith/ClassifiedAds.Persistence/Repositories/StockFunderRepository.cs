@@ -19,7 +19,7 @@ namespace ClassifiedAds.Persistence.Repositories
 
         public List<StockFunderDTO> GetCreditTopBuy()
         {
-            string sql = @"
+            var sql = @"
 SELECT TOP 30 
 	s.name, 
     s.closePrice,
@@ -42,7 +42,7 @@ ORDER  BY date DESC, CreditSum DESC
 
         public PagedResult<StockFunderDTO> GetCreditBuyPaged(uint pageIndex, uint pageSize)
         {
-            string sql = @"
+            var sql = @"
 SELECT
 	s.name, 
     s.closePrice,
@@ -59,8 +59,30 @@ WHERE  t.CreditSum > 0
                              AND f.date > Dateadd(day, -20, t.date) 
                              AND f.date < t.date)
 ";
-            string orderby = "ORDER  BY date DESC, CreditSum DESC";
+            var orderby = "ORDER  BY date DESC, CreditSum DESC";
             return GetPaged<StockFunderDTO>(pageIndex, pageSize, sql, orderBy: orderby);
+        }
+
+        public List<StockFunderScoreDTO> GetStockFunderScore(DateTime startDate)
+        {
+            var sql = @"
+;WITH f AS (
+SELECT TOP 100 StockCode, 
+	SUM(CASE WHEN CreditSum > 0 THEN 1 WHEN CreditSum < 0 THEN -10 ELSE 0 END) CreditScore,
+	SUM(CASE WHEN ForeignSum > 0 THEN 1 WHEN ForeignSum < 0 THEN -1 ELSE 0 END) ForeignScore
+FROM StockFunder
+WHERE CreditSum > 0 AND Date > @date
+GROUP BY StockCode
+ORDER BY creditScore DESC)
+SELECT s.Code, s.Name, CreditScore, ForeignScore
+FROM Stock s
+	JOIN f ON s.Code = f.StockCode";
+
+            var param = new Dictionary<string, object>
+            {
+                { "@date", startDate },
+            };
+            return DbContext.Connection.Query<StockFunderScoreDTO>(sql, param).ToList();
         }
     }
 }

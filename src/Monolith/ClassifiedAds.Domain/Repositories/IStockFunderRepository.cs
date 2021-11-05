@@ -9,5 +9,6 @@ namespace ClassifiedAds.Domain.Repositories
     {
         List<StockFunderDTO> GetCreditTopBuy();
         PagedResult<StockFunderDTO> GetCreditBuyPaged(uint pageIndex, uint pageSize);
+        List<StockFunderScoreDTO> GetStockFunderScore(DateTime startDate);
     }
 }
