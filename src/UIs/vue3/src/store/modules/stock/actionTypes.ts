@@ -1,0 +1,6 @@
+export default {
+    FETCH_STOCKS: "FETCH_STOCKS",
+    ADD_STOCK: "ADD_STOCK",
+    UPDATE_STOCK: "UPDATE_STOCK",
+    DEL_STOCK: "DEL_STOCK",
+};

@@ -40,6 +40,14 @@ export function setupRouter(i18n: I18n): Router {
         },
         //--routes
         {
+            path: "/:locale/stocks",
+            name: "Stocks",
+            component: () => import("../views/Stocks.vue"),
+            meta: {
+                index: 1
+            }
+        },
+        {
             path: "/:locale/awesomePages",
             name: "AwesomePages",
             component: () => import("../views/AwesomePages.vue"),

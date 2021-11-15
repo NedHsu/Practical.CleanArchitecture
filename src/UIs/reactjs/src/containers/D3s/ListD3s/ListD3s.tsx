@@ -4,8 +4,6 @@ import { connect } from "react-redux";
 import ValueChart from "../../Stocks/ValueChart/ValueChart";
 import * as stockMarginActions from "../../StockMargins/actions";
 
-const d3 = require("d3")
-
 class ListD3s extends Component<any, any> {
   state = {
   };
@@ -26,7 +24,7 @@ class ListD3s extends Component<any, any> {
     return (
       <div>
         {
-          stockMarginLoading || stockMarginFunders.date.length == 0 ? null : (
+          stockMarginLoading || stockMarginFunders.date.length === 0 ? null : (
             <ValueChart id="value-chart" data={{
               k: stockMarginFunders.date,
               n: 5,

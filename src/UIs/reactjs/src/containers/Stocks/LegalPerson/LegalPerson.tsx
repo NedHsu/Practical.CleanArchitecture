@@ -175,6 +175,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchStocks: (options) => dispatch(actions.fetchStockFunders(options)),
+    fetchStockFunderScores: (options) => dispatch(actions.fetchStockFunderScores(options)),
     fetchStocksDays: (options) => dispatch(daysActions.fetchStocksDays(options)),
     fetchStockGroups: () => dispatch(groupActions.fetchStockGroups()),
     fetchStockGroupItems: (stock) => dispatch(groupItemActions.fetchStockGroupItems(stock)),

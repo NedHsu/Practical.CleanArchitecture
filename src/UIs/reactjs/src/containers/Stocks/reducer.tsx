@@ -84,6 +84,23 @@ const fetchStockFundersFail = (state, action) => {
 };
 /// StockFunders
 
+/// StockFunderScores
+const fetchStockFunderScoresStart = (state, action) => {
+  return updateObject(state, { scoreLoading: true });
+};
+
+const fetchStockFunderScoresSuccess = (state, action) => {
+  return updateObject(state, {
+    stockfunderScores: action.stockfunderScores,
+    scoreLoading: false,
+  });
+};
+
+const fetchStockFunderScoresFail = (state, action) => {
+  return updateObject(state, { scoreLoading: false });
+};
+/// StockFunderScores
+
 /// StockRevenues
 const fetchStockRevenuesStart = (state, action) => {
   return updateObject(state, { loading: true });
@@ -182,6 +199,12 @@ const reducer = (state = initialState, action) => {
       return fetchStockFundersSuccess(state, action);
     case actionTypes.FETCH_STOCK_FUNDERS_FAIL:
       return fetchStockFundersFail(state, action);
+    case actionTypes.FETCH_STOCK_FUNDER_SCORES_START:
+      return fetchStockFunderScoresStart(state, action);
+    case actionTypes.FETCH_STOCK_FUNDER_SCORES_SUCCESS:
+      return fetchStockFunderScoresSuccess(state, action);
+    case actionTypes.FETCH_STOCK_FUNDER_SCORES_FAIL:
+      return fetchStockFunderScoresFail(state, action);
     case actionTypes.FETCH_STOCK_REVENUES_START:
       return fetchStockRevenuesStart(state, action);
     case actionTypes.FETCH_STOCK_REVENUES_SUCCESS:

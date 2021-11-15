@@ -104,6 +104,9 @@ export default class ValueChart extends PureComponent<Props> {
             const yValue = d3.pointer(event)[1] - margin.bottom;
             const targetTime = y.invert(yValue);
             // 推算出目前hover位置
+            const targetIndex = Math.floor(targetTime / (x.step() / n));
+            const targetValue = yz[targetIndex][targetIndex];
+            console.log(targetValue);
             // console.log(d3.bisect(xz, targetTime), xValue);
         });
 

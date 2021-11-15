@@ -375,3 +375,4 @@ src/Monolith/ClassifiedAds.WebAPI/appsettings.json
 src/Monolith/tye.yml
 
 pkg/*
+src/UIs/reactjs/pkg/*

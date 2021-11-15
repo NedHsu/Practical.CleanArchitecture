@@ -38,6 +38,17 @@ export function* fetchStockFundersSaga(action) {
   }
 }
 
+export function* fetchStockFunderScoresSaga(action) {
+  yield put(actions.fetchStockFunderScoresStart());
+  try {
+    const response = yield axios.get("funder/score", { params: action.options });
+    const fetchedStockFunders = response.data;
+    yield put(actions.fetchStockFunderScoresSuccess(fetchedStockFunders));
+  } catch (error) {
+    yield put(actions.fetchStockFunderScoresFail(error));
+  }
+}
+
 export function* fetchStockRevenuesSaga(action) {
   yield put(actions.fetchStockRevenuesStart());
   try {
@@ -124,6 +135,7 @@ export function* watchStock() {
   yield takeLatest(actionTypes.FETCH_STOCKS, fetchStocksSaga);
   yield takeLatest(actionTypes.FETCH_STOCK_OPTIONS, fetchStockOptionsSaga);
   yield takeEvery(actionTypes.FETCH_STOCK_FUNDERS, fetchStockFundersSaga);
+  yield takeEvery(actionTypes.FETCH_STOCK_FUNDER_SCORES, fetchStockFunderScoresSaga);
   yield takeEvery(actionTypes.FETCH_STOCK_REVENUES, fetchStockRevenuesSaga);
   yield takeEvery(actionTypes.FETCH_STOCK, fetchStockSaga);
   yield takeEvery(actionTypes.SAVE_STOCK, saveStockSaga);
