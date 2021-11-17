@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
-import { Button, Modal } from "react-bootstrap";
+import { Button, Col, Form, Modal } from "react-bootstrap";
+import { toast } from "react-toastify";
 import Menu from "../Menu/Menu";
 import GroupModal from "../GroupModal/GroupModal";
 import ListNotes from "../../StockNotes/ListStockNotes/ListStockNotes";
@@ -14,6 +15,7 @@ import * as groupItemActions from "../../StockGroupItems/actions";
 import styles from "./LegalPerson.module.scss";
 import TrendLine from "../TrendLine/TrendLine";
 import { GrList, GrNotes } from "react-icons/gr";
+import Spinner from "../../../components/Spinner/Spinner";
 
 class LegalPerson extends Component<any, any> {
   state = {
@@ -30,6 +32,8 @@ class LegalPerson extends Component<any, any> {
       stockCode: "",
       name: "",
     },
+    checkedStocks: Array<any>(),
+    selectedGroupId: "",
     pageIndex: 1,
     pageSize: 50,
   };
@@ -55,14 +59,33 @@ class LegalPerson extends Component<any, any> {
   };
 
   editGroups = (stock) => {
-    if (!(this.props.stockGroups?.length > 0)) {
-      this.props.fetchStockGroups();
-    }
     this.setState({ showGroupsModal: true, stock: stock, });
     this.props.fetchStockGroupItems({ code: stock.stockCode });
   };
 
+  addToGroup = () => {
+    if (!this.state.selectedGroupId) {
+      toast("Please select a group", {
+        position: toast.POSITION.BOTTOM_CENTER,
+        autoClose: 2000,
+        type: toast.TYPE.ERROR
+      });
+      return;
+    } else if (!(this.state.checkedStocks?.length > 0)) {
+      toast("Please select a stock", {
+        position: toast.POSITION.BOTTOM_CENTER,
+        autoClose: 2000,
+        type: toast.TYPE.ERROR
+      });
+      return;
+    }
+    this.props.addStockGroupStocks(this.state.selectedGroupId, this.state.checkedStocks);
+  }
+
   componentDidMount() {
+    if (!(this.props.stockGroups?.length > 0)) {
+      this.props.fetchStockGroups();
+    }
     this.props.fetchStocks({});
   }
 
@@ -71,6 +94,30 @@ class LegalPerson extends Component<any, any> {
       var stockGroupIds = this.props.stockGroupItems.map(x => x.groupId);
       this.setState({ stockGroupIds: stockGroupIds });
     }
+  }
+
+  toggleStock = event => {
+    var stockCodes = this.state.checkedStocks;
+    if (event.target.checked) {
+      stockCodes.push(event.target.value);
+    } else {
+      stockCodes.splice(stockCodes.indexOf(event.target.value), 1);
+    }
+    this.setState({ checkedStocks: stockCodes });
+  }
+
+  toggleAllStock = event => {
+    var stockCodes = this.state.checkedStocks;
+    if (event.target.checked) {
+      stockCodes = this.props.stockfunders.items.map(x => x.stockCode);
+    } else {
+      stockCodes = [];
+    }
+    this.setState({ checkedStocks: stockCodes });
+  }
+
+  selectGroup = item => {
+    this.setState({ selectedGroupId: item.id });
   }
 
   render() {
@@ -101,6 +148,17 @@ class LegalPerson extends Component<any, any> {
           &nbsp;
           <GrList onClick={() => this.editGroups(stock)} title="Edit Groups"></GrList>
         </td>
+        <td>
+          <Form.Check
+            custom
+            type="checkbox"
+            id={`stock-check-${stock.stockCode}`}
+            checked={this.state.checkedStocks?.indexOf(stock.stockCode) > -1}
+            value={stock.stockCode}
+            onChange={this.toggleStock}
+            title={stock.name}
+          />
+        </td>
       </tr>
     ));
 
@@ -110,6 +168,18 @@ class LegalPerson extends Component<any, any> {
         </ListNotes>
       </Modal>
     );
+
+    const stockGroupTags = this.props.stockGroups?.map((item) => (
+      <Col key={item.id} lg={1} md={2} sm={3} className={styles.groupTags}>
+        <Button
+          variant="outline-dark"
+          active={this.state.selectedGroupId === item.id}
+          block
+          onClick={() => this.selectGroup(item)}>
+          {item.groupTitle}
+        </Button>
+      </Col>
+    ));
 
     const table = this.props.stockfunders ? (
       <table className={`table ${styles.table}`}>
@@ -125,7 +195,16 @@ class LegalPerson extends Component<any, any> {
             <th>Buy/Sell/Sum</th>
             <th className={styles.number}>Total</th>
             <th>Fetch Date</th>
-            <th></th>
+            <th>Edit</th>
+            <th>
+              <Form.Check
+                custom
+                type="checkbox"
+                id="select-all"
+                checked={this.state.checkedStocks?.length === stockFunders?.items?.length}
+                onChange={this.toggleAllStock}
+              />
+            </th>
           </tr>
         </thead>
         <tbody>{rows}</tbody>
@@ -140,7 +219,10 @@ class LegalPerson extends Component<any, any> {
           </div>
           <div className="card-body">
             <div className="row">
-
+              {stockGroupTags}
+              <Button onClick={this.addToGroup}>
+                Add to Group
+              </Button>
             </div>
             <div className="table-responsive">{table}</div>
           </div>
@@ -156,9 +238,11 @@ class LegalPerson extends Component<any, any> {
         }
         {listNoteModal}
         <GroupModal showGroupsModal={this.state.showGroupsModal} stock={{ name: this.state.stock.name, code: this.state.stock.stockCode }} hide={() => this.setState({ showGroupsModal: false })} />
+        <Spinner loading={this.props.stockLoading || this.props.groupLoading || this.props.stockGroupItemLoading} fullscreen />
       </div>
     );
   }
+
 }
 
 const mapStateToProps = (state) => {
@@ -168,6 +252,8 @@ const mapStateToProps = (state) => {
     stockTotalCount: state.stock.totalCount,
     stockTotalPage: state.stock.totalPage,
     stockLoading: state.stock.loading,
+    stockGroupItemLoading: state.stockGroupItem.loading,
+    groupLoading: state.stockGroup.loading,
     stockDayMaps: state.stockDay.stockDayMaps,
   };
 };
@@ -180,6 +266,7 @@ const mapDispatchToProps = (dispatch) => {
     fetchStockGroups: () => dispatch(groupActions.fetchStockGroups()),
     fetchStockGroupItems: (stock) => dispatch(groupItemActions.fetchStockGroupItems(stock)),
     fetchStockNotes: (stock) => dispatch(noteActions.fetchStockNotes(stock)),
+    addStockGroupStocks: (groupId, stocks) => dispatch(groupItemActions.addStockGroupStocks(groupId, stocks)),
   };
 };
 

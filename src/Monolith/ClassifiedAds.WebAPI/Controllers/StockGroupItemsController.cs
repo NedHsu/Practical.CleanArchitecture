@@ -65,6 +65,28 @@ namespace ClassifiedAds.WebAPI.Controllers
             return Created($"/api/StockGroupItems/{model.Id}", model);
         }
 
+        [HttpPut("stocks")]
+        [Consumes("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult PutStocks(UpdateStockGroupItemStocksCommand command)
+        {
+            _dispatcher.Dispatch(command);
+
+            return Ok();
+        }
+
+        [HttpPut("stocks/add")]
+        [Consumes("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult PostStocks(AddStockGroupItemStocksCommand command)
+        {
+            _dispatcher.Dispatch(command);
+
+            return Ok();
+        }
+
         [HttpPut("{stockCode}")]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]

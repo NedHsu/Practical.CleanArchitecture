@@ -51,6 +51,17 @@ export function* saveStockGroupItemsSaga(action) {
   }
 }
 
+export function* addStockGroupStocksSaga(action) {
+  yield put(actions.saveStockGroupItemStart());
+  try {
+    const response = yield axios.put("stocks/add", { groupId: action.groupId, stockCodes: action.stockCodes });
+    yield put(actions.saveStockGroupItemSuccess());
+  } catch (error) {
+    console.log(error);
+    yield put(actions.saveStockGroupItemFail(error));
+  }
+}
+
 export function* deleteStockGroupItemSaga(action) {
   yield put(actions.deleteStockGroupItemStart(action.stockGroupItem));
   try {
@@ -78,6 +89,7 @@ export function* watchStockGroupItem() {
   yield takeEvery(actionTypes.FETCH_STOCK_GROUP_ITEM, fetchStockGroupItemSaga);
   yield takeEvery(actionTypes.SAVE_STOCK_GROUP_ITEM, saveStockGroupItemSaga);
   yield takeEvery(actionTypes.SAVE_STOCK_GROUP_ITEMS, saveStockGroupItemsSaga);
+  yield takeEvery(actionTypes.ADD_STOCK_GROUP_STOCKS, addStockGroupStocksSaga);
   yield takeEvery(actionTypes.DELETE_STOCK_GROUP_ITEM, deleteStockGroupItemSaga);
   yield takeEvery(actionTypes.FETCH_STOCK_GROUP_ITEM_AUDIT_LOGS, fetchAuditLogsSaga);
 }

@@ -37,5 +37,42 @@ namespace ClassifiedAds.Application.StockGroupItems.Services
                 Repository.Add(newItems);
             }
         }
+
+        public void Update(Guid groupId, List<string> stockCodes)
+        {
+            var oldGroupItems = Repository.GetAll(x => x.GroupId == groupId && stockCodes.Contains(x.StockCode)).Select(x => new { x.Id, x.StockCode });
+            var oldStocks = new HashSet<string>(oldGroupItems.Select(x => x.StockCode));
+            var newStocks = new HashSet<string>(stockCodes);
+
+            var newItems = newStocks.Where(x => !oldStocks.Contains(x))
+                .Select(x => new StockGroupItem { GroupId = groupId, Id = Guid.NewGuid(), StockCode = x });
+
+            var deletedItems = oldGroupItems.Where(x => !newStocks.Contains(x.StockCode))
+                .Select(x => new StockGroupItem { Id = x.Id });
+
+            if (deletedItems.Any())
+            {
+                Repository.Delete(deletedItems);
+            }
+
+            if (newItems.Any())
+            {
+                Repository.Add(newItems);
+            }
+        }
+
+        public void Add(Guid groupId, List<string> stockCodes)
+        {
+            var oldStocks = new HashSet<string>(Repository.GetAll(x => x.GroupId == groupId && stockCodes.Contains(x.StockCode)).Select(x => x.StockCode));
+            var newStocks = new HashSet<string>(stockCodes);
+
+            var newItems = newStocks.Where(x => !oldStocks.Contains(x))
+                .Select(x => new StockGroupItem { GroupId = groupId, Id = Guid.NewGuid(), StockCode = x });
+
+            if (newItems.Any())
+            {
+                Repository.Add(newItems);
+            }
+        }
     }
 }

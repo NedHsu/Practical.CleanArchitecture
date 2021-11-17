@@ -101,6 +101,14 @@ export const saveStockGroupItems = (stockCode, groupIds) => {
   };
 };
 
+export const addStockGroupStocks = (groupId, stockCodes) => {
+  return {
+    type: actionTypes.ADD_STOCK_GROUP_STOCKS,
+    groupId: groupId,
+    stockCodes: stockCodes,
+  };
+};
+
 export const saveStockGroupItem = (stockGroupItem) => {
   return {
     type: actionTypes.SAVE_STOCK_GROUP_ITEM,
