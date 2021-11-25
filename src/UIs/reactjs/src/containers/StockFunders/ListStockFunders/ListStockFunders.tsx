@@ -29,8 +29,8 @@ class ListStockFunders extends Component<any, any> {
 
   performFilter(filterBy) {
     filterBy = filterBy.toLocaleLowerCase();
-    return this.props.stockfunders.filter(
-      (stockfunder) => stockfunder.name.toLocaleLowerCase().indexOf(filterBy) !== -1
+    return this.props.stockFunders.filter(
+      (stockFunder) => stockFunder.name.toLocaleLowerCase().indexOf(filterBy) !== -1
     );
   }
 
@@ -39,13 +39,13 @@ class ListStockFunders extends Component<any, any> {
     this.setState({ pageTitle: pageTitle });
   };
 
-  viewAuditLogs = (stockfunder) => {
-    this.props.fetchAuditLogs(stockfunder);
+  viewAuditLogs = (stockFunder) => {
+    this.props.fetchAuditLogs(stockFunder);
     this.setState({ showAuditLogsModal: true });
   };
 
-  deleteStockFunder = (stockfunder) => {
-    this.setState({ showDeleteModal: true, deletingStockFunder: stockfunder });
+  deleteStockFunder = (stockFunder) => {
+    this.setState({ showDeleteModal: true, deletingStockFunder: stockFunder });
   };
 
   deleteCanceled = () => {
@@ -70,36 +70,36 @@ class ListStockFunders extends Component<any, any> {
   render() {
     const filteredStockFunders = this.state.listFilter
       ? this.performFilter(this.state.listFilter)
-      : this.props.stockfunders;
+      : this.props.stockFunders;
 
-    const rows = filteredStockFunders?.map((stockfunder) => (
-      <tr key={stockfunder.id}>
+    const rows = filteredStockFunders?.map((stockFunder) => (
+      <tr key={stockFunder.id}>
         <td>
           {this.state.showImage ? (
             <img
               alt=""
-              src={stockfunder.imageUrl || logo}
-              title={stockfunder.name}
+              src={stockFunder.imageUrl || logo}
+              title={stockFunder.name}
               style={{ width: "50px", margin: "2px" }}
             />
           ) : null}
         </td>
         <td>
-          <NavLink to={"/stockfunders/" + stockfunder.id}>{stockfunder.name}</NavLink>
+          <NavLink to={"/stockFunders/" + stockFunder.id}>{stockFunder.name}</NavLink>
         </td>
-        <td>{stockfunder.code?.toLocaleUpperCase()}</td>
-        <td>{stockfunder.description}</td>
-        <td>{stockfunder.price || (5).toFixed(2)}</td>
+        <td>{stockFunder.code?.toLocaleUpperCase()}</td>
+        <td>{stockFunder.description}</td>
+        <td>{stockFunder.price || (5).toFixed(2)}</td>
         <td>
           <Star
-            rating={stockfunder.starRating || 4}
+            rating={stockFunder.starRating || 4}
             ratingClicked={(event) => this.onRatingClicked(event)}
           ></Star>
         </td>
         <td>
           <NavLink
             className="btn btn-primary"
-            to={"/stockfunders/edit/" + stockfunder.id}
+            to={"/stockFunders/edit/" + stockFunder.id}
           >
             Edit
           </NavLink>
@@ -107,7 +107,7 @@ class ListStockFunders extends Component<any, any> {
           <button
             type="button"
             className="btn btn-primary btn-secondary"
-            onClick={() => this.viewAuditLogs(stockfunder)}
+            onClick={() => this.viewAuditLogs(stockFunder)}
           >
             View Audit Logs
           </button>
@@ -115,7 +115,7 @@ class ListStockFunders extends Component<any, any> {
           <button
             type="button"
             className="btn btn-primary btn-danger"
-            onClick={() => this.deleteStockFunder(stockfunder)}
+            onClick={() => this.deleteStockFunder(stockFunder)}
           >
             Delete
           </button>
@@ -123,7 +123,7 @@ class ListStockFunders extends Component<any, any> {
       </tr>
     ));
 
-    const table = this.props.stockfunders ? (
+    const table = this.props.stockFunders ? (
       <table className="table">
         <thead>
           <tr>
@@ -213,7 +213,7 @@ class ListStockFunders extends Component<any, any> {
             <NavLink
               className="btn btn-primary"
               style={{ float: "right" }}
-              to="/stockfunders/add"
+              to="/stockFunders/add"
             >
               Add StockFunder
             </NavLink>
@@ -253,15 +253,15 @@ class ListStockFunders extends Component<any, any> {
 
 const mapStateToProps = (state) => {
   return {
-    stockfunders: state.stockfunder.stockfunders,
-    auditLogs: state.stockfunder.auditLogs,
+    stockFunders: state.stockFunder.stockFunders,
+    auditLogs: state.stockFunder.auditLogs,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchStockFunders: (code, start, end) => dispatch(actions.fetchStockFunders(code, start, end)),
-    deleteStockFunder: (stockfunder) => dispatch(actions.deleteStockFunder(stockfunder)),
+    deleteStockFunder: (stockFunder) => dispatch(actions.deleteStockFunder(stockFunder)),
   };
 };
 

@@ -46,6 +46,8 @@ import stockMarginReducer from "./containers/StockMargins/reducer";
 import { watchStockMargin } from "./containers/StockMargins/sagas";
 import stockSeminarReducer from "./containers/StockSeminars/reducer";
 import { watchStockSeminar } from "./containers/StockSeminars/sagas";
+import stockFunderReducer from "./containers/StockFunders/reducer";
+import { watchStockFunder } from "./containers/StockFunders/sagas";
 import chatReducer from "./containers/Chats/reducer";
 import { watchChat } from "./containers/Chats/sagas";
 import notificationReducer from "./containers/Notifications/reducer";
@@ -78,6 +80,7 @@ const rootReducer = combineReducers({
   stockRevenue: stockRevenueReducer,
   stockMargin: stockMarginReducer,
   stockSeminar: stockSeminarReducer,
+  stockFunder: stockFunderReducer,
   chat: chatReducer,
   notification: notificationReducer,
   calendar: calendarReducer,
@@ -111,6 +114,7 @@ sagaMiddleware.run(watchStockSeminar);
 sagaMiddleware.run(watchChat);
 sagaMiddleware.run(watchNotification);
 sagaMiddleware.run(watchCalendar);
+sagaMiddleware.run(watchStockFunder);
 
 store.dispatch({
   type: "SET_AUTH_SERVICE",

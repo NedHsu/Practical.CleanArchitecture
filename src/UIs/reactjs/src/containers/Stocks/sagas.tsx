@@ -129,6 +129,8 @@ export function* fetchAuditLogsSaga(action) {
   }
 }
 
+//--exportFunctions
+
 export function* watchStock() {
   yield takeEvery(actionTypes.FETCH_INDUSTRYS, fetchIndustrysSaga);
   yield takeEvery(actionTypes.FETCH_GROUP_STOCKS, fetchGroupStocksSaga);
@@ -141,4 +143,5 @@ export function* watchStock() {
   yield takeEvery(actionTypes.SAVE_STOCK, saveStockSaga);
   yield takeEvery(actionTypes.DELETE_STOCK, deleteStockSaga);
   yield takeEvery(actionTypes.FETCH_STOCK_AUDIT_LOGS, fetchAuditLogsSaga);
+  //--yield
 }

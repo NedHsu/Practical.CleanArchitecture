@@ -80,7 +80,7 @@ export const fetchStockOptionsFail = (error) => {
 export const fetchStockFundersSuccess = (result) => {
   return {
     type: actionTypes.FETCH_STOCK_FUNDERS_SUCCESS,
-    stockfunders: result,
+    stockFunders: result,
   };
 };
 
@@ -107,7 +107,7 @@ export const fetchStockFunders = (options) => {
 export const fetchStockFunderScoresSuccess = (result) => {
   return {
     type: actionTypes.FETCH_STOCK_FUNDER_SCORES_SUCCESS,
-    stockfunderScores: result,
+    stockFunderScores: result,
   };
 };
 
@@ -312,3 +312,5 @@ export const fetchIndustrysSuccess = (industrys) => {
   }
 }
 /// INDUSTRYS
+
+//--export

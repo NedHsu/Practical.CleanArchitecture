@@ -29,11 +29,11 @@ export function* fetchStockFunderSaga(action) {
 export function* saveStockFunderSaga(action) {
   yield put(actions.saveStockFunderStart());
   try {
-    const response = action.stockfunder.id
-      ? yield axios.put(action.stockfunder.id, action.stockfunder)
-      : yield axios.post("", action.stockfunder);
-    const stockfunder = response.data;
-    yield put(actions.saveStockFunderSuccess(stockfunder));
+    const response = action.stockFunder.id
+      ? yield axios.put(action.stockFunder.id, action.stockFunder)
+      : yield axios.post("", action.stockFunder);
+    const stockFunder = response.data;
+    yield put(actions.saveStockFunderSuccess(stockFunder));
   } catch (error) {
     console.log(error);
     yield put(actions.saveStockFunderFail(error));
@@ -43,11 +43,23 @@ export function* saveStockFunderSaga(action) {
 export function* deleteStockFunderSaga(action) {
   yield put(actions.deleteStockFunderStart());
   try {
-    const response = yield axios.delete(action.stockfunder.id, action.stockfunder);
-    yield put(actions.deleteStockFunderSuccess(action.stockfunder));
+    const response = yield axios.delete(action.stockFunder.id, action.stockFunder);
+    yield put(actions.deleteStockFunderSuccess(action.stockFunder));
   } catch (error) {
     console.log(error);
     yield put(actions.deleteStockFunderFail(error));
+  }
+}
+
+//--exportFunctions
+export function* fetchFunderScoresSaga(action) {
+  yield put(actions.fetchFunderScoresStart());
+  try {
+    const response = yield axios.get("score", { params: action.options });
+    const fetchedFunderScores = response.data;
+    yield put(actions.fetchFunderScoresSuccess(fetchedFunderScores));
+  } catch (error) {
+    yield put(actions.fetchFunderScoresFail(error));
   }
 }
 
@@ -56,4 +68,6 @@ export function* watchStockFunder() {
   yield takeEvery(actionTypes.FETCH_FUNDER, fetchStockFunderSaga);
   yield takeEvery(actionTypes.SAVE_FUNDER, saveStockFunderSaga);
   yield takeEvery(actionTypes.DELETE_FUNDER, deleteStockFunderSaga);
+  //--yield
+  yield takeEvery(actionTypes.FETCH_FUNDER_SCORES, fetchFunderScoresSaga);
 }

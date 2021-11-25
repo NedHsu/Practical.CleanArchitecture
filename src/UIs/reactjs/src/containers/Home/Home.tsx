@@ -1,6 +1,7 @@
 import React from "react";
-import logo from "../../logo.svg";
 import "./Home.css";
+import ListFunderScores from "../StockFunders/ListFunderScores/ListFunderScores"
+import { Col, Row } from "react-bootstrap";
 
 function Home() {
   const date = new Date();
@@ -12,11 +13,17 @@ function Home() {
       <div className="card-body">
         <div className="container-fluid">
           <div className="text-center">
-            <img
-              src={logo}
-              className="img-responsive center-block"
-              style={{ maxHeight: "300px", paddingBottom: "10px" }}
-            />
+            <Row>
+              <Col>
+                <ListFunderScores />
+              </Col>
+              <Col>
+
+              </Col>
+              <Col>
+                
+              </Col>
+            </Row>
           </div>
 
           <div className="text-center">Developed by:</div>

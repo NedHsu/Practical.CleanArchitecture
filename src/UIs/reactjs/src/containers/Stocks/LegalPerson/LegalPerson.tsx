@@ -45,7 +45,7 @@ class LegalPerson extends Component<any, any> {
       startDate.setMonth(startDate.getMonth() - 6);
 
       this.props.fetchStocksDays({
-        stockCodes: this.props.stockfunders.items.map(x => x.stockCode),
+        stockCodes: this.props.stockFunders.items.map(x => x.stockCode),
         startDate: startDate,
         endDate: endDate,
       });
@@ -109,7 +109,7 @@ class LegalPerson extends Component<any, any> {
   toggleAllStock = event => {
     var stockCodes = this.state.checkedStocks;
     if (event.target.checked) {
-      stockCodes = this.props.stockfunders.items.map(x => x.stockCode);
+      stockCodes = this.props.stockFunders.items.map(x => x.stockCode);
     } else {
       stockCodes = [];
     }
@@ -121,7 +121,7 @@ class LegalPerson extends Component<any, any> {
   }
 
   render() {
-    const stockFunders = this.props.stockfunders;
+    const stockFunders = this.props.stockFunders;
 
     const rows = stockFunders?.items?.map((stock) => (
       <tr key={"L" + stock.stockCode}>
@@ -181,7 +181,7 @@ class LegalPerson extends Component<any, any> {
       </Col>
     ));
 
-    const table = this.props.stockfunders ? (
+    const table = this.props.stockFunders ? (
       <table className={`table ${styles.table}`}>
         <thead>
           <tr>
@@ -248,7 +248,7 @@ class LegalPerson extends Component<any, any> {
 const mapStateToProps = (state) => {
   return {
     stockGroups: state.stockGroup.stockGroups,
-    stockfunders: state.stock.stockfunders,
+    stockFunders: state.stock.stockFunders,
     stockTotalCount: state.stock.totalCount,
     stockTotalPage: state.stock.totalPage,
     stockLoading: state.stock.loading,

@@ -1,10 +1,10 @@
 import * as actionTypes from "./actionTypes";
 
 /// FUNDERS
-export const fetchStockFundersSuccess = (stockfunders) => {
+export const fetchStockFundersSuccess = (stockFunders) => {
   return {
     type: actionTypes.FETCH_FUNDERS_SUCCESS,
-    stockfunders: stockfunders,
+    stockFunders: stockFunders,
   };
 };
 
@@ -40,10 +40,10 @@ export const fetchAllStockFunders = () => {
 /// FUNDERS
 
 /// FUNDER
-export const fetchStockFunderSuccess = (stockfunder) => {
+export const fetchStockFunderSuccess = (stockFunder) => {
   return {
     type: actionTypes.FETCH_FUNDER_SUCCESS,
-    stockfunder: stockfunder,
+    stockFunder: stockFunder,
   };
 };
 
@@ -69,10 +69,10 @@ export const fetchStockFunder = (id) => {
 /// FUNDER
 
 /// UPDATE FUNDER
-export const updateStockFunder = (stockfunder) => {
+export const updateStockFunder = (stockFunder) => {
   return {
     type: actionTypes.UPDATE_FUNDER,
-    stockfunder: stockfunder,
+    stockFunder: stockFunder,
   };
 };
 
@@ -84,10 +84,10 @@ export const resetStockFunder = () => {
 /// UPDATE FUNDER
 
 /// SAVE FUNDER
-export const saveStockFunderSuccess = (stockfunder) => {
+export const saveStockFunderSuccess = (stockFunder) => {
   return {
     type: actionTypes.SAVE_FUNDER_SUCCESS,
-    stockfunder: stockfunder,
+    stockFunder: stockFunder,
   };
 };
 
@@ -104,16 +104,16 @@ export const saveStockFunderStart = () => {
   };
 };
 
-export const saveStockFunder = (stockfunder) => {
+export const saveStockFunder = (stockFunder) => {
   return {
     type: actionTypes.SAVE_FUNDER,
-    stockfunder: stockfunder,
+    stockFunder: stockFunder,
   };
 };
 /// SAVE FUNDER
 
 /// DELETE FUNDER
-export const deleteStockFunderSuccess = (stockfunder) => {
+export const deleteStockFunderSuccess = (stockFunder) => {
   return {
     type: actionTypes.DELETE_FUNDER_SUCCESS,
   };
@@ -132,10 +132,40 @@ export const deleteStockFunderStart = () => {
   };
 };
 
-export const deleteStockFunder = (stockfunder) => {
+export const deleteStockFunder = (stockFunder) => {
   return {
     type: actionTypes.DELETE_FUNDER,
-    stockfunder: stockfunder,
+    stockFunder: stockFunder,
   };
 };
 /// DELETE FUNDER
+
+//--export
+/// FUNDER_SCORES
+export const fetchFunderScoresSuccess = (funderScores) => {
+  return {
+    type: actionTypes.FETCH_FUNDER_SCORES_SUCCESS,
+    funderScores: funderScores,
+  };
+};
+
+export const fetchFunderScoresFail = (error) => {
+  return {
+    type: actionTypes.FETCH_FUNDER_SCORES_FAIL,
+    error: error,
+  };
+};
+
+export const fetchFunderScoresStart = () => {
+  return {
+    type: actionTypes.FETCH_FUNDER_SCORES_START,
+  };
+};
+
+export const fetchFunderScores = (options) => {
+  return {
+    type: actionTypes.FETCH_FUNDER_SCORES,
+    options,
+  };
+};
+/// FUNDER_SCORES

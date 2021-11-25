@@ -2,12 +2,13 @@ import { updateObject } from "../../shared/utility";
 import * as actionTypes from "./actionTypes";
 
 const initialState = {
-  stockfunders: [],
-  stockfunder: {
+  stockFunders: [],
+  stockFunder: {
     name: "",
     code: "",
     description: "",
   },
+  funderScores: [],
   auditLogs: [],
   loading: false,
   saved: false,
@@ -22,7 +23,7 @@ const fetchStockFundersStart = (state, action) => {
 
 const fetchStockFundersSuccess = (state, action) => {
   return updateObject(state, {
-    stockfunders: action.stockfunders,
+    stockFunders: action.stockFunders,
     loading: false,
   });
 };
@@ -40,7 +41,7 @@ const fetchStockFunderStart = (state, action) => {
 
 const fetchStockFunderSuccess = (state, action) => {
   return updateObject(state, {
-    stockfunder: action.stockfunder,
+    stockFunder: action.stockFunder,
     loading: false,
   });
 };
@@ -57,7 +58,7 @@ const saveStockFunderStart = (state, action) => {
 
 const saveStockFunderSuccess = (state, action) => {
   return updateObject(state, {
-    stockfunder: action.stockfunder,
+    stockFunder: action.stockFunder,
     loading: false,
     saved: true,
   });
@@ -66,6 +67,25 @@ const saveStockFunderSuccess = (state, action) => {
 const saveStockFunderFail = (state, action) => {
   return updateObject(state, { loading: false, saved: false });
 };
+
+//--functions
+/// FunderScores
+const fetchFunderScoresStart = (state, action) => {
+  return updateObject(state, { loading: true });
+};
+
+const fetchFunderScoresSuccess = (state, action) => {
+  return updateObject(state, {
+    funderScores: action.funderScores,
+    loading: false,
+  });
+};
+
+const fetchFunderScoresFail = (state, action) => {
+  return updateObject(state, { loading: false });
+};
+
+/// FunderScores
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -82,7 +102,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.FETCH_FUNDER_FAIL:
       return fetchStockFunderFail(state, action);
     case actionTypes.UPDATE_FUNDER:
-      return updateObject(state, { stockfunder: action.stockfunder });
+      return updateObject(state, { stockFunder: action.stockFunder });
     case actionTypes.RESET_FUNDER:
       return updateObject(state, initialState);
     case actionTypes.SAVE_FUNDER_START:
@@ -93,13 +113,13 @@ const reducer = (state = initialState, action) => {
       return saveStockFunderFail(state, action);
     case actionTypes.DELETE_FUNDER_START:
       return updateObject(state, {
-        stockfunder: action.stockfunder,
+        stockFunder: action.stockFunder,
         loading: true,
         deleted: false,
       });
     case actionTypes.DELETE_FUNDER_SUCCESS:
       return updateObject(state, {
-        stockfunder: initialState.stockfunder,
+        stockFunder: initialState.stockFunder,
         loading: false,
         deleted: true,
       });
@@ -109,6 +129,13 @@ const reducer = (state = initialState, action) => {
         loading: false,
         deleted: false,
       });
+    //--case
+    case actionTypes.FETCH_FUNDER_SCORES_START:
+      return fetchFunderScoresStart(state, action);
+    case actionTypes.FETCH_FUNDER_SCORES_SUCCESS:
+      return fetchFunderScoresSuccess(state, action);
+    case actionTypes.FETCH_FUNDER_SCORES_FAIL:
+      return fetchFunderScoresFail(state, action);
     default:
       return state;
   }

@@ -84,6 +84,8 @@ export function* fetchAuditLogsSaga(action) {
   }
 }
 
+//--exportFunctions
+
 export function* watchStockGroupItem() {
   yield takeEvery(actionTypes.FETCH_STOCK_GROUP_ITEMS, fetchStockGroupItemsSaga);
   yield takeEvery(actionTypes.FETCH_STOCK_GROUP_ITEM, fetchStockGroupItemSaga);
@@ -92,4 +94,5 @@ export function* watchStockGroupItem() {
   yield takeEvery(actionTypes.ADD_STOCK_GROUP_STOCKS, addStockGroupStocksSaga);
   yield takeEvery(actionTypes.DELETE_STOCK_GROUP_ITEM, deleteStockGroupItemSaga);
   yield takeEvery(actionTypes.FETCH_STOCK_GROUP_ITEM_AUDIT_LOGS, fetchAuditLogsSaga);
+  //--yield
 }

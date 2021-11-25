@@ -67,6 +67,8 @@ const saveStockGroupItemFail = (state, action) => {
   return updateObject(state, { loading: false, saved: false });
 };
 
+//--functions
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.FETCH_STOCK_GROUP_ITEMS_START:
@@ -122,6 +124,7 @@ const reducer = (state = initialState, action) => {
         error: action.error,
         loading: false,
       });
+    //--case
     default:
       return state;
   }

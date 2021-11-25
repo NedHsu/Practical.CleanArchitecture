@@ -3,7 +3,7 @@ import * as actionTypes from "./actionTypes";
 
 const initialState = {
   stocks: new Array<any>(),
-  stockfunders: [],
+  stockFunders: [],
   stockRevenues: [],
   stockProfits: [],
   totalPage: 0,
@@ -72,7 +72,7 @@ const fetchStockFundersStart = (state, action) => {
 
 const fetchStockFundersSuccess = (state, action) => {
   return updateObject(state, {
-    stockfunders: action.stockfunders,
+    stockFunders: action.stockFunders,
     loading: false,
     totalPage: action.totalPage,
     totalCount: action.totalCount,
@@ -91,7 +91,7 @@ const fetchStockFunderScoresStart = (state, action) => {
 
 const fetchStockFunderScoresSuccess = (state, action) => {
   return updateObject(state, {
-    stockfunderScores: action.stockfunderScores,
+    stockFunderScores: action.stockFunderScores,
     scoreLoading: false,
   });
 };
@@ -172,6 +172,8 @@ const saveStockSuccess = (state, action) => {
 const saveStockFail = (state, action) => {
   return updateObject(state, { loading: false, saved: false });
 };
+
+//--functions
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -266,6 +268,7 @@ const reducer = (state = initialState, action) => {
         error: action.error,
         loading: false,
       });
+    //--case
     default:
       return state;
   }

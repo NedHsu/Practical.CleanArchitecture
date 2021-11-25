@@ -9,7 +9,7 @@ type Props = {
   resetStockFunder: any,
   match: any,
   fetchStockFunder: any,
-  stockfunder: any,
+  stockFunder: any,
   saveStockFunder: any,
   updateStockFunder: any,
   saved: any
@@ -71,14 +71,14 @@ class AddStockFunder extends Component<Props, any> {
   }
 
   fieldChanged = event => {
-    const stockfunder = {
-      ...this.props.stockfunder,
+    const stockFunder = {
+      ...this.props.stockFunder,
       [event.target.name]: event.target.value
     };
 
     this.checkFieldValidity(event.target.name, event.target.value);
 
-    this.props.updateStockFunder(stockfunder);
+    this.props.updateStockFunder(stockFunder);
   };
 
   checkFieldValidity = (name, value) => {
@@ -108,12 +108,12 @@ class AddStockFunder extends Component<Props, any> {
     let isValid = true;
     for (let fieldName in this.state.controls) {
       isValid =
-        this.checkFieldValidity(fieldName, this.props.stockfunder[fieldName]) &&
+        this.checkFieldValidity(fieldName, this.props.stockFunder[fieldName]) &&
         isValid;
     }
 
     if (isValid) {
-      this.props.saveStockFunder(this.props.stockfunder);
+      this.props.saveStockFunder(this.props.stockFunder);
     }
   };
 
@@ -144,7 +144,7 @@ class AddStockFunder extends Component<Props, any> {
                       ? "is-invalid"
                       : "")
                   }
-                  value={this.props.stockfunder?.name}
+                  value={this.props.stockFunder?.name}
                   onChange={event => this.fieldChanged(event)}
                 />
                 <span className="invalid-feedback">
@@ -171,7 +171,7 @@ class AddStockFunder extends Component<Props, any> {
                       ? "is-invalid"
                       : "")
                   }
-                  value={this.props.stockfunder?.code}
+                  value={this.props.stockFunder?.code}
                   onChange={event => this.fieldChanged(event)}
                 />
                 <span className="invalid-feedback">
@@ -199,7 +199,7 @@ class AddStockFunder extends Component<Props, any> {
                       ? "is-invalid"
                       : "")
                   }
-                  value={this.props.stockfunder?.description}
+                  value={this.props.stockFunder?.description}
                   onChange={event => this.fieldChanged(event)}
                 />
                 <span className="invalid-feedback">
@@ -226,7 +226,7 @@ class AddStockFunder extends Component<Props, any> {
         <div className="card-footer">
           <NavLink
             className="btn btn-outline-secondary"
-            to="/stockfunders"
+            to="/stockFunders"
             style={{ width: "80px" }}
           >
             <i className="fa fa-chevron-left"></i> Back
@@ -236,7 +236,7 @@ class AddStockFunder extends Component<Props, any> {
     );
 
     return this.state.submitted && this.props.saved ? (
-      <Redirect to={"/stockfunders/" + this.props.stockfunder.id} />
+      <Redirect to={"/stockFunders/" + this.props.stockFunder.id} />
     ) : (
       form
     );
@@ -245,17 +245,17 @@ class AddStockFunder extends Component<Props, any> {
 
 const mapStateToProps = state => {
   return {
-    stockfunder: state.stockfunder.stockfunder,
-    saved: state.stockfunder.saved
+    stockFunder: state.stockFunder.stockFunder,
+    saved: state.stockFunder.saved
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     fetchStockFunder: id => dispatch(actions.fetchStockFunder(id)),
-    updateStockFunder: stockfunder => dispatch(actions.updateStockFunder(stockfunder)),
+    updateStockFunder: stockFunder => dispatch(actions.updateStockFunder(stockFunder)),
     resetStockFunder: () => dispatch(actions.resetStockFunder()),
-    saveStockFunder: stockfunder => dispatch(actions.saveStockFunder(stockfunder))
+    saveStockFunder: stockFunder => dispatch(actions.saveStockFunder(stockFunder))
   };
 };
 

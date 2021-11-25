@@ -8,7 +8,7 @@ import * as actions from "../actions";
 
 class ViewStockFunder extends Component<any, any> {
   state = {
-    stockfunder: {
+    stockFunder: {
       name: "",
       code: "",
       description: ""
@@ -22,14 +22,14 @@ class ViewStockFunder extends Component<any, any> {
   }
 
   back = () => {
-    this.props.history.push("/stockfunders");
+    this.props.history.push("/stockFunders");
   };
 
   render() {
-    const page = this.props.stockfunder ? (
+    const page = this.props.stockFunder ? (
       <div className="card">
         <div className="card-header">
-          {"StockFunder Detail: " + this.props.stockfunder.name}
+          {"StockFunder Detail: " + this.props.stockFunder.name}
         </div>
 
         <div className="card-body">
@@ -37,24 +37,24 @@ class ViewStockFunder extends Component<any, any> {
             <div className="col-md-8">
               <div className="row">
                 <div className="col-md-4">Name:</div>
-                <div className="col-md-8">{this.props.stockfunder.name}</div>
+                <div className="col-md-8">{this.props.stockFunder.name}</div>
               </div>
               <div className="row">
                 <div className="col-md-4">Code:</div>
-                <div className="col-md-8">{this.props.stockfunder.code}</div>
+                <div className="col-md-8">{this.props.stockFunder.code}</div>
               </div>
               <div className="row">
                 <div className="col-md-4">Description:</div>
-                <div className="col-md-8">{this.props.stockfunder.description}</div>
+                <div className="col-md-8">{this.props.stockFunder.description}</div>
               </div>
               <div className="row">
                 <div className="col-md-4">Price:</div>
-                <div className="col-md-8">{this.props.stockfunder.price || 5}</div>
+                <div className="col-md-8">{this.props.stockFunder.price || 5}</div>
               </div>
               <div className="row">
                 <div className="col-md-4">5 Star Rating:</div>
                 <div className="col-md-8">
-                  <Star rating={this.props.stockfunder.starRating || 4} />
+                  <Star rating={this.props.stockFunder.starRating || 4} />
                 </div>
               </div>
             </div>
@@ -64,8 +64,8 @@ class ViewStockFunder extends Component<any, any> {
                 alt=""
                 className="center-block img-responsive"
                 style={{ width: "200px", margin: "2px" }}
-                src={this.props.stockfunder.imageUrl || logo}
-                title={this.props.stockfunder.name}
+                src={this.props.stockFunder.imageUrl || logo}
+                title={this.props.stockFunder.name}
               />
             </div>
           </div>
@@ -82,7 +82,7 @@ class ViewStockFunder extends Component<any, any> {
           &nbsp;
           <NavLink
             className="btn btn-primary"
-            to={"/stockfunders/edit/" + this.props.stockfunder.id}
+            to={"/stockFunders/edit/" + this.props.stockFunder.id}
           >
             Edit
           </NavLink>
@@ -95,7 +95,7 @@ class ViewStockFunder extends Component<any, any> {
 
 const mapStateToProps = state => {
   return {
-    stockfunder: state.stockfunder.stockfunder
+    stockFunder: state.stockFunder.stockFunder
   };
 };
 
