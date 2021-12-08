@@ -16,6 +16,8 @@ namespace ClassifiedAds.Domain.Entities
 
         public string Content { get; set; }
 
+        public string Provider { get; set; }
+
         public virtual Stock StockCodeNavigation { get; set; }
     }
 }

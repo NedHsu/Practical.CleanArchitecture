@@ -32,6 +32,8 @@ namespace ClassifiedAds.Persistence
         public virtual DbSet<StockNote> StockNotes { get; set; }
         public virtual DbSet<StockProfit> StockProfits { get; set; }
         public virtual DbSet<StockSeminar> StockSeminars { get; set; }
+        public virtual DbSet<StockNew> StockNews { get; set; }
+        public virtual DbSet<StockInsiderTransaction> StockInsiderTransactions { get; set; }
 
         private IDbContextTransaction _dbContextTransaction;
 
@@ -328,6 +330,46 @@ namespace ClassifiedAds.Persistence
                 entity.Property(e => e.Remark).HasMaxLength(500);
 
                 entity.HasIndex("Date");
+            });
+
+            modelBuilder.Entity<StockNew>(entity =>
+            {
+                entity.HasKey(e => new { e.Id });
+
+                entity.ToTable("StockNews");
+
+                entity.Property(e => e.Id).HasDefaultValueSql("newsequentialid()");
+                entity.Property(e => e.StockCode)
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Title).HasMaxLength(500);
+                entity.Property(e => e.Content).HasMaxLength(5000);
+                entity.Property(e => e.Provider).HasMaxLength(20);
+
+                entity.HasIndex("Time");
+                entity.HasIndex("StockCode");
+            });
+
+            modelBuilder.Entity<StockInsiderTransaction>(entity =>
+            {
+                entity.HasKey(e => new { e.Id });
+
+                entity.ToTable("StockInsiderTransaction");
+
+                entity.Property(e => e.Id).HasDefaultValueSql("newsequentialid()");
+                entity.Property(e => e.StockCode)
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FromName).HasMaxLength(50);
+                entity.Property(e => e.ToName).HasMaxLength(50);
+                entity.Property(e => e.Position).HasMaxLength(20);
+                entity.Property(e => e.Method).HasMaxLength(20);
+                entity.Property(e => e.During).HasMaxLength(50);
+
+                entity.HasIndex("Time");
+                entity.HasIndex("StockCode");
             });
 
             OnModelCreatingPartial(modelBuilder);
