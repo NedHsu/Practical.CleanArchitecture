@@ -1,6 +1,7 @@
 import React from "react";
 import "./Home.css";
-import ListFunderScores from "../StockFunders/ListFunderScores/ListFunderScores"
+import ListFunderScores from "../StockFunders/ListFunderScores/ListFunderScores";
+import StockFetchDatees from "../Stocks/ListStockFetchDates/ListStockFetchDates";
 import { Col, Row } from "react-bootstrap";
 
 function Home() {
@@ -25,7 +26,7 @@ function Home() {
               </Col>
             </Row>
           </div>
-
+          <StockFetchDatees />
           <div className="text-center">Developed by:</div>
           <div className="text-center">
             <h3>Phong Nguyen</h3>

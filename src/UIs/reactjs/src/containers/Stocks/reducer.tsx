@@ -21,6 +21,13 @@ const initialState = {
   error: null,
   stockOptions: [],
   optionsLoading: false,
+  stockFetchDates: {
+    stockDay: "",
+    stockFundamental: "",
+    stockFunder: "",
+    stockMargin: "",
+    stockRevenue: "",
+  },
 };
 
 /// Stocks
@@ -174,6 +181,24 @@ const saveStockFail = (state, action) => {
 };
 
 //--functions
+/// StockFetchDates
+const fetchStockFetchDatesStart = (state, action) => {
+  return updateObject(state, { loading: true });
+};
+
+const fetchStockFetchDatesSuccess = (state, action) => {
+  return updateObject(state, {
+    stockFetchDates: action.stockFetchDates,
+    loading: false,
+  });
+};
+
+const fetchStockFetchDatesFail = (state, action) => {
+  return updateObject(state, { loading: false });
+};
+
+/// StockFetchDates
+
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -269,7 +294,12 @@ const reducer = (state = initialState, action) => {
         loading: false,
       });
     //--case
-    default:
+    case actionTypes.FETCH_STOCK_FETCH_DATES_START:
+      return fetchStockFetchDatesStart(state, action);
+    case actionTypes.FETCH_STOCK_FETCH_DATES_SUCCESS:
+      return fetchStockFetchDatesSuccess(state, action);
+    case actionTypes.FETCH_STOCK_FETCH_DATES_FAIL:
+      return fetchStockFetchDatesFail(state, action);    default:
       return state;
   }
 };

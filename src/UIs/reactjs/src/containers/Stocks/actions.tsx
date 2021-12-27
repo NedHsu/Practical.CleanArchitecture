@@ -314,3 +314,30 @@ export const fetchIndustrysSuccess = (industrys) => {
 /// INDUSTRYS
 
 //--export
+/// STOCK_FETCH_DATES
+export const fetchStockFetchDatesSuccess = (stockFetchDates) => {
+  return {
+    type: actionTypes.FETCH_STOCK_FETCH_DATES_SUCCESS,
+    stockFetchDates: stockFetchDates,
+  };
+};
+
+export const fetchStockFetchDatesFail = (error) => {
+  return {
+    type: actionTypes.FETCH_STOCK_FETCH_DATES_FAIL,
+    error: error,
+  };
+};
+
+export const fetchStockFetchDatesStart = () => {
+  return {
+    type: actionTypes.FETCH_STOCK_FETCH_DATES_START,
+  };
+};
+
+export const fetchStockFetchDates = () => {
+  return {
+    type: actionTypes.FETCH_STOCK_FETCH_DATES,
+  };
+};
+/// STOCK_FETCH_DATES

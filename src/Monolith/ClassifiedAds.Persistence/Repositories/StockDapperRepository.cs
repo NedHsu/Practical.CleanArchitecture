@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using Dapper;
 using System.Linq;
+using ClassifiedAds.Domain.DTOs;
 
 namespace ClassifiedAds.Persistence.Repositories
 {
@@ -57,6 +58,20 @@ WHERE Code IN @Codes
             };
 
             return DbContext.Connection.Query<Stock>(sql, param).ToDictionary(x => x.Code, x => x.Name);
+        }
+
+        public StockFetchDatesDTO GetStockFetchDates()
+        {
+            string sql = @"
+SELECT 
+	(SELECT MAX(Date) FROM StockDay) StockDay,
+	(SELECT MAX(Date) FROM StockFunder) StockFunder,
+	(SELECT MAX(Date) FROM StockRevenue) StockRevenue,
+	(SELECT MAX(Date) FROM StockFundamental) StockFundamental,
+	(SELECT MAX(Date) FROM StockMargin) StockMargin
+";
+
+            return DbContext.Connection.QueryFirst<StockFetchDatesDTO>(sql);
         }
     }
 }

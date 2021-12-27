@@ -130,6 +130,17 @@ export function* fetchAuditLogsSaga(action) {
 }
 
 //--exportFunctions
+export function* fetchStockFetchDatesSaga(action) {
+  yield put(actions.fetchStockFetchDatesStart());
+  try {
+    const response = yield axios.get("fetchDate");
+    const fetchedStockFetchDates = response.data;
+    yield put(actions.fetchStockFetchDatesSuccess(fetchedStockFetchDates));
+  } catch (error) {
+    yield put(actions.fetchStockFetchDatesFail(error));
+  }
+}
+
 
 export function* watchStock() {
   yield takeEvery(actionTypes.FETCH_INDUSTRYS, fetchIndustrysSaga);
@@ -144,4 +155,5 @@ export function* watchStock() {
   yield takeEvery(actionTypes.DELETE_STOCK, deleteStockSaga);
   yield takeEvery(actionTypes.FETCH_STOCK_AUDIT_LOGS, fetchAuditLogsSaga);
   //--yield
+  yield takeEvery(actionTypes.FETCH_STOCK_FETCH_DATES, fetchStockFetchDatesSaga);
 }

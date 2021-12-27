@@ -94,6 +94,15 @@ namespace ClassifiedAds.WebAPI.Controllers
             return Ok(model);
         }
 
+        [HttpGet("fetchDate")]
+        public ActionResult<StockFetchDatesModel> GetFetchDate([FromQuery] GetStockFetchDatesQuery query)
+        {
+            _logger.LogInformation("Getting all stock fetch dates");
+            var stockFetchDates = _dispatcher.Dispatch(query);
+            var model = _mapper.Map<StockFetchDatesModel>(stockFetchDates);
+            return Ok(model);
+        }
+
         [HttpGet("{code}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
