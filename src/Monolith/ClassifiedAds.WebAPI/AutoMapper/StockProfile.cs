@@ -2,6 +2,7 @@
 using ClassifiedAds.Domain.DTOs;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.WebAPI.Models.Common;
+using ClassifiedAds.WebAPI.Models.Jobs;
 using ClassifiedAds.WebAPI.Models.StockDays;
 using ClassifiedAds.WebAPI.Models.StockFunders;
 using ClassifiedAds.WebAPI.Models.StockGroupItems;
@@ -112,6 +113,10 @@ namespace ClassifiedAds.WebAPI.AutoMapper
                 .ForMember(x => x.StockMargin, opt => opt.MapFrom(src => src.StockMargin.ToString("yyyy-MM-dd")))
                 .ForMember(x => x.StockRevenue, opt => opt.MapFrom(src => src.StockRevenue.ToString("yyyy-MM-dd")))
                 ;
+
+            CreateMap<Job, JobModel>()
+                ;
+            
         }
     }
 }

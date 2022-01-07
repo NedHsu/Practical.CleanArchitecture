@@ -42,6 +42,7 @@ import Transform3Ds from "./containers/PageEffects/Transform3Ds/Transform3D";
 import ListD3s from "./containers/D3s/ListD3s/ListD3s";
 import ViewChat from "./containers/Chats/ViewChat/ViewChat";
 import ViewCalendar from "./containers/Calendars/ViewCalendar/ViewCalendar";
+import ListJobs from "./containers/Jobs/ListJobs/ListJobs";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -90,6 +91,7 @@ function App() {
         <Route path="/effects" component={ListPageEffects} />
         <Route path="/chats/:id" component={ViewChat} />
         <Route path="/calendars" component={ViewCalendar} />
+        <Route path="/jobs" component={ListJobs} />
         <Redirect to="/home" />
       </Switch>
       <ToastContainer

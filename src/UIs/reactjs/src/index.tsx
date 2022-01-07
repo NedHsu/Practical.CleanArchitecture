@@ -54,6 +54,8 @@ import notificationReducer from "./containers/Notifications/reducer";
 import { watchNotification } from "./containers/Notifications/sagas";
 import calendarReducer from "./containers/Calendars/reducer";
 import { watchCalendar } from "./containers/Calendars/sagas";
+import jobReducer from "./containers/Jobs/reducer";
+import { watchJob } from "./containers/Jobs/sagas";
 
 const composeEnhancers =
   (process.env.NODE_ENV === "development"
@@ -84,6 +86,7 @@ const rootReducer = combineReducers({
   chat: chatReducer,
   notification: notificationReducer,
   calendar: calendarReducer,
+  job: jobReducer,
 });
 
 const sagaMiddleware = createSagaMiddleware();
@@ -115,6 +118,7 @@ sagaMiddleware.run(watchChat);
 sagaMiddleware.run(watchNotification);
 sagaMiddleware.run(watchCalendar);
 sagaMiddleware.run(watchStockFunder);
+sagaMiddleware.run(watchJob);
 
 store.dispatch({
   type: "SET_AUTH_SERVICE",
