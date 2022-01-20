@@ -266,9 +266,9 @@ class ListStocks extends Component<any, any> {
     const stockGroupTags = this.props.stockGroups?.map((item) => (
       <Col key={item.id} lg={1} md={2} sm={3} className={styles.groupTags}>
         <Button
+          className="btn-default-size"
           variant="outline-dark"
           active={this.props.stockGroup?.id === item.id}
-          block
           onClick={() => this.selectGroup(item)}
           onDoubleClick={() => this.showStockGroupEditor(item)}>
           {item.groupTitle}
@@ -289,9 +289,9 @@ class ListStocks extends Component<any, any> {
               </Col>
               <Col lg={1} md={2} sm={3} className={styles.groupTags}>
                 <Button
+                  className="btn-default-size"
                   variant="outline-dark"
                   active={!this.props.stockGroup?.id}
-                  block
                   onClick={() => this.selectGroup({})}>
                   All
                 </Button>
@@ -333,8 +333,8 @@ class ListStocks extends Component<any, any> {
             </Row>
             <hr />
             <div className="row">
-              <div className="col-md-1">Filter by:</div>
               <div className="col-md-4">
+                <label style={{ marginRight: 10 }}>Filter by:</label>
                 <input
                   type="text"
                   value={this.state.listFilter}
@@ -344,7 +344,7 @@ class ListStocks extends Component<any, any> {
               <div className="col"></div>
               <NavLink
                 className="btn btn-primary"
-                style={{ float: "right", marginRight: "10px" }}
+                style={{ float: "right", marginRight: "10px", width: "200px" }}
                 to="/stocks/add"
               >
                 Add Stock

@@ -1,21 +1,30 @@
-import React, { Component } from "react";
-import { NavLink, Redirect } from "react-router-dom";
+import React, { Component, MouseEventHandler } from "react";
 import { connect } from "react-redux";
 
 import * as actions from "../actions";
 import { checkValidity } from "../../../shared/utility";
+import { Button, Col, Form, FormControl } from "react-bootstrap";
 
 type Props = {
   resetJob: any,
   match: any,
   fetchJob: any,
+  fetchJobSrcs: any,
   job: any,
+  jobSrcs: Array<any>,
   saveJob: any,
   updateJob: any,
-  saved: any
+  saved: any,
+  back: MouseEventHandler<HTMLElement>,
 }
 
 class AddJob extends Component<Props, any> {
+  static defaultProps = {
+    back: () => {
+      console.log("default back");
+    }
+  }
+
   state = {
     title: "Add Job",
     controls: {
@@ -31,25 +40,21 @@ class AddJob extends Component<Props, any> {
         valid: false,
         touched: false
       },
-      code: {
+      provider: {
         validation: {
           required: true,
-          maxLength: 10
         },
         error: {
           required: false,
-          maxLength: false
         },
         valid: false,
         touched: false
       },
-      description: {
+      arguments: {
         validation: {
-          required: true,
           maxLength: 100
         },
         error: {
-          required: false,
           maxLength: false
         },
         valid: false,
@@ -58,11 +63,18 @@ class AddJob extends Component<Props, any> {
     },
     valid: false,
     submitted: false,
-    errorMessage: null
+    errorMessage: null,
+    formValues: {
+      provider: "",
+      name: "",
+      arguments: "",
+    },
+    jobNames: [] as Array<any>,
   };
 
   componentDidMount() {
     this.props.resetJob();
+    this.props.fetchJobSrcs();
     const id = this.props.match?.params?.id;
     if (id) {
       this.setState({ title: "Edit Job" });
@@ -71,14 +83,16 @@ class AddJob extends Component<Props, any> {
   }
 
   fieldChanged = event => {
-    const job = {
-      ...this.props.job,
+    const formValues = {
+      ...this.state.formValues,
       [event.target.name]: event.target.value
     };
 
     this.checkFieldValidity(event.target.name, event.target.value);
 
-    this.props.updateJob(job);
+    this.setState({
+      formValues: formValues
+    });
   };
 
   checkFieldValidity = (name, value) => {
@@ -102,20 +116,49 @@ class AddJob extends Component<Props, any> {
     return validationRs.isValid;
   };
 
-  onSubmit = event => {
+  onSubmit = async event => {
     event.preventDefault();
     this.setState({ submitted: true });
     let isValid = true;
     for (let fieldName in this.state.controls) {
       isValid =
-        this.checkFieldValidity(fieldName, this.props.job[fieldName]) &&
+        this.checkFieldValidity(fieldName, this.state.formValues[fieldName]) &&
         isValid;
     }
 
     if (isValid) {
-      this.props.saveJob(this.props.job);
+      await this.props.saveJob(this.state.formValues);
+      console.log("saved");
     }
   };
+
+  onSelectProvider = event => {
+    this.setState({
+      formValues: { ...this.state.formValues, provider: event.target.value },
+      jobNames: this.props.jobSrcs.find(x => x.provider === event.target.value)?.items ?? []
+    });
+  }
+
+  onSelectName = event => {
+    this.setState({
+      formValues: { ...this.state.formValues, name: event.target.value }
+    });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.jobSrcs !== this.props.jobSrcs) {
+      if (this.props.jobSrcs.length > 0) {
+        this.setState({
+          jobNames: this.props.jobSrcs.length > 0 ? this.props.jobSrcs[0].items : [],
+          formValues: {
+            ...this.state.formValues,
+            provider: this.props.jobSrcs[0].provider,
+            name: this.props.jobSrcs[0].items[0]?.name
+          },
+        });
+      }
+    }
+  }
 
   render() {
     const form = (
@@ -131,22 +174,49 @@ class AddJob extends Component<Props, any> {
           ) : null}
           <form onSubmit={this.onSubmit}>
             <div className="form-group row">
-              <label htmlFor="name" className="col-sm-2 col-form-label">
+              <label htmlFor="provider" className="col-sm-3 col-form-label">
+                Provider
+              </label>
+              <div className="col-sm-9">
+                <Form.Control
+                  as="select"
+                  name="provider"
+                  value={this.state.formValues.provider}
+                  onChange={this.onSelectProvider}>
+                  <option key="default" value={""}>Select a provider</option>
+                  {
+                    this.props.jobSrcs?.map(x => {
+                      return (
+                        <option key={x.provider} value={x.provider}>{x.provider}</option>
+                      )
+                    })
+                  }
+                </Form.Control>
+                <span className="invalid-feedback">
+                  {this.state.controls["provider"].error.required ? (
+                    <span>Enter a provider</span>
+                  ) : null}
+                </span>
+              </div>
+            </div>
+            <div className="form-group row">
+              <label htmlFor="name" className="col-sm-3 col-form-label">
                 Name
               </label>
-              <div className="col-sm-10">
-                <input
-                  id="name"
+              <div className="col-sm-9">
+                <Form.Control
+                  as="select"
                   name="name"
-                  className={
-                    "form-control " +
-                    (this.state.submitted && !this.state.controls["name"].valid
-                      ? "is-invalid"
-                      : "")
+                  value={this.state.formValues.name}
+                  onChange={this.onSelectName}>
+                  {
+                    this.state.jobNames?.map(x => {
+                      return (
+                        <option key={x.name} value={x.name}>{x.name}</option>
+                      )
+                    })
                   }
-                  value={this.props.job?.name}
-                  onChange={event => this.fieldChanged(event)}
-                />
+                </Form.Control>
                 <span className="invalid-feedback">
                   {this.state.controls["name"].error.required ? (
                     <span>Enter a name</span>
@@ -158,94 +228,53 @@ class AddJob extends Component<Props, any> {
               </div>
             </div>
             <div className="form-group row">
-              <label htmlFor="code" className="col-sm-2 col-form-label">
-                Code
+              <label htmlFor="arguments" className="col-sm-3 col-form-label">
+                Arguments
               </label>
-              <div className="col-sm-10">
-                <input
-                  id="code"
-                  name="code"
-                  className={
-                    "form-control " +
-                    (this.state.submitted && !this.state.controls["code"].valid
-                      ? "is-invalid"
-                      : "")
-                  }
-                  value={this.props.job?.code}
+              <div className="col-sm-9">
+                <FormControl
+                  id="arguments"
+                  name="arguments"
+                  as="textarea"
+                  placeholder="arg1,arg2..."
+                  rows={5}
                   onChange={event => this.fieldChanged(event)}
-                />
-                <span className="invalid-feedback">
-                  {this.state.controls["code"].error.required ? (
-                    <span>Enter a code</span>
-                  ) : null}
-                  {this.state.controls["code"].error.maxLength ? (
-                    <span>The code must be less than 10 characters.</span>
-                  ) : null}
-                </span>
-              </div>
-            </div>
-            <div className="form-group row">
-              <label htmlFor="description" className="col-sm-2 col-form-label">
-                Description
-              </label>
-              <div className="col-sm-10">
-                <input
-                  id="description"
-                  name="description"
                   className={
-                    "form-control " +
                     (this.state.submitted &&
-                    !this.state.controls["description"].valid
+                      !this.state.controls["arguments"].valid
                       ? "is-invalid"
                       : "")
-                  }
-                  value={this.props.job?.description}
-                  onChange={event => this.fieldChanged(event)}
-                />
+                  }>
+                </FormControl>
                 <span className="invalid-feedback">
-                  {this.state.controls["description"].error.required ? (
-                    <span>Enter a description</span>
-                  ) : null}
-                  {this.state.controls["description"].error.maxLength ? (
+                  {this.state.controls["arguments"].error.maxLength ? (
                     <span>The code must be less than 100 characters.</span>
                   ) : null}
                 </span>
               </div>
             </div>
             <div className="form-group row">
-              <label
-                htmlFor="description"
-                className="col-sm-2 col-form-label"
-              ></label>
-              <div className="col-sm-10">
+              <Col sm={{ span: 9, offset: 3 }}>
                 <button className="btn btn-primary">Save</button>
-              </div>
+              </Col>
             </div>
           </form>
         </div>
         <div className="card-footer">
-          <NavLink
-            className="btn btn-outline-secondary"
-            to="/jobs"
-            style={{ width: "80px" }}
-          >
+          <Button variant="outline-secondary" style={{ width: "80px" }} onClick={this.props.back}>
             <i className="fa fa-chevron-left"></i> Back
-          </NavLink>
+          </Button>
         </div>
       </div>
     );
-
-    return this.state.submitted && this.props.saved ? (
-      <Redirect to={"/jobs/" + this.props.job.id} />
-    ) : (
-      form
-    );
+    return form;
   }
 }
 
 const mapStateToProps = state => {
   return {
     job: state.job.job,
+    jobSrcs: state.job.jobSrcs,
     saved: state.job.saved
   };
 };
@@ -253,9 +282,10 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     fetchJob: id => dispatch(actions.fetchJob(id)),
+    fetchJobSrcs: () => dispatch(actions.fetchJobSrcs()),
     updateJob: job => dispatch(actions.updateJob(job)),
     resetJob: () => dispatch(actions.resetJob()),
-    saveJob: job => dispatch(actions.saveJob(job))
+    saveJob: job => dispatch(actions.saveJob(job)),
   };
 };
 

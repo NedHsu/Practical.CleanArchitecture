@@ -3,6 +3,7 @@ using ClassifiedAds.Domain.DTOs;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.WebAPI.Models.Common;
 using ClassifiedAds.WebAPI.Models.Jobs;
+using ClassifiedAds.WebAPI.Models.JobSrcs;
 using ClassifiedAds.WebAPI.Models.StockDays;
 using ClassifiedAds.WebAPI.Models.StockFunders;
 using ClassifiedAds.WebAPI.Models.StockGroupItems;
@@ -116,7 +117,11 @@ namespace ClassifiedAds.WebAPI.AutoMapper
 
             CreateMap<Job, JobModel>()
                 ;
-            
+            CreateMap<JobModel, Job>()
+                ;
+
+            CreateMap<JobSrc, JobSrcModel>()
+                ;
         }
     }
 }

@@ -66,6 +66,22 @@ const saveJobFail = (state, action) => {
   return updateObject(state, { loading: false, saved: false });
 };
 //--functions
+/// JobSrcs
+const fetchJobSrcsStart = (state, action) => {
+  return updateObject(state, { loading: true });
+};
+
+const fetchJobSrcsSuccess = (state, action) => {
+  return updateObject(state, {
+    jobSrcs: action.jobSrcs,
+    loading: false,
+  });
+};
+
+const fetchJobSrcsFail = (state, action) => {
+  return updateObject(state, { loading: false });
+};
+/// JobSrcs
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -110,6 +126,12 @@ const reducer = (state = initialState, action) => {
         deleted: false,
       });
     //--case
+    case actionTypes.FETCH_JOB_SRCS_START:
+      return fetchJobSrcsStart(state, action);
+    case actionTypes.FETCH_JOB_SRCS_SUCCESS:
+      return fetchJobSrcsSuccess(state, action);
+    case actionTypes.FETCH_JOB_SRCS_FAIL:
+      return fetchJobSrcsFail(state, action);
     default:
       return state;
   }

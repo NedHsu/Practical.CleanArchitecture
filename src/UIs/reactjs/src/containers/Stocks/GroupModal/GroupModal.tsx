@@ -43,7 +43,6 @@ export class GroupModal extends Component<Props, any> {
         const GroupOptions = this.props.stockGroups?.map((item) => (
             <Col key={`check-${item.id}`} md={4}>
                 <Form.Check
-                    custom
                     type="checkbox"
                     id={`group-check-${item.id}`}
                     label={item.groupTitle}

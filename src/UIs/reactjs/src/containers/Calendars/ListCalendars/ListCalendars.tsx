@@ -164,8 +164,8 @@ class ListCalendars extends Component<any, any> {
           </div>
           <div className="card-body">
             <div className="row">
-              <div className="col-md-2">Filter by:</div>
               <div className="col-md-4">
+                <label style={{ marginRight: 10 }}>Filter by:</label>
                 <input
                   type="text"
                   value={this.state.listFilter}

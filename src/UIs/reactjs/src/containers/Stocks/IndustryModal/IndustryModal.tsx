@@ -42,7 +42,6 @@ export class IndustryModal extends Component<Props, any> {
         const IndustryOptions = this.props.stockIndustrys?.map((item) => (
             <Col key={`check-${item.id}`} md={4}>
                 <Form.Check
-                    custom
                     type="checkbox"
                     id={`industry-check-${item.id}`}
                     label={item.industryTitle}

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button, Col } from "react-bootstrap";
 import Menu from "../../Stocks/Menu/Menu";
 
 import styles from "./ListStockSeminars.module.scss";
@@ -133,24 +133,27 @@ class ListStockSeminars extends Component<any, any> {
         <div className="card">
           <div className="card-header">
             <Menu />
-            <NavLink
-              className="btn btn-primary"
-              style={{ float: "right" }}
-              to="/stockSeminars/add"
-            >
-              Add StockSeminar
-              </NavLink>
+
           </div>
           <div className="card-body">
             <div className="row">
-              <div className="col-md-2">Filter by:</div>
               <div className="col-md-4">
+                <label style={{ marginRight: 10 }}>Filter by:</label>
                 <input
                   type="text"
                   value={this.state.listFilter}
                   onChange={(event) => this.filterChanged(event)}
                 />
               </div>
+              <Col>
+                <NavLink
+                  className="btn btn-primary"
+                  style={{ float: "right" }}
+                  to="/stockSeminars/add"
+                >
+                  Add StockSeminar
+                </NavLink>
+              </Col>
             </div>
             {this.state.listFilter ? (
               <div className="row">

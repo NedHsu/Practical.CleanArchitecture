@@ -4,10 +4,12 @@ using ClassifiedAds.Application.Jobs.Commands;
 using ClassifiedAds.Application.Jobs.DTOs;
 using ClassifiedAds.Application.Jobs.Queries;
 using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.WebAPI.Hubs;
 using ClassifiedAds.WebAPI.Models.Jobs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
@@ -25,12 +27,14 @@ namespace ClassifiedAds.WebAPI.Controllers
         private readonly Dispatcher _dispatcher;
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
+        private readonly IHubContext<JobHub> _hub;
 
-        public JobsController(Dispatcher dispatcher, ILogger<JobsController> logger, IMapper mapper)
+        public JobsController(Dispatcher dispatcher, ILogger<JobsController> logger, IMapper mapper, IHubContext<JobHub> hub)
         {
             _dispatcher = dispatcher;
             _logger = logger;
             _mapper = mapper;
+            _hub = hub;
         }
 
         [HttpGet]
@@ -58,9 +62,10 @@ namespace ClassifiedAds.WebAPI.Controllers
         public ActionResult<Job> Post([FromBody] JobModel model)
         {
             var job = _mapper.Map<Job>(model);
+            job.CreatedAt = DateTime.Now;
             _dispatcher.Dispatch(new AddUpdateJobCommand { Job = job });
             model = _mapper.Map<JobModel>(job);
-            return Created($"/api/jobs/{model.Code}", model);
+            return Created($"/api/jobs/{model.Id}", model);
         }
 
         [HttpPut("{id}")]

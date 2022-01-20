@@ -108,16 +108,19 @@ class ListStockNotes extends Component<any, any> {
           </div>
           <div className="card-body">
             <div className="row">
-              <div className="col-md-2">Filter by:</div>
               <div className="col-md-4">
+                <label style={{ marginRight: 10 }}>Filter by:</label>
                 <input
+                  id="listFilter"
                   type="text"
                   value={this.state.listFilter}
                   onChange={(event) => this.filterChanged(event)}
                 />
               </div>
               <div className="col"></div>
-              <Button variant="primary" style={{ float: "right", marginRight: "10px" }} onClick={() => { this.props.resetStockNote(); this.toggleAddNote(); }}>Add StockNote</Button>
+              <Col>
+                <Button variant="primary" style={{ float: "right", marginRight: "10px" }} onClick={() => { this.props.resetStockNote(); this.toggleAddNote(); }}>Add StockNote</Button>
+              </Col>
             </div>
             {this.state.listFilter ? (
               <div className="row">

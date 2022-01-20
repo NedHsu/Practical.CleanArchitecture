@@ -150,7 +150,6 @@ class LegalPerson extends Component<any, any> {
         </td>
         <td>
           <Form.Check
-            custom
             type="checkbox"
             id={`stock-check-${stock.stockCode}`}
             checked={this.state.checkedStocks?.indexOf(stock.stockCode) > -1}
@@ -172,9 +171,9 @@ class LegalPerson extends Component<any, any> {
     const stockGroupTags = this.props.stockGroups?.map((item) => (
       <Col key={item.id} lg={1} md={2} sm={3} className={styles.groupTags}>
         <Button
+          className="btn-default-size"
           variant="outline-dark"
           active={this.state.selectedGroupId === item.id}
-          block
           onClick={() => this.selectGroup(item)}>
           {item.groupTitle}
         </Button>
@@ -198,7 +197,6 @@ class LegalPerson extends Component<any, any> {
             <th>Edit</th>
             <th>
               <Form.Check
-                custom
                 type="checkbox"
                 id="select-all"
                 checked={this.state.checkedStocks?.length === stockFunders?.items?.length}
@@ -220,9 +218,11 @@ class LegalPerson extends Component<any, any> {
           <div className="card-body">
             <div className="row">
               {stockGroupTags}
-              <Button onClick={this.addToGroup}>
-                Add to Group
-              </Button>
+              <Col lg={1} md={2} sm={3}>
+                <Button className="btn-default-size" onClick={this.addToGroup}>
+                  Add to Group
+                </Button>
+              </Col>
             </div>
             <div className="table-responsive">{table}</div>
           </div>

@@ -1,15 +1,20 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button, ModalBody } from "react-bootstrap";
 
+import AddJob from "../AddJob/AddJob";
 import * as actions from "../actions";
+import dayjs from "dayjs";
+import TimeZone from "dayjs/plugin/timezone";
+dayjs.extend(TimeZone);
 
 class ListJobs extends Component<any, any> {
   state = {
     pageTitle: "Job List",
     showImage: false,
     showDeleteModal: false,
+    showAddModal: false,
     deletingJob: {
       name: null
     },
@@ -40,6 +45,14 @@ class ListJobs extends Component<any, any> {
     this.setState({ showDeleteModal: false, deletingJob: null });
   };
 
+  addCanceled = () => {
+    this.setState({ showAddModal: false, });
+  };
+
+  showAddModal = () => {
+    this.setState({ showAddModal: true, });
+  }
+
   deleteConfirmed = () => {
     this.props.deleteJob(this.state.deletingJob);
     this.setState({ showDeleteModal: false, deletingJob: null });
@@ -65,9 +78,9 @@ class ListJobs extends Component<any, any> {
         <td>
           <NavLink to={"/jobs/" + job.id}>{job.name}</NavLink>
         </td>
-        <td>{job.code?.toLocaleUpperCase()}</td>
-        <td>{job.description}</td>
-        <td>{job.price || (5).toFixed(2)}</td>
+        <td>{job.provider}</td>
+        <td>{job.arguments}</td>
+        <td>{dayjs(job.createdAt).format("DD/MM HH:mm:ss")}-{job.expireAt ? dayjs(job.expireAt).format("DD/MM HH:mm:ss") : ""}</td>
         <td>
           <NavLink
             className="btn btn-primary"
@@ -92,9 +105,9 @@ class ListJobs extends Component<any, any> {
         <thead>
           <tr>
             <th>Job</th>
-            <th>Code</th>
-            <th>Description</th>
-            <th>Price</th>
+            <th>Provider</th>
+            <th>Arguments</th>
+            <th>Time</th>
             <th></th>
           </tr>
         </thead>
@@ -122,23 +135,42 @@ class ListJobs extends Component<any, any> {
       </Modal>
     );
 
+    const addModal = (
+      <Modal show={this.state.showAddModal} onHide={this.addCanceled}>
+        <ModalBody>
+          <AddJob back={this.addCanceled} />
+        </ModalBody>
+      </Modal>
+    )
+
     return (
       <div>
         <div className="card">
           <div className="card-header">
-            {this.state.pageTitle}
+            <Button
+              className="btn btn-secondary"
+              active={true}
+            >
+              {this.state.pageTitle}
+            </Button>
             <NavLink
+              className="btn outline-info"
+              to={"/jobsrcs/"}
+            >
+              Sripts
+            </NavLink>
+            <Button
               className="btn btn-primary"
               style={{ float: "right" }}
-              to="/jobs/add"
+              onClick={this.showAddModal}
             >
               Add Job
-            </NavLink>
+            </Button>
           </div>
           <div className="card-body">
             <div className="row">
-              <div className="col-md-2">Filter by:</div>
-              <div className="col-md-4">
+              <div className="col-md-6">
+                <label style={{ marginRight: 10 }}>Filter by:</label>
                 <input
                   type="text"
                   value={this.state.listFilter}
@@ -162,6 +194,7 @@ class ListJobs extends Component<any, any> {
           </div>
         ) : null}
         {deleteModal}
+        {addModal}
       </div>
     );
   }

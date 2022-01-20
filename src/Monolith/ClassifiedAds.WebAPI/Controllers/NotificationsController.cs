@@ -63,8 +63,6 @@ namespace ClassifiedAds.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public ActionResult<Notification> Post([FromBody] NotificationSenderModel model)
         {
-            //var notification = _mapper.Map<Notification>(model);
-            //_dispatcher.Dispatch(new AddUpdateNotificationCommand { Notification = notification });
             _hubContext.Clients.All.SendAsync("notificationReceived", "test", model.Content);
             return Created($"/api/notifications/{model.Id}", model);
         }

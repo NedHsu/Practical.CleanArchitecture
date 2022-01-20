@@ -107,7 +107,11 @@ class Nav extends Component<Props> {
               Audit Logs
             </NavLink>
           </li> */}
-
+          <li>
+            <NavLink className="nav-link" to="/jobs">
+              Jobs
+            </NavLink>
+          </li>
           {!this.props.authService.isAuthenticated() ? (
             <li>
               <NavLink
