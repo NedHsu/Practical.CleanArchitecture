@@ -33,6 +33,7 @@ namespace ClassifiedAds.Persistence
         public virtual DbSet<StockProfit> StockProfits { get; set; }
         public virtual DbSet<StockSeminar> StockSeminars { get; set; }
         public virtual DbSet<StockNew> StockNews { get; set; }
+        public virtual DbSet<StockEPS> StockEPSs { get; set; }
         public virtual DbSet<StockInsiderTransaction> StockInsiderTransactions { get; set; }
 
         private IDbContextTransaction _dbContextTransaction;
@@ -370,6 +371,14 @@ namespace ClassifiedAds.Persistence
 
                 entity.HasIndex("Time");
                 entity.HasIndex("StockCode");
+            });
+
+            modelBuilder.Entity<StockEPS>(entity =>
+            {
+                entity.HasKey(e => new { e.StockCode, e.Year });
+
+                entity.ToTable("StockEPS");
+                entity.Property(e => e.EPS).HasColumnType("decimal(5, 2)");
             });
 
             OnModelCreatingPartial(modelBuilder);
