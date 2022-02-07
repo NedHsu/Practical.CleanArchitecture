@@ -169,7 +169,7 @@ class LegalPerson extends Component<any, any> {
     );
 
     const stockGroupTags = this.props.stockGroups?.map((item) => (
-      <Col key={item.id} lg={1} md={2} sm={3} className={styles.groupTags}>
+      <div key={item.id} className={styles.groupTags}>
         <Button
           className="btn-default-size"
           variant="outline-dark"
@@ -177,7 +177,7 @@ class LegalPerson extends Component<any, any> {
           onClick={() => this.selectGroup(item)}>
           {item.groupTitle}
         </Button>
-      </Col>
+      </div>
     ));
 
     const table = this.props.stockFunders ? (

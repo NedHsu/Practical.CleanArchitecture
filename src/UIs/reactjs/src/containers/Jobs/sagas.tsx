@@ -76,5 +76,5 @@ export function* watchJob() {
   yield takeEvery(actionTypes.SAVE_JOB, saveJobSaga);
   yield takeEvery(actionTypes.DELETE_JOB, deleteJobSaga);
   //--yield
-  yield takeEvery(actionTypes.FETCH_JOB_SRCS, fetchJobSrcsSaga);
+  yield takeEvery(actionTypes.FETCH_JOB_SRCS_EX, fetchJobSrcsSaga);
 }

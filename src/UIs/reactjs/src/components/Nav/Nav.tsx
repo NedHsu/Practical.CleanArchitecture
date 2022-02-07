@@ -28,7 +28,7 @@ class Nav extends Component<Props> {
     }
   }
   render() {
-    const pageTitle = "ClassifiedAds.React";
+    const pageTitle = "React";
     return (
       <nav ref={this.navRef}
         className={"navbar navbar-expand navbar-dark " + classes.Nav}

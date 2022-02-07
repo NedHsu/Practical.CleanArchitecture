@@ -80,7 +80,7 @@ class ListJobs extends Component<any, any> {
         </td>
         <td>{job.provider}</td>
         <td>{job.arguments}</td>
-        <td>{dayjs(job.createdAt).format("DD/MM HH:mm:ss")}-{job.expireAt ? dayjs(job.expireAt).format("DD/MM HH:mm:ss") : ""}</td>
+        <td>{dayjs(job.createdAt).format("MMM DD HH:mm:ss")}-{job.expireAt ? dayjs(job.expireAt).format("MMM DD HH:mm:ss") : ""}</td>
         <td>
           <NavLink
             className="btn btn-primary"

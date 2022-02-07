@@ -36,6 +36,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddScoped<SmsMessageService>()
 
                 //--AddScoped
+                .AddScoped<IStockEpService, StockEpService>()
                 .AddScoped<IJobSrcService, JobSrcService>()
                 .AddScoped<IJobService, JobService>()
                 .AddScoped<IStockNewService, StockNewService>()
@@ -56,6 +57,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 configureInterceptor(typeof(IStockService), typeof(StockService), ServiceLifetime.Scoped);
 
                 //--configureInterceptor
+                configureInterceptor(typeof(IStockEpService), typeof(StockEpService), ServiceLifetime.Scoped);
                 configureInterceptor(typeof(IJobSrcService), typeof(JobSrcService), ServiceLifetime.Scoped);
                 configureInterceptor(typeof(IJobService), typeof(JobService), ServiceLifetime.Scoped);
                 configureInterceptor(typeof(IStockNewService), typeof(StockNewService), ServiceLifetime.Scoped);

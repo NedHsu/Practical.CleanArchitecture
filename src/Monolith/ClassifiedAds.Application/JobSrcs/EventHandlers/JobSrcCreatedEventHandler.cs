@@ -28,7 +28,7 @@ namespace ClassifiedAds.Application.JobSrcs.EventHandlers
                     UserId = currentUser.IsAuthenticated ? currentUser.UserId: Guid.Empty,
                     CreatedDateTime = domainEvent.EventDateTime,
                     Action = "CREATED_JobSrc",
-                    ObjectId = $"{domainEvent.Entity.Provider}/{domainEvent.Entity.Name}",
+                    ObjectId = $"{domainEvent.Entity.Id}",
                     Log = domainEvent.Entity.AsJsonString(),
                 });
             }

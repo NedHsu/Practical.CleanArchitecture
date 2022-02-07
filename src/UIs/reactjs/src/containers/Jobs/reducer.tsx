@@ -126,11 +126,11 @@ const reducer = (state = initialState, action) => {
         deleted: false,
       });
     //--case
-    case actionTypes.FETCH_JOB_SRCS_START:
+    case actionTypes.FETCH_JOB_SRCS_EX_START:
       return fetchJobSrcsStart(state, action);
-    case actionTypes.FETCH_JOB_SRCS_SUCCESS:
+    case actionTypes.FETCH_JOB_SRCS_EX_SUCCESS:
       return fetchJobSrcsSuccess(state, action);
-    case actionTypes.FETCH_JOB_SRCS_FAIL:
+    case actionTypes.FETCH_JOB_SRCS_EX_FAIL:
       return fetchJobSrcsFail(state, action);
     default:
       return state;

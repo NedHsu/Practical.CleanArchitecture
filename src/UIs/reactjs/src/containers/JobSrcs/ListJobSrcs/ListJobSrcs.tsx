@@ -4,6 +4,8 @@ import { connect } from "react-redux";
 
 import * as actions from "../actions";
 import { Button } from "react-bootstrap";
+import { IoIosTrash } from "react-icons/io";
+import { GrEdit } from "react-icons/gr";
 
 class ListJobSrcs extends Component<any, any> {
   state = {
@@ -38,17 +40,19 @@ class ListJobSrcs extends Component<any, any> {
       <tr key={jobSrc.provider + jobSrc.name}>
         <td>{jobSrc.provider}</td>
         <td>
-          <NavLink to={"/jobSrcs/" + jobSrc.id}>{jobSrc.name}</NavLink>
+          {jobSrc.name}
         </td>
         <td>{jobSrc.src}</td>
         <td>{jobSrc.createdAt}</td>
         <td>
           <NavLink
-            className="btn btn-primary"
-            to={"/jobSrcs/edit/" + jobSrc.id}
+            to={`/jobSrcs/edit/${jobSrc.provider}/${jobSrc.name}`}
           >
-            Edit
+            <GrEdit></GrEdit>
           </NavLink>
+          <Button variant="link" onClick={() => this.deleteJobSrc(jobSrc)}>
+            <IoIosTrash size="1.5rem"></IoIosTrash>
+          </Button>
         </td>
       </tr>
     ));
@@ -121,24 +125,21 @@ class ListJobSrcs extends Component<any, any> {
       </div>
     );
   }
+  deleteJobSrc(jobSrc): void {
+    this.props.deleteJobSrc(jobSrc);
+  }
 }
 
 const mapStateToProps = (state) => {
   return {
-    jobSrcs: state.job.jobSrcs?.reduce((a, b) => {
-      return a.concat(b.items.map(x => {
-        return {
-          provider: b.provider,
-          ...x
-        }
-      }));
-    }, []),
+    jobSrcs: state.jobSrc.jobSrcs,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchJobSrcs: () => dispatch(actions.fetchJobSrcs()),
+    deleteJobSrc: (jobSrc) => dispatch(actions.deleteJobSrc(jobSrc)),
   };
 };
 

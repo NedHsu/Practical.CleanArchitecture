@@ -28,7 +28,7 @@ namespace ClassifiedAds.Application.JobSrcs.EventHandlers
                     UserId = currentUser.UserId,
                     CreatedDateTime = domainEvent.EventDateTime,
                     Action = "DELETED_JobSrc",
-                    ObjectId = $"{domainEvent.Entity.Provider}/{domainEvent.Entity.Name}",
+                    ObjectId = $"{domainEvent.Entity.Id}",
                     Log = domainEvent.Entity.AsJsonString(),
                 });
             }

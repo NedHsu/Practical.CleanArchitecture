@@ -43,7 +43,8 @@ import ListD3s from "./containers/D3s/ListD3s/ListD3s";
 import ViewChat from "./containers/Chats/ViewChat/ViewChat";
 import ViewCalendar from "./containers/Calendars/ViewCalendar/ViewCalendar";
 import ListJobs from "./containers/Jobs/ListJobs/ListJobs";
-import ListJobSrcs from "./containers/Jobs/ListJobSrcs/ListJobSrcs";
+import ListJobSrcs from "./containers/JobSrcs/ListJobSrcs/ListJobSrcs";
+import AddJobSrc from "./containers/JobSrcs/AddJobSrc/AddJobSrc";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -93,6 +94,8 @@ function App() {
         <Route path="/chats/:id" component={ViewChat} />
         <Route path="/calendars" component={ViewCalendar} />
         <Route path="/jobs" component={ListJobs} />
+        <Route path="/jobsrcs/add" component={AddJobSrc} />
+        <Route path="/jobsrcs/edit/:provider/:name" component={AddJobSrc} />
         <Route path="/jobsrcs" component={ListJobSrcs} />
         <Redirect to="/home" />
       </Switch>

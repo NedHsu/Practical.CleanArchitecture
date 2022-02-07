@@ -15,6 +15,8 @@ namespace ClassifiedAds.Persistence.MappingConfigurations
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
             builder.Property(x => x.Provider).HasMaxLength(10);
             builder.Property(x => x.Name).HasMaxLength(20);
+
+            builder.HasIndex(x => new { x.Provider, x.Name });
         }
     }
 }

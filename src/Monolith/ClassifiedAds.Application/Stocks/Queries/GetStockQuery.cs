@@ -14,9 +14,9 @@ namespace ClassifiedAds.Application.Stocks.Queries
 
     internal class GetStockQueryHandler : IQueryHandler<GetStockQuery, Stock>
     {
-        private readonly IBaseDapperRepository<Stock> _stockRepository;
+        private readonly IStockDapperRepository _stockRepository;
 
-        public GetStockQueryHandler(IBaseDapperRepository<Stock> stockRepository)
+        public GetStockQueryHandler(IStockDapperRepository stockRepository)
         {
             _stockRepository = stockRepository;
         }

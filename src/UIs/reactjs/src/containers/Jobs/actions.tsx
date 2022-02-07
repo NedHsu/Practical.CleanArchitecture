@@ -130,30 +130,30 @@ export const deleteJob = (job) => {
 /// DELETE JOB
 
 //--export
-/// JOB_SRCS
+/// JOB_SRCS_EX
 export const fetchJobSrcsSuccess = (jobSrcs) => {
   return {
-    type: actionTypes.FETCH_JOB_SRCS_SUCCESS,
+    type: actionTypes.FETCH_JOB_SRCS_EX_SUCCESS,
     jobSrcs: jobSrcs,
   };
 };
 
 export const fetchJobSrcsFail = (error) => {
   return {
-    type: actionTypes.FETCH_JOB_SRCS_FAIL,
+    type: actionTypes.FETCH_JOB_SRCS_EX_FAIL,
     error: error,
   };
 };
 
 export const fetchJobSrcsStart = () => {
   return {
-    type: actionTypes.FETCH_JOB_SRCS_START,
+    type: actionTypes.FETCH_JOB_SRCS_EX_START,
   };
 };
 
 export const fetchJobSrcs = () => {
   return {
-    type: actionTypes.FETCH_JOB_SRCS,
+    type: actionTypes.FETCH_JOB_SRCS_EX,
   };
 };
-/// JOB_SRCS
+/// JOB_SRCS_EX

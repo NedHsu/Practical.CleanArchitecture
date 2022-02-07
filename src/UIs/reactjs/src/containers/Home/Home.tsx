@@ -22,22 +22,11 @@ function Home() {
 
               </Col>
               <Col>
-                
+
               </Col>
             </Row>
           </div>
           <StockFetchDatees />
-          <div className="text-center">Developed by:</div>
-          <div className="text-center">
-            <h3>Phong Nguyen</h3>
-          </div>
-
-          <div className="text-center">@phongnguyend</div>
-          <div className="text-center">
-            <a href="https://github.com/phongnguyend/Practical.CleanArchitecture">
-              Practical.CleanArchitecture
-            </a>
-          </div>
           <div className="text-center">
             <strong>react v{React.version}</strong>
           </div>

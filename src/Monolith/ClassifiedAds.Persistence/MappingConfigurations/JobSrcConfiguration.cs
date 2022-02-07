@@ -12,14 +12,16 @@ namespace ClassifiedAds.Persistence.MappingConfigurations
         {
             builder.ToTable("JobSrc");
 
-            builder.HasKey(x => new { x.Provider, x.Name });
+            builder.Property(x => x.Id).ValueGeneratedOnAdd();
             builder.Property(x => x.Provider).HasMaxLength(10);
             builder.Property(x => x.Name).HasMaxLength(20);
+            builder.HasIndex(x => new { x.Provider, x.Name });
 
             builder.HasData(new List<JobSrc>
             {
                 new JobSrc
                 {
+                    Id = 1,
                     Provider = "go",
                     Name = "funder",
                     Src = @"jobs\stocks\funder1\funder1.go",
@@ -27,6 +29,7 @@ namespace ClassifiedAds.Persistence.MappingConfigurations
                 },
                 new JobSrc
                 {
+                    Id = 2,
                     Provider = "go",
                     Name = "margin",
                     Src = @"jobs\stocks\margin\margin.go",
@@ -34,6 +37,7 @@ namespace ClassifiedAds.Persistence.MappingConfigurations
                 },
                 new JobSrc
                 {
+                    Id = 3,
                     Provider = "go",
                     Name = "stock3",
                     Src = @"stock3\stock3.go",
@@ -41,6 +45,7 @@ namespace ClassifiedAds.Persistence.MappingConfigurations
                 },
                 new JobSrc
                 {
+                    Id = 4,
                     Provider = "go",
                     Name = "fundamental",
                     Src = @"jobs\stocks\fundamental\fundamental.go",
@@ -48,6 +53,7 @@ namespace ClassifiedAds.Persistence.MappingConfigurations
                 },
                 new JobSrc
                 {
+                    Id = 5,
                     Provider = "go",
                     Name = "revenue",
                     Src = @"jobs\stocks\revenue\revenue.go",
@@ -55,6 +61,7 @@ namespace ClassifiedAds.Persistence.MappingConfigurations
                 },
                 new JobSrc
                 {
+                    Id = 6,
                     Provider = "go",
                     Name = "profit",
                     Src = @"jobs\stocks\profit\profit.go",
@@ -62,6 +69,7 @@ namespace ClassifiedAds.Persistence.MappingConfigurations
                 },
                 new JobSrc
                 {
+                    Id = 7,
                     Provider = "go",
                     Name = "seminar",
                     Src = @"jobs\stocks\seminar\seminar.go",

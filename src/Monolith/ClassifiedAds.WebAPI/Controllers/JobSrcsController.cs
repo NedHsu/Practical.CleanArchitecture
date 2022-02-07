@@ -42,12 +42,12 @@ namespace ClassifiedAds.WebAPI.Controllers
             return Ok(model);
         }
 
-        [HttpGet("{provider}/{name}")]
+        [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<JobSrcModel> Get(string provider, string name)
+        public ActionResult<JobSrcModel> Get(int id)
         {
-            var jobSrc = _dispatcher.Dispatch(new GetJobSrcQuery { Provider = provider, Name = name, ThrowNotFoundIfNull = true });
+            var jobSrc = _dispatcher.Dispatch(new GetJobSrcQuery { Id = id, ThrowNotFoundIfNull = true });
             var model = _mapper.Map<JobSrcModel>(jobSrc);
             return Ok(model);
         }
@@ -55,12 +55,11 @@ namespace ClassifiedAds.WebAPI.Controllers
         [HttpPost]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public ActionResult<JobSrc> Post([FromBody] JobSrcModel model)
+        public ActionResult<JobSrc> Post([FromBody] JobSrc jobSrc)
         {
-            var jobSrc = _mapper.Map<JobSrc>(model);
+            jobSrc.CreatedAt = DateTime.Now;
             _dispatcher.Dispatch(new AddUpdateJobSrcCommand { JobSrc = jobSrc });
-            model = _mapper.Map<JobSrcModel>(jobSrc);
-            return Created($"/api/jobSrcs", model);
+            return Created($"/api/jobSrcs", jobSrc);
         }
 
         [HttpPut]
@@ -69,10 +68,12 @@ namespace ClassifiedAds.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult Put([FromBody] JobSrcModel model)
         {
-            var jobSrc = _dispatcher.Dispatch(new GetJobSrcQuery { Provider = model.Provider, Name = model.Name, ThrowNotFoundIfNull = false })
+            var jobSrc = _dispatcher.Dispatch(new GetJobSrcQuery { Id = model.Id, ThrowNotFoundIfNull = false })
                 ?? new JobSrc { };
 
             jobSrc.Name = model.Name;
+            jobSrc.Provider = model.Provider;
+            jobSrc.Src = model.Src;
 
             _dispatcher.Dispatch(new AddUpdateJobSrcCommand { JobSrc = jobSrc });
 

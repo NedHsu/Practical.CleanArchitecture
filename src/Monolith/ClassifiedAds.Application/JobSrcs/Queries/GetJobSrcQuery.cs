@@ -8,8 +8,7 @@ namespace ClassifiedAds.Application.JobSrcs.Queries
 {
     public class GetJobSrcQuery : IQuery<JobSrc>
     {
-        public string Provider { get; set; }
-        public string Name { get; set; }
+        public int Id { get; set; }
         public bool ThrowNotFoundIfNull { get; set; }
     }
 
@@ -24,11 +23,11 @@ namespace ClassifiedAds.Application.JobSrcs.Queries
 
         public JobSrc Handle(GetJobSrcQuery query)
         {
-            var jobSrc = _jobSrcRepository.Get(x => x.Provider == query.Provider && x.Name == query.Name);
+            var jobSrc = _jobSrcRepository.Get(x => x.Id == query.Id);
 
             if (query.ThrowNotFoundIfNull && jobSrc == null)
             {
-                throw new NotFoundException($"JobSrc {query.Provider} {query.Name} not found.");
+                throw new NotFoundException($"JobSrc {query.Id} not found.");
             }
 
             return jobSrc;

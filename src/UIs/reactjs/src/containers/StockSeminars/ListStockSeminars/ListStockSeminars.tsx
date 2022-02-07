@@ -70,7 +70,7 @@ class ListStockSeminars extends Component<any, any> {
         <td>
           <NavLink to={"/stocks/" + stockSeminar.stockCode}>({stockSeminar.stockCode}){stockSeminar.name}</NavLink>
         </td>
-        <td>{dayjs(stockSeminar.date).format("MMM/DD hh:mm A")}</td>
+        <td>{dayjs(stockSeminar.date).format("MMM DD hh:mm A")}</td>
         <td>{stockSeminar.place}</td>
         <td>{stockSeminar.message}</td>
         <td></td>
