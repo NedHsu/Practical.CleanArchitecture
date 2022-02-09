@@ -1,4 +1,4 @@
-import React, { Component, MouseEventHandler } from "react";
+import React, { Component } from "react";
 import { connect } from "react-redux";
 
 import * as actions from "../actions";
@@ -14,8 +14,9 @@ type Props = {
   jobSrcs: Array<any>,
   saveJob: any,
   updateJob: any,
-  saved: any,
-  back: MouseEventHandler<HTMLElement>,
+  saved: boolean,
+  loading: boolean,
+  back: (reload: boolean) => void,
 }
 
 class AddJob extends Component<Props, any> {
@@ -127,8 +128,7 @@ class AddJob extends Component<Props, any> {
     }
 
     if (isValid) {
-      await this.props.saveJob(this.state.formValues);
-      console.log("saved");
+      this.props.saveJob(this.state.formValues);
     }
   };
 
@@ -157,6 +157,9 @@ class AddJob extends Component<Props, any> {
           },
         });
       }
+    }
+    if (prevProps.loading && !this.props.loading && this.props.saved) {
+      this.props.back(true);
     }
   }
 
@@ -261,7 +264,7 @@ class AddJob extends Component<Props, any> {
           </form>
         </div>
         <div className="card-footer">
-          <Button variant="outline-secondary" style={{ width: "80px" }} onClick={this.props.back}>
+          <Button variant="outline-secondary" style={{ width: "80px" }} onClick={() => this.props.back(false)}>
             <i className="fa fa-chevron-left"></i> Back
           </Button>
         </div>
@@ -275,7 +278,8 @@ const mapStateToProps = state => {
   return {
     job: state.job.job,
     jobSrcs: state.job.jobSrcs,
-    saved: state.job.saved
+    saved: state.job.saved,
+    loading: state.job.loading,
   };
 };
 

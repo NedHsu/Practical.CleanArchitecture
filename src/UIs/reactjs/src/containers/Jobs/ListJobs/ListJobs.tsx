@@ -45,8 +45,11 @@ class ListJobs extends Component<any, any> {
     this.setState({ showDeleteModal: false, deletingJob: null });
   };
 
-  addCanceled = () => {
+  addCanceled = (reload) => {
     this.setState({ showAddModal: false, });
+    if (reload) {
+      this.props.fetchJobs();
+    }
   };
 
   showAddModal = () => {
@@ -136,7 +139,7 @@ class ListJobs extends Component<any, any> {
     );
 
     const addModal = (
-      <Modal show={this.state.showAddModal} onHide={this.addCanceled}>
+      <Modal show={this.state.showAddModal} onHide={() => this.addCanceled(false)}>
         <ModalBody>
           <AddJob back={this.addCanceled} />
         </ModalBody>
