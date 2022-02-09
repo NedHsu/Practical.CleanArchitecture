@@ -95,7 +95,6 @@ export default class AutoComplete extends Component<any, any> {
       props: {
         name: inputName,
         disabled,
-        onChange: propOnChange,
         className: propClassName,
       },
     } = this;

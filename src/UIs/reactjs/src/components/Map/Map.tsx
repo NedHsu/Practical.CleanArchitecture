@@ -134,7 +134,7 @@ class Map extends Component<Props, MyState> {
     })
 
     const SelectMark = () => {
-      const map = useMapEvents({
+      useMapEvents({
         unload() {
         },
         click(e) {

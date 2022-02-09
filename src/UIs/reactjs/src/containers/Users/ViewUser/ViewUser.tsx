@@ -154,7 +154,7 @@ class ViewUser extends Component<any, any> {
 
     isValid =
       isValid &&
-      this.state.setPasswordModel.password ==
+      this.state.setPasswordModel.password ===
       this.state.setPasswordModel.confirmPassword;
 
     if (isValid) {
@@ -236,7 +236,7 @@ class ViewUser extends Component<any, any> {
                   className={
                     "form-control " +
                     (this.state.submitted &&
-                      this.state.setPasswordModel?.password !=
+                      this.state.setPasswordModel?.password !==
                       this.state.setPasswordModel?.confirmPassword
                       ? "is-invalid"
                       : "")
@@ -394,6 +394,7 @@ class ViewUser extends Component<any, any> {
                 style={{ width: "200px", margin: "2px" }}
                 src={logo}
                 title={this.props.user.userName}
+                alt=""
               />
             </div>
           </div>

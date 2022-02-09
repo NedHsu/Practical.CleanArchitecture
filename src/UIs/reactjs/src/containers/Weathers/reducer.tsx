@@ -356,7 +356,7 @@ const reducer = (state = initialState, action) => {
 export default reducer;
 function toWeatherIcon(weather: any, firstKeyRex: string, tmpWeatherMap: any) {
   let icon = undefined;
-  if (!weather || weather == "-99") {
+  if (!weather || weather === "-99") {
     // default icon
   } else {
     let firstKeyMatches = weather.match(new RegExp(firstKeyRex));

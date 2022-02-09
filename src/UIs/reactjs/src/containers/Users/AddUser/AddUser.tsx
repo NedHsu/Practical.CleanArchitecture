@@ -53,7 +53,7 @@ class AddUser extends Component<any, any> {
   fieldChanged = (event) => {
     let value = event.target.value;
 
-    if (event.target.type == "checkbox") {
+    if (event.target.type === "checkbox") {
       value = event.target.checked;
     }
 
@@ -149,7 +149,7 @@ class AddUser extends Component<any, any> {
                   className={
                     "form-control " +
                     (this.state.submitted &&
-                    !this.state.controls["userName"].valid
+                      !this.state.controls["userName"].valid
                       ? "is-invalid"
                       : "")
                   }

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
-import { Button, Modal, Table } from "react-bootstrap";
+import { Modal, Table } from "react-bootstrap";
 import Menu from "../Menu/Menu";
 import GroupModal from "../GroupModal/GroupModal";
 import IndustryModal from "../IndustryModal/IndustryModal";
@@ -17,9 +17,6 @@ import TrendLine from "../TrendLine/TrendLine";
 import { GrNotes, GrList } from "react-icons/gr";
 
 class Revenue extends Component<any, any> {
-  constructor(props) {
-    super(props);
-  }
 
   state = {
     pageTitle: "Stock List",
