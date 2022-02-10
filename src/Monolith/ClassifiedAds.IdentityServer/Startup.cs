@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using reCAPTCHA.AspNetCore;
 
 namespace ClassifiedAds.IdentityServer
 {
@@ -157,6 +158,8 @@ namespace ClassifiedAds.IdentityServer
             services.AddMessageBusSender<EmailMessageCreatedEvent>(AppSettings.MessageBroker);
             services.AddMessageBusSender<SmsMessageCreatedEvent>(AppSettings.MessageBroker);
             services.AddScoped<IProfileService, ProfileService>();
+
+            services.AddRecaptcha(Configuration.GetSection("RecaptchaSettings"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

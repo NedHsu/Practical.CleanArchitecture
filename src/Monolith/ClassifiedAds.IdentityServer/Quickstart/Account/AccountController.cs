@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using reCAPTCHA.AspNetCore.Attributes;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -83,6 +84,7 @@ namespace IdentityServerHost.Quickstart.UI
         /// Handle postback from username/password login
         /// </summary>
         [HttpPost]
+        [ValidateRecaptcha(0.5)]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginInputModel model, string button)
         {
