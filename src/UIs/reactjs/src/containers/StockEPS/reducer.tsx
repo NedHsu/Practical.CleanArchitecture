@@ -2,7 +2,7 @@ import { updateObject } from "../../shared/utility";
 import * as actionTypes from "./actionTypes";
 
 const initialState = {
-  stockEPSes: [],
+  stockEPSList: [],
   stockEPS: {
     name: "",
     code: "",
@@ -21,7 +21,7 @@ const fetchStockEPSesStart = (state, action) => {
 
 const fetchStockEPSesSuccess = (state, action) => {
   return updateObject(state, {
-    stockEPSes: action.stockEPSes,
+    stockEPSList: action.stockEPSList,
     loading: false,
   });
 };

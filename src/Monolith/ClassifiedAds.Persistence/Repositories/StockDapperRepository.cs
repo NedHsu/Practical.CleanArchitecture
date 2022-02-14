@@ -73,5 +73,35 @@ SELECT
 
             return DbContext.Connection.QueryFirst<StockFetchDatesDTO>(sql);
         }
+
+        public List<StockEPSDTO> GetEPS(int year, float growthRatio)
+        {
+            string sql = @"
+;WITH t AS (
+SELECT *, ROW_NUMBER() OVER (PARTITION BY StockCode ORDER BY Year) n
+FROM StockEPS)
+SELECT t.StockCode, t.EPS, p.EPS P_EPS, t.UpdatedAt, t.Year, p.Year P_Year, 
+	CASE WHEN p.EPS = 0 THEN 0 ELSE t.EPS / p.EPS END GrowthRatio into #t
+FROM t t
+	LEFT JOIN t p ON t.StockCode = p.StockCode AND (p.n + 1) = t.n
+WHERE t.Year = @Year
+
+SELECT s.Name, s.Industry, s.ClosePrice, s.TwentyPrice, s.SixtyPrice, t.*,
+	CASE WHEN t.EPS = 0 THEN 0 ELSE s.ClosePrice / t.EPS END PE,
+	CASE WHEN t.P_EPS = 0 THEN 0 ELSE s.ClosePrice / t.P_EPS END P_PE
+FROM #t t
+	JOIN Stock s ON t.StockCode = s.Code
+WHERE t.GrowthRatio > @GrowthRatio AND t.EPS > 0
+ORDER BY PE
+
+DROP TABLE #t
+";
+            Dictionary<string, object> param = new Dictionary<string, object>()
+            {
+                { "@Year", year },
+                { "@GrowthRatio", growthRatio },
+            };
+            return DbContext.Connection.Query<StockEPSDTO>(sql, param).ToList();
+        }
     }
 }

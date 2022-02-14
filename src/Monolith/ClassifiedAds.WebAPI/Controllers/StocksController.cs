@@ -7,6 +7,7 @@ using ClassifiedAds.Application.StockRevenues.Queries;
 using ClassifiedAds.Application.Stocks.Commands;
 using ClassifiedAds.Application.Stocks.DTOs;
 using ClassifiedAds.Application.Stocks.Queries;
+using ClassifiedAds.Domain.DTOs;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.WebAPI.Models.Common;
 using ClassifiedAds.WebAPI.Models.StockFunders;
@@ -83,6 +84,14 @@ namespace ClassifiedAds.WebAPI.Controllers
             var stockfunders = _dispatcher.Dispatch(query);
             var model = _mapper.Map<PagedResultModel<StockFunderModel>>(stockfunders);
             return Ok(model);
+        }
+
+        [HttpGet("EPS")]
+        public ActionResult<List<StockEPSDTO>> GetEPS([FromQuery] GetStockEPSsQuery query)
+        {
+            _logger.LogInformation("Getting all stock with EPS");
+            var stockEPSs = _dispatcher.Dispatch(query);
+            return Ok(stockEPSs);
         }
 
         [HttpGet("revenue")]

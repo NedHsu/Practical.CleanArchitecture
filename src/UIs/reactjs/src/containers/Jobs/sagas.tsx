@@ -45,7 +45,7 @@ export function* saveJobSaga(action) {
 export function* deleteJobSaga(action) {
   yield put(actions.deleteJobStart());
   try {
-    const response = yield axios.delete(`${action.job.id}`);
+    yield axios.delete(`${action.job.id}`);
     yield put(actions.deleteJobSuccess(action.job));
     yield put(actions.fetchJobs());
   } catch (error) {

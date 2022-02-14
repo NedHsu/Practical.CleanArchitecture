@@ -45,6 +45,8 @@ import ViewCalendar from "./containers/Calendars/ViewCalendar/ViewCalendar";
 import ListJobs from "./containers/Jobs/ListJobs/ListJobs";
 import ListJobSrcs from "./containers/JobSrcs/ListJobSrcs/ListJobSrcs";
 import AddJobSrc from "./containers/JobSrcs/AddJobSrc/AddJobSrc";
+import ListStockEPS from "./containers/StockEPS/ListStockEPS/ListStockEPS";
+import AddStockEPS from "./containers/StockEPS/AddStockEPS/AddStockEpss";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -75,6 +77,8 @@ function App() {
         <Route path="/stocks" component={ListStocks} />
         <Route path="/stockStickyNotes" component={StickyStockNotes} />
         <Route path="/stockSeminars" component={ListStockSeminars} />
+        <Route path="/stockEPS" component={ListStockEPS} />
+        <Route path="/stockEPS/add" component={AddStockEPS} />
         <Route path="/illustrations" component={ViewIllustration} />
         <Route path="/users/add" component={AddUser} />
         <Route path="/users/edit/:id" component={AddUser} />

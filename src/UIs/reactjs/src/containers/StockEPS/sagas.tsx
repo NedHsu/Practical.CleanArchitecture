@@ -1,5 +1,6 @@
 import { put, takeEvery } from "redux-saga/effects";
 import axios from "./axios";
+import stockAxios from "../Stocks/axios";
 
 import * as actionTypes from "./actionTypes";
 import * as actions from "./actions";
@@ -7,7 +8,7 @@ import * as actions from "./actions";
 export function* fetchStockEPSesSaga(action) {
   yield put(actions.fetchStockEPSesStart());
   try {
-    const response = yield axios.get("");
+    const response = yield stockAxios.get("EPS", { params: action.options });
     const fetchedStockEPSes = response.data;
     yield put(actions.fetchStockEPSesSuccess(fetchedStockEPSes));
   } catch (error) {
@@ -43,9 +44,8 @@ export function* saveStockEPSSaga(action) {
 export function* deleteStockEPSSaga(action) {
   yield put(actions.deleteStockEPSStart());
   try {
-    const response = yield axios.delete(action.stockEPS.id, action.stockEPS);
+    yield axios.delete(action.stockEPS.id, action.stockEPS);
     yield put(actions.deleteStockEPSSuccess(action.stockEPS));
-    yield put(actions.fetchStockEPSes());
   } catch (error) {
     console.log(error);
     yield put(actions.deleteStockEPSFail(error));

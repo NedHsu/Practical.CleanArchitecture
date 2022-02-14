@@ -226,7 +226,7 @@ class AddStockEPS extends Component<Props, any> {
         <div className="card-footer">
           <NavLink
             className="btn btn-outline-secondary"
-            to="/stockEPSes"
+            to="/stockEPSList"
             style={{ width: "80px" }}
           >
             <i className="fa fa-chevron-left"></i> Back
@@ -236,7 +236,7 @@ class AddStockEPS extends Component<Props, any> {
     );
 
     return this.state.submitted && this.props.saved ? (
-      <Redirect to={"/stockEPSes/" + this.props.stockEPS.id} />
+      <Redirect to={"/stockEPSList/" + this.props.stockEPS.id} />
     ) : (
       form
     );

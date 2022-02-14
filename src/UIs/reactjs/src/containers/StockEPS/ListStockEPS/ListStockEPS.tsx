@@ -2,8 +2,11 @@ import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
 import { Modal, Button } from "react-bootstrap";
+import Menu from "../../Stocks/Menu/Menu";
+import styles from "./ListStockEPS.module.scss";
 
 import * as actions from "../actions";
+import dayjs from "dayjs";
 class ListStockEPS extends Component<any, any> {
   state = {
     pageTitle: "StockEPS List",
@@ -13,6 +16,8 @@ class ListStockEPS extends Component<any, any> {
       name: null
     },
     listFilter: "",
+    year: dayjs().year() - 1911,
+    growthRatio: 1.0,
   };
 
   filterChanged = (event) => {
@@ -21,8 +26,8 @@ class ListStockEPS extends Component<any, any> {
 
   performFilter(filterBy) {
     filterBy = filterBy.toLocaleLowerCase();
-    return this.props.stockEPSes.filter(
-      (stockEPS) => stockEPS.name.toLocaleLowerCase().indexOf(filterBy) !== -1
+    return this.props.stockEPSList.filter(
+      (stockEPS) => (stockEPS.name + stockEPS.stockCode).toLocaleLowerCase().indexOf(filterBy) !== -1
     );
   }
 
@@ -46,49 +51,75 @@ class ListStockEPS extends Component<any, any> {
   };
 
   componentDidMount() {
-    this.props.fetchStockEPSes();
+    this.props.fetchStockEPSes({
+      year: this.state.year,
+      growthRatio: this.state.growthRatio
+    });
   }
 
   render() {
     const filteredStockEPSes = this.state.listFilter
       ? this.performFilter(this.state.listFilter)
-      : this.props.stockEPSes;
+      : this.props.stockEPSList;
+    const priceDiff = (num, den) => {
+      return Math.round((num - den) / den * 10000) / 100;
+    };
+    const priceClass = (diff) => {
+      return diff > 0 ? styles.posText : styles.negText;
+    };
 
-    const rows = filteredStockEPSes?.map((stockEPS) => (
-      <tr key={stockEPS.id}>
-        <td>
-          <NavLink to={"/stockEPSes/" + stockEPS.id}>{stockEPS.name}</NavLink>
-        </td>
-        <td>{stockEPS.code?.toLocaleUpperCase()}</td>
-        <td>{stockEPS.description}</td>
-        <td>{stockEPS.price || (5).toFixed(2)}</td>
-        <td>
-          <NavLink
-            className="btn btn-primary"
-            to={"/stockEPSes/edit/" + stockEPS.id}
-          >
-            Edit
-          </NavLink>
-          &nbsp;
-          <button
-            type="button"
-            className="btn btn-primary btn-danger"
-            onClick={() => this.deleteStockEPS(stockEPS)}
-          >
-            Delete
-          </button>
-        </td>
-      </tr>
-    ));
+    const rows = filteredStockEPSes?.map((stockEPS) => {
+      let twentyDiff = priceDiff(stockEPS.twentyPrice, stockEPS.closePrice);
+      let sixtyDiff = priceDiff(stockEPS.sixtyPrice, stockEPS.closePrice);
+      return (
+        <tr key={stockEPS.stockCode}>
+          <td>
+            <NavLink to={"/stockEPSList/" + stockEPS.stockCode}>({stockEPS.stockCode}){stockEPS.name}</NavLink>
+          </td>
+          <td>{stockEPS.industry}</td>
+          <td>{stockEPS.closePrice}</td>
+          <td>
+            <div>20: {stockEPS.twentyPrice} / <span className={priceClass(-twentyDiff)}>{Math.abs(twentyDiff)}</span></div>
+            <div>60: {stockEPS.sixtyPrice} / <span className={priceClass(-sixtyDiff)}>{Math.abs(sixtyDiff)}</span></div>
+          </td>
+          <td>
+            <div>{stockEPS.year}: <a href="javascript:void(0)">{stockEPS.eps}</a></div>
+            <div>{stockEPS.p_Year}: {stockEPS.p_EPS}</div>
+          </td>
+          <td>
+            <div>{stockEPS.pe}</div>
+            <div>{stockEPS.p_PE}</div>
+          </td>
+          <td>
+            <NavLink
+              className="btn btn-primary"
+              to={"/stockEPSList/edit/" + stockEPS.id}
+            >
+              Edit
+            </NavLink>
+            &nbsp;
+            <button
+              type="button"
+              className="btn btn-primary btn-danger"
+              onClick={() => this.deleteStockEPS(stockEPS)}
+            >
+              Delete
+            </button>
+          </td>
+        </tr>
+      )
+    });
 
-    const table = this.props.stockEPSes ? (
+    const table = this.props.stockEPSList ? (
       <table className="table">
         <thead>
           <tr>
-            <th>StockEPS</th>
-            <th>Code</th>
-            <th>Description</th>
+            <th>Stock</th>
+            <th>Industry</th>
             <th>Price</th>
+            <th>Average</th>
+            <th>EPS</th>
+            <th>PE</th>
             <th></th>
           </tr>
         </thead>
@@ -120,25 +151,26 @@ class ListStockEPS extends Component<any, any> {
       <div>
         <div className="card">
           <div className="card-header">
-            {this.state.pageTitle}
-            <NavLink
-              className="btn btn-primary"
-              style={{ float: "right" }}
-              to="/stockEPSes/add"
-            >
-              Add StockEPS
-            </NavLink>
+            <Menu />
           </div>
           <div className="card-body">
             <div className="row">
-              <div className="col-md-2">Filter by:</div>
               <div className="col-md-4">
+                <label style={{ marginRight: 10 }}>Filter by:</label>
                 <input
                   type="text"
                   value={this.state.listFilter}
                   onChange={(event) => this.filterChanged(event)}
                 />
               </div>
+              <div className="col"></div>
+              <NavLink
+                className="btn btn-primary"
+                style={{ float: "right", marginRight: "10px", width: "200px" }}
+                to="/stockEPSList/add"
+              >
+                Add StockEPS
+              </NavLink>
             </div>
             {this.state.listFilter ? (
               <div className="row">
@@ -163,14 +195,14 @@ class ListStockEPS extends Component<any, any> {
 
 const mapStateToProps = (state) => {
   return {
-    stockEPSes: state.stockEPS.stockEPSes,
+    stockEPSList: state.stockEPS.stockEPSList,
     auditLogs: state.stockEPS.auditLogs,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchStockEPSes: () => dispatch(actions.fetchStockEPSes()),
+    fetchStockEPSes: (options) => dispatch(actions.fetchStockEPSes(options)),
     deleteStockEPS: (stockEPS) => dispatch(actions.deleteStockEPS(stockEPS)),
   };
 };

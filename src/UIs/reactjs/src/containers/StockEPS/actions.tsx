@@ -1,10 +1,10 @@
 import * as actionTypes from "./actionTypes";
 
 /// STOCK_EPSSES
-export const fetchStockEPSesSuccess = (stockEPSes) => {
+export const fetchStockEPSesSuccess = (stockEPSList) => {
   return {
     type: actionTypes.FETCH_STOCK_EPSSES_SUCCESS,
-    stockEPSes: stockEPSes,
+    stockEPSList: stockEPSList,
   };
 };
 
@@ -21,9 +21,10 @@ export const fetchStockEPSesStart = () => {
   };
 };
 
-export const fetchStockEPSes = () => {
+export const fetchStockEPSes = (options) => {
   return {
     type: actionTypes.FETCH_STOCK_EPSSES,
+    options: options
   };
 };
 /// STOCK_EPSSES
