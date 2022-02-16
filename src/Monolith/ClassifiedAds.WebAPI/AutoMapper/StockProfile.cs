@@ -5,6 +5,7 @@ using ClassifiedAds.WebAPI.Models.Common;
 using ClassifiedAds.WebAPI.Models.Jobs;
 using ClassifiedAds.WebAPI.Models.JobSrcs;
 using ClassifiedAds.WebAPI.Models.StockDays;
+using ClassifiedAds.WebAPI.Models.StockEPSs;
 using ClassifiedAds.WebAPI.Models.StockFunders;
 using ClassifiedAds.WebAPI.Models.StockGroupItems;
 using ClassifiedAds.WebAPI.Models.StockGroups;
@@ -14,6 +15,7 @@ using ClassifiedAds.WebAPI.Models.StockProfits;
 using ClassifiedAds.WebAPI.Models.StockRevenues;
 using ClassifiedAds.WebAPI.Models.Stocks;
 using ClassifiedAds.WebAPI.Models.StockSeminars;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -106,7 +108,6 @@ namespace ClassifiedAds.WebAPI.AutoMapper
                 .ForMember(x => x.SelfHedgingSum, opt => opt.MapFrom(src => src.Select(x => x.SelfHedgingSum)))
                 .ForMember(x => x.Total, opt => opt.MapFrom(src => src.Select(x => x.Total)))
                 ;
-
             CreateMap<StockFetchDatesDTO, StockFetchDatesModel>()
                 .ForMember(x => x.StockDay, opt => opt.MapFrom(src => src.StockDay.ToString("yyyy-MM-dd")))
                 .ForMember(x => x.StockFundamental, opt => opt.MapFrom(src => src.StockFundamental.ToString("yyyy-MM-dd")))
@@ -114,13 +115,16 @@ namespace ClassifiedAds.WebAPI.AutoMapper
                 .ForMember(x => x.StockMargin, opt => opt.MapFrom(src => src.StockMargin.ToString("yyyy-MM-dd")))
                 .ForMember(x => x.StockRevenue, opt => opt.MapFrom(src => src.StockRevenue.ToString("yyyy-MM-dd")))
                 ;
-
             CreateMap<Job, JobModel>()
                 ;
             CreateMap<JobModel, Job>()
                 ;
-
             CreateMap<JobSrc, JobSrcModel>()
+                ;
+            CreateMap<StockEPS, StockEPSModel>()
+                ;
+            CreateMap<StockEPSModel, StockEPS>()
+                .ForMember(x => x.CreatedAt, opt => opt.MapFrom(src => DateTime.Now))
                 ;
         }
     }

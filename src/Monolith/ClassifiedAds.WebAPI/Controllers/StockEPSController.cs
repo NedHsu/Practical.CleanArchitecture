@@ -70,7 +70,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         public ActionResult Put([FromBody] StockEPSModel model)
         {
             var stockEPS = _dispatcher.Dispatch(new GetStockEPSQuery { Code = model.Code, Year = model.Year, ThrowNotFoundIfNull = false })
-                ?? new StockEPS { };
+                ?? _mapper.Map<StockEPS>(model);
 
             stockEPS.EPS = model.EPS;
 

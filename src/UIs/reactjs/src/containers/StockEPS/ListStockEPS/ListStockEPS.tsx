@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button, FormControl } from "react-bootstrap";
 import Menu from "../../Stocks/Menu/Menu";
 import styles from "./ListStockEPS.module.scss";
 
@@ -12,8 +12,15 @@ class ListStockEPS extends Component<any, any> {
     pageTitle: "StockEPS List",
     showImage: false,
     showDeleteModal: false,
+    showEditModal: false,
     deletingStockEPS: {
       name: null
+    },
+    editStockEPS: {
+      code: "",
+      name: "",
+      year: null,
+      eps: 0
     },
     listFilter: "",
     year: dayjs().year() - 1911,
@@ -23,6 +30,15 @@ class ListStockEPS extends Component<any, any> {
   filterChanged = (event) => {
     this.setState({ listFilter: event.target.value });
   };
+
+  changeEditValues = event => {
+    this.setState({
+      editStockEPS: {
+        ...this.state.editStockEPS,
+        [event.target.name]: event.target.value
+      }
+    });
+  }
 
   performFilter(filterBy) {
     filterBy = filterBy.toLocaleLowerCase();
@@ -39,9 +55,28 @@ class ListStockEPS extends Component<any, any> {
     this.setState({ showDeleteModal: false, deletingStockEPS: null });
   };
 
+  edit = (eps) => {
+    this.setState({
+      showEditModal: true,
+      editStockEPS: {
+        ...this.state.editStockEPS,
+        ...eps
+      }
+    });
+  };
+
+  editCanceled = () => {
+    this.setState({ showEditModal: false });
+  };
+
   deleteConfirmed = () => {
     this.props.deleteStockEPS(this.state.deletingStockEPS);
     this.setState({ showDeleteModal: false, deletingStockEPS: null });
+  };
+
+  editConfirmed = () => {
+    this.props.saveStockEPS(this.state.editStockEPS);
+    this.setState({ showEditModal: false });
   };
 
   formatDateTime = (value) => {
@@ -83,13 +118,14 @@ class ListStockEPS extends Component<any, any> {
             <div>60: {stockEPS.sixtyPrice} / <span className={priceClass(-sixtyDiff)}>{Math.abs(sixtyDiff)}</span></div>
           </td>
           <td>
-            <div>{stockEPS.year}: <a href="javascript:void(0)">{stockEPS.eps}</a></div>
-            <div>{stockEPS.p_Year}: {stockEPS.p_EPS}</div>
+            <div>{stockEPS.year}: <button className="btn btn-link" onClick={() => this.edit({ id: "1", code: stockEPS.stockCode, name: stockEPS.name, year: stockEPS.year, eps: stockEPS.eps })}>{stockEPS.eps}</button></div>
+            <div>{stockEPS.p_Year}: <button className="btn btn-link" onClick={() => this.edit({ id: "1", code: stockEPS.stockCode, name: stockEPS.name, year: stockEPS.p_Year, eps: stockEPS.p_EPS })}>{stockEPS.p_EPS}</button></div>
           </td>
           <td>
             <div>{stockEPS.pe}</div>
             <div>{stockEPS.p_PE}</div>
           </td>
+          <td>{stockEPS.p_PE - stockEPS.pe}</td>
           <td>
             <NavLink
               className="btn btn-primary"
@@ -147,6 +183,27 @@ class ListStockEPS extends Component<any, any> {
       </Modal>
     );
 
+    const editModal = (
+      <Modal show={this.state.showEditModal} onHide={this.editCanceled}>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit StockEPS</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          ({this.state.editStockEPS.code}){this.state.editStockEPS.name}
+          Year: <strong> {this.state.editStockEPS.year}</strong>
+          <FormControl as="input" name="eps" value={this.state.editStockEPS.eps} onChange={this.changeEditValues} type="number" placeholder="Normal text" />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={this.editCanceled}>
+            No
+          </Button>
+          <Button variant="primary" onClick={this.editConfirmed}>
+            Yes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+
     return (
       <div>
         <div className="card">
@@ -188,6 +245,7 @@ class ListStockEPS extends Component<any, any> {
           </div>
         ) : null}
         {deleteModal}
+        {editModal}
       </div>
     );
   }
@@ -204,6 +262,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchStockEPSes: (options) => dispatch(actions.fetchStockEPSes(options)),
     deleteStockEPS: (stockEPS) => dispatch(actions.deleteStockEPS(stockEPS)),
+    saveStockEPS: stockEPS => dispatch(actions.saveStockEPS(stockEPS)),
   };
 };
 

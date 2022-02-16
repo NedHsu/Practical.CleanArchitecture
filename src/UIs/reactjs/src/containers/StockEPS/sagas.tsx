@@ -31,7 +31,7 @@ export function* saveStockEPSSaga(action) {
   yield put(actions.saveStockEPSStart());
   try {
     const response = action.stockEPS.id
-      ? yield axios.put(action.stockEPS.id, action.stockEPS)
+      ? yield axios.put("", action.stockEPS)
       : yield axios.post("", action.stockEPS);
     const stockEPS = response.data;
     yield put(actions.saveStockEPSSuccess(stockEPS));
