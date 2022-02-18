@@ -109,7 +109,7 @@ class ListStockEPS extends Component<any, any> {
       return (
         <tr key={stockEPS.stockCode}>
           <td>
-            <NavLink to={"/stockEPSList/" + stockEPS.stockCode}>({stockEPS.stockCode}){stockEPS.name}</NavLink>
+            <NavLink to={"/stocks/" + stockEPS.stockCode}>({stockEPS.stockCode}){stockEPS.name}</NavLink>
           </td>
           <td>{stockEPS.industry}</td>
           <td>{stockEPS.closePrice}</td>

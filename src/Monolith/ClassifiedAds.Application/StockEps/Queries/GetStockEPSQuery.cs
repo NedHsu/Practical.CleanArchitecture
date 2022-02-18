@@ -24,7 +24,7 @@ namespace ClassifiedAds.Application.StockEPSs.Queries
 
         public StockEPS Handle(GetStockEPSQuery query)
         {
-            var stockEp = _stockEpRepository.Get(x => x.StockCode == query.Code);
+            var stockEp = _stockEpRepository.Get(x => x.StockCode == query.Code && x.Year == query.Year);
 
             if (query.ThrowNotFoundIfNull && stockEp == null)
             {
