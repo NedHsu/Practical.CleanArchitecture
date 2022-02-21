@@ -28,6 +28,10 @@ namespace ClassifiedAds.WebAPI.AutoMapper
             CreateMap<StockModel, Stock>();
             CreateMap<Stock, StockModel>()
                 .ForMember(x => x.FetchDate, opt => opt.MapFrom(src => src.FetchDate.HasValue ? src.FetchDate.Value.ToString("yyyy-MM-dd") : string.Empty));
+
+            CreateMap<StockExtraDTO, StockExtraModel>()
+                .ForMember(x => x.FetchDate, opt => opt.MapFrom(src => src.FetchDate.HasValue ? src.FetchDate.Value.ToString("yyyy-MM-dd") : string.Empty));
+
             CreateMap<StockNote, StockNoteModel>();
             CreateMap<StockNoteModel, StockNote>();
             CreateMap<StockGroup, StockGroupModel>();

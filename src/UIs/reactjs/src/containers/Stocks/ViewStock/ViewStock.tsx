@@ -22,7 +22,7 @@ class ViewStock extends Component<any, any> {
 
   componentDidMount() {
     const code = this.props.match.params.id;
-    this.props.fetchStock(code);
+    this.props.fetchStockExtra(code);
     this.props.fetchStockProfits(code);
     this.props.fetchStockRevenues(code);
   }
@@ -112,25 +112,33 @@ class ViewStock extends Component<any, any> {
           <div className="row">
             <div className="col-md-8">
               <div className="row">
-                <div className="col-md-4">{stock.code}</div>
-                <div className="col-md-8">{stock.name}</div>
+                <div className="col-md-2">({stock.code}){stock.name}</div>
+                <div className="col-md-2">{stock.industry}</div>
               </div>
               <div className="row">
-                <div className="col-md-4">Code:</div>
-                <div className="col-md-8">{stock.code}</div>
+                <div className="col-md-2">Year:</div>
+                <div className="col-md-2">{stock.p_Year}</div>
+                <div className="col-md-2">{stock.year}</div>
               </div>
               <div className="row">
-                <div className="col-md-4">Description:</div>
-                <div className="col-md-8">{stock.description}</div>
+                <div className="col-md-2">EPS:</div>
+                <div className="col-md-2">{stock.p_EPS}</div>
+                <div className="col-md-2">{stock.eps}</div>
               </div>
               <div className="row">
-                <div className="col-md-4">Price:</div>
-                <div className="col-md-8">{stock.price || 5}</div>
+                <div className="col-md-2">PE:</div>
+                <div className="col-md-2">{stock.p_PE || '-'}</div>
+                <div className="col-md-2">{stock.pe || '-'}</div>
               </div>
               <div className="row">
-                <div className="col-md-4">5 Star Rating:</div>
-                <div className="col-md-8">
-                  <Star rating={stock.starRating || 4} />
+                <div className="col-md-2">Price:</div>
+                <div className="col-md-2">
+                  {stock.closePrice}
+                </div>
+                <div className="col-md-2">
+                  <div>5: {stock.fivePrice}</div>
+                  <div>20: {stock.twentyPrice}</div>
+                  <div>60: {stock.sixtyPrice}</div>
                 </div>
               </div>
             </div>
@@ -175,12 +183,14 @@ const mapStateToProps = state => {
     stock: state.stock.stock,
     stockProfits: state.stockProfit.stockProfits,
     stockRevenues: state.stockRevenue.stockRevenues,
+    stockDayMaps: state.stockDay.stockDayMaps,
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     fetchStock: code => dispatch(actions.fetchStock(code)),
+    fetchStockExtra: code => dispatch(actions.fetchStockExtra(code)),
     fetchStockProfits: code => dispatch(profitActions.fetchStockProfits({ stockCode: code })),
     fetchStockRevenues: code => dispatch(revenueActions.fetchStockRevenues({ stockCode: code })),
   };

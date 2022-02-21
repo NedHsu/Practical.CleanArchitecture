@@ -20,6 +20,7 @@ import { GrEdit, GrList, GrNotes, GrTrash } from "react-icons/gr";
 class ListStocks extends Component<any, any> {
   groupTitleField: any;
   filterTimer: any;
+  groupClickTimer: any;
   constructor(props) {
     super(props);
     this.groupTitleField = React.createRef();
@@ -150,7 +151,13 @@ class ListStocks extends Component<any, any> {
   selectGroup(stockGroup) {
     if (stockGroup?.id) {
       this.props.updateStockGroup(stockGroup);
-      this.props.fetchGroupStocks(stockGroup);
+      if (this.groupClickTimer !== undefined) {
+        clearTimeout(this.groupClickTimer);
+      }
+
+      this.groupClickTimer = setTimeout(() => {
+        this.props.fetchGroupStocks(stockGroup);
+      }, 300);
     } else {
       this.props.resetStockGroup();
       this.props.fetchStocks({
@@ -270,7 +277,12 @@ class ListStocks extends Component<any, any> {
           variant="outline-dark"
           active={this.props.stockGroup?.id === item.id}
           onClick={() => this.selectGroup(item)}
-          onDoubleClick={() => this.showStockGroupEditor(item)}>
+          onDoubleClick={() => {
+            if (this.groupClickTimer !== undefined) {
+              clearTimeout(this.groupClickTimer);
+            };
+            this.showStockGroupEditor(item);
+          }}>
           {item.groupTitle}
         </Button>
       </Col>

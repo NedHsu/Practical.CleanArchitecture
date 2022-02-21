@@ -188,6 +188,13 @@ export const fetchStock = (id) => {
     id: id,
   };
 };
+
+export const fetchStockExtra = (id) => {
+  return {
+    type: actionTypes.FETCH_STOCK_EXTRA,
+    id: id,
+  };
+};
 /// STOCK
 
 /// UPDATE STOCK

@@ -103,5 +103,34 @@ DROP TABLE #t
             };
             return DbContext.Connection.Query<StockEPSDTO>(sql, param).ToList();
         }
+
+        public StockExtraDTO GetExtra(string code)
+        {
+            string sql = @"
+;WITH t AS (
+SELECT *, ROW_NUMBER() OVER (PARTITION BY StockCode ORDER BY Year DESC) n
+FROM StockEPS
+WHERE StockCode = @Code)
+SELECT t.StockCode, t.EPS, p.EPS P_EPS, t.UpdatedAt, t.Year, p.Year P_Year into #t
+FROM t t
+	LEFT JOIN t p ON t.StockCode = p.StockCode AND p.n = t.n + 1
+WHERE t.n = 1
+
+SELECT s.*, t.Year, t.P_Year, t.EPS, t.P_EPS, t.UpdatedAt,
+	CASE WHEN t.EPS = 0 THEN 0 ELSE s.ClosePrice / t.EPS END PE,
+	CASE WHEN t.P_EPS = 0 THEN 0 ELSE s.ClosePrice / t.P_EPS END P_PE
+FROM Stock s
+	JOIN #t t ON t.StockCode = s.Code
+WHERE s.Code = @Code
+ORDER BY PE
+
+DROP TABLE #t
+";
+            Dictionary<string, object> param = new Dictionary<string, object>()
+            {
+                { "@Code", code },
+            };
+            return DbContext.Connection.QueryFirstOrDefault<StockExtraDTO>(sql, param);
+        }
     }
 }

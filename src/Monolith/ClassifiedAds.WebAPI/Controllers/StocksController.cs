@@ -112,6 +112,16 @@ namespace ClassifiedAds.WebAPI.Controllers
             return Ok(model);
         }
 
+        [HttpGet("{code}/extra")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<StockExtraModel> GetExtra(string code)
+        {
+            var stock = _dispatcher.Dispatch(new GetStockExtraQuery { Code = code, ThrowNotFoundIfNull = true });
+            var model = _mapper.Map<StockExtraModel>(stock);
+            return Ok(model);
+        }
+
         [HttpGet("{code}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

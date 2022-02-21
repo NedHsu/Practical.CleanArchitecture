@@ -12,5 +12,6 @@ namespace ClassifiedAds.Domain.Repositories
         Dictionary<string, string> GetStocksName(List<string> codes);
         StockFetchDatesDTO GetStockFetchDates();
         List<StockEPSDTO> GetEPS(int year, float growthRatio);
+        StockExtraDTO GetExtra(string code);
     }
 }
