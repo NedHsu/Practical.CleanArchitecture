@@ -21,7 +21,14 @@ const fetchStockEPSesStart = (state, action) => {
 
 const fetchStockEPSesSuccess = (state, action) => {
   return updateObject(state, {
-    stockEPSList: action.stockEPSList,
+    stockEPSList: action.stockEPSList?.map(x => {
+      return {
+        ...x,
+        pe: x.pe.toFixed(2),
+        p_PE: x.p_PE.toFixed(2),
+        dif_PE: (x.pe - x.p_PE).toFixed(2)
+      }
+    }),
     loading: false,
   });
 };

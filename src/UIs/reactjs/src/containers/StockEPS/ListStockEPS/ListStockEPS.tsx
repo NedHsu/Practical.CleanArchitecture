@@ -1,9 +1,10 @@
-import React, { Component } from "react";
+import React, { Component, Ref } from "react";
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
-import { Modal, Button, FormControl } from "react-bootstrap";
+import { Modal, Button, FormControl, Table } from "react-bootstrap";
 import Menu from "../../Stocks/Menu/Menu";
 import styles from "./ListStockEPS.module.scss";
+import { FaSort, FaSortAlphaDown, FaSortAlphaUp } from "react-icons/fa";
 
 import * as actions from "../actions";
 import dayjs from "dayjs";
@@ -23,9 +24,17 @@ class ListStockEPS extends Component<any, any> {
       eps: 0
     },
     listFilter: "",
+    sort: "",
+    sortDesc: false,
     year: dayjs().year() - 1911,
     growthRatio: 1.0,
   };
+  table: Ref<HTMLTableElement> | undefined;
+
+  constructor(props) {
+    super(props);
+    this.table = React.createRef();
+  }
 
   filterChanged = (event) => {
     this.setState({ listFilter: event.target.value });
@@ -90,11 +99,18 @@ class ListStockEPS extends Component<any, any> {
       year: this.state.year,
       growthRatio: this.state.growthRatio
     });
+    console.log(this.table);
   }
 
   render() {
-    const filteredStockEPSes = this.state.listFilter
-      ? this.performFilter(this.state.listFilter)
+    const {
+      listFilter,
+      sort,
+      sortDesc,
+    } = this.state;
+
+    let filteredStockEPSes = listFilter
+      ? this.performFilter(listFilter)
       : this.props.stockEPSList;
     const priceDiff = (num, den) => {
       return Math.round((num - den) / den * 10000) / 100;
@@ -102,6 +118,20 @@ class ListStockEPS extends Component<any, any> {
     const priceClass = (diff) => {
       return diff > 0 ? styles.posText : styles.negText;
     };
+
+    if (sort) {
+      filteredStockEPSes = filteredStockEPSes?.sort((a, b) => {
+        const va = a[sort];
+        const vb = b[sort];
+        if (va < vb) {
+          return sortDesc ? 1 : -1;
+        }
+        if (va > vb) {
+          return sortDesc ? -1 : 1;
+        }
+        return 0;
+      });
+    }
 
     const rows = filteredStockEPSes?.map((stockEPS) => {
       let twentyDiff = priceDiff(stockEPS.twentyPrice, stockEPS.closePrice);
@@ -125,15 +155,8 @@ class ListStockEPS extends Component<any, any> {
             <div>{stockEPS.pe}</div>
             <div>{stockEPS.p_PE}</div>
           </td>
-          <td>{stockEPS.p_PE - stockEPS.pe}</td>
+          <td>{stockEPS.dif_PE}</td>
           <td>
-            <NavLink
-              className="btn btn-primary"
-              to={"/stockEPSList/edit/" + stockEPS.id}
-            >
-              Edit
-            </NavLink>
-            &nbsp;
             <button
               type="button"
               className="btn btn-primary btn-danger"
@@ -146,21 +169,40 @@ class ListStockEPS extends Component<any, any> {
       )
     });
 
+    const sortCol = (col) => {
+      let sortIcon;
+      if (sort === col) {
+        const sortDescFn = () => { this.setState({ sortDesc: !sortDesc }); };
+        sortIcon = sortDesc ?
+          (<FaSortAlphaUp onClick={sortDescFn}></FaSortAlphaUp>) :
+          (<FaSortAlphaDown onClick={sortDescFn}></FaSortAlphaDown>);
+      } else {
+        sortIcon = (<FaSort onClick={() => { this.setState({ sort: col, sortDesc: false }); }}></FaSort>)
+      }
+      return (
+        <span className="order">
+          {sortIcon}
+        </span>
+      )
+    }
+
     const table = this.props.stockEPSList ? (
-      <table className="table">
+      <Table striped ref={this.table}>
         <thead>
           <tr>
             <th>Stock</th>
             <th>Industry</th>
             <th>Price</th>
             <th>Average</th>
-            <th>EPS</th>
-            <th>PE</th>
-            <th></th>
+            <th>EPS {sortCol("eps")}</th>
+            <th>PE {sortCol("pe")}</th>
+            <th>
+              Dif {sortCol("dif_PE")}
+            </th>
           </tr>
         </thead>
         <tbody>{rows}</tbody>
-      </table>
+      </Table>
     ) : null;
 
     const deleteModal = (
@@ -216,7 +258,7 @@ class ListStockEPS extends Component<any, any> {
                 <label style={{ marginRight: 10 }}>Filter by:</label>
                 <input
                   type="text"
-                  value={this.state.listFilter}
+                  value={listFilter}
                   onChange={(event) => this.filterChanged(event)}
                 />
               </div>
@@ -229,10 +271,10 @@ class ListStockEPS extends Component<any, any> {
                 Add StockEPS
               </NavLink>
             </div>
-            {this.state.listFilter ? (
+            {listFilter ? (
               <div className="row">
                 <div className="col-md-6">
-                  <h4>Filtered by: {this.state.listFilter}</h4>
+                  <h4>Filtered by: {listFilter}</h4>
                 </div>
               </div>
             ) : null}
