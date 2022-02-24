@@ -169,7 +169,7 @@ class ListStockEPS extends Component<any, any> {
       )
     });
 
-    const sortCol = (col) => {
+    const sortCol = (col: string) => {
       let sortIcon;
       if (sort === col) {
         const sortDescFn = () => { this.setState({ sortDesc: !sortDesc }); };
