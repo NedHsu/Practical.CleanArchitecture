@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ClassifiedAds.CrossCuttingConcerns.OS;
+﻿using ClassifiedAds.CrossCuttingConcerns.OS;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Persistence.DapperContext;
-using ClassifiedAds.Persistence.Repositories;
 using Moq;
 using Xunit;
 
@@ -28,7 +22,7 @@ namespace ClassifiedAds.Persistence.Repositories.Tests
         {
             var dbContext = new DapperContext.StockDbContext("Server=localhost,1433;Database=ClassifiedAds;User Id=sa;Password=Zxc@123456;MultipleActiveResultSets=true");
             var repository = new BaseDapperRepository<Stock>(dbContext, _dateTimeProvider.Object);
-            
+
             var testDto = new Stock { Code = "test", Ex = "otc" };
             repository.Delete(testDto);
             repository.Add(testDto);

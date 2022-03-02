@@ -1,5 +1,4 @@
 ﻿using IdentityServer4.EntityFramework.Entities;
-using IdentityServer4.EntityFramework.Mappers;
 using System.Collections.Generic;
 using System.Linq;
 

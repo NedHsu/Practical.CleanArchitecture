@@ -4,15 +4,13 @@ using ClassifiedAds.Domain.DTOs;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace ClassifiedAds.Application.StockSeminars.Queries
 {
     public class GetStockSeminarsQuery : IQuery<PagedResult<StockSeminarDTO>>
     {
-        public DateTime StartDate { get;set; }
-        public DateTime EndDate { get;set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
         public uint PageSize { get; set; }
         public uint PageIndex { get; set; }
     }

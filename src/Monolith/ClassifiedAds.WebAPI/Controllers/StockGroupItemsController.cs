@@ -39,7 +39,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         public ActionResult<IEnumerable<StockGroupItemModel>> Get(string code)
         {
             _logger.LogInformation("Getting all StockGroupItems");
-            var stockGroupItems = _dispatcher.Dispatch(new GetStockGroupItemsQuery(){ Code = code });
+            var stockGroupItems = _dispatcher.Dispatch(new GetStockGroupItemsQuery() { Code = code });
             var model = _mapper.Map<IEnumerable<StockGroupItemModel>>(stockGroupItems);
             return Ok(model);
         }

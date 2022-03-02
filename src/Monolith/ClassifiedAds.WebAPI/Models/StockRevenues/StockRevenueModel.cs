@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ClassifiedAds.WebAPI.Models.StockRevenues
+﻿namespace ClassifiedAds.WebAPI.Models.StockRevenues
 {
     public class StockRevenueModel
     {

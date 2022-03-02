@@ -1,7 +1,9 @@
 ﻿using System;
 
-namespace ClassifiedAds.Domain.Entities {
-    public class Player : AggregateRoot<Guid> {
+namespace ClassifiedAds.Domain.Entities
+{
+    public class Player : AggregateRoot<Guid>
+    {
         public string Name { get; set; }
 
         public int Gender { get; set; }

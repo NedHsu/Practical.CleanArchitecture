@@ -1,13 +1,13 @@
-﻿using System;
-using System.IO;
-using System.Net;
-using System.Net.Mime;
-using System.Threading.Tasks;
-using ClassifiedAds.Application;
+﻿using ClassifiedAds.Application;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Infrastructure.Storages;
 using ClassifiedAds.WebMVC.Models.File;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.IO;
+using System.Net;
+using System.Net.Mime;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.WebMVC.Controllers
 {

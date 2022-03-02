@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 
-namespace ClassifiedAds.Blazor.Modules.Core.Models {
-    public class PagedResultModel<T> 
+namespace ClassifiedAds.Blazor.Modules.Core.Models
+{
+    public class PagedResultModel<T>
     {
         public int TotalPages { get; set; }
 

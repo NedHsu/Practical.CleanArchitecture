@@ -149,7 +149,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult Put(string code, [FromBody] StockModel model)
         {
-            var stock = _dispatcher.Dispatch(new GetStockQuery { Code = code, ThrowNotFoundIfNull = false }) 
+            var stock = _dispatcher.Dispatch(new GetStockQuery { Code = code, ThrowNotFoundIfNull = false })
                 ?? new Stock { };
 
             stock.Code = model.Code;

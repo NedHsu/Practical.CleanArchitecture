@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using ClassifiedAds.Domain.Entities;
+using System.Collections.Generic;
 
 namespace ClassifiedAds.WebAPI.Models.Common
 {

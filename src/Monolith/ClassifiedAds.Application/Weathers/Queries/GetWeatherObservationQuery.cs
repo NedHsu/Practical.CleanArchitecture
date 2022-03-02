@@ -1,8 +1,6 @@
 ﻿using ClassifiedAds.Application.Weathers.DTOs;
 using ClassifiedAds.Application.Weathers.Services;
-using ClassifiedAds.CrossCuttingConcerns.Exceptions;
 using System;
-using System.Linq;
 
 namespace ClassifiedAds.Application.Weathers.Queries
 {

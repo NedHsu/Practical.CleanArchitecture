@@ -1,10 +1,12 @@
-﻿using System;
+﻿using ClassifiedAds.Blazor.Modules.Players.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using ClassifiedAds.Blazor.Modules.Players.Models;
 
-namespace ClassifiedAds.Blazor.Modules.Matchs.Models {
-    public class MatchModel {
+namespace ClassifiedAds.Blazor.Modules.Matchs.Models
+{
+    public class MatchModel
+    {
         public Guid Id { get; set; }
 
         [Required]

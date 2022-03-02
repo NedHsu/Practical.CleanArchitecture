@@ -3,7 +3,6 @@ using ClassifiedAds.Application.Decorators.DatabaseRetry;
 using ClassifiedAds.Domain.DTOs;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
-using System.Collections.Generic;
 
 namespace ClassifiedAds.Application.StockFunders.Queries
 {

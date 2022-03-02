@@ -10,7 +10,7 @@ namespace ClassifiedAds.Infrastructure.Web.Filters
         {
             if (context.Exception is NotFoundException)
             {
-                 context.Result = new NotFoundResult();
+                context.Result = new NotFoundResult();
             }
             else if (context.Exception is ValidationException)
             {

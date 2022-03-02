@@ -1,5 +1,4 @@
-﻿using ClassifiedAds.Application.Common.DTOs;
-using ClassifiedAds.Domain.Entities;
+﻿using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.WebAPI.Models.Common;
 using System.Collections.Generic;
 using System.Linq;

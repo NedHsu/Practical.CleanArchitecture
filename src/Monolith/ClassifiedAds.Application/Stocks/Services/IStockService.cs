@@ -1,6 +1,4 @@
-﻿using ClassifiedAds.Domain.Entities;
-
-namespace ClassifiedAds.Application.Stocks.Services
+﻿namespace ClassifiedAds.Application.Stocks.Services
 {
     public interface IStockService
     {

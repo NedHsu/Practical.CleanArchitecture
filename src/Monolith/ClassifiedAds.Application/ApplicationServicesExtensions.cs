@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
-using ClassifiedAds.Application;
+﻿using ClassifiedAds.Application;
 using ClassifiedAds.Application.EmailMessages.Services;
 using ClassifiedAds.Application.Matchs.Services;
 using ClassifiedAds.Application.Products.Services;
@@ -13,6 +10,9 @@ using ClassifiedAds.Application.Users.Services;
 using ClassifiedAds.Application.Weathers.Services;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Events;
+using System;
+using System.Linq;
+using System.Reflection;
 
 namespace Microsoft.Extensions.DependencyInjection
 {

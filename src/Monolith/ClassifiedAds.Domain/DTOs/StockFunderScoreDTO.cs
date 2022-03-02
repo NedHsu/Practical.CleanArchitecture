@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ClassifiedAds.Domain.DTOs
+﻿namespace ClassifiedAds.Domain.DTOs
 {
     public class StockFunderScoreDTO
     {

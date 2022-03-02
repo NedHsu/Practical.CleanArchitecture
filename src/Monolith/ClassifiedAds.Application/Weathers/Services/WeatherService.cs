@@ -1,10 +1,6 @@
 ﻿using ClassifiedAds.Application.Weathers.DTOs;
 using ClassifiedAds.Application.Weathers.Queries;
 using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
-using ClassifiedAds.Domain.Entities;
-using ClassifiedAds.Domain.Events;
-using ClassifiedAds.Domain.Identity;
-using ClassifiedAds.Domain.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;

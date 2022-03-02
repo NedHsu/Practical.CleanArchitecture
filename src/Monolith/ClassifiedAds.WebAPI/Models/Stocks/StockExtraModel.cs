@@ -1,7 +1,4 @@
-﻿using AutoMapper.Configuration.Conventions;
-using System;
-
-namespace ClassifiedAds.WebAPI.Models.Stocks
+﻿namespace ClassifiedAds.WebAPI.Models.Stocks
 {
     public class StockExtraModel
     {

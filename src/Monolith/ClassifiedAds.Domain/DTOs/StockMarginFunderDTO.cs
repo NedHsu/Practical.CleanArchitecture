@@ -1,5 +1,4 @@
 ﻿using ClassifiedAds.Domain.Entities;
-using System;
 
 namespace ClassifiedAds.Domain.DTOs
 {

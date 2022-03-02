@@ -4,7 +4,6 @@ using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ClassifiedAds.Application.StockDays.Queries
 {

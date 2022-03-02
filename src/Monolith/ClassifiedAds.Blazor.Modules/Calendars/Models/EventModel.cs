@@ -1,10 +1,11 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 
-namespace ClassifiedAds.Blazor.Modules.Calendars.Models {
-    public class EventModel {
+namespace ClassifiedAds.Blazor.Modules.Calendars.Models
+{
+    public class EventModel
+    {
         public Guid Id { get; set; }
-        
+
         public DateTime StartTime { get; set; }
 
         public DateTime EndTime { get; set; }

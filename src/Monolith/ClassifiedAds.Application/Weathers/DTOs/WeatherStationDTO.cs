@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ClassifiedAds.Application.Weathers.DTOs
+﻿namespace ClassifiedAds.Application.Weathers.DTOs
 {
     public class WeatherStationDTO
     {

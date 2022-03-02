@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ClassifiedAds.Domain.Entities
+﻿namespace ClassifiedAds.Domain.Entities
 {
     public class MatchType : AggregateRoot<int>
     {

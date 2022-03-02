@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using ClassifiedAds.Application;
 using ClassifiedAds.Application.Calendars.Commands;
-using ClassifiedAds.Application.Calendars.DTOs;
 using ClassifiedAds.Application.Calendars.Queries;
 using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
 using ClassifiedAds.Domain.Entities;
@@ -10,10 +9,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ClassifiedAds.WebAPI.Controllers
 {

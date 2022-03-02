@@ -1,9 +1,6 @@
 using ClassifiedAds.Application.Weathers.Queries;
 using ClassifiedAds.Application.Weathers.Services;
-using ClassifiedAds.Domain.Identity;
 using Moq;
-using System;
-using System.Net.Http;
 using Xunit;
 
 namespace ClassifiedAds.UnitTests.Application.Services

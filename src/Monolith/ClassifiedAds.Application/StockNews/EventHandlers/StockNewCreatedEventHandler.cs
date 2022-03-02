@@ -25,7 +25,7 @@ namespace ClassifiedAds.Application.StockNews.EventHandlers
 
                 auditSerivce.AddOrUpdate(new AuditLogEntry
                 {
-                    UserId = currentUser.IsAuthenticated ? currentUser.UserId: Guid.Empty,
+                    UserId = currentUser.IsAuthenticated ? currentUser.UserId : Guid.Empty,
                     CreatedDateTime = domainEvent.EventDateTime,
                     Action = "CREATED_StockNew",
                     ObjectId = domainEvent.Entity.Id.ToString(),

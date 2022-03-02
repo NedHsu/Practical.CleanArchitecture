@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ClassifiedAds.WebAPI.Models.StockFundamentals
+﻿namespace ClassifiedAds.WebAPI.Models.StockFundamentals
 {
     public class StockFundamentalModel
     {

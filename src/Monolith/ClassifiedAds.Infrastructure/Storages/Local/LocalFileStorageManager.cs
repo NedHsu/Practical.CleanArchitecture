@@ -32,7 +32,7 @@ namespace ClassifiedAds.Infrastructure.Storages.Local
             {
                 return;
             }
-            
+
             var path = Path.Combine(_rootPath, fileEntry.FileLocation);
             if (File.Exists(path))
             {

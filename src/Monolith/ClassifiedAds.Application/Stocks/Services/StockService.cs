@@ -2,7 +2,6 @@
 using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Identity;
 using ClassifiedAds.Domain.Repositories;
-using System;
 
 namespace ClassifiedAds.Application.Stocks.Services
 {
@@ -11,6 +10,6 @@ namespace ClassifiedAds.Application.Stocks.Services
         public StockService(IBaseDapperRepository<Stock> stockRepository, IDomainEvents domainEvents, ICurrentUser currentUser)
         {
         }
-        
+
     }
 }

@@ -1,7 +1,7 @@
-﻿using System;
+﻿using MicroOrm.Dapper.Repositories.Attributes.Joins;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using MicroOrm.Dapper.Repositories.Attributes.Joins;
 
 #nullable disable
 

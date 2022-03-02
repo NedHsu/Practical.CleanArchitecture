@@ -42,7 +42,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         public ActionResult<IEnumerable<StockNoteModel>> Get(string code)
         {
             _logger.LogInformation("Getting all stocknotes");
-            var stocknotes = _dispatcher.Dispatch(new GetStockNotesQuery(){ Code = code });
+            var stocknotes = _dispatcher.Dispatch(new GetStockNotesQuery() { Code = code });
             var model = _mapper.Map<IEnumerable<StockNoteModel>>(stocknotes);
             return Ok(model);
         }
@@ -52,7 +52,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         {
             _logger.LogInformation("Getting paged stocknotes");
             var stocknotes = _dispatcher.Dispatch(new GetStockNotePagedQuery() { PageIndex = pageIndex, PageSize = pageSize });
-            var stocks = _dispatcher.Dispatch(new GetStocksNameQuery(){ StockCodes = stocknotes.Items.Select(x => x.StockCode).Distinct().ToList() });
+            var stocks = _dispatcher.Dispatch(new GetStocksNameQuery() { StockCodes = stocknotes.Items.Select(x => x.StockCode).Distinct().ToList() });
             var model = _mapper.Map<PagedResultModel<StockNoteModel>>(stocknotes);
             model.Items.Where(x => stocks.ContainsKey(x.StockCode))
                 .ToList()

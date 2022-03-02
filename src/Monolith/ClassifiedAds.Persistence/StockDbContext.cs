@@ -1,10 +1,8 @@
-﻿using System;
-using System.Data;
-using ClassifiedAds.Domain.Entities;
+﻿using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage;
+using System.Data;
 
 #nullable disable
 

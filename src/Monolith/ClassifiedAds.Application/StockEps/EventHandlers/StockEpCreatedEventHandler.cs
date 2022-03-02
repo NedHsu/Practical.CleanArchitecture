@@ -25,7 +25,7 @@ namespace ClassifiedAds.Application.StockEPSs.EventHandlers
 
                 auditSerivce.AddOrUpdate(new AuditLogEntry
                 {
-                    UserId = currentUser.IsAuthenticated ? currentUser.UserId: Guid.Empty,
+                    UserId = currentUser.IsAuthenticated ? currentUser.UserId : Guid.Empty,
                     CreatedDateTime = domainEvent.EventDateTime,
                     Action = "CREATED_StockEPS",
                     ObjectId = $"{domainEvent.Entity.StockCode}{domainEvent.Entity.Year}",
