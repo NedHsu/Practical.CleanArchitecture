@@ -73,6 +73,11 @@ namespace ClassifiedAds.WebAPI.Controllers
                 ?? new Calendar { };
 
             calendar.Name = model.Name;
+            calendar.BgColor = model.BgColor;
+            calendar.BorderColor = model.BorderColor;
+            calendar.CategoryId = model.CategoryId;
+            calendar.Color = model.Color;
+            calendar.DragBgColor = model.DragBgColor;
 
             _dispatcher.Dispatch(new AddUpdateCalendarCommand { Calendar = calendar });
 

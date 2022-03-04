@@ -57,7 +57,7 @@ export default {
                 });
         },
         [ACTIONS.UPDATE_CALENDAR]({ commit }, calendar) {
-            request.put("calendars", calendar)
+            request.put("calendars/" + calendar.id, calendar)
                 .then(rs => {
                     commit(TYPES.UPDATE_CALENDAR_SUCCESS, rs.data);
                 })
