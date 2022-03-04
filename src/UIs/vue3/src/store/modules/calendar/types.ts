@@ -11,6 +11,10 @@ export interface CalendarState {
 export interface Calendar {
     id: string;
     name: string;
-    code: string;
-    description: string;
+    dragBgColor: string;
+    categoryId: string;
+    bgColor: string;
+    borderColor: string;
+    color: string;
+    categoryName: string;
 }
