@@ -8,6 +8,7 @@ import { FaSort, FaSortAlphaDown, FaSortAlphaUp } from "react-icons/fa";
 
 import * as actions from "../actions";
 import dayjs from "dayjs";
+import { IoIosSearch } from "react-icons/io";
 class ListStockEPS extends Component<any, any> {
   state = {
     pageTitle: "StockEPS List",
@@ -37,7 +38,7 @@ class ListStockEPS extends Component<any, any> {
   }
 
   filterChanged = (event) => {
-    this.setState({ listFilter: event.target.value });
+    this.setState({ [event.target.name]: event.target.value });
   };
 
   changeEditValues = event => {
@@ -95,10 +96,7 @@ class ListStockEPS extends Component<any, any> {
   };
 
   componentDidMount() {
-    this.props.fetchStockEPSes({
-      year: this.state.year,
-      growthRatio: this.state.growthRatio
-    });
+    this.search();
     console.log(this.table);
   }
 
@@ -107,6 +105,8 @@ class ListStockEPS extends Component<any, any> {
       listFilter,
       sort,
       sortDesc,
+      growthRatio,
+      year,
     } = this.state;
 
     let filteredStockEPSes = listFilter
@@ -121,8 +121,8 @@ class ListStockEPS extends Component<any, any> {
 
     if (sort) {
       filteredStockEPSes = filteredStockEPSes?.sort((a, b) => {
-        const va = a[sort];
-        const vb = b[sort];
+        const va = Number(a[sort]);
+        const vb = Number(b[sort]);
         if (va < vb) {
           return sortDesc ? 1 : -1;
         }
@@ -151,6 +151,7 @@ class ListStockEPS extends Component<any, any> {
             <div>{stockEPS.year}: <button className="btn btn-link" onClick={() => this.edit({ id: "1", code: stockEPS.stockCode, name: stockEPS.name, year: stockEPS.year, eps: stockEPS.eps })}>{stockEPS.eps}</button></div>
             <div>{stockEPS.p_Year}: <button className="btn btn-link" onClick={() => this.edit({ id: "1", code: stockEPS.stockCode, name: stockEPS.name, year: stockEPS.p_Year, eps: stockEPS.p_EPS })}>{stockEPS.p_EPS}</button></div>
           </td>
+          <td>{stockEPS.growthRatio}</td>
           <td>
             <div>{stockEPS.pe}</div>
             <div>{stockEPS.p_PE}</div>
@@ -195,6 +196,7 @@ class ListStockEPS extends Component<any, any> {
             <th>Price</th>
             <th>Average</th>
             <th>EPS {sortCol("eps")}</th>
+            <th>Growth {sortCol("growthRatio")}</th>
             <th>PE {sortCol("pe")}</th>
             <th>
               Dif {sortCol("dif_PE")}
@@ -259,13 +261,31 @@ class ListStockEPS extends Component<any, any> {
                 <input
                   type="text"
                   value={listFilter}
+                  name="listFilter"
                   onChange={(event) => this.filterChanged(event)}
                 />
               </div>
+              <div className="col-md-4">
+                <label style={{ marginRight: 10 }}>Growth:</label>
+                <input
+                  type="number"
+                  value={growthRatio}
+                  name="growthRatio"
+                  onChange={(event) => this.filterChanged(event)} />
+                <label style={{ marginRight: 10 }}>Year:</label>
+                <input
+                  type="number"
+                  value={year}
+                  name="year"
+                  onChange={(event) => this.filterChanged(event)} />
+                <Button variant="link" onClick={() => this.search()}>
+                  <IoIosSearch size="1.5rem" />
+                </Button>
+              </div>
               <div className="col"></div>
               <NavLink
-                className="btn btn-primary"
-                style={{ float: "right", marginRight: "10px", width: "200px" }}
+                className="btn btn-primary pull-right"
+                style={{ marginRight: "10px", width: "200px" }}
                 to="/stockEPSList/add"
               >
                 Add StockEPS
@@ -290,6 +310,12 @@ class ListStockEPS extends Component<any, any> {
         {editModal}
       </div>
     );
+  }
+  search(): void {
+    this.props.fetchStockEPSes({
+      year: this.state.year,
+      growthRatio: this.state.growthRatio
+    });
   }
 }
 

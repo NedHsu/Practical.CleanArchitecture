@@ -26,7 +26,8 @@ const fetchStockEPSesSuccess = (state, action) => {
         ...x,
         pe: x.pe.toFixed(2),
         p_PE: x.p_PE.toFixed(2),
-        dif_PE: (x.pe - x.p_PE).toFixed(2)
+        dif_PE: (x.pe - x.p_PE).toFixed(2),
+        growthRatio: x.growthRatio.toFixed(2),
       }
     }),
     loading: false,
