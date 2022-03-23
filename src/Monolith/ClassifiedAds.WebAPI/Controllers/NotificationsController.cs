@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
 using ClassifiedAds.Application;
-using ClassifiedAds.Application.AuditLogEntries.DTOs;
-using ClassifiedAds.Application.AuditLogEntries.Queries;
 using ClassifiedAds.Application.Notifications.Commands;
-using ClassifiedAds.Application.Notifications.DTOs;
 using ClassifiedAds.Application.Notifications.Queries;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.WebAPI.Hubs;
@@ -13,10 +10,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ClassifiedAds.WebAPI.Controllers
 {
@@ -43,7 +38,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         public ActionResult<IEnumerable<NotificationModel>> Get()
         {
             _logger.LogInformation("Getting all notifications");
-            var notifications = _dispatcher.Dispatch(new GetNotificationsQuery(){ });
+            var notifications = _dispatcher.Dispatch(new GetNotificationsQuery() { });
             var model = _mapper.Map<IEnumerable<NotificationModel>>(notifications);
             return Ok(model);
         }
@@ -73,7 +68,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult Put(Guid id, [FromBody] NotificationModel model)
         {
-            var notification = _dispatcher.Dispatch(new GetNotificationQuery { Id = id, ThrowNotFoundIfNull = false }) 
+            var notification = _dispatcher.Dispatch(new GetNotificationQuery { Id = id, ThrowNotFoundIfNull = false })
                 ?? new Notification { };
 
             notification.Content = model.Content;

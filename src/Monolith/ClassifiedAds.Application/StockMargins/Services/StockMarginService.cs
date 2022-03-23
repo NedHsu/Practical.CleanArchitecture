@@ -2,7 +2,6 @@
 using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Identity;
 using ClassifiedAds.Domain.Repositories;
-using System;
 
 namespace ClassifiedAds.Application.StockMargins.Services
 {

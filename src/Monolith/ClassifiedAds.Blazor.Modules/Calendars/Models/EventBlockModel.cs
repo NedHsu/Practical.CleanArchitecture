@@ -1,8 +1,9 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 
-namespace ClassifiedAds.Blazor.Modules.Calendars.Models {
-    public class EventBlockModel {
+namespace ClassifiedAds.Blazor.Modules.Calendars.Models
+{
+    public class EventBlockModel
+    {
         public Guid Id { get; set; }
 
         public int StartIndex { get; set; }

@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using ClassifiedAds.Application.Decorators.AuditLog;
+﻿using ClassifiedAds.Application.Decorators.AuditLog;
 using ClassifiedAds.Application.Decorators.DatabaseRetry;
-using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
+using System.Collections.Generic;
 
 namespace ClassifiedAds.Application.Stocks.Queries
 {

@@ -74,7 +74,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult Put(Guid id, [FromBody] StockGroupModel model)
         {
-            var stockgroup = _dispatcher.Dispatch(new GetStockGroupQuery { Id = id, ThrowNotFoundIfNull = false }) 
+            var stockgroup = _dispatcher.Dispatch(new GetStockGroupQuery { Id = id, ThrowNotFoundIfNull = false })
                 ?? new StockGroup { };
 
             stockgroup.GroupTitle = model.GroupTitle;

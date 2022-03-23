@@ -1,12 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Blazorise;
 using ClassifiedAds.Blazor.Modules.Players.Models;
 using Microsoft.AspNetCore.Components;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace ClassifiedAds.Blazor.Modules.Players.Components {
-    public partial class PlayerSelector {
+namespace ClassifiedAds.Blazor.Modules.Players.Components
+{
+    public partial class PlayerSelector
+    {
         // reference to the modal component
         private Modal modalRef;
 
@@ -19,30 +20,36 @@ namespace ClassifiedAds.Blazor.Modules.Players.Components {
 
         private List<PlayerModel> playerOptions;
 
-        public async Task ShowAsync(List<PlayerModel> players) {
+        public async Task ShowAsync(List<PlayerModel> players)
+        {
             selectedPlayers = players;
             modalRef.Show();
             await this.Search();
         }
 
-        public void AddPlayer(PlayerModel player) {
+        public void AddPlayer(PlayerModel player)
+        {
             selectedPlayers.Add(player);
         }
 
-        public void RemovePlayer(PlayerModel player) {
+        public void RemovePlayer(PlayerModel player)
+        {
             selectedPlayers.Remove(player);
         }
 
-        public void Hide() {
+        public void Hide()
+        {
             modalRef.Hide();
         }
 
-        public async Task ConfirmAsync() {
+        public async Task ConfirmAsync()
+        {
             await ConfirmEventCallback.InvokeAsync(selectedPlayers);
             modalRef.Hide();
         }
 
-        public async Task Search() {
+        public async Task Search()
+        {
             this.playerOptions = new List<PlayerModel>() {
                 new PlayerModel {
                     Name = "Test2"

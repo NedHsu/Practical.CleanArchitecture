@@ -39,7 +39,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         public ActionResult<IEnumerable<StockFundamentalModel>> Get()
         {
             _logger.LogInformation("Getting all stockfundamentals");
-            var stockfundamentals = _dispatcher.Dispatch(new GetStockFundamentalsQuery(){ });
+            var stockfundamentals = _dispatcher.Dispatch(new GetStockFundamentalsQuery() { });
             var model = _mapper.Map<IEnumerable<StockFundamentalModel>>(stockfundamentals);
             return Ok(model);
         }
@@ -71,7 +71,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult Put(string code, [FromBody] StockFundamentalModel model)
         {
-            var stockfundamental = _dispatcher.Dispatch(new GetStockFundamentalQuery { Code = code, ThrowNotFoundIfNull = false }) 
+            var stockfundamental = _dispatcher.Dispatch(new GetStockFundamentalQuery { Code = code, ThrowNotFoundIfNull = false })
                 ?? new StockFundamental { };
 
             stockfundamental.StockCode = model.Code;

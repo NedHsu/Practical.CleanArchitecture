@@ -1,5 +1,4 @@
 ﻿using ClassifiedAds.Application.Weathers.DTOs;
-using ClassifiedAds.Application.Weathers.Services;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
 using System;

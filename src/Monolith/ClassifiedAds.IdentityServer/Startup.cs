@@ -1,7 +1,4 @@
-﻿using System;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
-using ClassifiedAds.Application.EmailMessages.DTOs;
+﻿using ClassifiedAds.Application.EmailMessages.DTOs;
 using ClassifiedAds.Application.SmsMessages.DTOs;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.IdentityServer.ConfigurationOptions;
@@ -17,6 +14,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using reCAPTCHA.AspNetCore;
+using System;
+using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.IdentityServer
 {

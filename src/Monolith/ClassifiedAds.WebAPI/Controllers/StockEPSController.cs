@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using ClassifiedAds.Application;
 using ClassifiedAds.Application.StockEPSs.Commands;
-using ClassifiedAds.Application.StockEPSs.DTOs;
 using ClassifiedAds.Application.StockEPSs.Queries;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.WebAPI.Models.StockEPSs;
@@ -9,10 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ClassifiedAds.WebAPI.Controllers
 {
@@ -84,7 +80,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult Delete([FromQuery]GetStockEPSQuery query)
+        public ActionResult Delete([FromQuery] GetStockEPSQuery query)
         {
             query.ThrowNotFoundIfNull = true;
             var stockEPS = _dispatcher.Dispatch(query);

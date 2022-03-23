@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ClassifiedAds.WebAPI.Models.StockMargins
+﻿namespace ClassifiedAds.WebAPI.Models.StockMargins
 {
     public class StockMarginModel
     {

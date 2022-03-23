@@ -8,7 +8,7 @@ namespace ClassifiedAds.Blazor.Modules.AuditLogs.Services
 {
     public class AuditLogService : HttpService
     {
-        public AuditLogService(HttpClient httpClient, ITokenManager tokenManager) 
+        public AuditLogService(HttpClient httpClient, ITokenManager tokenManager)
             : base(httpClient, tokenManager)
         {
         }

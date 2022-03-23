@@ -39,7 +39,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         public ActionResult<IEnumerable<LocationModel>> Get()
         {
             _logger.LogInformation("Getting all locations");
-            var locations = _dispatcher.Dispatch(new GetLocationsQuery(){ });
+            var locations = _dispatcher.Dispatch(new GetLocationsQuery() { });
             var model = _mapper.Map<IEnumerable<LocationModel>>(locations);
             return Ok(model);
         }
@@ -71,7 +71,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult Put(Guid id, [FromBody] LocationModel model)
         {
-            var location = _dispatcher.Dispatch(new GetLocationQuery { Id = id, ThrowNotFoundIfNull = false }) 
+            var location = _dispatcher.Dispatch(new GetLocationQuery { Id = id, ThrowNotFoundIfNull = false })
                 ?? new Location { };
 
             location.Latitude = model.Latitude;

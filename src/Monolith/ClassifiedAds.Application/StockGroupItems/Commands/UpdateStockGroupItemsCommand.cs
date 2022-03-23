@@ -1,5 +1,4 @@
 ﻿using ClassifiedAds.Application.StockGroupItems.Services;
-using ClassifiedAds.Domain.Entities;
 using System;
 using System.Collections.Generic;
 

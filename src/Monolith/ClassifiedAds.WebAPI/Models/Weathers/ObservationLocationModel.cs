@@ -1,5 +1,4 @@
 ﻿using ClassifiedAds.Application.Weathers.DTOs;
-using System;
 using System.Collections.Generic;
 
 namespace ClassifiedAds.WebAPI.Models.Weathers

@@ -36,7 +36,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<StockMarginModel>> Get([FromQuery]GetStockMarginsQuery query)
+        public ActionResult<IEnumerable<StockMarginModel>> Get([FromQuery] GetStockMarginsQuery query)
         {
             _logger.LogInformation("Getting all stockmargins");
             var stockmargins = _dispatcher.Dispatch(query);

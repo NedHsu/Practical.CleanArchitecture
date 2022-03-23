@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ClassifiedAds.WebAPI.Models.Weathers
+﻿namespace ClassifiedAds.WebAPI.Models.Weathers
 {
     public class WeatherModel
     {

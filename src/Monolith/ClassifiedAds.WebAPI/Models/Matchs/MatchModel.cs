@@ -1,7 +1,9 @@
 ﻿using System;
 
-namespace ClassifiedAds.WebAPI.Models.Matchs {
-    public class MatchModel {
+namespace ClassifiedAds.WebAPI.Models.Matchs
+{
+    public class MatchModel
+    {
         public Guid Id { get; set; }
 
         public string Code { get; set; }

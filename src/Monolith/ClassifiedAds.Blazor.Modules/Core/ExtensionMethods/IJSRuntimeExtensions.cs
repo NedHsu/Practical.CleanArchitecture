@@ -18,7 +18,7 @@ namespace ClassifiedAds.Blazor.Modules
 
         public static async void Alert(this IJSRuntime jSRuntime, string text)
         {
-          await jSRuntime.InvokeVoidAsync("alert", text);
+            await jSRuntime.InvokeVoidAsync("alert", text);
         }
     }
 }

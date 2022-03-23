@@ -1,9 +1,6 @@
-﻿using IdentityServer4.EntityFramework.Entities;
-using IdentityServer4.Models;
-using System;
+﻿using IdentityServer4.Models;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace ClassifiedAds.IdentityServer.Models.ApiResourceModels
 {

@@ -60,6 +60,8 @@ import jobSrcReducer from "./containers/JobSrcs/reducer";
 import { watchJobSrc } from "./containers/JobSrcs/sagas";
 import stockEPSReducer from "./containers/StockEPS/reducer";
 import { watchStockEPS } from "./containers/StockEPS/sagas";
+import stockNewsReducer from "./containers/StockNews/reducer";
+import { watchStockNew } from "./containers/StockNews/sagas";
 
 const composeEnhancers =
   (process.env.NODE_ENV === "development"
@@ -93,6 +95,7 @@ const rootReducer = combineReducers({
   job: jobReducer,
   jobSrc: jobSrcReducer,
   stockEPS: stockEPSReducer,
+  stockNew: stockNewsReducer,
 });
 
 const sagaMiddleware = createSagaMiddleware();
@@ -127,6 +130,7 @@ sagaMiddleware.run(watchStockFunder);
 sagaMiddleware.run(watchJob);
 sagaMiddleware.run(watchJobSrc);
 sagaMiddleware.run(watchStockEPS);
+sagaMiddleware.run(watchStockNew);
 
 store.dispatch({
   type: "SET_AUTH_SERVICE",

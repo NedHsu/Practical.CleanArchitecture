@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ClassifiedAds.Application.Weathers.DTOs
 {
@@ -41,7 +40,7 @@ namespace ClassifiedAds.Application.Weathers.DTOs
     {
         public string DataTime { get; set; }
         public List<TidalWeatherElementParameter> Parameter { get; set; }
-}
+    }
 
     public class TidalWeatherElementParameter
     {

@@ -36,7 +36,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<StockProfitModel>> Get([FromQuery]GetStockProfitsQuery query)
+        public ActionResult<IEnumerable<StockProfitModel>> Get([FromQuery] GetStockProfitsQuery query)
         {
             _logger.LogInformation("Getting all stockprofits");
             var stockprofits = _dispatcher.Dispatch(query);
@@ -71,7 +71,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult Put(string code, [FromBody] StockProfitModel model)
         {
-            var stockprofit = _dispatcher.Dispatch(new GetStockProfitQuery { Code = code, ThrowNotFoundIfNull = false }) 
+            var stockprofit = _dispatcher.Dispatch(new GetStockProfitQuery { Code = code, ThrowNotFoundIfNull = false })
                 ?? new StockProfit { };
 
             stockprofit.StockCode = model.Code;

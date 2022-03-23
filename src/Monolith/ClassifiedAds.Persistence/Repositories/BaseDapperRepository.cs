@@ -1,16 +1,16 @@
-﻿using System;
+﻿using ClassifiedAds.CrossCuttingConcerns.OS;
+using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.Domain.Repositories;
+using ClassifiedAds.Persistence.DapperContext;
+using Dapper;
+using MicroOrm.Dapper.Repositories;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using ClassifiedAds.CrossCuttingConcerns.OS;
-using ClassifiedAds.Domain.Entities;
-using ClassifiedAds.Domain.Repositories;
-using ClassifiedAds.Persistence.DapperContext;
-using Dapper;
-using MicroOrm.Dapper.Repositories;
 
 namespace ClassifiedAds.Persistence.Repositories
 {

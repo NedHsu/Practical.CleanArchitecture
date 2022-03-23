@@ -1,6 +1,6 @@
-﻿using ClassifiedAds.Blazor.Modules.Core.Components;
-using ClassifiedAds.Blazor.Modules.Calendars.Models;
+﻿using ClassifiedAds.Blazor.Modules.Calendars.Models;
 using ClassifiedAds.Blazor.Modules.Calendars.Services;
+using ClassifiedAds.Blazor.Modules.Core.Components;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Logging;

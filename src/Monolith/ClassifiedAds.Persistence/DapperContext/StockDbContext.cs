@@ -1,5 +1,4 @@
-﻿using ClassifiedAds.Domain.Entities;
-using MicroOrm.Dapper.Repositories;
+﻿using MicroOrm.Dapper.Repositories;
 using MicroOrm.Dapper.Repositories.DbContext;
 using Microsoft.Data.SqlClient;
 using System.Collections.Generic;

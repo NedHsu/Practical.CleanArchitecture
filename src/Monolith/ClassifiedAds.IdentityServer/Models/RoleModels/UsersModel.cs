@@ -1,5 +1,4 @@
 ﻿using ClassifiedAds.Domain.Entities;
-using System;
 using System.Collections.Generic;
 
 namespace ClassifiedAds.IdentityServer.Models.RoleModels

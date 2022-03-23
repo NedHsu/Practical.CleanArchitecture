@@ -1,7 +1,6 @@
 ﻿using ClassifiedAds.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
 
 namespace ClassifiedAds.Persistence.MappingConfigurations
 {

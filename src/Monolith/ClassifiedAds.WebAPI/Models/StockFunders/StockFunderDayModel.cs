@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ClassifiedAds.WebAPI.Models.StockFunders
+﻿namespace ClassifiedAds.WebAPI.Models.StockFunders
 {
     public class StockFunderDayModel
     {

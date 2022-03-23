@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using ClassifiedAds.Application;
 using ClassifiedAds.Application.Jobs.Commands;
-using ClassifiedAds.Application.Jobs.DTOs;
 using ClassifiedAds.Application.Jobs.Queries;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.WebAPI.Hubs;
@@ -11,10 +10,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ClassifiedAds.WebAPI.Controllers
 {

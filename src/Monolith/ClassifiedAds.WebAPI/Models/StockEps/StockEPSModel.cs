@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ClassifiedAds.WebAPI.Models.StockEPSs
+﻿namespace ClassifiedAds.WebAPI.Models.StockEPSs
 {
     public class StockEPSModel
     {

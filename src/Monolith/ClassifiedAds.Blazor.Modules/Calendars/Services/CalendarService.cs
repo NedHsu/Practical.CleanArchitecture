@@ -1,5 +1,5 @@
-﻿using ClassifiedAds.Blazor.Modules.Core.Services;
-using ClassifiedAds.Blazor.Modules.Calendars.Models;
+﻿using ClassifiedAds.Blazor.Modules.Calendars.Models;
+using ClassifiedAds.Blazor.Modules.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -43,7 +43,7 @@ namespace ClassifiedAds.Blazor.Modules.Calendars.Services
             await DeleteAsync($"api/calendars/{id}");
         }
 
-        public async Task<List<EventModel>> GetEvents(DateTime startDate, DateTime endDate) 
+        public async Task<List<EventModel>> GetEvents(DateTime startDate, DateTime endDate)
         {
             var events = await GetAsync<List<CalendarModel>>("api/calendarEvents");
             return new List<EventModel>()

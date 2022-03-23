@@ -1,17 +1,11 @@
 ﻿using AutoMapper;
 using ClassifiedAds.Application;
-using ClassifiedAds.Application.AuditLogEntries.DTOs;
-using ClassifiedAds.Application.AuditLogEntries.Queries;
-using ClassifiedAds.Application.StockDays.Commands;
-using ClassifiedAds.Application.StockDays.DTOs;
 using ClassifiedAds.Application.StockDays.Queries;
-using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.WebAPI.Models.StockDays;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;

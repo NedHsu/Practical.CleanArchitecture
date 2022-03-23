@@ -1,8 +1,9 @@
-﻿using System.Runtime.InteropServices;
-using System;
+﻿using System;
 
-namespace ClassifiedAds.Domain.Entities {
-    public class MatchPlayer : Entity<Guid> {
+namespace ClassifiedAds.Domain.Entities
+{
+    public class MatchPlayer : Entity<Guid>
+    {
 
         public Guid MatchId { get; set; }
         public Match Match { get; set; }

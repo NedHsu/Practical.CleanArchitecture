@@ -1,8 +1,6 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.Exceptions;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
-using System;
-using System.Linq;
 
 namespace ClassifiedAds.Application.CalendarCategories.Queries
 {

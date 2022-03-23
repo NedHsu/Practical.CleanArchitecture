@@ -3,7 +3,6 @@ using ClassifiedAds.Blazor.Modules.Matchs.Models;
 using ClassifiedAds.Blazor.Modules.Matchs.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using System;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Blazor.Modules.Matchs.Components
@@ -20,7 +19,7 @@ namespace ClassifiedAds.Blazor.Modules.Matchs.Components
 
         public MatchModel Match { get; set; }
 
-        public MatchJoinModel MatchJoin { get; set; } = new MatchJoinModel(){ Number = 1 };
+        public MatchJoinModel MatchJoin { get; set; } = new MatchJoinModel() { Number = 1 };
 
         public void Show(MatchModel match)
         {

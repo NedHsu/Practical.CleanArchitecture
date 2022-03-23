@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ClassifiedAds.Domain.Entities {
-    public class Match : AggregateRoot<Guid> {
+namespace ClassifiedAds.Domain.Entities
+{
+    public class Match : AggregateRoot<Guid>
+    {
         public DateTime Time { get; set; }
 
         public string Title { get; set; }

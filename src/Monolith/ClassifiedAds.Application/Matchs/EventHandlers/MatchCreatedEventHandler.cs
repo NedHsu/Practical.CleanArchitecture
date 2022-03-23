@@ -25,7 +25,7 @@ namespace ClassifiedAds.Application.Matchs.EventHandlers
 
                 auditSerivce.AddOrUpdate(new AuditLogEntry
                 {
-                    UserId = currentUser.IsAuthenticated ? currentUser.UserId: Guid.Empty,
+                    UserId = currentUser.IsAuthenticated ? currentUser.UserId : Guid.Empty,
                     CreatedDateTime = domainEvent.EventDateTime,
                     Action = "CREATED_MATCH",
                     ObjectId = domainEvent.Entity.Id.ToString(),

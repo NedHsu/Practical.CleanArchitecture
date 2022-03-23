@@ -1,7 +1,7 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace ClassifiedAds.Blazor.Modules.Matchs.Models {
+namespace ClassifiedAds.Blazor.Modules.Matchs.Models
+{
     public class MatchJoinModel
     {
         [Required]

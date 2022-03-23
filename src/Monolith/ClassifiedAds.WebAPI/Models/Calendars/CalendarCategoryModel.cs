@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ClassifiedAds.WebAPI.Models.Calendars
+﻿namespace ClassifiedAds.WebAPI.Models.Calendars
 {
     public class CalendarCategoryModel
     {

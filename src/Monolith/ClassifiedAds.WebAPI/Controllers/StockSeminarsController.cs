@@ -37,7 +37,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<PagedResultModel<StockSeminarModel>> Get([FromQuery]GetStockSeminarsQuery query)
+        public ActionResult<PagedResultModel<StockSeminarModel>> Get([FromQuery] GetStockSeminarsQuery query)
         {
             _logger.LogInformation("Getting all stockseminars");
             var stockseminars = _dispatcher.Dispatch(query);

@@ -1,5 +1,5 @@
-using System;
 using ClassifiedAds.WebAPI.Models.Common;
+using System;
 
 namespace ClassifiedAds.WebAPI.Models.Matchs
 {

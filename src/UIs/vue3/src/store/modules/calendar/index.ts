@@ -25,6 +25,15 @@ export default {
             state.loading = false;
         },
         [TYPES.UPDATE_CALENDAR_SUCCESS](state: CalendarState, data: any) {
+            var c = state.calendars.find(x => x.id == data.id);
+            if (c) {
+                c.name = data.name;
+                c.bgColor = data.bgColor;
+                c.categoryId = data.categoryId;
+                c.color = data.color;
+                c.dragBgColor = data.dragBgColor;
+                c.categoryName = data.categoryName;
+            }
             state.loading = false;
         },
         [TYPES.DEL_CALENDAR_SUCCESS](state: CalendarState, id: string) {
@@ -57,7 +66,7 @@ export default {
                 });
         },
         [ACTIONS.UPDATE_CALENDAR]({ commit }, calendar) {
-            request.put("calendars", calendar)
+            request.put("calendars/" + calendar.id, calendar)
                 .then(rs => {
                     commit(TYPES.UPDATE_CALENDAR_SUCCESS, rs.data);
                 })

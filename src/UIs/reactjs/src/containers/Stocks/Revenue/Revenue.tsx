@@ -92,6 +92,7 @@ class Revenue extends Component<any, any> {
         </td>
         <td>{stock.industry}</td>
         <td className={styles.number}>{stock.closePrice || "--"}</td>
+        <td className={styles.number}>{stock.month}</td>
         <td className={styles.number}>{stock.moM}</td>
         <td className={styles.number}>{stock.yoY}</td>
         <td className={styles.number}>{stock.totalYoY}</td>
@@ -121,6 +122,7 @@ class Revenue extends Component<any, any> {
             <th>Stock</th>
             <th>Industry</th>
             <th className={styles.number}>Price</th>
+            <th>Month</th>
             <th className={styles.number}>MoM(%)</th>
             <th className={styles.number}>YoY(%)</th>
             <th className={styles.number}>Total YoY(%)</th>
