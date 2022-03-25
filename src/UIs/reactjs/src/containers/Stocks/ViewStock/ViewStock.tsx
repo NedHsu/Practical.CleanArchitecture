@@ -3,11 +3,13 @@ import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
 
 import logo from "../../../logo.svg";
-import Star from "../../../components/Star/Star";
+import ValueChart from "../../Stocks/ValueChart/ValueChart";
 import * as actions from "../actions";
 import * as profitActions from "../../StockProfits/actions";
 import * as revenueActions from "../../StockRevenues/actions";
+import * as stockMarginActions from "../../StockMargins/actions";
 import { Table } from "react-bootstrap";
+import dayjs from "dayjs";
 
 class ViewStock extends Component<any, any> {
   state = {
@@ -25,6 +27,9 @@ class ViewStock extends Component<any, any> {
     this.props.fetchStockExtra(code);
     this.props.fetchStockProfits(code);
     this.props.fetchStockRevenues(code);
+    const endDate = dayjs();
+    const startDate = endDate.add(-30, "days");
+    this.props.fetchStockMarginFunders({ stockCode: code, startDate: startDate.format("YYYY-MM-DD"), endDate: endDate.format("YYYY-MM-DD") })
   }
 
   back = () => {
@@ -37,6 +42,8 @@ class ViewStock extends Component<any, any> {
         stock,
         stockProfits,
         stockRevenues,
+        stockMarginLoading,
+        stockMarginFunders,
       }
     } = this;
 
@@ -145,6 +152,7 @@ class ViewStock extends Component<any, any> {
 
             <div className="col-md-4">
               <img
+                alt=""
                 className="center-block img-responsive"
                 style={{ width: "200px", margin: "2px" }}
                 src={stock.imageUrl || logo}
@@ -154,6 +162,18 @@ class ViewStock extends Component<any, any> {
           </div>
           {profitTable}
           {revenueTable}
+          <div>
+            {
+              stockMarginLoading || stockMarginFunders.date.length === 0 ? null : (
+                <ValueChart id="value-chart" data={{
+                  k: stockMarginFunders.date,
+                  n: 5,
+                  yz: [stockMarginFunders.foreignSum, stockMarginFunders.creditSum, stockMarginFunders.selfSum, stockMarginFunders.securitiesBalance, stockMarginFunders.financingBalance],
+                  groups: ["外資", "投信", "自營"]
+                }} unit={1000} />
+              )
+            }
+          </div>
         </div>
 
         <div className="card-footer">
@@ -184,6 +204,8 @@ const mapStateToProps = state => {
     stockProfits: state.stockProfit.stockProfits,
     stockRevenues: state.stockRevenue.stockRevenues,
     stockDayMaps: state.stockDay.stockDayMaps,
+    stockMarginFunders: state.stockMargin.stockMarginFunders,
+    stockMarginLoading: state.stockMargin.loading,
   };
 };
 
@@ -193,6 +215,7 @@ const mapDispatchToProps = dispatch => {
     fetchStockExtra: code => dispatch(actions.fetchStockExtra(code)),
     fetchStockProfits: code => dispatch(profitActions.fetchStockProfits({ stockCode: code })),
     fetchStockRevenues: code => dispatch(revenueActions.fetchStockRevenues({ stockCode: code })),
+    fetchStockMarginFunders: (options) => dispatch(stockMarginActions.fetchStockMarginFunders(options)),
   };
 };
 

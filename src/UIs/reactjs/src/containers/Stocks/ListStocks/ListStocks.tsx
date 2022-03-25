@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
-import { Modal, Button, Row, Col, FormControl } from "react-bootstrap";
+import { Modal, Button, Row, Col, FormControl, Table } from "react-bootstrap";
 import ListNotes from "../../StockNotes/ListStockNotes/ListStockNotes";
 import Menu from "../Menu/Menu";
 import TrendLine from "../TrendLine/TrendLine";
@@ -223,7 +223,7 @@ class ListStocks extends Component<any, any> {
     ));
 
     const table = this.props.stocks ? (
-      <table className="table">
+      <Table striped className="table">
         <thead>
           <tr>
             <th>
@@ -240,7 +240,7 @@ class ListStocks extends Component<any, any> {
           </tr>
         </thead>
         <tbody>{rows}</tbody>
-      </table>
+      </Table>
     ) : null;
 
     const deleteModal = (

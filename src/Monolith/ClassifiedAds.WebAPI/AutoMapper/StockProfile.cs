@@ -59,7 +59,7 @@ namespace ClassifiedAds.WebAPI.AutoMapper
                 .ForMember(x => x.Month, opt => opt.MapFrom(src => src.Date.AddYears(-1911).ToString("yyy/MM")));
             CreateMap<StockSeminarDTO, StockSeminarModel>();
             CreateMap<List<StockMarginFunderDTO>, StockMarginFundersModel>()
-                .ForMember(x => x.Date, opt => opt.MapFrom(src => src.Select(x => x.Date.ToString("yyyy-MM-dd"))))
+                .ForMember(x => x.Date, opt => opt.MapFrom(src => src.Select(x => x.Date.ToString("MM-dd"))))
                 .ForMember(x => x.ForeignBuy, opt => opt.MapFrom(src => src.Select(x => x.ForeignBuy)))
                 .ForMember(x => x.ForeignSell, opt => opt.MapFrom(src => src.Select(x => x.ForeignSell)))
                 .ForMember(x => x.ForeignSum, opt => opt.MapFrom(src => src.Select(x => x.ForeignSum)))

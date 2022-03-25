@@ -49,7 +49,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         {
             _logger.LogInformation("Getting all stockmarginfunders");
             var stockmargins = _dispatcher.Dispatch(query);
-            var model = _mapper.Map<StockMarginFundersModel>(stockmargins);
+            var model = _mapper.Map<StockMarginFundersModel>(stockmargins.OrderBy(x => x.Date).ToList());
             return Ok(model);
         }
 

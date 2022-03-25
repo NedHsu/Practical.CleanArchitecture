@@ -5,11 +5,11 @@ const d3 = require("d3")
 
 type Props = {
     id: string,
-    data: { k: Array<string>; yz: Array<Array<number>>; n: number; },
+    data: { k: Array<string>; yz: Array<Array<number>>; n: number; groups: Array<string>; },
     unit: number,
 }
-console.log("ValueChart");
 
+const colors = ["#FF6B6B", "#FFD93D", "#6BCB77", "#FF6B6B"];
 export default class ValueChart extends PureComponent<Props> {
     svg: any;
     componentDidMount() {
@@ -29,6 +29,7 @@ export default class ValueChart extends PureComponent<Props> {
         let n = data.n; // number of series
         // let m = data.k.length; // number of values per series
         let xz = data.k // the x-values shared by all series
+        console.log(data);
         let yz = data.yz // the y-values of each of the n series
         let y01z = d3.stack()
             .keys(d3.range(n))
@@ -39,7 +40,7 @@ export default class ValueChart extends PureComponent<Props> {
         // [y1Min, y1Max] 等價 d3.extent(y01z.reduce((a, b) => a.concat(b.map(x =>x[1])), []))
         let x = d3.scaleBand()
             .domain(xz)
-            .rangeRound([margin.left, width - margin.right])
+            .range([margin.left, width - margin.right])
             .padding(0.08);
         let y = d3.scaleLinear()
             .domain([y1Min, y1Max])
@@ -49,7 +50,11 @@ export default class ValueChart extends PureComponent<Props> {
 
         let xAxis = g => g
             .attr("transform", `translate(0,${height - margin.bottom})`)
-            .call(d3.axisBottom(x).tickSizeOuter(0).tickSize(1).tickPadding(1).tickFormat(x => x));
+            .call(d3.axisBottom(x).tickSizeOuter(0).tickSize(1).tickPadding(1).tickFormat(x => x))
+            .selectAll("g text")
+            .each((t, i, p) => {
+                p[i].classList.add(i % 2 === 0 ? styles.text0 : styles.text1)
+            });
 
         let yAxis = d3.axisLeft(y)
             .tickSizeOuter(0)
@@ -69,6 +74,7 @@ export default class ValueChart extends PureComponent<Props> {
             .attr("y", y(0))
             .attr("width", x.bandwidth())
             .attr("height", 0)
+            .attr("fill", (d) => colors[d[2]])
             .on('click', (a, b, c) => { console.log(a, b, c); });
 
         // Axis
@@ -89,14 +95,16 @@ export default class ValueChart extends PureComponent<Props> {
         rect.transition()
             .duration(500)
             .delay((d, i) => i * 20)
-            .attr("x", (d, i) => x(xz[i]) + x.bandwidth() / n * d[2])
+            .attr("x", (d, i) => {
+                // console.log(x.bandwidth())
+                return x(xz[i]) + x.bandwidth() / n * d[2]
+            })
             .attr("width", x.bandwidth() / n)
             .transition()
             .attr("y", d => (d[1] - d[0]) > 0 ? y(d[1] - d[0]) : y(0))
             .attr("height", d => Math.abs(y(0) - y(d[1] - d[0])));
 
         rect.append("title")
-            .attr("fill", "black")
             .text(d => (d[1] - d[0]) / unit);
 
         svg.on('click', (event) => {
@@ -105,8 +113,8 @@ export default class ValueChart extends PureComponent<Props> {
             const targetTime = y.invert(yValue);
             // 推算出目前hover位置
             const targetIndex = Math.floor(targetTime / (x.step() / n));
-            const targetValue = yz[targetIndex][targetIndex];
-            console.log(targetValue);
+            // const targetValue = yz[targetIndex][targetIndex];
+            // console.log(targetValue);
             // console.log(d3.bisect(xz, targetTime), xValue);
         });
 
@@ -146,8 +154,18 @@ export default class ValueChart extends PureComponent<Props> {
     }
 
     render() {
+        const groups = this.props.data.groups.map((text, i) => (
+            <div key={`mark-${i}`} className={styles.mark}>
+                <div className={styles.circle} style={{ backgroundColor: colors[i] }}></div>
+                {text}
+            </div>
+        ));
+
         return (
             <div className={styles.container}>
+                <div className={styles.groups}>
+                    {groups}
+                </div>
                 <svg id={this.props.id}>
                 </svg>
             </div>

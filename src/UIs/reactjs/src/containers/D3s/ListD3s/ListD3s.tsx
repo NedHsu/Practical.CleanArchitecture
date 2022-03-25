@@ -28,7 +28,8 @@ class ListD3s extends Component<any, any> {
             <ValueChart id="value-chart" data={{
               k: stockMarginFunders.date,
               n: 5,
-              yz: [stockMarginFunders.foreignSum, stockMarginFunders.creditSum, stockMarginFunders.selfSum, stockMarginFunders.securitiesBalance, stockMarginFunders.financingBalance]
+              yz: [stockMarginFunders.foreignSum, stockMarginFunders.creditSum, stockMarginFunders.selfSum, stockMarginFunders.securitiesBalance, stockMarginFunders.financingBalance],
+              groups: []
             }} unit={1000} />
           )
         }
