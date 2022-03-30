@@ -37,6 +37,7 @@ export default class ValueChart extends PureComponent<Props> {
             .map((data, i) => data.map(([y0, y1]) => [y0, y1, i]));
         let y1Max = d3.max(y01z, y => d3.max(y, d => d[1]));
         let y1Min = d3.min(y01z, y => d3.min(y, d => d[1]));
+        console.log(y1Max, y1Min)
         // [y1Min, y1Max] 等價 d3.extent(y01z.reduce((a, b) => a.concat(b.map(x =>x[1])), []))
         let x = d3.scaleBand()
             .domain(xz)
@@ -60,7 +61,7 @@ export default class ValueChart extends PureComponent<Props> {
             .tickSizeOuter(0)
             .tickSize(1)
             .tickPadding(1)
-            .ticks(5)
+            .ticks(8)
             .tickFormat(x => x / unit);
 
         const rect = svg.selectAll("g")
@@ -70,12 +71,11 @@ export default class ValueChart extends PureComponent<Props> {
             .selectAll("rect")
             .data(d => d)
             .join("rect")
-            .attr("x", (d, i) => x(i))
             .attr("y", y(0))
             .attr("width", x.bandwidth())
             .attr("height", 0)
             .attr("fill", (d) => colors[d[2]])
-            .on('click', (a, b, c) => { console.log(a, b, c); });
+            .on('click', (e, d) => { console.log(e, d); });
 
         // Axis
         svg.append("g")
@@ -97,11 +97,11 @@ export default class ValueChart extends PureComponent<Props> {
             .delay((d, i) => i * 20)
             .attr("x", (d, i) => {
                 // console.log(x.bandwidth())
-                return x(xz[i]) + x.bandwidth() / n * d[2]
+                return x(xz[i]) + x.bandwidth() / n * d[2] + 1
             })
             .attr("width", x.bandwidth() / n)
             .transition()
-            .attr("y", d => (d[1] - d[0]) > 0 ? y(d[1] - d[0]) : y(0))
+            .attr("y", d => ((d[1] - d[0]) > 0 ? y(d[1] - d[0]) : y(0)) + 0.5)
             .attr("height", d => Math.abs(y(0) - y(d[1] - d[0])));
 
         rect.append("title")

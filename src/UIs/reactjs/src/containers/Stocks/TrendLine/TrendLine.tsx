@@ -58,7 +58,8 @@ export default class TrendLine extends PureComponent<Props> {
             .attr("stroke-width", 1)
             .attr("stroke-linejoin", "round")
             .attr("stroke-linecap", "round")
-            .attr("d", line);
+            .attr("d", line)
+            .on("click", (a, b, c) => { console.log(a, b) });
     }
 
     private avgData(num: number) {
