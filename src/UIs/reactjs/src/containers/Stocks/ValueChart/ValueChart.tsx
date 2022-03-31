@@ -88,6 +88,9 @@ export default class ValueChart extends PureComponent<Props> {
             .attr("class", styles.axis)
             .attr("transform", `translate(${margin.left},0)`)
             .call(yAxis)
+            .call(g => g.selectAll(".tick line").clone()
+                .attr("x2", width - margin.left - margin.right)
+                .attr("stroke-opacity", 0.1))
             // .selectAll("text")
             // .attr("x", "-2") // 用 tickPadding取代
             ;
