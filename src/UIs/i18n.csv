@@ -1,0 +1,18 @@
+﻿locales,en,tw
+pages,,
+pages/home,This page is home page,這是首頁
+pages/about,This page is about page,這是關於頁
+language,English,繁中
+navigations,,
+navigations/home,Home,首頁
+navigations/about,About,關於
+navigations/product,Product,產品
+navigations/stock,Stock,股票
+navigations/map,Map,地圖
+navigations/logout,Logout,登出
+navigations/login,Login,登入
+labels,,
+labels/language,Languages,語系
+labels/save,Save,儲存
+labels/delete,Delete,刪除
+labels/test/test,entest,twtest

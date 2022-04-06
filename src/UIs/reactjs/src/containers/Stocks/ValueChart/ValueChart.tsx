@@ -75,7 +75,7 @@ export default class ValueChart extends PureComponent<Props> {
             .attr("width", x.bandwidth())
             .attr("height", 0)
             .attr("fill", (d) => colors[d[2]])
-            .on('click', (e, d) => { console.log(e, d); });
+            .on('click', e => { console.log(e, x.invert(e.x)); });
 
         // Axis
         svg.append("g")
@@ -104,7 +104,7 @@ export default class ValueChart extends PureComponent<Props> {
             })
             .attr("width", x.bandwidth() / n)
             .transition()
-            .attr("y", d => ((d[1] - d[0]) > 0 ? y(d[1] - d[0]) : y(0)) + 0.5)
+            .attr("y", d => ((d[1] - d[0]) > 0 ? y(d[1] - d[0]) : y(0)))
             .attr("height", d => Math.abs(y(0) - y(d[1] - d[0])));
 
         rect.append("title")

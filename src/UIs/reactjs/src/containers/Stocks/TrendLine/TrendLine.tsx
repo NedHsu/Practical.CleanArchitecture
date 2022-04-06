@@ -7,6 +7,9 @@ const d3 = require("d3")
 type Props = {
     id: string,
     data: Array<any>,
+    width?: number,
+    height?: number,
+    margin?: { top?: number; right?: number; bottom?: number; left?: number; },
 }
 console.log("TrendLine");
 
@@ -14,9 +17,9 @@ export default class TrendLine extends PureComponent<Props> {
     svg: any;
     data: any[] = [];
     dataMap: {} = {};
-    margin: { top: number; right: number; bottom: number; left: number; } = { top: 1, right: 1, bottom: 1, left: 1, };
-    width: number = 100;
-    height: number = 50;
+    margin: { top: number; right: number; bottom: number; left: number; } = { ...(this.props.margin || {}), top: 1, right: 1, bottom: 1, left: 1, };
+    width: number = this.props.width || 100;
+    height: number = this.props.height || 50;
     componentDidMount() {
         const {
             width, height,
@@ -68,12 +71,12 @@ export default class TrendLine extends PureComponent<Props> {
 
         let g = self.svg
             .append("g")
-            .attr("class", "pointer")
+            .attr("class", styles.pointer)
             .call(g => {
                 g.append("line").attr("class", "date").attr("y1", margin.top).attr("y2", height - margin.bottom);
-                g.append("text").attr("class", `date ${styles.text}`).attr("y", height - margin.bottom);
+                g.append("text").attr("class", `date ${styles.text}`).attr("y", height + 10).attr("text-anchor", "middle");
                 g.append("line").attr("class", "volume").attr("x1", margin.left).attr("x2", width - margin.right);
-                g.append("text").attr("class", `volume ${styles.text}`).attr("x", width - margin.right);
+                g.append("text").attr("class", `volume ${styles.text}`).attr("x", width - margin.right).attr("text-anchor", "end");
                 g.append("line").attr("class", "price").attr("x1", margin.left).attr("x2", width - margin.right);
                 g.append("text").attr("class", `price ${styles.text}`).attr("x", 0);
             });
@@ -84,7 +87,7 @@ export default class TrendLine extends PureComponent<Props> {
                 let invertDate = scaleX.invert(x);
                 let point = dataMap[invertDate];
                 console.log(point);
-                let _x = scaleX(invertDate);
+                let _x = scaleX(invertDate) + scaleX.bandwidth() / 2;
                 let _y1 = scaleY1(point.closePrice);
                 let _y2 = scaleY2(point.dealAmount);
                 g.selectAll("line.date")
@@ -97,7 +100,7 @@ export default class TrendLine extends PureComponent<Props> {
                     .attr("y1", _y1)
                     .attr("y2", _y1)
                     .attr("stroke", "currentColor");
-                g.selectAll("text.price").attr("y", _y2).text(point.closePrice);
+                g.selectAll("text.price").attr("y", _y1).text(point.closePrice);
 
                 g.selectAll("line.volume")
                     .attr("y1", _y2)
@@ -184,7 +187,7 @@ export default class TrendLine extends PureComponent<Props> {
             .datum(data)
             .attr("fill", "none")
             .attr("stroke", color)
-            .attr("stroke-width", 1)
+            .attr("stroke-width", "1px")
             .attr("stroke-linejoin", "round")
             .attr("stroke-linecap", "round")
             .attr("d", line)

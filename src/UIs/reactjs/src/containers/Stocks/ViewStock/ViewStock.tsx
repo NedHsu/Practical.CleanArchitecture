@@ -4,10 +4,13 @@ import { connect } from "react-redux";
 
 import logo from "../../../logo.svg";
 import ValueChart from "../../Stocks/ValueChart/ValueChart";
+import TrendLine from "../../Stocks/TrendLine/TrendLine";
 import * as actions from "../actions";
 import * as profitActions from "../../StockProfits/actions";
 import * as revenueActions from "../../StockRevenues/actions";
 import * as stockMarginActions from "../../StockMargins/actions";
+import * as daysActions from "../../StockDays/actions";
+import styles from "./ViewStock.module.scss";
 import { Table } from "react-bootstrap";
 import dayjs from "dayjs";
 
@@ -27,9 +30,14 @@ class ViewStock extends Component<any, any> {
     this.props.fetchStockExtra(code);
     this.props.fetchStockProfits(code);
     this.props.fetchStockRevenues(code);
-    const endDate = dayjs();
-    const startDate = endDate.add(-30, "days");
-    this.props.fetchStockMarginFunders({ stockCode: code, startDate: startDate.format("YYYY-MM-DD"), endDate: endDate.format("YYYY-MM-DD") })
+    const nowDate = dayjs();
+    const startDate = nowDate.add(-30, "days");
+    this.props.fetchStockMarginFunders({ stockCode: code, startDate: startDate.format("YYYY-MM-DD"), endDate: nowDate.format("YYYY-MM-DD") });
+    this.props.fetchStocksDays({
+      stockCodes: [code],
+      startDate: nowDate.add(-6, "month"),
+      endDate: nowDate,
+    });
   }
 
   back = () => {
@@ -174,6 +182,13 @@ class ViewStock extends Component<any, any> {
               )
             }
           </div>
+          <div>
+            {this.props.stockDayMaps && this.props.stockDayMaps[stock.code] ? (
+              <div className={styles.trend}>
+                <TrendLine id={`tl-${stock.code}`} data={this.props.stockDayMaps[stock.code]} width={1000} height={500} margin={{ bottom: 20 }}></TrendLine>
+              </div>
+            ) : null}
+          </div>
         </div>
 
         <div className="card-footer">
@@ -216,6 +231,7 @@ const mapDispatchToProps = dispatch => {
     fetchStockProfits: code => dispatch(profitActions.fetchStockProfits({ stockCode: code })),
     fetchStockRevenues: code => dispatch(revenueActions.fetchStockRevenues({ stockCode: code })),
     fetchStockMarginFunders: (options) => dispatch(stockMarginActions.fetchStockMarginFunders(options)),
+    fetchStocksDays: (options) => dispatch(daysActions.fetchStocksDays(options)),
   };
 };
 

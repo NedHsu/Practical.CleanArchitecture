@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import * as actions from "../actions";
 import { checkValidity } from "../../../shared/utility";
 import { Button, Card, Col, Form, Row } from "react-bootstrap";
+import { Translation } from "react-i18next";
 
 type Props = {
   resetMatch: any,
@@ -120,7 +121,7 @@ class AddMatch extends Component<Props, any> {
   };
 
   render() {
-    const form0 = (
+    const form = (t) => (
       <Card>
         <Card.Header>
           {this.state.title}
@@ -167,7 +168,7 @@ class AddMatch extends Component<Props, any> {
             <Form.Group as={Row}>
               <Col sm={2}></Col>
               <Col sm={10}>
-                <Button type="submit">儲存</Button>
+                <Button type="submit">{t('labels.save')}</Button>
               </Col>
             </Form.Group>
           </Form>
@@ -183,128 +184,16 @@ class AddMatch extends Component<Props, any> {
         </Card.Footer>
       </Card>
     );
-    const form = (
-      <div className="card">
-        <div className="card-header">{this.state.title}</div>
-        <div className="card-body">
-          {this.state.errorMessage ? (
-            <div
-              className="row alert alert-danger"
-            >
-              {this.state.errorMessage}
-            </div>
-          ) : null}
-          <form onSubmit={this.onSubmit}>
-            <div className="form-group row">
-              <label htmlFor="name" className="col-sm-2 col-form-label">
-                Name
-              </label>
-              <div className="col-sm-10">
-                <input
-                  id="name"
-                  name="name"
-                  className={
-                    "form-control " +
-                    (this.state.submitted && !this.state.controls["title"].valid
-                      ? "is-invalid"
-                      : "")
-                  }
-                  value={this.props.match?.name}
-                  onChange={event => this.fieldChanged(event)}
-                />
-                <span className="invalid-feedback">
-                  {this.state.controls["title"].error.required ? (
-                    <span>Enter a name</span>
-                  ) : null}
-                  {this.state.controls["title"].error.minLength ? (
-                    <span>The name must be longer than 3 characters.</span>
-                  ) : null}
-                </span>
-              </div>
-            </div>
-            <div className="form-group row">
-              <label htmlFor="code" className="col-sm-2 col-form-label">
-                Code
-              </label>
-              <div className="col-sm-10">
-                <input
-                  id="code"
-                  name="code"
-                  className={
-                    "form-control " +
-                    (this.state.submitted && !this.state.controls["code"].valid
-                      ? "is-invalid"
-                      : "")
-                  }
-                  value={this.props.match?.code}
-                  onChange={event => this.fieldChanged(event)}
-                />
-                <span className="invalid-feedback">
-                  {this.state.controls["code"].error.required ? (
-                    <span>Enter a code</span>
-                  ) : null}
-                  {this.state.controls["code"].error.maxLength ? (
-                    <span>The code must be less than 10 characters.</span>
-                  ) : null}
-                </span>
-              </div>
-            </div>
-            <div className="form-group row">
-              <label htmlFor="description" className="col-sm-2 col-form-label">
-                Description
-              </label>
-              <div className="col-sm-10">
-                <input
-                  id="description"
-                  name="description"
-                  className={
-                    "form-control " +
-                    (this.state.submitted &&
-                      !this.state.controls["description"].valid
-                      ? "is-invalid"
-                      : "")
-                  }
-                  value={this.props.match?.description}
-                  onChange={event => this.fieldChanged(event)}
-                />
-                <span className="invalid-feedback">
-                  {this.state.controls["description"].error.required ? (
-                    <span>Enter a description</span>
-                  ) : null}
-                  {this.state.controls["description"].error.maxLength ? (
-                    <span>The code must be less than 100 characters.</span>
-                  ) : null}
-                </span>
-              </div>
-            </div>
-            <div className="form-group row">
-              <label
-                htmlFor="description"
-                className="col-sm-2 col-form-label"
-              ></label>
-              <div className="col-sm-10">
-                <button className="btn btn-primary">Save</button>
-              </div>
-            </div>
-          </form>
-        </div>
-        <div className="card-footer">
-          <NavLink
-            className="btn btn-outline-secondary"
-            to="/matches"
-            style={{ width: "80px" }}
-          >
-            <i className="fa fa-chevron-left"></i> Back
-          </NavLink>
-        </div>
-      </div>
-    );
 
     return this.state.submitted && this.props.saved ? (
       <Redirect to={"/matches/" + this.props.match.id} />
     ) : (
-        form0
-      );
+      <Translation>
+        {
+          (t) => form(t)
+        }
+      </Translation>
+    );
   }
 }
 

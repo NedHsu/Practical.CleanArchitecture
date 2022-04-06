@@ -1,18 +1,23 @@
 import i18n from 'i18next';
-import translation from './en/translation.json';
-import tw from './zh-TW/translation.json';
+import en from './en.json';
+import tw from './tw.json';
 import { initReactI18next } from 'react-i18next';
 
 export const resources = {
     en: {
-        translation,
+        translation: en,
     },
     tw: {
-        tw,
+        translation: tw,
     },
 } as const;
 
+export function setI18nLanguage(lng: string) {
+    i18n.changeLanguage(lng);
+    localStorage.setItem('lng', lng);
+};
+
 i18n.use(initReactI18next).init({
-    lng: 'en',
+    lng: localStorage.getItem('lng') || 'tw',
     resources,
 });

@@ -1,0 +1,25 @@
+{
+  "locale": "en",
+  "pages": {
+    "home": "This page is home page",
+    "about": "This page is about page"
+  },
+  "language": "English",
+  "navigations": {
+    "home": "Home",
+    "about": "About",
+    "product": "Product",
+    "stock": "Stock",
+    "map": "Map",
+    "logout": "Logout",
+    "login": "Login"
+  },
+  "labels": {
+    "language": "Languages",
+    "save": "Save",
+    "delete": "Delete",
+    "test": {
+      "test": "entest"
+    }
+  }
+}

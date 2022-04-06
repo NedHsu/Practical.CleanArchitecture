@@ -117,6 +117,8 @@ class ListStocks extends Component<any, any> {
 
   componentDidMount() {
     console.log("componentDidMount");
+    if (this.props.stocks?.length > 0)
+      return
     this.selectGroup({});
     this.props.fetchStockGroups();
   }
