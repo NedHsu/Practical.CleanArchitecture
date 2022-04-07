@@ -104,7 +104,7 @@ export default class ValueChart extends PureComponent<Props> {
             })
             .attr("width", x.bandwidth() / n)
             .transition()
-            .attr("y", d => ((d[1] - d[0]) > 0 ? y(d[1] - d[0]) : y(0)))
+            .attr("y", d => ((d[1] - d[0]) > 0 ? y(d[1] - d[0]) : y(0)) + 0.5)
             .attr("height", d => Math.abs(y(0) - y(d[1] - d[0])));
 
         rect.append("title")

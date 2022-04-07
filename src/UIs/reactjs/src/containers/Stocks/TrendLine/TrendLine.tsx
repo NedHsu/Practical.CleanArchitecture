@@ -74,7 +74,7 @@ export default class TrendLine extends PureComponent<Props> {
             .attr("class", styles.pointer)
             .call(g => {
                 g.append("line").attr("class", "date").attr("y1", margin.top).attr("y2", height - margin.bottom);
-                g.append("text").attr("class", `date ${styles.text}`).attr("y", height + 10).attr("text-anchor", "middle");
+                g.append("text").attr("class", `date ${styles.text}`).attr("y", margin.top + 15).attr("text-anchor", "middle");
                 g.append("line").attr("class", "volume").attr("x1", margin.left).attr("x2", width - margin.right);
                 g.append("text").attr("class", `volume ${styles.text}`).attr("x", width - margin.right).attr("text-anchor", "end");
                 g.append("line").attr("class", "price").attr("x1", margin.left).attr("x2", width - margin.right);
