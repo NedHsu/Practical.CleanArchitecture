@@ -64,9 +64,8 @@ export default class TrendLine extends PureComponent<Props> {
             .range([height - margin.bottom, margin.top]);
 
         let maxY2 = d3.max(lines, o => o.y2);
-        let minY2 = d3.min(lines, o => o.y2);
         let scaleY2 = d3.scaleLinear()
-            .domain([minY2, maxY2]).nice()
+            .domain([0, maxY2]).nice()
             .range([height - margin.bottom, margin.top]);
 
         let g = self.svg
@@ -86,7 +85,7 @@ export default class TrendLine extends PureComponent<Props> {
                 let x = d3.pointer(e)[0];
                 let invertDate = scaleX.invert(x);
                 let point = dataMap[invertDate];
-                console.log(point);
+                console.log(point.date, point.closePrice, point.dealAmount);
                 let _x = scaleX(invertDate) + scaleX.bandwidth() / 2;
                 let _y1 = scaleY1(point.closePrice);
                 let _y2 = scaleY2(point.dealAmount);

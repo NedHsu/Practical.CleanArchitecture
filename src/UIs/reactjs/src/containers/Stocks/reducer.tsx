@@ -3,7 +3,8 @@ import * as actionTypes from "./actionTypes";
 
 const initialState = {
   stocks: new Array<any>(),
-  stockFunders: [],
+  stockFunders: {},
+  showTrendLine: false,
   stockRevenues: [],
   stockProfits: [],
   totalPage: 0,
@@ -105,6 +106,10 @@ const fetchStockFunderScoresSuccess = (state, action) => {
 
 const fetchStockFunderScoresFail = (state, action) => {
   return updateObject(state, { scoreLoading: false });
+};
+
+const toggleStockTrendLine = (state, action) => {
+  return updateObject(state, { showTrendLine: !state.showTrendLine });
 };
 /// StockFunderScores
 
@@ -232,6 +237,8 @@ const reducer = (state = initialState, action) => {
       return fetchStockFunderScoresSuccess(state, action);
     case actionTypes.FETCH_STOCK_FUNDER_SCORES_FAIL:
       return fetchStockFunderScoresFail(state, action);
+    case actionTypes.TOGGLE_STOCK_TREND_LINE:
+      return toggleStockTrendLine(state, action);
     case actionTypes.FETCH_STOCK_REVENUES_START:
       return fetchStockRevenuesStart(state, action);
     case actionTypes.FETCH_STOCK_REVENUES_SUCCESS:
@@ -299,7 +306,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.FETCH_STOCK_FETCH_DATES_SUCCESS:
       return fetchStockFetchDatesSuccess(state, action);
     case actionTypes.FETCH_STOCK_FETCH_DATES_FAIL:
-      return fetchStockFetchDatesFail(state, action);    default:
+      return fetchStockFetchDatesFail(state, action); default:
       return state;
   }
 };

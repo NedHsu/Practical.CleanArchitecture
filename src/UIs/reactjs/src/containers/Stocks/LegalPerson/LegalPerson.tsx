@@ -20,7 +20,6 @@ import Spinner from "../../../components/Spinner/Spinner";
 class LegalPerson extends Component<any, any> {
   state = {
     pageTitle: "Stock List",
-    showTrendLine: false,
     deletingStock: {
       name: null
     },
@@ -39,7 +38,7 @@ class LegalPerson extends Component<any, any> {
   };
 
   toggleTrendLine = () => {
-    if (!this.state.showTrendLine) {
+    if (!this.props.showTrendLine) {
       let endDate = new Date();
       let startDate = new Date();
       startDate.setMonth(startDate.getMonth() - 6);
@@ -50,7 +49,7 @@ class LegalPerson extends Component<any, any> {
         endDate: endDate,
       });
     }
-    this.setState({ showTrendLine: !this.state.showTrendLine });
+    this.props.toggleTrendLine();
   };
 
   viewNotes = (stock) => {
@@ -86,7 +85,10 @@ class LegalPerson extends Component<any, any> {
     if (!(this.props.stockGroups?.length > 0)) {
       this.props.fetchStockGroups();
     }
-    this.props.fetchStocks({});
+    console.log(this.props.stockFunders);
+    if (!(this.props.stockFunders?.totalCount > 0)) {
+      this.props.fetchStocks({});
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -126,7 +128,7 @@ class LegalPerson extends Component<any, any> {
     const rows = stockFunders?.items?.map((stock) => (
       <tr key={"L" + stock.stockCode}>
         <td>
-          {this.state.showTrendLine && this.props.stockDayMaps && this.props.stockDayMaps[stock.stockCode] ? (
+          {this.props.showTrendLine && this.props.stockDayMaps && this.props.stockDayMaps[stock.stockCode] ? (
             <div>
               <TrendLine id={`tl-${stock.stockCode}`} data={this.props.stockDayMaps[stock.stockCode]}></TrendLine>
             </div>
@@ -186,7 +188,7 @@ class LegalPerson extends Component<any, any> {
           <tr>
             <th>
               <button className="btn btn-primary" onClick={this.toggleTrendLine}>
-                {this.state.showTrendLine ? "Hide" : "Show"} Trend
+                {this.props.showTrendLine ? "Hide" : "Show"} Trend
               </button>
             </th>
             <th>Stock</th>
@@ -255,6 +257,7 @@ const mapStateToProps = (state) => {
     stockGroupItemLoading: state.stockGroupItem.loading,
     groupLoading: state.stockGroup.loading,
     stockDayMaps: state.stockDay.stockDayMaps,
+    showTrendLine: state.stock.showTrendLine,
   };
 };
 
@@ -267,6 +270,7 @@ const mapDispatchToProps = (dispatch) => {
     fetchStockGroupItems: (stock) => dispatch(groupItemActions.fetchStockGroupItems(stock)),
     fetchStockNotes: (stock) => dispatch(noteActions.fetchStockNotes(stock)),
     addStockGroupStocks: (groupId, stocks) => dispatch(groupItemActions.addStockGroupStocks(groupId, stocks)),
+    toggleTrendLine: () => dispatch(actions.toggleTrendLine()),
   };
 };
 

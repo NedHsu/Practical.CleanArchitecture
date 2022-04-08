@@ -130,6 +130,11 @@ export const fetchStockFunderScores = (options) => {
     options: options,
   };
 };
+export const toggleTrendLine = () => {
+  return {
+    type: actionTypes.TOGGLE_STOCK_TREND_LINE,
+  };
+};
 /// STOCKS
 
 /// STOCK REVENUES

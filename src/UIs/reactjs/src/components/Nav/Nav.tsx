@@ -165,7 +165,7 @@ class Nav extends Component<Props> {
                     {
                       Object.keys(resources).map(k => {
                         return (
-                          <option value={k}>{resources[k].translation.language}</option>
+                          <option value={k} key={k}>{resources[k].translation.language}</option>
                         )
                       })
                     }

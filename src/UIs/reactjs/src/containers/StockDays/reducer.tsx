@@ -22,7 +22,10 @@ const fetchStockDaysStart = (state, action) => {
 
 const fetchStocksDaysSuccess = (state, action) => {
   return updateObject(state, {
-    stockDayMaps: action.stockDayMaps,
+    stockDayMaps: {
+      ...state.stockDayMaps,
+      ...action.stockDayMaps,
+    },
     loading: false,
   });
 };
