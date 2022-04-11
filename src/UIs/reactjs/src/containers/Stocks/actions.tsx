@@ -145,7 +145,6 @@ export const fetchStockRevenuesSuccess = (result) => {
   };
 };
 
-
 export const fetchStockRevenuePagedSuccess = (stockRevenuePaged) => {
   return {
     type: actionTypes.FETCH_STOCK_REVENUE_PAGED_SUCCESS,

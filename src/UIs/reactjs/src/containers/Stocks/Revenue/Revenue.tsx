@@ -106,8 +106,8 @@ class Revenue extends Component<any, any> {
       },
     } = this;
 
-    const rows = stockRevenuePaged?.items?.map((stock) => (
-      <tr key={"L" + stock.stockCode}>
+    const rows = stockRevenuePaged?.items?.map((stock, i) => (
+      <tr key={"L" + stock.stockCode + i}>
         <td>
           {showTrendLine && stockDayMaps && stockDayMaps[stock.stockCode] ? (
             <div>
