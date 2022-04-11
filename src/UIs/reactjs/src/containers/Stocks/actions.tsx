@@ -145,6 +145,14 @@ export const fetchStockRevenuesSuccess = (result) => {
   };
 };
 
+
+export const fetchStockRevenuePagedSuccess = (stockRevenuePaged) => {
+  return {
+    type: actionTypes.FETCH_STOCK_REVENUE_PAGED_SUCCESS,
+    stockRevenuePaged: stockRevenuePaged,
+  };
+};
+
 export const fetchStockRevenuesFail = (error) => {
   return {
     type: actionTypes.FETCH_STOCK_REVENUES_FAIL,
@@ -161,6 +169,13 @@ export const fetchStockRevenuesStart = () => {
 export const fetchStockRevenues = (options) => {
   return {
     type: actionTypes.FETCH_STOCK_REVENUES,
+    options: options,
+  };
+};
+
+export const fetchStockRevenuePaged = (options) => {
+  return {
+    type: actionTypes.FETCH_STOCK_REVENUE_PAGED,
     options: options,
   };
 };

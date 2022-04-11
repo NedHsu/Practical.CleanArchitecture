@@ -18,6 +18,9 @@ class Nav extends Component<Props> {
   navRef: any = React.createRef();
   state = {
     language: i18n.language,
+    showTopButton: false,
+    dragBottom: undefined,
+    dragRight: undefined,
   };
   selectLanguage = e => {
     const language = e.target.value;
@@ -25,6 +28,24 @@ class Nav extends Component<Props> {
     this.setState({
       language: language
     });
+  };
+  goToTop = () => {
+    document.body.scrollTop = 0; // For Safari
+    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+  };
+  dragTop = (e) => {
+    console.log({
+      clientX: e.clientX,
+      clientY: e.clientY,
+      screenX: e.screenX,
+      screenY: e.screenY,
+      offsetX: e.offsetX,
+      offsetY: e.offsetY,
+    });
+    // this.setState({
+    //   dragBottom: e.target.offsetHeight,
+    //   dragRight: e.target.offsetWidth,
+    // });
   };
   componentDidMount() {
     const self = this;
@@ -38,7 +59,9 @@ class Nav extends Component<Props> {
       } else {
         nav.style.top = "-50px";
       }
+
       self.prevScrollpos = currentScrollPos;
+      self.setState({ showTopButton: currentScrollPos > 20 });
     }
   }
   render() {
@@ -173,6 +196,10 @@ class Nav extends Component<Props> {
                 </li>
               </ul>
               <Submarine />
+              <button className={classes["top-button"]} onClick={this.goToTop} title="Go to top" hidden={!this.state.showTopButton} style={{
+                right: this.state.dragRight,
+                bottom: this.state.dragBottom,
+              }} draggable="true" onDragEnd={this.dragTop}>Top</button>
             </nav>
           )
         }

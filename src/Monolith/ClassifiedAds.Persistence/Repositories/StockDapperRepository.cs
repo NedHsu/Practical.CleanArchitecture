@@ -38,7 +38,18 @@ ORDER BY i.Sort, s.code
             string sql = @"
 SELECT Industry
 FROM Stock
-WHERE Industry <> ''
+WHERE Industry <> '' 
+AND CFICode IN (
+    'ESVUFR',
+    'ESVTFR',
+    'EPRRQR',
+    'EPRRAR',
+    'EPNRQR',
+    'EPNRFR',
+    'EPNRAR',
+    'EPNNFR',
+    'EPNNFB',
+    'EPNCAR')
 GROUP BY Industry
 ORDER BY COUNT(0) DESC";
 

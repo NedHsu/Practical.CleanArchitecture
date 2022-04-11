@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
-import { Modal, Table } from "react-bootstrap";
+import { Button, Col, Form, Modal, Row, Table } from "react-bootstrap";
 import Menu from "../Menu/Menu";
 import GroupModal from "../GroupModal/GroupModal";
 import IndustryModal from "../IndustryModal/IndustryModal";
@@ -17,7 +17,6 @@ import TrendLine from "../TrendLine/TrendLine";
 import { GrNotes, GrList } from "react-icons/gr";
 
 class Revenue extends Component<any, any> {
-
   state = {
     pageTitle: "Stock List",
     showTrendLine: false,
@@ -34,16 +33,17 @@ class Revenue extends Component<any, any> {
     },
     pageIndex: 1,
     pageSize: 50,
+    industry: "",
   };
 
   toggleTrendLine = () => {
-    if (!this.state.showTrendLine) {
+    if (!this.state.showTrendLine && this.props.stockRevenuePaged?.items) {
       let endDate = new Date();
       let startDate = new Date();
       startDate.setMonth(startDate.getMonth() - 6);
 
       this.props.fetchStocksDays({
-        stockCodes: this.props.stockRevenues.map(x => x.stockCode),
+        stockCodes: this.props.stockRevenuePaged.items.map(x => x.stockCode),
         startDate: startDate,
         endDate: endDate,
       });
@@ -63,9 +63,24 @@ class Revenue extends Component<any, any> {
     this.setState({ showGroupsModal: true, stock: stock, });
     this.props.fetchStockGroupItems({ code: stock.stockCode });
   };
-
+  changeField = (e) => {
+    console.log(e);
+    this.setState({
+      [e.target.name]: e.target.value
+    });
+  };
+  query = () => {
+    this.props.fetchStockPaged({
+      industry: this.state.industry,
+      pageSize: this.state.pageSize,
+      pageIndex: this.state.pageIndex,
+    });
+  };
   componentDidMount() {
-    this.props.fetchStocks({});
+    if (!(this.props.stockIndustrys?.length > 0)) {
+      this.props.fetchIndustrys();
+    }
+    this.query();
   }
 
   componentDidUpdate(prevProps) {
@@ -76,14 +91,27 @@ class Revenue extends Component<any, any> {
   }
 
   render() {
-    const stockRevenues = this.props.stockRevenues;
+    const {
+      props: {
+        stockDayMaps,
+        stockIndustrys,
+        stockRevenuePaged,
+      },
+      state: {
+        showTrendLine,
+        showNotesModal,
+        showGroupsModal,
+        pageIndex,
+        pageSize,
+      },
+    } = this;
 
-    const rows = stockRevenues?.map((stock) => (
+    const rows = stockRevenuePaged?.items?.map((stock) => (
       <tr key={"L" + stock.stockCode}>
         <td>
-          {this.state.showTrendLine && this.props.stockDayMaps && this.props.stockDayMaps[stock.stockCode] ? (
+          {showTrendLine && stockDayMaps && stockDayMaps[stock.stockCode] ? (
             <div>
-              <TrendLine id={`tl-${stock.stockCode}`} data={this.props.stockDayMaps[stock.stockCode]}></TrendLine>
+              <TrendLine id={`tl-${stock.stockCode}`} data={stockDayMaps[stock.stockCode]}></TrendLine>
             </div>
           ) : null}
         </td>
@@ -106,13 +134,13 @@ class Revenue extends Component<any, any> {
     ));
 
     const listNoteModal = (
-      <Modal size="xl" show={this.state.showNotesModal} onHide={() => this.setState({ showNotesModal: false })} >
+      <Modal size="xl" show={showNotesModal} onHide={() => this.setState({ showNotesModal: false })} >
         <ListNotes>
         </ListNotes>
       </Modal>
     );
 
-    const table = this.props.stockRevenues ? (
+    const table = (
       <Table hover striped className={`${styles.table}`}>
         <thead>
           <tr>
@@ -132,7 +160,7 @@ class Revenue extends Component<any, any> {
         </thead>
         <tbody>{rows}</tbody>
       </Table>
-    ) : null;
+    );
 
     return (
       <div>
@@ -141,16 +169,51 @@ class Revenue extends Component<any, any> {
             <Menu />
           </div>
           <div className="card-body">
-            <div className="row">
-              <div className={styles.tableTools}>
+            <Row className={styles.tableTools}>
+              <Col md={2}>
                 <button className="btn btn-primary" onClick={this.toggleTrendLine}>
-                  {this.state.showTrendLine ? "Hide" : "Show"} Trend
+                  {showTrendLine ? "Hide" : "Show"} Trend
                 </button>
-              </div>
-              <div>
-
-              </div>
-            </div>
+              </Col>
+              <Col md={2}>
+                <Form.Select
+                  value={this.state.industry}
+                  onChange={this.changeField}
+                  name="industry">
+                  <option value="">--</option>
+                  {
+                    stockIndustrys?.map((item, i) => {
+                      return (
+                        <option value={item} key={i}>{item}</option>
+                      )
+                    })
+                  }
+                </Form.Select>
+              </Col>
+              <Col md={1}>
+                <Form.Group as={Row}>
+                  <Form.Label column sm="5">
+                    Page
+                  </Form.Label>
+                  <Col sm="7">
+                    <Form.Control type="number" min={1} max={stockRevenuePaged.totalPages} name="pageIndex" value={pageIndex} onChange={this.changeField} />
+                  </Col>
+                </Form.Group>
+              </Col>
+              <Col md={1}>
+                <Form.Group as={Row}>
+                  <Form.Label column sm="5">
+                    Size
+                  </Form.Label>
+                  <Col sm="7">
+                    <Form.Control type="number" min={1} max={1000} name="pageSize" value={pageSize} onChange={this.changeField} />
+                  </Col>
+                </Form.Group>
+              </Col>
+              <Col>
+                <Button onClick={this.query}>Query</Button>
+              </Col>
+            </Row>
             <div className="table-responsive">{table}</div>
           </div>
         </div>
@@ -164,7 +227,7 @@ class Revenue extends Component<any, any> {
           ) : null
         }
         {listNoteModal}
-        <GroupModal showGroupsModal={this.state.showGroupsModal} stock={{ name: this.state.stock.name, code: this.state.stock.stockCode }} hide={() => this.setState({ showGroupsModal: false })} />
+        <GroupModal showGroupsModal={showGroupsModal} stock={{ name: this.state.stock.name, code: this.state.stock.stockCode }} hide={() => this.setState({ showGroupsModal: false })} />
         <IndustryModal saveStockIndustryItems={() => { }} />
       </div>
     );
@@ -174,7 +237,8 @@ class Revenue extends Component<any, any> {
 const mapStateToProps = (state) => {
   return {
     stockGroups: state.stockGroup.stockGroups,
-    stockRevenues: state.stock.stockRevenues,
+    stockRevenuePaged: state.stock.stockRevenuePaged,
+    stockIndustrys: state.stock.industrys,
     stockTotalCount: state.stock.totalCount,
     stockTotalPage: state.stock.totalPage,
     stockLoading: state.stock.loading,
@@ -184,7 +248,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchStocks: (options) => dispatch(actions.fetchStockRevenues(options)),
+    fetchStockPaged: (options) => dispatch(actions.fetchStockRevenuePaged(options)),
+    fetchIndustrys: () => dispatch(actions.fetchIndustrys()),
     fetchStocksDays: (options) => dispatch(daysActions.fetchStocksDays(options)),
     fetchStockGroups: () => dispatch(groupActions.fetchStockGroups()),
     fetchStockGroupItems: (stock) => dispatch(groupItemActions.fetchStockGroupItems(stock)),

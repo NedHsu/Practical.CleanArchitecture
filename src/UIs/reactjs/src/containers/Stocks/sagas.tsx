@@ -60,10 +60,21 @@ export function* fetchStockRevenuesSaga(action) {
   }
 }
 
+export function* fetchStockRevenuePagedSaga(action) {
+  yield put(actions.fetchStockRevenuesStart());
+  try {
+    const response = yield axios.get("revenue/paged", { params: action.options });
+    const fetchedStockRevenues = response.data;
+    yield put(actions.fetchStockRevenuePagedSuccess(fetchedStockRevenues));
+  } catch (error) {
+    yield put(actions.fetchStockRevenuesFail(error));
+  }
+}
+
 export function* fetchGroupStocksSaga(action) {
   yield put(actions.fetchStocksStart());
   try {
-    const response = yield axios.get(`/groupId/${action.group?.id}`);
+    const response = yield axios.get(`groupId/${action.group?.id}`);
     const fetchedStocks = response.data;
     yield put(actions.fetchGroupStocksSuccess(fetchedStocks));
   } catch (error) {
@@ -74,7 +85,7 @@ export function* fetchGroupStocksSaga(action) {
 export function* fetchIndustrysSaga() {
   yield put(actions.fetchStocksStart());
   try {
-    const response = yield axios.get(`/Industry`);
+    const response = yield axios.get(`Industry`);
     const fetchedIndustrys = response.data;
     yield put(actions.fetchIndustrysSuccess(fetchedIndustrys));
   } catch (error) {
@@ -161,6 +172,7 @@ export function* watchStock() {
   yield takeEvery(actionTypes.FETCH_STOCK_FUNDERS, fetchStockFundersSaga);
   yield takeEvery(actionTypes.FETCH_STOCK_FUNDER_SCORES, fetchStockFunderScoresSaga);
   yield takeEvery(actionTypes.FETCH_STOCK_REVENUES, fetchStockRevenuesSaga);
+  yield takeEvery(actionTypes.FETCH_STOCK_REVENUE_PAGED, fetchStockRevenuePagedSaga);
   yield takeEvery(actionTypes.FETCH_STOCK, fetchStockSaga);
   yield takeEvery(actionTypes.FETCH_STOCK_EXTRA, fetchStockExtraSaga);
   yield takeEvery(actionTypes.SAVE_STOCK, saveStockSaga);

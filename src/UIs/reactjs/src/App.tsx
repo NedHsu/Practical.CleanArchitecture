@@ -56,7 +56,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
-    <div>
+    <div className="app">
       <Nav />
       <Switch>
         <Route path="/home" component={Home} />

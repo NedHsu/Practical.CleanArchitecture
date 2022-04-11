@@ -6,6 +6,7 @@ const initialState = {
   stockFunders: {},
   showTrendLine: false,
   stockRevenues: [],
+  stockRevenuePaged: {},
   stockProfits: [],
   totalPage: 0,
   totalCount: 0,
@@ -127,6 +128,20 @@ const fetchStockRevenuesSuccess = (state, action) => {
   });
 };
 
+const fetchStockRevenuePagedSuccess = (state, action) => {
+  return updateObject(state, {
+    stockRevenuePaged: action.stockRevenuePaged,
+    loading: false,
+  });
+};
+
+const fetchStockIndustrysSuccess = (state, action) => {
+  return updateObject(state, {
+    industrys: action.industrys,
+    loading: false,
+  });
+};
+
 const fetchStockRevenuesFail = (state, action) => {
   return updateObject(state, { loading: false });
 };
@@ -245,6 +260,10 @@ const reducer = (state = initialState, action) => {
       return fetchStockRevenuesSuccess(state, action);
     case actionTypes.FETCH_STOCK_REVENUES_FAIL:
       return fetchStockRevenuesFail(state, action);
+    case actionTypes.FETCH_STOCK_REVENUE_PAGED_SUCCESS:
+      return fetchStockRevenuePagedSuccess(state, action);
+    case actionTypes.FETCH_INDUSTRYS_SUCCESS:
+      return fetchStockIndustrysSuccess(state, action);
     case actionTypes.FETCH_STOCK_PROFITS_START:
       return fetchStockProfitsStart(state, action);
     case actionTypes.FETCH_STOCK_PROFITS_SUCCESS:

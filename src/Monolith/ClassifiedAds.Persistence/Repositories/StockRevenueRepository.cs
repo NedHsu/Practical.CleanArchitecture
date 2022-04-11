@@ -1,6 +1,7 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.OS;
 using ClassifiedAds.Domain.DTOs;
 using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.Domain.Queries;
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Persistence.DapperContext;
 using Dapper;
@@ -30,6 +31,30 @@ WHERE r.TotalYoY > 0
 ORDER BY Date DESC, r.MoM DESC, r.YoY DESC
 ";
             return DbContext.Connection.Query<StockRevenueDTO>(sql).ToList();
+        }
+
+        public PagedResult<StockRevenueDTO> GetpRevenuePaged(StockRevenueQuery query)
+        {
+            var filters = "r.TotalYoY > 0";
+            var param = new Dictionary<string, object>();
+            if (!string.IsNullOrWhiteSpace(query.Industry))
+            {
+                param.Add("Industry", query.Industry);
+                filters += " AND s.Industry = @Industry";
+            }
+
+            var sql = @$"
+SELECT 
+	s.name, 
+    s.closePrice,
+	s.Industry,
+	r.* 
+FROM StockRevenue r 
+	JOIN Stock s ON r.StockCode = s.Code
+WHERE {filters}
+";
+            var orderby = "ORDER BY Date DESC, r.MoM DESC, r.YoY DESC";
+            return GetPaged<StockRevenueDTO>(query.PageIndex, query.PageSize, sql, param, orderBy: orderby);
         }
     }
 }

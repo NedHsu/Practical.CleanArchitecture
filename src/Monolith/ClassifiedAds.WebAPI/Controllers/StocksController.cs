@@ -103,6 +103,15 @@ namespace ClassifiedAds.WebAPI.Controllers
             return Ok(model);
         }
 
+        [HttpGet("revenue/paged")]
+        public ActionResult<PagedResultModel<StockRevenueModel>> GetRevenuePaged([FromQuery] GetRevenueStockPagedQuery query)
+        {
+            _logger.LogInformation("Getting paged stockRevenue");
+            var stockRevenues = _dispatcher.Dispatch(query);
+            var model = _mapper.Map<PagedResultModel<StockRevenueModel>>(stockRevenues);
+            return Ok(model);
+        }
+
         [HttpGet("fetchDate")]
         public ActionResult<StockFetchDatesModel> GetFetchDate([FromQuery] GetStockFetchDatesQuery query)
         {
