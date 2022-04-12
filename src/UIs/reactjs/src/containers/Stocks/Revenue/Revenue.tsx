@@ -64,7 +64,6 @@ class Revenue extends Component<any, any> {
     this.props.fetchStockGroupItems({ code: stock.stockCode });
   };
   changeField = (e) => {
-    console.log(e);
     this.setState({
       [e.target.name]: e.target.value
     });
@@ -76,11 +75,28 @@ class Revenue extends Component<any, any> {
       pageIndex: this.state.pageIndex,
     });
   };
+  onWindowScroll = () => {
+    const sticky = this.toolbar.current?.offsetTop ?? 40;
+    var currentScrollPos = window.pageYOffset;
+    if (currentScrollPos > sticky) {
+      this.toolbar.current?.classList.add(styles.sticky);
+    } else {
+      this.toolbar.current?.classList.remove(styles.sticky);
+    }
+  };
+  toolbar = React.createRef<HTMLDivElement>();
   componentDidMount() {
     if (!(this.props.stockIndustrys?.length > 0)) {
       this.props.fetchIndustrys();
     }
-    this.query();
+    if (!(this.props.stockRevenuePaged?.totalPages)) {
+      this.query();
+    }
+    window.addEventListener("scroll", this.onWindowScroll);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("scroll", this.onWindowScroll);
   }
 
   componentDidUpdate(prevProps) {
@@ -169,7 +185,7 @@ class Revenue extends Component<any, any> {
             <Menu />
           </div>
           <div className="card-body">
-            <Row className={styles.tableTools}>
+            <Row className={styles.tableTools} ref={this.toolbar}>
               <Col md={2}>
                 <button className="btn btn-primary" onClick={this.toggleTrendLine}>
                   {showTrendLine ? "Hide" : "Show"} Trend

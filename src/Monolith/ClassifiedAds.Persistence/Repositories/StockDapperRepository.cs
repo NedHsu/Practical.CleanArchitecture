@@ -102,7 +102,7 @@ SELECT s.Name, s.Industry, s.ClosePrice, s.TwentyPrice, s.SixtyPrice, t.*,
 	CASE WHEN t.P_EPS = 0 THEN 0 ELSE s.ClosePrice / t.P_EPS END P_PE
 FROM #t t
 	JOIN Stock s ON t.StockCode = s.Code
-WHERE t.GrowthRatio > @GrowthRatio AND t.EPS > 0
+WHERE t.GrowthRatio > @GrowthRatio AND t.EPS > 0 AND s.ClosePrice <> 0
 ORDER BY PE
 
 DROP TABLE #t

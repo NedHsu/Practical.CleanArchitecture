@@ -47,22 +47,26 @@ class Nav extends Component<Props> {
     //   dragRight: e.target.offsetWidth,
     // });
   };
-  componentDidMount() {
+  onWindowScroll = () => {
     const self = this;
-    self.prevScrollpos = window.pageYOffset;
-
-    window.onscroll = function () {
-      var currentScrollPos = window.pageYOffset;
-      let nav = self.navRef.current;
-      if (self.prevScrollpos > currentScrollPos) {
-        nav.style.top = "0";
-      } else {
-        nav.style.top = "-50px";
-      }
-
-      self.prevScrollpos = currentScrollPos;
-      self.setState({ showTopButton: currentScrollPos > 20 });
+    var currentScrollPos = window.pageYOffset;
+    let nav = self.navRef.current;
+    if (self.prevScrollpos > currentScrollPos) {
+      nav.style.top = "0";
+    } else {
+      nav.style.top = "-50px";
     }
+
+    self.prevScrollpos = currentScrollPos;
+    self.setState({ showTopButton: currentScrollPos > 20 });
+  };
+  componentDidMount() {
+    this.prevScrollpos = window.pageYOffset;
+    window.addEventListener("scroll", this.onWindowScroll);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("scroll", this.onWindowScroll);
   }
   render() {
     const pageTitle = "React";
