@@ -7,6 +7,6 @@ namespace ClassifiedAds.Domain.Repositories
 {
     public interface IStockMarginRepository : IBaseDapperRepository<StockMargin>
     {
-        List<StockMarginFunderDTO> GetWithFunders(string stockCode, DateTime startDate, DateTime endDate);
+        Task<List<StockMarginFunderDTO>> GetWithFunders(string stockCode, DateTime startDate, DateTime endDate);
     }
 }

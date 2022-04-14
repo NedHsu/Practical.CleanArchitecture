@@ -16,9 +16,9 @@ namespace ClassifiedAds.Application.StockNews.Commands
             _stockNewService = stockNewService;
         }
 
-        public void Handle(DeleteStockNewCommand command)
+        public async Task HandleAsync(DeleteStockNewCommand command, CancellationToken cancellationToken = default)
         {
-            _stockNewService.Delete(command.StockNew);
+            await _stockNewService.DeleteAsync(command.StockNew);
         }
     }
 }

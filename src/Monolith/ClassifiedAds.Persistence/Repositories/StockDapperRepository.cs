@@ -7,6 +7,7 @@ using Dapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Persistence.Repositories
 {
@@ -17,7 +18,7 @@ namespace ClassifiedAds.Persistence.Repositories
         {
         }
 
-        public List<Stock> GetByGroupId(Guid groupId)
+        public async Task<List<Stock>> GetByGroupId(Guid groupId)
         {
             string sql = @"
 SELECT s.* 
@@ -30,10 +31,10 @@ ORDER BY i.Sort, s.code
             {
                 { "@GroupId", groupId },
             };
-            return DbContext.Connection.Query<Stock>(sql, param).ToList();
+            return (await DbContext.Connection.QueryAsync<Stock>(sql, param)).ToList();
         }
 
-        public List<string> GetAllIndustry()
+        public async Task<IEnumerable<string>> GetAllIndustryAsync()
         {
             string sql = @"
 SELECT Industry
@@ -53,10 +54,10 @@ AND CFICode IN (
 GROUP BY Industry
 ORDER BY COUNT(0) DESC";
 
-            return DbContext.Connection.Query<string>(sql).ToList();
+            return await DbContext.Connection.QueryAsync<string>(sql);
         }
 
-        public Dictionary<string, string> GetStocksName(List<string> codes)
+        public async Task<Dictionary<string, string>> GetStocksName(List<string> codes)
         {
             string sql = @"
 SELECT Code, Name
@@ -68,10 +69,10 @@ WHERE Code IN @Codes
                 { "@Codes", codes },
             };
 
-            return DbContext.Connection.Query<Stock>(sql, param).ToDictionary(x => x.Code, x => x.Name);
+            return (await DbContext.Connection.QueryAsync<Stock>(sql, param)).ToDictionary(x => x.Code, x => x.Name);
         }
 
-        public StockFetchDatesDTO GetStockFetchDates()
+        public async Task<StockFetchDatesDTO> GetStockFetchDates()
         {
             string sql = @"
 SELECT 
@@ -82,10 +83,10 @@ SELECT
 	(SELECT MAX(Date) FROM StockMargin) StockMargin
 ";
 
-            return DbContext.Connection.QueryFirst<StockFetchDatesDTO>(sql);
+            return await DbContext.Connection.QueryFirstAsync<StockFetchDatesDTO>(sql);
         }
 
-        public List<StockEPSDTO> GetEPS(int year, float growthRatio)
+        public async Task<List<StockEPSDTO>> GetEPS(int year, float growthRatio)
         {
             string sql = @"
 ;WITH t AS (
@@ -112,10 +113,10 @@ DROP TABLE #t
                 { "@Year", year },
                 { "@GrowthRatio", growthRatio },
             };
-            return DbContext.Connection.Query<StockEPSDTO>(sql, param).ToList();
+            return (await DbContext.Connection.QueryAsync<StockEPSDTO>(sql, param)).ToList();
         }
 
-        public StockExtraDTO GetExtra(string code)
+        public async Task<StockExtraDTO> GetExtra(string code)
         {
             string sql = @"
 ;WITH t AS (
@@ -141,7 +142,7 @@ DROP TABLE #t
             {
                 { "@Code", code },
             };
-            return DbContext.Connection.QueryFirstOrDefault<StockExtraDTO>(sql, param);
+            return await DbContext.Connection.QueryFirstOrDefaultAsync<StockExtraDTO>(sql, param);
         }
     }
 }

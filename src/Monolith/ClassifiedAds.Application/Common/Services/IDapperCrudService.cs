@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application
 {
     public interface IDapperCrudService<T>
         where T : class
     {
-        IList<T> Get();
+        Task<IList<T>> Get();
 
-        void AddOrUpdate(T entity);
+        Task AddOrUpdateAsync(T entity);
 
-        void Delete(T entity);
+        Task DeleteAsync(T entity);
     }
 }

@@ -23,9 +23,9 @@ namespace ClassifiedAds.Application.StockProfits.Queries
             _stockprofitRepository = stockprofitRepository;
         }
 
-        public List<StockProfit> Handle(GetStockProfitsQuery query)
+        public async Task<List<StockProfit>> HandleAsync(GetStockProfitsQuery query, CancellationToken cancellationToken = default)
         {
-            return _stockprofitRepository.GetAll(x => x.StockCode == query.StockCode, " [Date] DESC").Take(12).ToList();
+            return (await _stockprofitRepository.GetAllAsync(x => x.StockCode == query.StockCode, " [Date] DESC")).Take(12).ToList();
         }
     }
 }

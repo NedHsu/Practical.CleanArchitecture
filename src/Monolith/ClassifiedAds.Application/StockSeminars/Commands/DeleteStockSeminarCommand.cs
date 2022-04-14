@@ -16,9 +16,9 @@ namespace ClassifiedAds.Application.StockSeminars.Commands
             _stockseminarService = stockseminarService;
         }
 
-        public void Handle(DeleteStockSeminarCommand command)
+        public async Task HandleAsync(DeleteStockSeminarCommand command, CancellationToken cancellationToken = default)
         {
-            _stockseminarService.Delete(command.StockSeminar);
+            await _stockseminarService.DeleteAsync(command.StockSeminar);
         }
     }
 }

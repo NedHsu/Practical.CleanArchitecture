@@ -1,7 +1,8 @@
 ﻿using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application.Users.Queries
 {
@@ -22,7 +23,7 @@ namespace ClassifiedAds.Application.Users.Queries
             _userRepository = userRepository;
         }
 
-        public List<User> Handle(GetUsersQuery query)
+        public async Task<List<User>> HandleAsync(GetUsersQuery query, CancellationToken cancellationToken = default)
         {
             var db = _userRepository.Get(new UserQueryOptions
             {
@@ -32,7 +33,7 @@ namespace ClassifiedAds.Application.Users.Queries
                 AsNoTracking = query.AsNoTracking,
             });
 
-            return db.ToList();
+            return await _userRepository.ToListAsync(db);
         }
     }
 }

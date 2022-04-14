@@ -1,10 +1,12 @@
 ﻿using ClassifiedAds.Application;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.WebAPI.Hubs
 {
+    [Authorize]
     public class NotificationHub : Hub
     {
         private readonly Dispatcher _dispatcher;

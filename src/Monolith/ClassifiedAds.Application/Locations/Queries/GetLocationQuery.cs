@@ -21,9 +21,9 @@ namespace ClassifiedAds.Application.Locations.Queries
             _locationRepository = locationRepository;
         }
 
-        public Location Handle(GetLocationQuery query)
+        public async Task<Location> HandleAsync(GetLocationQuery query, CancellationToken cancellationToken = default)
         {
-            var location = _locationRepository.GetAll().FirstOrDefault(x => x.Id == query.Id);
+            var location = await _locationRepository.FirstOrDefaultAsync(_locationRepository.GetAll().Where(x => x.Id == query.Id));
 
             if (query.ThrowNotFoundIfNull && location == null)
             {

@@ -1,5 +1,4 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
-using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,14 +15,14 @@ namespace ClassifiedAds.Application.StockDays.EventHandlers
             _serviceProvider = serviceProvider;
         }
 
-        public void Handle(EntityDeletedEvent<StockDay> domainEvent)
+        public async Task HandleAsync(EntityDeletedEvent<StockDay> domainEvent, CancellationToken cancellationToken = default)
         {
             using (var scope = _serviceProvider.CreateScope())
             {
                 var auditSerivce = scope.ServiceProvider.GetService<ICrudService<AuditLogEntry>>();
                 var currentUser = scope.ServiceProvider.GetService<ICurrentUser>();
 
-                auditSerivce.AddOrUpdate(new AuditLogEntry
+                await auditSerivce.AddOrUpdateAsync(new AuditLogEntry
                 {
                     UserId = currentUser.UserId,
                     CreatedDateTime = domainEvent.EventDateTime,

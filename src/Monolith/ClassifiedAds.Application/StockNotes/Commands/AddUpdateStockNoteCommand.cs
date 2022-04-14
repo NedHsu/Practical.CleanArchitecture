@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.Domain.Entities;
+using System.Threading;
 
 namespace ClassifiedAds.Application.StockNotes.Commands
 {
@@ -16,9 +17,9 @@ namespace ClassifiedAds.Application.StockNotes.Commands
             _stocknoteService = stocknoteService;
         }
 
-        public void Handle(AddUpdateStockNoteCommand command)
+        public async Task HandleAsync(AddUpdateStockNoteCommand command, CancellationToken cancellationToken = default)
         {
-            _stocknoteService.AddOrUpdate(command.StockNote);
+            await _stocknoteService.AddOrUpdateAsync(command.StockNote);
         }
     }
 }

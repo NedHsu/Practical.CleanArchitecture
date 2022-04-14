@@ -21,9 +21,9 @@ namespace ClassifiedAds.Application.Matchs.Queries
             _matchRepository = matchRepository;
         }
 
-        public Match Handle(GetMatchQuery query)
+        public async Task<Match> HandleAsync(GetMatchQuery query, CancellationToken cancellationToken = default)
         {
-            var match = _matchRepository.GetAll().FirstOrDefault(x => x.Id == query.Id);
+            var match = await _matchRepository.FirstOrDefaultAsync(_matchRepository.GetAll().Where(x => x.Id == query.Id));
 
             if (query.ThrowNotFoundIfNull && match == null)
             {

@@ -4,6 +4,7 @@ metadata:
   name: {{ .Release.Name}}-shared
 data:
   ASPNETCORE_ENVIRONMENT: "Development"
+  DOTNET_ENVIRONMENT: "Development"
   ConnectionStrings__ClassifiedAds: "Server={{ .Release.Name}}-db;Database=ClassifiedAds;User Id=sa;Password=sqladmin123!@#;MultipleActiveResultSets=true"
   MessageBroker__Provider: "RabbitMQ"
   MessageBroker__RabbitMQ__HostName: "{{ .Release.Name}}-rabbitmq"
@@ -25,5 +26,5 @@ data:
   Notification__Sms__Twilio__AuthToken: ""
   Notification__Sms__Twilio__FromNumber: ""
   Notification__Web__Provider: "Fake"
-  Notification__Web__SignalR__Endpoint: "http://{{ .Release.Name}}-notificationserver"
+  Notification__Web__SignalR__Endpoint: "http://{{ .Release.Name}}-webmvc"
   

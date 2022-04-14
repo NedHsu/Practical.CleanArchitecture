@@ -20,9 +20,9 @@ namespace ClassifiedAds.Application.StockNotes.Queries
             _stocknoteRepository = stocknoteRepository;
         }
 
-        public StockNote Handle(GetStockNoteQuery query)
+        public async Task<StockNote> HandleAsync(GetStockNoteQuery query, CancellationToken cancellationToken = default)
         {
-            var stocknote = _stocknoteRepository.Get(x => x.Id == query.Id);
+            var stocknote = await _stocknoteRepository.GetAsync(x => x.Id == query.Id);
 
             if (query.ThrowNotFoundIfNull && stocknote == null)
             {

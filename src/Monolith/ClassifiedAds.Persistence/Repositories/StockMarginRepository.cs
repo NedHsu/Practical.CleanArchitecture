@@ -17,7 +17,7 @@ namespace ClassifiedAds.Persistence.Repositories
         {
         }
 
-        public List<StockMarginFunderDTO> GetWithFunders(string stockCode, DateTime startDate, DateTime endDate)
+        public async Task<List<StockMarginFunderDTO>> GetWithFunders(string stockCode, DateTime startDate, DateTime endDate)
         {
             string sql = @"
 ;WITH t AS (
@@ -72,7 +72,7 @@ SELECT * FROM t
                 { "@EndDate", endDate },
             };
 
-            return DbContext.Connection.Query<StockMarginFunderDTO>(sql, param).ToList();
+            return (await DbContext.Connection.QueryAsync<StockMarginFunderDTO>(sql, param)).ToList();
         }
     }
 }

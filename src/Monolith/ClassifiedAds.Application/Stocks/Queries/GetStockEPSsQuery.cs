@@ -23,9 +23,9 @@ namespace ClassifiedAds.Application.Stocks.Queries
             _stockRepository = stockRepository;
         }
 
-        public List<StockEPSDTO> Handle(GetStockEPSsQuery query)
+        public async Task<List<StockEPSDTO>> HandleAsync(GetStockEPSsQuery query, CancellationToken cancellationToken)
         {
-            return _stockRepository.GetEPS(query.Year, query.GrowthRatio);
+            return await _stockRepository.GetEPS(query.Year, query.GrowthRatio);
         }
     }
 }

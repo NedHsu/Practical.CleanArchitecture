@@ -23,9 +23,9 @@ namespace ClassifiedAds.Application.StockFunders.Queries
             _stockFunderRepository = stockfunderRepository;
         }
 
-        public PagedResult<StockFunderDTO> Handle(GetCreditStockFunderPagedQuery query)
+        public async Task<PagedResult<StockFunderDTO>> HandleAsync(GetCreditStockFunderPagedQuery query, CancellationToken cancellationToken = default)
         {
-            return _stockFunderRepository.GetCreditBuyPaged(query.PageIndex, query.PageSize);
+            return await _stockFunderRepository.GetCreditBuyPaged(query.PageIndex, query.PageSize);
         }
     }
 }

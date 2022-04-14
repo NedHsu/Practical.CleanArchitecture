@@ -1,13 +1,14 @@
-﻿using ClassifiedAds.Domain.Entities;
-using ClassifiedAds.Domain.Notification;
+﻿using ClassifiedAds.Domain.Notification;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.Notification.Sms.Fake
 {
     public class FakeSmsNotification : ISmsNotification
     {
-        public void Send(SmsMessage smsMessage)
+        public Task SendAsync(ISmsMessage smsMessage, CancellationToken cancellationToken = default)
         {
-            // do nothing
+            return Task.CompletedTask;
         }
     }
 }

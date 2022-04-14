@@ -1,12 +1,17 @@
 using ClassifiedAds.Infrastructure.DistributedTracing;
 using ClassifiedAds.Infrastructure.Web.Filters;
-using ClassifiedAds.Services.Notification.Api.ConfigurationOptions;
+using ClassifiedAds.Services.Notification.ConfigurationOptions;
+using ClassifiedAds.Services.Notification.HostedServices;
+using ClassifiedAds.Services.Notification.Hubs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Polly;
+using System;
+using System.Reflection;
 
 namespace ClassifiedAds.Services.Notification
 {
@@ -28,10 +33,14 @@ namespace ClassifiedAds.Services.Notification
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            AppSettings.ConnectionStrings.MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+
             services.AddControllers(configure =>
             {
                 configure.Filters.Add(typeof(GlobalExceptionFilter));
             });
+
+            services.AddSignalR();
 
             services.AddCors(options =>
             {
@@ -39,6 +48,12 @@ namespace ClassifiedAds.Services.Notification
                     .AllowAnyOrigin()
                     .AllowAnyMethod()
                     .AllowAnyHeader());
+
+                options.AddPolicy("SignalRHubs", builder => builder
+                    .SetIsOriginAllowed(host => true)
+                    .AllowAnyHeader()
+                    .WithMethods("GET", "POST")
+                    .AllowCredentials());
             });
 
             services.AddDistributedTracing(AppSettings.DistributedTracing);
@@ -46,7 +61,7 @@ namespace ClassifiedAds.Services.Notification
             services.AddDateTimeProvider();
             services.AddApplicationServices();
 
-            services.AddNotificationModule(AppSettings.MessageBroker, AppSettings.Notification, AppSettings.ConnectionStrings.ClassifiedAds);
+            services.AddNotificationModule(AppSettings);
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>
@@ -55,12 +70,23 @@ namespace ClassifiedAds.Services.Notification
                         options.Audience = AppSettings.IdentityServerAuthentication.ApiName;
                         options.RequireHttpsMetadata = AppSettings.IdentityServerAuthentication.RequireHttpsMetadata;
                     });
+
+            services.AddHostedService<PushNotificationHostedService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.MigrateNotificationDb();
+            Policy.Handle<Exception>().WaitAndRetry(new[]
+            {
+                TimeSpan.FromSeconds(10),
+                TimeSpan.FromSeconds(20),
+                TimeSpan.FromSeconds(30),
+            })
+            .Execute(() =>
+            {
+                app.MigrateNotificationDb();
+            });
 
             if (env.IsDevelopment())
             {
@@ -77,6 +103,7 @@ namespace ClassifiedAds.Services.Notification
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<NotificationHub>("/hubs/notification").RequireCors("SignalRHubs");
             });
         }
     }

@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.Domain.Entities;
+using System.Threading;
 
 namespace ClassifiedAds.Application.Stocks.Commands
 {
@@ -16,9 +17,9 @@ namespace ClassifiedAds.Application.Stocks.Commands
             _stockService = stockService;
         }
 
-        public void Handle(DeleteStockCommand command)
+        public async Task HandleAsync(DeleteStockCommand command, CancellationToken cancellationToken = default)
         {
-            _stockService.Delete(command.Stock);
+            await _stockService.DeleteAsync(command.Stock);
         }
     }
 }

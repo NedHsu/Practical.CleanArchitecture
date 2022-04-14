@@ -1,10 +1,13 @@
-﻿namespace ClassifiedAds.Infrastructure.Notification.Sms.Fake
+﻿using System.Threading;
+using System.Threading.Tasks;
+
+namespace ClassifiedAds.Infrastructure.Notification.Sms.Fake
 {
     public class FakeSmsNotification : ISmsNotification
     {
-        public void Send(SmsMessageDTO smsMessage)
+        public Task SendAsync(ISmsMessage smsMessage, CancellationToken cancellationToken = default)
         {
-            // do nothing
+            return Task.CompletedTask;
         }
     }
 }

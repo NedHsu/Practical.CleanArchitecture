@@ -8,14 +8,15 @@ export const environment = {
     Authority: "https://localhost:44367",
     //Authority: "http://host.docker.internal:9000/",
     //Authority: "http://identityserver",
-    ClientId: "ClassifiedAds.Angular"
+    ClientId: "ClassifiedAds.Angular",
   },
   ResourceServer: {
-    Endpoint: "https://localhost:44312/api/"
-    //Endpoint: "http://host.docker.internal:9002/api/"
-    //Endpoint: "http://webapi/api/"
+    Endpoint: "https://localhost:44312/api/",
+    //Endpoint: "http://host.docker.internal:9002/api/",
+    //Endpoint: "http://webapi/api/",
+    NotificationEndpoint: "https://localhost:44312/hubs/notification",
   },
-  CurrentUrl: "http://localhost:4200/"
+  CurrentUrl: "http://localhost:4200/",
 };
 
 /*
@@ -25,4 +26,4 @@ export const environment = {
  * This import should be commented out in production mode because it will have a negative impact
  * on performance if an error is thrown.
  */
-// import 'zone.js/dist/zone-error';  // Included with Angular CLI.
+// import 'zone.js/plugins/zone-error';  // Included with Angular CLI.

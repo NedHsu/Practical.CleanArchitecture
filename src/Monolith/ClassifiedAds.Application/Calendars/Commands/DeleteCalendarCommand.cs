@@ -16,9 +16,9 @@ namespace ClassifiedAds.Application.Calendars.Commands
             _calendarService = calendarService;
         }
 
-        public void Handle(DeleteCalendarCommand command)
+        public async Task HandleAsync(DeleteCalendarCommand command, CancellationToken cancellationToken = default)
         {
-            _calendarService.Delete(command.Calendar);
+            await _calendarService.DeleteAsync(command.Calendar);
         }
     }
 }

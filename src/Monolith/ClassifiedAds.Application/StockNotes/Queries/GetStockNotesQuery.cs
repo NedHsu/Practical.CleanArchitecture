@@ -23,14 +23,14 @@ namespace ClassifiedAds.Application.StockNotes.Queries
             _stocknoteRepository = stocknoteRepository;
         }
 
-        public List<StockNote> Handle(GetStockNotesQuery query)
+        public async Task<List<StockNote>> HandleAsync(GetStockNotesQuery query, CancellationToken cancellationToken = default)
         {
             if (!string.IsNullOrWhiteSpace(query.Code))
             {
-                return _stocknoteRepository.GetAll(x => x.StockCode == query.Code).ToList();
+                return _stocknoteRepository.GetAllAsync(x => x.StockCode == query.Code).Result.ToList();
             }
 
-            return _stocknoteRepository.GetAll().ToList();
+            return (await _stocknoteRepository.GetAllAsync()).ToList();
         }
     }
 }

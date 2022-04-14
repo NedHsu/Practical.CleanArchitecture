@@ -16,9 +16,9 @@ namespace ClassifiedAds.Application.JobSrcs.Commands
             _jobSrcService = jobSrcService;
         }
 
-        public void Handle(DeleteJobSrcCommand command)
+        public async Task HandleAsync(DeleteJobSrcCommand command, CancellationToken cancellationToken = default)
         {
-            _jobSrcService.Delete(command.JobSrc);
+            await _jobSrcService.DeleteAsync(command.JobSrc);
         }
     }
 }

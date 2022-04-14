@@ -3,57 +3,88 @@ using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Transfer;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.Storages.Amazon
 {
     public class AmazonS3StorageManager : IFileStorageManager
     {
         private readonly IAmazonS3 _client;
-        private readonly string _bucketName;
+        private readonly AmazonOptions _options;
 
-        public AmazonS3StorageManager(string awsAccessKeyId, string awsSecretAccessKey, string bucketName, string regionEndpoint)
+        public AmazonS3StorageManager(AmazonOptions options)
         {
-            _client = new AmazonS3Client(awsAccessKeyId, awsSecretAccessKey, RegionEndpoint.GetBySystemName(regionEndpoint));
-            _bucketName = bucketName;
+            _client = new AmazonS3Client(options.AccessKeyID, options.SecretAccessKey, RegionEndpoint.GetBySystemName(options.RegionEndpoint));
+            _options = options;
         }
 
-        public void Create(FileEntryDTO fileEntry, Stream stream)
+        private string GetKey(IFileEntry fileEntry)
+        {
+            return _options.Path + fileEntry.FileLocation;
+        }
+
+        public async Task CreateAsync(IFileEntry fileEntry, Stream stream, CancellationToken cancellationToken = default)
         {
             var fileTransferUtility = new TransferUtility(_client);
 
             var uploadRequest = new TransferUtilityUploadRequest
             {
                 InputStream = stream,
-                Key = fileEntry.Id.ToString(),
-                BucketName = _bucketName,
+                Key = GetKey(fileEntry),
+                BucketName = _options.BucketName,
                 CannedACL = S3CannedACL.NoACL,
             };
 
-            fileTransferUtility.UploadAsync(uploadRequest).Wait();
-
-            fileEntry.FileLocation = fileEntry.Id.ToString();
+            await fileTransferUtility.UploadAsync(uploadRequest, cancellationToken);
         }
 
-        public void Delete(FileEntryDTO fileEntry)
+        public async Task DeleteAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)
         {
-            _client.DeleteObjectAsync(_bucketName, fileEntry.FileLocation).Wait();
+            await _client.DeleteObjectAsync(_options.BucketName, GetKey(fileEntry), cancellationToken);
         }
 
-        public byte[] Read(FileEntryDTO fileEntry)
+        public async Task<byte[]> ReadAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)
         {
             var request = new GetObjectRequest
             {
-                BucketName = _bucketName,
-                Key = fileEntry.FileLocation,
+                BucketName = _options.BucketName,
+                Key = GetKey(fileEntry),
             };
 
-            using (var response = _client.GetObjectAsync(request).GetAwaiter().GetResult())
-            using (var responseStream = response.ResponseStream)
-            using (var reader = new MemoryStream())
+            using var response = await _client.GetObjectAsync(request, cancellationToken);
+            using var responseStream = response.ResponseStream;
+            using var reader = new MemoryStream();
+            await responseStream.CopyToAsync(reader, cancellationToken);
+            return reader.ToArray();
+        }
+
+        public async Task ArchiveAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)
+        {
+            var copy = new CopyObjectRequest
             {
-                responseStream.CopyTo(reader);
-                return reader.ToArray();
-            }
+                SourceBucket = _options.BucketName,
+                SourceKey = GetKey(fileEntry),
+                DestinationBucket = _options.BucketName,
+                DestinationKey = GetKey(fileEntry),
+                StorageClass = S3StorageClass.StandardInfrequentAccess,
+            };
+
+            await _client.CopyObjectAsync(copy, cancellationToken);
+        }
+
+        public async Task UnArchiveAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)
+        {
+            var copy = new CopyObjectRequest
+            {
+                SourceBucket = _options.BucketName,
+                SourceKey = GetKey(fileEntry),
+                DestinationBucket = _options.BucketName,
+                DestinationKey = GetKey(fileEntry),
+                StorageClass = S3StorageClass.Standard,
+            };
+
+            await _client.CopyObjectAsync(copy, cancellationToken);
         }
     }
 }

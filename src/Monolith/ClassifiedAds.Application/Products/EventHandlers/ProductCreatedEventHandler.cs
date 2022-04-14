@@ -4,6 +4,8 @@ using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application.Products.EventHandlers
 {
@@ -16,13 +18,13 @@ namespace ClassifiedAds.Application.Products.EventHandlers
             _serviceProvider = serviceProvider;
         }
 
-        public void Handle(EntityCreatedEvent<Product> domainEvent)
+        public async Task HandleAsync(EntityCreatedEvent<Product> domainEvent, CancellationToken cancellationToken = default)
         {
             using var scope = _serviceProvider.CreateScope();
             var auditSerivce = scope.ServiceProvider.GetService<ICrudService<AuditLogEntry>>();
             var currentUser = scope.ServiceProvider.GetService<ICurrentUser>();
 
-            auditSerivce.AddOrUpdate(new AuditLogEntry
+            await auditSerivce.AddOrUpdateAsync(new AuditLogEntry
             {
                 UserId = currentUser.IsAuthenticated ? currentUser.UserId : Guid.Empty,
                 CreatedDateTime = domainEvent.EventDateTime,

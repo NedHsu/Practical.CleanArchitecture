@@ -16,9 +16,9 @@ namespace ClassifiedAds.Application.StockGroups.Commands
             _stockgroupService = stockgroupService;
         }
 
-        public void Handle(DeleteStockGroupCommand command)
+        public async Task HandleAsync(DeleteStockGroupCommand command, CancellationToken cancellationToken = default)
         {
-            _stockgroupService.Delete(command.StockGroup);
+            await _stockgroupService.DeleteAsync(command.StockGroup);
         }
     }
 }

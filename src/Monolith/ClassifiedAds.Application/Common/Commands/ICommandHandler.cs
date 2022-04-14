@@ -1,8 +1,11 @@
-﻿namespace ClassifiedAds.Application
+﻿using System.Threading;
+using System.Threading.Tasks;
+
+namespace ClassifiedAds.Application
 {
     public interface ICommandHandler<TCommand>
         where TCommand : ICommand
     {
-        void Handle(TCommand command);
+        Task HandleAsync(TCommand command, CancellationToken cancellationToken = default);
     }
 }

@@ -16,7 +16,7 @@ namespace ClassifiedAds.Persistence.Repositories
         {
         }
 
-        public List<StockDay> GetInStocks(string[] codes, DateTime startDate, DateTime endDate)
+        public async Task<List<StockDay>> GetInStocks(string[] codes, DateTime startDate, DateTime endDate)
         {
             string sql = @"
 SELECT * 
@@ -32,7 +32,7 @@ ORDER BY Date
                 { "@EndDate", endDate },
             };
 
-            return DbContext.Connection.Query<StockDay>(sql, param).ToList();
+            return (await DbContext.Connection.QueryAsync<StockDay>(sql, param)).ToList();
         }
     }
 }

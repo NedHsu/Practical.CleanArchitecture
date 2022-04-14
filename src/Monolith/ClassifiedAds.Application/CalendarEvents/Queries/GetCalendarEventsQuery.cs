@@ -26,20 +26,20 @@ namespace ClassifiedAds.Application.CalendarEvents.Queries
             _calendareventRepository = calendareventRepository;
         }
 
-        public List<CalendarEvent> Handle(GetCalendarEventsQuery query)
+        public async Task<List<CalendarEvent>> HandleAsync(GetCalendarEventsQuery query, CancellationToken cancellationToken = default)
         {
-            var result = _calendareventRepository.GetAll();
+            List<CalendarEvent> result = null;
             if (query.Start.HasValue)
             {
-                result = result.Where(x => x.EndTime.Date >= query.Start);
+                result = await _calendareventRepository.ToListAsync(_calendareventRepository.GetAll().Where(x => x.EndTime.Date >= query.Start));
             }
 
             if (query.End.HasValue)
             {
-                result = result.Where(x => x.StartTime.Date <= query.End);
+                result = await _calendareventRepository.ToListAsync(_calendareventRepository.GetAll().Where(x => x.StartTime.Date <= query.End));
             }
 
-            return result.ToList();
+            return result;
         }
     }
 }

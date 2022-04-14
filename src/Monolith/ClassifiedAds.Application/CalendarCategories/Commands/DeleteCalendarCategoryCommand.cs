@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.Domain.Entities;
+using System.Threading;
 
 namespace ClassifiedAds.Application.CalendarCategories.Commands
 {
@@ -16,9 +17,9 @@ namespace ClassifiedAds.Application.CalendarCategories.Commands
             _calendarCategoryService = calendarCategoryService;
         }
 
-        public void Handle(DeleteCalendarCategoryCommand command)
+        public async Task HandleAsync(DeleteCalendarCategoryCommand command, CancellationToken cancellationToken = default)
         {
-            _calendarCategoryService.Delete(command.CalendarCategory);
+            await _calendarCategoryService.DeleteAsync(command.CalendarCategory);
         }
     }
 }

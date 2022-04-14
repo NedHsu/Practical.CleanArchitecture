@@ -2,16 +2,17 @@
 using ClassifiedAds.Domain.Entities;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Domain.Repositories
 {
     public interface IStockDapperRepository : IBaseDapperRepository<Stock>
     {
-        List<Stock> GetByGroupId(Guid groupId);
-        List<string> GetAllIndustry();
-        Dictionary<string, string> GetStocksName(List<string> codes);
-        StockFetchDatesDTO GetStockFetchDates();
-        List<StockEPSDTO> GetEPS(int year, float growthRatio);
-        StockExtraDTO GetExtra(string code);
+        Task<List<Stock>> GetByGroupId(Guid groupId);
+        Task<IEnumerable<string>> GetAllIndustryAsync();
+        Task<Dictionary<string, string>> GetStocksName(List<string> codes);
+        Task<StockFetchDatesDTO> GetStockFetchDates();
+        Task<List<StockEPSDTO>> GetEPS(int year, float growthRatio);
+        Task<StockExtraDTO> GetExtra(string code);
     }
 }

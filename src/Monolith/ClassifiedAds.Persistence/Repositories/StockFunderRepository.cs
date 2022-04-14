@@ -17,7 +17,7 @@ namespace ClassifiedAds.Persistence.Repositories
         {
         }
 
-        public List<StockFunderDTO> GetCreditTopBuy()
+        public async Task<List<StockFunderDTO>> GetCreditTopBuy()
         {
             var sql = @"
 SELECT TOP 30 
@@ -37,10 +37,10 @@ WHERE  t.CreditSum > 0
                              AND f.date < t.date) 
 ORDER  BY date DESC, CreditSum DESC
 ";
-            return DbContext.Connection.Query<StockFunderDTO>(sql).ToList();
+            return (await DbContext.Connection.QueryAsync<StockFunderDTO>(sql)).ToList();
         }
 
-        public PagedResult<StockFunderDTO> GetCreditBuyPaged(uint pageIndex, uint pageSize)
+        public async Task<PagedResult<StockFunderDTO>> GetCreditBuyPaged(uint pageIndex, uint pageSize)
         {
             var sql = @"
 SELECT
@@ -60,10 +60,10 @@ WHERE  t.CreditSum > 0
                              AND f.date < t.date)
 ";
             var orderby = "ORDER  BY date DESC, CreditSum DESC";
-            return GetPaged<StockFunderDTO>(pageIndex, pageSize, sql, orderBy: orderby);
+            return await GetPagedAsync<StockFunderDTO>(pageIndex, pageSize, sql, orderBy: orderby);
         }
 
-        public List<StockFunderScoreDTO> GetStockFunderScore(DateTime startDate)
+        public async Task<List<StockFunderScoreDTO>> GetStockFunderScore(DateTime startDate)
         {
             var sql = @"
 ;WITH f AS (
@@ -82,7 +82,7 @@ FROM Stock s
             {
                 { "@date", startDate },
             };
-            return DbContext.Connection.Query<StockFunderScoreDTO>(sql, param).ToList();
+            return (await DbContext.Connection.QueryAsync<StockFunderScoreDTO>(sql, param)).ToList();
         }
     }
 }

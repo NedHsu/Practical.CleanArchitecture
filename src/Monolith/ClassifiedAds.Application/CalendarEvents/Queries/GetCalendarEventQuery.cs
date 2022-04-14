@@ -21,9 +21,9 @@ namespace ClassifiedAds.Application.CalendarEvents.Queries
             _calendareventRepository = calendareventRepository;
         }
 
-        public CalendarEvent Handle(GetCalendarEventQuery query)
+        public async Task<CalendarEvent> HandleAsync(GetCalendarEventQuery query, CancellationToken cancellationToken = default)
         {
-            var calendarevent = _calendareventRepository.GetAll().FirstOrDefault(x => x.Id == query.Id);
+            var calendarevent = await _calendareventRepository.FirstOrDefaultAsync(_calendareventRepository.GetAll().Where(x => x.Id == query.Id));
 
             if (query.ThrowNotFoundIfNull && calendarevent == null)
             {

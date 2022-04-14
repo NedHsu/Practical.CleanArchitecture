@@ -1,5 +1,7 @@
 ﻿using System.Linq;
 using System.Net.Mail;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.Notification.Email.SmtpClient
 {
@@ -12,7 +14,7 @@ namespace ClassifiedAds.Infrastructure.Notification.Email.SmtpClient
             _options = options;
         }
 
-        public void Send(EmailMessageDTO emailMessage)
+        public async Task SendAsync(IEmailMessage emailMessage, CancellationToken cancellationToken = default)
         {
             var mail = new MailMessage();
 
@@ -57,7 +59,7 @@ namespace ClassifiedAds.Infrastructure.Notification.Email.SmtpClient
                 smtpClient.EnableSsl = _options.EnableSsl.Value;
             }
 
-            smtpClient.Send(mail);
+            await smtpClient.SendMailAsync(mail, cancellationToken);
         }
     }
 }

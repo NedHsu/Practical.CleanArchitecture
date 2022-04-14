@@ -5,6 +5,7 @@ using ClassifiedAds.Blazor.Modules.Products.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Logging;
+using Microsoft.JSInterop;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -22,6 +23,9 @@ namespace ClassifiedAds.Blazor.Modules.Products.Pages
         public NavigationManager NavManager { get; set; }
 
         [Inject]
+        public IJSRuntime JSRuntime { get; set; }
+
+        [Inject]
         public ILogger<List> Logger { get; set; }
 
         protected AuditLogsDialog AuditLogsDialog { get; set; }
@@ -34,10 +38,10 @@ namespace ClassifiedAds.Blazor.Modules.Products.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            Products = await ProductService.GetProducts();
+            Products = await ProductService.GetProductsAsync();
         }
 
-        protected async Task QuickAddProduct()
+        protected void QuickAddProduct()
         {
             NavManager.NavigateTo("/products/add");
         }
@@ -50,7 +54,7 @@ namespace ClassifiedAds.Blazor.Modules.Products.Pages
 
         protected async Task ViewAuditLogs(ProductModel product)
         {
-            var logs = await ProductService.GetAuditLogs(product.Id);
+            var logs = await ProductService.GetAuditLogsAsync(product.Id);
             AuditLogsDialog.Show(logs);
         }
 
@@ -62,10 +66,24 @@ namespace ClassifiedAds.Blazor.Modules.Products.Pages
 
         public async void ConfirmedDeleteProduct()
         {
-            await ProductService.DeleteProduct(DeletingProduct.Id);
+            await ProductService.DeleteProductAsync(DeletingProduct.Id);
             DeleteDialog.Close();
-            Products = await ProductService.GetProducts();
+            Products = await ProductService.GetProductsAsync();
             StateHasChanged();
+        }
+
+        protected async Task ExportAsPdf()
+        {
+            var token = await ProductService.GetAccessToken();
+            await JSRuntime.Log(token);
+            await JSRuntime.InvokeVoidAsync("interop.downloadFile", ProductService.GetExportPdfUrl(), token, "Products.pdf");
+        }
+
+        protected async Task ExportAsCsv()
+        {
+            var token = await ProductService.GetAccessToken();
+            await JSRuntime.Log(token);
+            await JSRuntime.InvokeVoidAsync("interop.downloadFile", ProductService.GetExportCsvUrl(), token, "Products.csv");
         }
     }
 }

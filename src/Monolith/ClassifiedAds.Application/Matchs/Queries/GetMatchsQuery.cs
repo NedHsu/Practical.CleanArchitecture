@@ -23,9 +23,9 @@ namespace ClassifiedAds.Application.Matchs.Queries
             _matchRepository = matchRepository;
         }
 
-        public List<Match> Handle(GetMatchsQuery query)
+        public async Task<List<Match>> HandleAsync(GetMatchsQuery query, CancellationToken cancellationToken = default)
         {
-            return _matchRepository.GetAll().ToList();
+            return (await _matchRepository.GetAllAsync()).ToList();
         }
     }
 }

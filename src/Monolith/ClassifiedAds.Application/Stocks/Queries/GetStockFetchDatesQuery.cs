@@ -22,9 +22,9 @@ namespace ClassifiedAds.Application.Stocks.Queries
             _stockRepository = stockRepository;
         }
 
-        public StockFetchDatesDTO Handle(GetStockFetchDatesQuery query)
+        public async Task<StockFetchDatesDTO> HandleAsync(GetStockFetchDatesQuery query, CancellationToken cancellationToken = default)
         {
-            return _stockRepository.GetStockFetchDates();
+            return await _stockRepository.GetStockFetchDates();
         }
     }
 }

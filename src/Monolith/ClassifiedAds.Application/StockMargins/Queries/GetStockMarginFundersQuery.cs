@@ -25,9 +25,9 @@ namespace ClassifiedAds.Application.StockMargins.Queries
             _stockmarginRepository = stockmarginRepository;
         }
 
-        public List<StockMarginFunderDTO> Handle(GetStockMarginFundersQuery query)
+        public async Task<List<StockMarginFunderDTO>> HandleAsync(GetStockMarginFundersQuery query, CancellationToken cancellationToken = default)
         {
-            return _stockmarginRepository.GetWithFunders(query.StockCode, query.StartDate, query.EndDate);
+            return await _stockmarginRepository.GetWithFunders(query.StockCode, query.StartDate, query.EndDate);
         }
     }
 }

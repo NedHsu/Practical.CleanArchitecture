@@ -6,13 +6,18 @@ namespace ClassifiedAds.WebAPI.Models.Roles
 {
     public static class RoleModelMappingConfiguration
     {
-        public static IEnumerable<RoleModel> ToDTOs(this IEnumerable<Role> entities)
+        public static IEnumerable<RoleModel> ToModels(this IEnumerable<Role> entities)
         {
-            return entities.Select(x => x.ToDTO());
+            return entities.Select(x => x.ToModel());
         }
 
-        public static RoleModel ToDTO(this Role entity)
+        public static RoleModel ToModel(this Role entity)
         {
+            if (entity == null)
+            {
+                return null;
+            }
+
             return new RoleModel
             {
                 Id = entity.Id,

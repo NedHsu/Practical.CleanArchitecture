@@ -1,15 +1,17 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using ClassifiedAds.IdentityServer.ConfigurationOptions;
+﻿using ClassifiedAds.IdentityServer.ConfigurationOptions;
 using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Infrastructure.Notification;
 using ClassifiedAds.Infrastructure.Notification.Email;
 using ClassifiedAds.Infrastructure.Notification.Sms;
 using ClassifiedAds.Infrastructure.Notification.Web;
+using ClassifiedAds.Modules.Identity.ConfigurationOptions;
 using ClassifiedAds.Modules.Identity.Entities;
 using ClassifiedAds.Modules.Identity.Repositories;
+using ClassifiedAds.Modules.Notification.ConfigurationOptions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -34,6 +36,13 @@ namespace ClassifiedAds.IdentityServer
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+                options.KnownNetworks.Clear();
+                options.KnownProxies.Clear();
+            });
+
             if (AppSettings.CookiePolicyOptions?.IsEnabled ?? false)
             {
                 services.Configure<Microsoft.AspNetCore.Builder.CookiePolicyOptions>(options =>
@@ -46,6 +55,7 @@ namespace ClassifiedAds.IdentityServer
             }
 
             services.AddControllersWithViews();
+            services.AddRazorPages();
 
             services.AddCors();
 
@@ -58,12 +68,35 @@ namespace ClassifiedAds.IdentityServer
                 Web = new WebOptions { Provider = "Fake" },
             };
 
-            services.AddIdentityModule(AppSettings.ConnectionStrings.ClassifiedAds)
-                    .AddNotificationModule(AppSettings.MessageBroker, notificationOptions, AppSettings.ConnectionStrings.ClassifiedAds)
+            services.AddIdentityModule(new IdentityModuleOptions
+            {
+                ConnectionStrings = new Modules.Identity.ConfigurationOptions.ConnectionStringsOptions
+                {
+                    Default = AppSettings.ConnectionStrings.ClassifiedAds,
+                },
+            })
+                    .AddNotificationModule(new NotificationModuleOptions
+                    {
+                        ConnectionStrings = new Modules.Notification.ConfigurationOptions.ConnectionStringsOptions
+                        {
+                            Default = AppSettings.ConnectionStrings.ClassifiedAds,
+                        },
+                        MessageBroker = AppSettings.MessageBroker,
+                        Notification = notificationOptions,
+                    })
                     .AddApplicationServices();
 
-            services.AddIdentityServer()
-                    .AddSigningCredential(new X509Certificate2(Configuration["Certificates:Default:Path"], Configuration["Certificates:Default:Password"]))
+            services.AddIdentityServer(options =>
+                    {
+                        if (!string.IsNullOrWhiteSpace(AppSettings.IdentityServer.IssuerUri))
+                        {
+                            options.IssuerUri = AppSettings.IdentityServer.IssuerUri;
+                        }
+
+                        options.InputLengthRestrictions.Password = int.MaxValue;
+                        options.InputLengthRestrictions.UserName = int.MaxValue;
+                    })
+                    .AddSigningCredential(AppSettings.IdentityServer.Certificate.FindCertificate())
                     .AddAspNetIdentity<User>()
                     .AddTokenProviderModule(AppSettings.ConnectionStrings.ClassifiedAds);
 
@@ -78,6 +111,8 @@ namespace ClassifiedAds.IdentityServer
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseForwardedHeaders();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -109,6 +144,7 @@ namespace ClassifiedAds.IdentityServer
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();
+                endpoints.MapRazorPages();
             });
         }
     }

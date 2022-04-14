@@ -1,7 +1,9 @@
-﻿using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
-using Microsoft.Azure.EventHubs;
-using Newtonsoft.Json;
-using System.Text;
+﻿using Azure.Messaging.EventHubs;
+using Azure.Messaging.EventHubs.Producer;
+using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
+using System.Collections.Generic;
+using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureEventHub
@@ -17,23 +19,22 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.AzureEventHub
             _hubName = hubName;
         }
 
-        public void Send(T message)
+        public async Task SendAsync(T message, MetaData metaData, CancellationToken cancellationToken = default)
         {
-            SendAsync(message).GetAwaiter().GetResult();
-        }
+            var producer = new EventHubProducerClient(_connectionString, _hubName);
 
-        private async Task SendAsync(T message)
-        {
-            var connectionStringBuilder = new EventHubsConnectionStringBuilder(_connectionString)
+            var events = new List<EventData>
             {
-                EntityPath = _hubName,
+                new EventData(JsonSerializer.Serialize(new Message<T>
+                {
+                    Data = message,
+                    MetaData = metaData,
+                })),
             };
 
-            var eventHubClient = EventHubClient.CreateFromConnectionString(connectionStringBuilder.ToString());
+            await producer.SendAsync(events, cancellationToken);
 
-            await eventHubClient.SendAsync(new EventData(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message))));
-
-            await eventHubClient.CloseAsync();
+            await producer.CloseAsync(cancellationToken);
         }
     }
 }

@@ -4,9 +4,12 @@ using ClassifiedAds.Infrastructure.Notification.Email;
 using ClassifiedAds.Infrastructure.Notification.Sms;
 using ClassifiedAds.Infrastructure.Notification.Web;
 using ClassifiedAds.Infrastructure.Web.Filters;
+using ClassifiedAds.Modules.Configuration.ConfigurationOptions;
+using ClassifiedAds.Modules.Identity.ConfigurationOptions;
 using ClassifiedAds.Modules.Identity.Contracts.Services;
 using ClassifiedAds.Modules.Identity.Repositories;
 using ClassifiedAds.Modules.Identity.Services;
+using ClassifiedAds.Modules.Notification.Hubs;
 using ClassifiedAds.WebAPI.ConfigurationOptions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -46,11 +49,14 @@ namespace ClassifiedAds.WebAPI
                 configure.Filters.Add(typeof(GlobalExceptionFilter));
             })
                 .AddAuditLogModule()
+                .AddConfigurationModule()
                 .AddIdentityModule()
                 .AddNotificationModule()
                 .AddProductModule()
                 .AddStorageModule()
                 .AddMonitoringServices(AppSettings.Monitoring);
+
+            services.AddSignalR();
 
             services.AddCors(options =>
             {
@@ -58,6 +64,12 @@ namespace ClassifiedAds.WebAPI
                     .WithOrigins(AppSettings.CORS.AllowedOrigins)
                     .AllowAnyMethod()
                     .AllowAnyHeader());
+
+                options.AddPolicy("SignalRHubs", builder => builder
+                    .WithOrigins(AppSettings.CORS.AllowedOrigins)
+                    .AllowAnyHeader()
+                    .WithMethods("GET", "POST")
+                    .AllowCredentials());
 
                 options.AddPolicy("AllowAnyOrigin", builder => builder
                     .AllowAnyOrigin()
@@ -79,12 +91,61 @@ namespace ClassifiedAds.WebAPI
                 Web = new WebOptions { Provider = "Fake" },
             };
 
-            services.AddAuditLogModule(AppSettings.ConnectionStrings.ClassifiedAds)
-                    .AddIdentityModuleCore(AppSettings.ConnectionStrings.ClassifiedAds)
-                    .AddNotificationModule(AppSettings.MessageBroker, notificationOptions, AppSettings.ConnectionStrings.ClassifiedAds)
-                    .AddProductModule(AppSettings.ConnectionStrings.ClassifiedAds)
-                    .AddStorageModule(AppSettings.Storage, AppSettings.MessageBroker, AppSettings.ConnectionStrings.ClassifiedAds)
-                    .AddApplicationServices();
+            services.AddAuditLogModule(new Modules.AuditLog.ConfigurationOptions.AuditLogModuleOptions
+            {
+                ConnectionStrings = new Modules.AuditLog.ConfigurationOptions.ConnectionStringsOptions
+                {
+                    Default = AppSettings.ConnectionStrings.ClassifiedAds,
+                },
+            })
+            .AddConfigurationModule(new ConfigurationModuleOptions
+            {
+                ConnectionStrings = new Modules.Configuration.ConfigurationOptions.ConnectionStringsOptions
+                {
+                    Default = AppSettings.ConnectionStrings.ClassifiedAds,
+                },
+                Certificates = AppSettings.ConfigurationModule.Certificates,
+            })
+            .AddIdentityModuleCore(new IdentityModuleOptions
+            {
+                ConnectionStrings = new Modules.Identity.ConfigurationOptions.ConnectionStringsOptions
+                {
+                    Default = AppSettings.ConnectionStrings.ClassifiedAds,
+                },
+                IdentityServerAuthentication = new Modules.Identity.ConfigurationOptions.IdentityServerAuthentication
+                {
+                    Authority = AppSettings.IdentityServerAuthentication.Authority,
+                },
+            })
+            .AddNotificationModule(new Modules.Notification.ConfigurationOptions.NotificationModuleOptions
+            {
+                ConnectionStrings = new Modules.Notification.ConfigurationOptions.ConnectionStringsOptions
+                {
+                    Default = AppSettings.ConnectionStrings.ClassifiedAds,
+                },
+                MessageBroker = AppSettings.MessageBroker,
+                Notification = notificationOptions,
+            })
+            .AddProductModule(new Modules.Product.ConfigurationOptions.ProductModuleOptions
+            {
+                ConnectionStrings = new Modules.Product.ConfigurationOptions.ConnectionStringsOptions
+                {
+                    Default = AppSettings.ConnectionStrings.ClassifiedAds,
+                },
+            })
+            .AddStorageModule(new Modules.Storage.ConfigurationOptions.StorageModuleOptions
+            {
+                ConnectionStrings = new Modules.Storage.ConfigurationOptions.ConnectionStringsOptions
+                {
+                    Default = AppSettings.ConnectionStrings.ClassifiedAds,
+                },
+                Storage = AppSettings.Storage,
+                MessageBroker = AppSettings.MessageBroker,
+            })
+            .AddApplicationServices();
+
+            services.AddHtmlGenerator();
+            services.AddDinkToPdfConverter();
 
             services.AddDataProtection()
                 .PersistKeysToDbContext<IdentityDbContext>()
@@ -120,12 +181,39 @@ namespace ClassifiedAds.WebAPI
                         },
                     });
 
-                setupAction.AddSecurityDefinition("bearer", new OpenApiSecurityScheme()
+                setupAction.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
                 {
                     Type = SecuritySchemeType.Http,
-                    Scheme = "bearer",
+                    Scheme = "Bearer",
                     BearerFormat = "JWT",
                     Description = "Input your Bearer token to access this API",
+                });
+
+                setupAction.AddSecurityDefinition("Oidc", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.OAuth2,
+                    Flows = new OpenApiOAuthFlows
+                    {
+                        AuthorizationCode = new OpenApiOAuthFlow
+                        {
+                            TokenUrl = new Uri(AppSettings.IdentityServerAuthentication.Authority + "/connect/token", UriKind.Absolute),
+                            AuthorizationUrl = new Uri(AppSettings.IdentityServerAuthentication.Authority + "/connect/authorize", UriKind.Absolute),
+                            Scopes = new Dictionary<string, string>
+                            {
+                                { "openid", "OpenId" },
+                                { "profile", "Profile" },
+                                { "ClassifiedAds.WebAPI", "ClassifiedAds WebAPI" },
+                            },
+                        },
+                        ClientCredentials = new OpenApiOAuthFlow
+                        {
+                            TokenUrl = new Uri(AppSettings.IdentityServerAuthentication.Authority + "/connect/token", UriKind.Absolute),
+                            Scopes = new Dictionary<string, string>
+                            {
+                                { "ClassifiedAds.WebAPI", "ClassifiedAds WebAPI" },
+                            },
+                        },
+                    },
                 });
 
                 setupAction.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -136,7 +224,17 @@ namespace ClassifiedAds.WebAPI
                             Reference = new OpenApiReference
                             {
                                 Type = ReferenceType.SecurityScheme,
-                                Id = "bearer",
+                                Id = "Oidc",
+                            },
+                        }, new List<string>()
+                    },
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer",
                             },
                         }, new List<string>()
                     },
@@ -152,6 +250,8 @@ namespace ClassifiedAds.WebAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseDebuggingMiddleware();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -165,6 +265,10 @@ namespace ClassifiedAds.WebAPI
 
             app.UseSwaggerUI(setupAction =>
             {
+                setupAction.OAuthClientId("Swagger");
+                setupAction.OAuthClientSecret("secret");
+                setupAction.OAuthUsePkce();
+
                 setupAction.SwaggerEndpoint(
                     "/swagger/ClassifiedAds/swagger.json",
                     "ClassifiedAds API");
@@ -186,6 +290,7 @@ namespace ClassifiedAds.WebAPI
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<NotificationHub>("/hubs/notification").RequireCors("SignalRHubs");
             });
         }
     }

@@ -25,7 +25,7 @@ namespace ClassifiedAds.Application.Weathers.Queries
             _weatherService = weatherService;
         }
 
-        public CountyResponse Handle(GetWeatherCountyWeatherQuery query)
+        public Task<CountyResponse> HandleAsync(GetWeatherCountyWeatherQuery query, CancellationToken cancellationToken = default)
         {
             return _weatherService.GetByCountry(query);
         }

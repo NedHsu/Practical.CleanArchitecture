@@ -1,11 +1,11 @@
-﻿using ClassifiedAds.Application.SmsMessages.DTOs;
-using ClassifiedAds.CrossCuttingConcerns.OS;
-using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
+﻿using ClassifiedAds.CrossCuttingConcerns.OS;
 using ClassifiedAds.Domain.Notification;
 using ClassifiedAds.Domain.Repositories;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application.SmsMessages.Services
 {
@@ -13,63 +13,82 @@ namespace ClassifiedAds.Application.SmsMessages.Services
     {
         private readonly ILogger _logger;
         private readonly ISmsMessageRepository _repository;
-        private readonly IMessageSender<SmsMessageCreatedEvent> _smsMessageCreatedEventSender;
         private readonly ISmsNotification _smsNotification;
         private readonly IDateTimeProvider _dateTimeProvider;
 
         public SmsMessageService(ILogger<SmsMessageService> logger,
             ISmsMessageRepository repository,
-            IMessageSender<SmsMessageCreatedEvent> smsMessageCreatedEventSender,
             ISmsNotification smsNotification,
             IDateTimeProvider dateTimeProvider)
         {
             _logger = logger;
             _repository = repository;
-            _smsMessageCreatedEventSender = smsMessageCreatedEventSender;
             _smsNotification = smsNotification;
             _dateTimeProvider = dateTimeProvider;
         }
 
-        public int ResendSmsMessage()
+        public async Task<int> SendSmsMessagesAsync()
         {
-            var dateTime = _dateTimeProvider.OffsetNow.AddMinutes(-1);
+            var deplayedTimes = new[]
+            {
+                TimeSpan.FromMinutes(1),
+                TimeSpan.FromMinutes(2),
+                TimeSpan.FromMinutes(3),
+                TimeSpan.FromMinutes(5),
+                TimeSpan.FromMinutes(8),
+                TimeSpan.FromMinutes(13),
+                TimeSpan.FromMinutes(21),
+                TimeSpan.FromMinutes(34),
+                TimeSpan.FromMinutes(55),
+                TimeSpan.FromMinutes(89),
+            };
 
-            var messages = _repository.GetAll()
-                .Where(x => x.SentDateTime == null && x.RetriedCount < 3)
-                .Where(x => (x.RetriedCount == 0 && x.CreatedDateTime < dateTime) || (x.RetriedCount != 0 && x.UpdatedDateTime < dateTime))
+            var dateTime = _dateTimeProvider.OffsetNow;
+            var defaultAttemptCount = 5;
+
+            var messages = (await _repository.GetAllAsync())
+                .Where(x => x.SentDateTime == null)
+                .Where(x => x.ExpiredDateTime == null || x.ExpiredDateTime > dateTime)
+                .Where(x => (x.MaxAttemptCount == 0 && x.AttemptCount < defaultAttemptCount) || x.AttemptCount < x.MaxAttemptCount)
+                .Where(x => x.NextAttemptDateTime == null || x.NextAttemptDateTime <= dateTime)
                 .ToList();
 
             if (messages.Any())
             {
                 foreach (var sms in messages)
                 {
-                    _smsMessageCreatedEventSender.Send(new SmsMessageCreatedEvent { Id = sms.Id });
-                    _repository.IncreaseRetry(sms.Id);
+                    string log = Environment.NewLine + Environment.NewLine
+                            + $"[{_dateTimeProvider.OffsetNow.ToString(CultureInfo.InvariantCulture)}] ";
+                    try
+                    {
+                        await _smsNotification.SendAsync(sms);
+                        sms.SentDateTime = _dateTimeProvider.OffsetNow;
+                        sms.Log += log + "Succeed.";
+                    }
+                    catch (Exception ex)
+                    {
+                        sms.Log += log + ex.ToString();
+                        sms.NextAttemptDateTime = _dateTimeProvider.OffsetNow + deplayedTimes[sms.AttemptCount];
+                    }
+
+                    sms.AttemptCount += 1;
+                    sms.Log = sms.Log.Trim();
+                    sms.UpdatedDateTime = _dateTimeProvider.OffsetNow;
+
+                    if (sms.MaxAttemptCount == 0)
+                    {
+                        sms.MaxAttemptCount = defaultAttemptCount;
+                    }
+
+                    await _repository.UnitOfWork.SaveChangesAsync();
                 }
             }
             else
             {
-                _logger.LogInformation("No SMS to resend.");
+                _logger.LogInformation("No SMS to send.");
             }
 
             return messages.Count;
-        }
-
-        public void SendSmsMessage(Guid id)
-        {
-            var smsMessage = _repository.GetAll().FirstOrDefault(x => x.Id == id);
-            if (smsMessage != null && !smsMessage.SentDateTime.HasValue)
-            {
-                try
-                {
-                    _smsNotification.Send(smsMessage);
-                    _repository.UpdateSent(smsMessage.Id);
-                }
-                catch (Exception ex)
-                {
-                    _repository.UpdateFailed(smsMessage.Id, Environment.NewLine + Environment.NewLine + ex.ToString());
-                }
-            }
         }
     }
 }

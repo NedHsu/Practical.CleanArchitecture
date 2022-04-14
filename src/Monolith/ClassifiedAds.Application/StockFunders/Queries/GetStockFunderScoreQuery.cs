@@ -7,14 +7,14 @@ using System.Collections.Generic;
 
 namespace ClassifiedAds.Application.StockFunders.Queries
 {
-    public class GetStockFunderScoreQuery : IQuery<List<StockFunderScoreDTO>>
+    public class GetStockFunderScoreQuery : IQuery<IEnumerable<StockFunderScoreDTO>>
     {
         public DateTime StartDate { get; set; }
     }
 
     [AuditLog]
     [DatabaseRetry]
-    internal class GetStockFunderScoreQueryHandler : IQueryHandler<GetStockFunderScoreQuery, List<StockFunderScoreDTO>>
+    internal class GetStockFunderScoreQueryHandler : IQueryHandler<GetStockFunderScoreQuery, IEnumerable<StockFunderScoreDTO>>
     {
         private readonly IStockFunderRepository _stockFunderRepository;
 
@@ -23,9 +23,9 @@ namespace ClassifiedAds.Application.StockFunders.Queries
             _stockFunderRepository = stockfunderRepository;
         }
 
-        public List<StockFunderScoreDTO> Handle(GetStockFunderScoreQuery query)
+        public async Task<IEnumerable<StockFunderScoreDTO>> HandleAsync(GetStockFunderScoreQuery query, CancellationToken cancellationToken = default)
         {
-            return _stockFunderRepository.GetStockFunderScore(query.StartDate);
+            return await _stockFunderRepository.GetStockFunderScore(query.StartDate);
         }
     }
 }

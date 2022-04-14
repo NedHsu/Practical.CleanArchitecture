@@ -16,9 +16,9 @@ namespace ClassifiedAds.Application.StockSeminars.Commands
             _stockseminarService = stockseminarService;
         }
 
-        public void Handle(AddUpdateStockSeminarCommand command)
+        public async Task HandleAsync(AddUpdateStockSeminarCommand command, CancellationToken cancellationToken = default)
         {
-            _stockseminarService.AddOrUpdate(command.StockSeminar);
+            await _stockseminarService.AddOrUpdateAsync(command.StockSeminar);
         }
     }
 }

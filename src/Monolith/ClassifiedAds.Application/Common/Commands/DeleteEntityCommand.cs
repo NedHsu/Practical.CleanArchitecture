@@ -1,5 +1,7 @@
 ﻿using ClassifiedAds.Domain.Entities;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application
 {
@@ -19,9 +21,9 @@ namespace ClassifiedAds.Application
             _crudService = crudService;
         }
 
-        public void Handle(DeleteEntityCommand<TEntity> command)
+        public async Task HandleAsync(DeleteEntityCommand<TEntity> command, CancellationToken cancellationToken = default)
         {
-            _crudService.Delete(command.Entity);
+            await _crudService.DeleteAsync(command.Entity);
         }
     }
 }

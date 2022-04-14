@@ -7,8 +7,8 @@ namespace ClassifiedAds.Domain.Repositories
 {
     public interface IStockFunderRepository : IBaseDapperRepository<StockFunder>
     {
-        List<StockFunderDTO> GetCreditTopBuy();
-        PagedResult<StockFunderDTO> GetCreditBuyPaged(uint pageIndex, uint pageSize);
-        List<StockFunderScoreDTO> GetStockFunderScore(DateTime startDate);
+        Task<List<StockFunderDTO>> GetCreditTopBuy();
+        Task<PagedResult<StockFunderDTO>> GetCreditBuyPaged(uint pageIndex, uint pageSize);
+        Task<List<StockFunderScoreDTO>> GetStockFunderScore(DateTime startDate);
     }
 }

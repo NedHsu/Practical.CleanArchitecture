@@ -19,9 +19,9 @@ namespace ClassifiedAds.Application.StockFundamentals.Queries
             _stockfundamentalRepository = stockfundamentalRepository;
         }
 
-        public StockFundamental Handle(GetStockFundamentalQuery query)
+        public async Task<StockFundamental> HandleAsync(GetStockFundamentalQuery query, CancellationToken cancellationToken = default)
         {
-            var stockfundamental = _stockfundamentalRepository.Get(x => x.StockCode == query.Code);
+            var stockfundamental = await _stockfundamentalRepository.GetAsync(x => x.StockCode == query.Code);
 
             if (query.ThrowNotFoundIfNull && stockfundamental == null)
             {

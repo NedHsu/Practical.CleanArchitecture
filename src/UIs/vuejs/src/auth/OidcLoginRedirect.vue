@@ -6,7 +6,8 @@
 import { UserManager, User, WebStorageStateStore } from "oidc-client";
 
 var config = {
-  userStore: new WebStorageStateStore({ store: window.localStorage })
+  userStore: new WebStorageStateStore({ store: window.localStorage }),
+  response_mode: "query"
 };
 var mgr = new UserManager(config);
 export default {
@@ -28,7 +29,7 @@ export default {
         }
       },
       error => {
-        console.error(error);
+        //console.error(error);
       }
     );
   }

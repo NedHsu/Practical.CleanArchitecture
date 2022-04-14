@@ -6,6 +6,8 @@ using ClassifiedAds.Modules.Identity.Contracts.Services;
 using ClassifiedAds.Modules.Storage.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Modules.Storage.EventHandlers
 {
@@ -18,7 +20,7 @@ namespace ClassifiedAds.Modules.Storage.EventHandlers
             _serviceProvider = serviceProvider;
         }
 
-        public void Handle(EntityUpdatedEvent<FileEntry> domainEvent)
+        public async Task HandleAsync(EntityUpdatedEvent<FileEntry> domainEvent, CancellationToken cancellationToken = default)
         {
             // Handle the event here and we can also forward to external systems
             using (var scope = _serviceProvider.CreateScope())
@@ -26,7 +28,7 @@ namespace ClassifiedAds.Modules.Storage.EventHandlers
                 var auditSerivce = scope.ServiceProvider.GetService<IAuditLogService>();
                 var currentUser = scope.ServiceProvider.GetService<ICurrentUser>();
 
-                auditSerivce.AddOrUpdate(new AuditLogEntryDTO
+                await auditSerivce.AddOrUpdateAsync(new AuditLogEntryDTO
                 {
                     UserId = currentUser.IsAuthenticated ? currentUser.UserId : Guid.Empty,
                     CreatedDateTime = domainEvent.EventDateTime,

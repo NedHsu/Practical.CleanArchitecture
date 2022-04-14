@@ -1,4 +1,6 @@
 ﻿using ClassifiedAds.Domain.Entities;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application.CalendarCategories.Commands
 {
@@ -16,9 +18,9 @@ namespace ClassifiedAds.Application.CalendarCategories.Commands
             _calendarCategoryService = calendarCategoryService;
         }
 
-        public void Handle(AddUpdateCalendarCategoryCommand command)
+        public async Task HandleAsync(AddUpdateCalendarCategoryCommand command, CancellationToken cancellationToken = default)
         {
-            _calendarCategoryService.AddOrUpdate(command.CalendarCategory);
+            await _calendarCategoryService.AddOrUpdateAsync(command.CalendarCategory);
         }
     }
 }

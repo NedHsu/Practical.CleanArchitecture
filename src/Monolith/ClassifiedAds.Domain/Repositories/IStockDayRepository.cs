@@ -6,6 +6,6 @@ namespace ClassifiedAds.Domain.Repositories
 {
     public interface IStockDayRepository : IBaseDapperRepository<StockDay>
     {
-        List<StockDay> GetInStocks(string[] codes, DateTime startDate, DateTime endDate);
+        Task<List<StockDay>> GetInStocks(string[] codes, DateTime startDate, DateTime endDate);
     }
 }

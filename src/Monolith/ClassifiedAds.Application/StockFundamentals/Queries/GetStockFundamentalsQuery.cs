@@ -1,19 +1,17 @@
 ﻿using ClassifiedAds.Application.Decorators.AuditLog;
 using ClassifiedAds.Application.Decorators.DatabaseRetry;
-using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ClassifiedAds.Application.StockFundamentals.Queries
 {
-    public class GetStockFundamentalsQuery : IQuery<List<StockFundamental>>
+    public class GetStockFundamentalsQuery : IQuery<IEnumerable<StockFundamental>>
     {
     }
 
     [AuditLog]
     [DatabaseRetry]
-    internal class GetStockFundamentalsQueryHandler : IQueryHandler<GetStockFundamentalsQuery, List<StockFundamental>>
+    internal class GetStockFundamentalsQueryHandler : IQueryHandler<GetStockFundamentalsQuery, IEnumerable<StockFundamental>>
     {
         private readonly IBaseDapperRepository<StockFundamental> _stockfundamentalRepository;
 
@@ -22,9 +20,9 @@ namespace ClassifiedAds.Application.StockFundamentals.Queries
             _stockfundamentalRepository = stockfundamentalRepository;
         }
 
-        public List<StockFundamental> Handle(GetStockFundamentalsQuery query)
+        public async Task<IEnumerable<StockFundamental>> HandleAsync(GetStockFundamentalsQuery query, CancellationToken cancellationToken = default)
         {
-            return _stockfundamentalRepository.GetAll().ToList();
+            return await _stockfundamentalRepository.GetAllAsync();
         }
     }
 }

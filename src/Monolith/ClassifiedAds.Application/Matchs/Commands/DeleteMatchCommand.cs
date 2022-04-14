@@ -16,9 +16,9 @@ namespace ClassifiedAds.Application.Matchs.Commands
             _matchService = matchService;
         }
 
-        public void Handle(DeleteMatchCommand command)
+        public async Task HandleAsync(DeleteMatchCommand command, CancellationToken cancellationToken = default)
         {
-            _matchService.Delete(command.Match);
+            await _matchService.DeleteAsync(command.Match);
         }
     }
 }

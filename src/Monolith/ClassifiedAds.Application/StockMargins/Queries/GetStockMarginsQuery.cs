@@ -22,9 +22,9 @@ namespace ClassifiedAds.Application.StockMargins.Queries
             _stockmarginRepository = stockmarginRepository;
         }
 
-        public List<StockMargin> Handle(GetStockMarginsQuery query)
+        public async Task<List<StockMargin>> HandleAsync(GetStockMarginsQuery query, CancellationToken cancellationToken = default)
         {
-            return _stockmarginRepository.GetAll().ToList();
+            return (await _stockmarginRepository.GetAllAsync()).ToList();
         }
     }
 }

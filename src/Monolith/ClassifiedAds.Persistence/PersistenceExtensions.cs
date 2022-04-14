@@ -1,9 +1,13 @@
-﻿using ClassifiedAds.Domain.Repositories;
+﻿using ClassifiedAds.CrossCuttingConcerns.Locks;
+using ClassifiedAds.CrossCuttingConcerns.Tenants;
+using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Persistence;
 using ClassifiedAds.Persistence.DapperContext;
+using ClassifiedAds.Persistence.Locks;
 using ClassifiedAds.Persistence.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -12,37 +16,49 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddPersistence(this IServiceCollection services, string connectionString, string migrationsAssembly = "")
         {
             services.AddDbContext<AdsDbContext>(options => options.UseSqlServer(connectionString, sql =>
-            {
-                if (!string.IsNullOrEmpty(migrationsAssembly))
-                {
-                    sql.MigrationsAssembly(migrationsAssembly);
-                }
-            }))
-                    .AddScoped(typeof(IRepository<,>), typeof(Repository<,>))
+                    {
+                        if (!string.IsNullOrEmpty(migrationsAssembly))
+                        {
+                            sql.MigrationsAssembly(migrationsAssembly);
+                        }
+                    }))
+                    .AddRepositories();
+            services.AddScoped<IStockDbContext>(_ => new ClassifiedAds.Persistence.DapperContext.StockDbContext(connectionString));
+            return services;
+        }
+
+        public static IServiceCollection AddMultiTenantPersistence(this IServiceCollection services, Type connectionStringResolverType, Type tenantResolverType)
+        {
+            services.AddScoped(typeof(IConnectionStringResolver<AdsDbContextMultiTenant>), connectionStringResolverType);
+            services.AddScoped(typeof(ITenantResolver), tenantResolverType);
+
+            services.AddDbContext<AdsDbContextMultiTenant>(options => { })
+                    .AddScoped(typeof(AdsDbContext), services =>
+                    {
+                        return services.GetRequiredService<AdsDbContextMultiTenant>();
+                    })
+                    .AddRepositories();
+            return services;
+        }
+
+        private static IServiceCollection AddRepositories(this IServiceCollection services)
+        {
+            services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>))
                     .AddScoped(typeof(IAuditLogEntryRepository), typeof(AuditLogEntryRepository))
                     .AddScoped(typeof(IEmailMessageRepository), typeof(EmailMessageRepository))
                     .AddScoped(typeof(ISmsMessageRepository), typeof(SmsMessageRepository))
                     .AddScoped(typeof(IUserRepository), typeof(UserRepository))
                     .AddScoped(typeof(IRoleRepository), typeof(RoleRepository))
                     .AddScoped(typeof(ICalendarRepository), typeof(CalendarRepository))
-                    ;
+                    .AddScoped(typeof(IBaseDapperRepository<>), typeof(BaseDapperRepository<>))
+                    .AddScoped(typeof(IStockDayRepository), typeof(StockDayRepository))
+                    .AddScoped(typeof(IStockMarginRepository), typeof(StockMarginRepository))
+                    .AddScoped(typeof(IStockFunderRepository), typeof(StockFunderRepository))
+                    .AddScoped(typeof(IStockRevenueRepository), typeof(StockRevenueRepository))
+                    .AddScoped(typeof(IStockSeminarRepository), typeof(StockSeminarRepository))
+                    .AddScoped(typeof(IStockDapperRepository), typeof(StockDapperRepository));
 
-            services.AddDbContext<ClassifiedAds.Persistence.StockDbContext>(options => options.UseSqlServer(connectionString, sql =>
-            {
-                if (!string.IsNullOrEmpty(migrationsAssembly))
-                {
-                    sql.MigrationsAssembly(migrationsAssembly);
-                }
-            }))
-                .AddScoped(typeof(IBaseDapperRepository<>), typeof(BaseDapperRepository<>))
-                .AddScoped(typeof(IStockDayRepository), typeof(StockDayRepository))
-                .AddScoped(typeof(IStockMarginRepository), typeof(StockMarginRepository))
-                .AddScoped(typeof(IStockFunderRepository), typeof(StockFunderRepository))
-                .AddScoped(typeof(IStockRevenueRepository), typeof(StockRevenueRepository))
-                .AddScoped(typeof(IStockSeminarRepository), typeof(StockSeminarRepository))
-                .AddScoped(typeof(IStockDapperRepository), typeof(StockDapperRepository));
-
-            services.AddScoped<IStockDbContext>(_ => new ClassifiedAds.Persistence.DapperContext.StockDbContext(connectionString));
+            services.AddScoped<ILockManager, LockManager>();
 
             return services;
         }

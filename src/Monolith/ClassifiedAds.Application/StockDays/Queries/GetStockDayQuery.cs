@@ -21,9 +21,9 @@ namespace ClassifiedAds.Application.StockDays.Queries
             _stockdayRepository = stockdayRepository;
         }
 
-        public StockDay Handle(GetStockDayQuery query)
+        public async Task<StockDay> HandleAsync(GetStockDayQuery query, CancellationToken cancellationToken = default)
         {
-            var stockday = _stockdayRepository.Get(x => x.StockCode == query.StockCode && x.Date == query.Date);
+            var stockday = await _stockdayRepository.GetAsync(x => x.StockCode == query.StockCode && x.Date == query.Date);
 
             if (query.ThrowNotFoundIfNull && stockday == null)
             {

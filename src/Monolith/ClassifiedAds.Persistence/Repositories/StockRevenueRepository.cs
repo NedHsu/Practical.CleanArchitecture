@@ -17,7 +17,7 @@ namespace ClassifiedAds.Persistence.Repositories
         {
         }
 
-        public List<StockRevenueDTO> GetTopRevenues()
+        public async Task<List<StockRevenueDTO>> GetTopRevenues()
         {
             string sql = @"
 SELECT TOP 100 
@@ -30,10 +30,10 @@ FROM StockRevenue r
 WHERE r.TotalYoY > 0
 ORDER BY Date DESC, r.MoM DESC, r.YoY DESC
 ";
-            return DbContext.Connection.Query<StockRevenueDTO>(sql).ToList();
+            return (await DbContext.Connection.QueryAsync<StockRevenueDTO>(sql)).ToList();
         }
 
-        public PagedResult<StockRevenueDTO> GetpRevenuePaged(StockRevenueQuery query)
+        public async Task<PagedResult<StockRevenueDTO>> GetpRevenuePaged(StockRevenueQuery query)
         {
             var filters = "r.TotalYoY > 0";
             var param = new Dictionary<string, object>();
@@ -54,7 +54,7 @@ FROM StockRevenue r
 WHERE {filters}
 ";
             var orderby = "ORDER BY Date DESC, r.MoM DESC, r.YoY DESC";
-            return GetPaged<StockRevenueDTO>(query.PageIndex, query.PageSize, sql, param, orderBy: orderby);
+            return await GetPagedAsync<StockRevenueDTO>(query.PageIndex, query.PageSize, sql, param, orderBy: orderby);
         }
     }
 }

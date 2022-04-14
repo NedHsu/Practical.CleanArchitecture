@@ -16,9 +16,9 @@ namespace ClassifiedAds.Application.StockEPSs.Commands
             _stockEpService = stockEpService;
         }
 
-        public void Handle(DeleteStockEPSCommand command)
+        public async Task HandleAsync(DeleteStockEPSCommand command, CancellationToken cancellationToken = default)
         {
-            _stockEpService.Delete(command.StockEPS);
+            await _stockEpService.DeleteAsync(command.StockEPS);
         }
     }
 }

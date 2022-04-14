@@ -1,5 +1,6 @@
 ﻿using ClassifiedAds.Domain.Entities;
 
+
 namespace ClassifiedAds.Application.StockProfits.Commands
 {
     public class AddUpdateStockProfitCommand : ICommand
@@ -16,9 +17,9 @@ namespace ClassifiedAds.Application.StockProfits.Commands
             _stockprofitService = stockprofitService;
         }
 
-        public void Handle(AddUpdateStockProfitCommand command)
+        public async Task HandleAsync(AddUpdateStockProfitCommand command, CancellationToken cancellationToken = default)
         {
-            _stockprofitService.AddOrUpdate(command.StockProfit);
+            await _stockprofitService.AddOrUpdateAsync(command.StockProfit);
         }
     }
 }

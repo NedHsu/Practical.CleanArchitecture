@@ -2,35 +2,36 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Domain.Repositories
 {
     public interface IBaseDapperRepository<TEntity>
     {
-        void Add(TEntity entity);
+        Task AddAsync(TEntity entity);
 
-        void Update(TEntity entity);
+        Task UpdateAsync(TEntity entity);
 
-        int AddOrUpdate(TEntity entity);
+        Task<int> AddOrUpdateAsync(TEntity entity);
 
-        void Add(IEnumerable<TEntity> entity);
+        Task AddAsync(IEnumerable<TEntity> entity);
 
-        void Update(IEnumerable<TEntity> entity);
+        Task UpdateAsync(IEnumerable<TEntity> entity);
 
-        void Delete(TEntity entity);
+        Task DeleteAsync(TEntity entity);
 
-        void Delete(IEnumerable<TEntity> entities);
+        Task DeleteAsync(IEnumerable<TEntity> entities);
 
-        IEnumerable<TEntity> GetAll();
+        Task<IEnumerable<TEntity>> GetAllAsync();
 
-        IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate);
+        Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate);
 
-        IEnumerable<TEntity> GetAll<T>(Expression<Func<TEntity, bool>> predicate);
+        Task<IEnumerable<TEntity>> GetAllAsync<T>(Expression<Func<TEntity, bool>> predicate);
 
-        IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate, string orderBy);
+        Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate, string orderBy);
 
-        TEntity Get(Expression<Func<TEntity, bool>> predicate);
+        Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate);
 
-        PagedResult<TEntity> GetPaged(uint pageIndex, uint pageSize, Expression<Func<TEntity, bool>> predicate, string orderBy);
+        Task<PagedResult<TEntity>> GetPaged(uint pageIndex, uint pageSize, Expression<Func<TEntity, bool>> predicate, string orderBy);
     }
 }

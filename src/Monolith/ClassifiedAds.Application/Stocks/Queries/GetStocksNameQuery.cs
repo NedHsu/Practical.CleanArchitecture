@@ -21,9 +21,9 @@ namespace ClassifiedAds.Application.Stocks.Queries
             _stockRepository = stockRepository;
         }
 
-        public Dictionary<string, string> Handle(GetStocksNameQuery query)
+        public async Task<Dictionary<string, string>> HandleAsync(GetStocksNameQuery query, CancellationToken cancellationToken = default)
         {
-            return _stockRepository.GetStocksName(query.StockCodes);
+            return await _stockRepository.GetStocksName(query.StockCodes);
         }
     }
 }

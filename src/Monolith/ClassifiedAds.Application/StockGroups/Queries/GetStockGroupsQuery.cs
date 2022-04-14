@@ -22,9 +22,9 @@ namespace ClassifiedAds.Application.StockGroups.Queries
             _stockgroupRepository = stockgroupRepository;
         }
 
-        public List<StockGroup> Handle(GetStockGroupsQuery query)
+        public async Task<List<StockGroup>> HandleAsync(GetStockGroupsQuery query, CancellationToken cancellationToken = default)
         {
-            return _stockgroupRepository.GetAll().ToList();
+            return (await _stockgroupRepository.GetAllAsync()).ToList();
         }
     }
 }

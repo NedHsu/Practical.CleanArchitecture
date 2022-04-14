@@ -16,9 +16,9 @@ namespace ClassifiedAds.Application.StockFundamentals.Commands
             _stockfundamentalService = stockfundamentalService;
         }
 
-        public void Handle(DeleteStockFundamentalCommand command)
+        public async Task HandleAsync(DeleteStockFundamentalCommand command, CancellationToken cancellationToken = default)
         {
-            _stockfundamentalService.Delete(command.StockFundamental);
+            await _stockfundamentalService.DeleteAsync(command.StockFundamental);
         }
     }
 }

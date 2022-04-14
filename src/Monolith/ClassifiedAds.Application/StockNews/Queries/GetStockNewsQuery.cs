@@ -4,16 +4,18 @@ using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application.StockNews.Queries
 {
-    public class GetStockNewsQuery : IQuery<List<StockNew>>
+    public class GetStockNewsQuery : IQuery<IEnumerable<StockNew>>
     {
     }
 
     [AuditLog]
     [DatabaseRetry]
-    internal class GetStockNewsQueryHandler : IQueryHandler<GetStockNewsQuery, List<StockNew>>
+    internal class GetStockNewsQueryHandler : IQueryHandler<GetStockNewsQuery, IEnumerable<StockNew>>
     {
         private readonly IBaseDapperRepository<StockNew> _stockNewRepository;
 
@@ -22,9 +24,9 @@ namespace ClassifiedAds.Application.StockNews.Queries
             _stockNewRepository = stockNewRepository;
         }
 
-        public List<StockNew> Handle(GetStockNewsQuery query)
+        public async Task<IEnumerable<StockNew>> HandleAsync(GetStockNewsQuery query, CancellationToken cancellationToken = default)
         {
-            return _stockNewRepository.GetAll().ToList();
+            return await _stockNewRepository.GetAllAsync();
         }
     }
 }

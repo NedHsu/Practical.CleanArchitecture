@@ -23,9 +23,9 @@ namespace ClassifiedAds.Application.Players.Queries
             _playerRepository = playerRepository;
         }
 
-        public List<Player> Handle(GetPlayersQuery query)
+        public async Task<List<Player>> HandleAsync(GetPlayersQuery query, CancellationToken cancellationToken = default)
         {
-            return _playerRepository.GetAll().ToList();
+            return (await _playerRepository.GetAllAsync()).ToList();
         }
     }
 }

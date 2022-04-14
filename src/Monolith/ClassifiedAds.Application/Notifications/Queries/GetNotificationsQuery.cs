@@ -24,9 +24,9 @@ namespace ClassifiedAds.Application.Notifications.Queries
             _notificationRepository = notificationRepository;
         }
 
-        public List<Notification> Handle(GetNotificationsQuery query)
+        public async Task<List<Notification>> HandleAsync(GetNotificationsQuery query, CancellationToken cancellationToken = default)
         {
-            return _notificationRepository.GetAll().ToList();
+            return (await _notificationRepository.GetAllAsync()).ToList();
         }
     }
 }

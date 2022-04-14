@@ -25,37 +25,37 @@ namespace ClassifiedAds.Application.Weathers.Services
             this.configs = configs;
         }
 
-        public AlarmResponse GetAlarm(GetWeatherAlarmQuery query)
+        public async Task<AlarmResponse> GetAlarm(GetWeatherAlarmQuery query)
         {
             var api = "/v1/rest/datastore/W-C0033-001";
-            return GetResponse<GetWeatherAlarmQuery, AlarmResponse>(query, api);
+            return await GetResponse<GetWeatherAlarmQuery, AlarmResponse>(query, api);
         }
 
-        private TResult GetResponse<TQuery, TResult>(TQuery query, string api)
+        private async Task<TResult> GetResponse<TQuery, TResult>(TQuery query, string api)
             where TQuery : class
         {
             var response = _httpClient.GetAsync($"/api{api}?Authorization={configs.Key}" + ToParamters(query));
-            return response.Result.Content.ReadAs<TResult>().Result;
+            return await response.Result.Content.ReadAs<TResult>();
         }
 
-        public CountyResponse GetByCountry(GetWeatherCountyWeatherQuery query)
+        public async Task<CountyResponse> GetByCountry(GetWeatherCountyWeatherQuery query)
         {
-            return GetResponse<GetWeatherCountyWeatherQuery, CountyResponse>(query, $"/v1/rest/datastore/{query.Country}");
+            return await GetResponse<GetWeatherCountyWeatherQuery, CountyResponse>(query, $"/v1/rest/datastore/{query.Country}");
         }
 
-        public EarthquakeResponse GetEarthquake(GetWeatherEarthquakeQuery query)
+        public async Task<EarthquakeResponse> GetEarthquake(GetWeatherEarthquakeQuery query)
         {
-            return GetResponse<GetWeatherEarthquakeQuery, EarthquakeResponse>(query, "/v1/rest/datastore/E-A0015-001");
+            return await GetResponse<GetWeatherEarthquakeQuery, EarthquakeResponse>(query, "/v1/rest/datastore/E-A0015-001");
         }
 
-        public RecentResponse GetRecent(GetWeatherRecentQuery query)
+        public async Task<RecentResponse> GetRecent(GetWeatherRecentQuery query)
         {
-            return GetResponse<GetWeatherRecentQuery, RecentResponse>(query, "/v1/rest/datastore/F-C0032-001");
+            return await GetResponse<GetWeatherRecentQuery, RecentResponse>(query, "/v1/rest/datastore/F-C0032-001");
         }
 
-        public TidalResponse GetTida(GetWeatherTidalQuery query)
+        public async Task<TidalResponse> GetTida(GetWeatherTidalQuery query)
         {
-            return GetResponse<GetWeatherTidalQuery, TidalResponse>(query, "/v1/rest/datastore/F-A0021-001");
+            return await GetResponse<GetWeatherTidalQuery, TidalResponse>(query, "/v1/rest/datastore/F-A0021-001");
         }
 
         public string ToParamters<T>(T query)
@@ -103,9 +103,9 @@ namespace ClassifiedAds.Application.Weathers.Services
             return result;
         }
 
-        public ObservationResponse GetObservation(GetWeatherObservationQuery query)
+        public async Task<ObservationResponse> GetObservation(GetWeatherObservationQuery query)
         {
-            return GetResponse<GetWeatherObservationQuery, ObservationResponse>(query, $"/v1/rest/datastore/{observationTypeMap[query.Type]}");
+            return await GetResponse<GetWeatherObservationQuery, ObservationResponse>(query, $"/v1/rest/datastore/{observationTypeMap[query.Type]}");
         }
     }
 }

@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Threading;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Domain.Events
 {
     public interface IDomainEventHandler<T>
            where T : IDomainEvent
     {
-        void Handle(T domainEvent);
+        Task HandleAsync(T domainEvent, CancellationToken cancellationToken = default);
     }
 }

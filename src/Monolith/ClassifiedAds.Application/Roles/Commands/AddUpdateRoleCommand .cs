@@ -1,5 +1,7 @@
 ﻿using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application.Roles.Commands
 {
@@ -17,10 +19,10 @@ namespace ClassifiedAds.Application.Roles.Commands
             _roleRepository = roleRepository;
         }
 
-        public void Handle(AddUpdateRoleCommand command)
+        public async Task HandleAsync(AddUpdateRoleCommand command, CancellationToken cancellationToken = default)
         {
-            _roleRepository.AddOrUpdate(command.Role);
-            _roleRepository.UnitOfWork.SaveChanges();
+            await _roleRepository.AddOrUpdateAsync(command.Role);
+            await _roleRepository.UnitOfWork.SaveChangesAsync();
         }
     }
 }

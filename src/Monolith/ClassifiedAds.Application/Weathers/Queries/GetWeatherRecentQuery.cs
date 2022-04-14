@@ -26,9 +26,9 @@ namespace ClassifiedAds.Application.Weathers.Queries
             _weatherService = weatherService;
         }
 
-        public RecentResponse Handle(GetWeatherRecentQuery query)
+        public async Task<RecentResponse> HandleAsync(GetWeatherRecentQuery query, CancellationToken cancellationToken = default)
         {
-            return _weatherService.GetRecent(query);
+            return await _weatherService.GetRecent(query);
         }
     }
 }

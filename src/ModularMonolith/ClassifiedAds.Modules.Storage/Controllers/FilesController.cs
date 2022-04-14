@@ -1,22 +1,24 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.Infrastructure.Storages;
+using ClassifiedAds.Infrastructure.Web.Authorization.Policies;
 using ClassifiedAds.Modules.AuditLog.Contracts.DTOs;
+using ClassifiedAds.Modules.Storage.Authorization.Policies.Files;
 using ClassifiedAds.Modules.Storage.Entities;
+using ClassifiedAds.Modules.Storage.Models;
 using ClassifiedAds.Modules.Storage.Queries;
 using CryptographyHelper;
 using CryptographyHelper.SymmetricAlgorithms;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mime;
 using System.Security.Cryptography;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Modules.Storage.Controllers
@@ -36,14 +38,17 @@ namespace ClassifiedAds.Modules.Storage.Controllers
             _fileManager = fileManager;
         }
 
+        [AuthorizePolicy(typeof(GetFilesPolicy))]
         [HttpGet]
-        public ActionResult<IEnumerable<FileEntry>> Get()
+        public async Task<ActionResult<IEnumerable<FileEntryModel>>> Get()
         {
-            return Ok(_dispatcher.Dispatch(new GetEntititesQuery<FileEntry>()));
+            var fileEntries = await _dispatcher.DispatchAsync(new GetEntititesQuery<FileEntry>());
+            return Ok(fileEntries.ToModels());
         }
 
+        [AuthorizePolicy(typeof(UploadFilePolicy))]
         [HttpPost]
-        public async Task<ActionResult<FileEntry>> Upload([FromForm] UploadFile model)
+        public async Task<ActionResult<FileEntryModel>> Upload([FromForm] UploadFileModel model)
         {
             var fileEntry = new FileEntry
             {
@@ -55,56 +60,66 @@ namespace ClassifiedAds.Modules.Storage.Controllers
                 Encrypted = model.Encrypted,
             };
 
-            _dispatcher.Dispatch(new AddOrUpdateEntityCommand<FileEntry>(fileEntry));
+            await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<FileEntry>(fileEntry));
 
-            var fileEntryDTO = fileEntry.ToFileEntryDTO();
+            fileEntry.FileLocation = DateTime.Now.ToString("yyyy/MM/dd/") + fileEntry.Id;
+
+            await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<FileEntry>(fileEntry));
+
+            var fileEntryDTO = fileEntry.ToModel();
 
             if (model.Encrypted)
             {
-                var key = SymmetricCrypto.GenerateKey(16);
+                var key = SymmetricCrypto.GenerateKey(32);
+                var iv = SymmetricCrypto.GenerateKey(16);
                 using (var inputStream = model.FormFile.OpenReadStream())
                 using (var encryptedStream = new MemoryStream(inputStream
                         .UseAES(key)
-                        .WithCipher(CipherMode.ECB)
+                        .WithCipher(CipherMode.CBC)
+                        .WithIV(iv)
                         .WithPadding(PaddingMode.PKCS7)
                         .Encrypt()))
                 {
-                    _fileManager.Create(fileEntryDTO, encryptedStream);
+                    await _fileManager.CreateAsync(fileEntryDTO, encryptedStream);
                 }
 
+                // TODO: EncryptionKey should be encrypted as well
                 fileEntry.EncryptionKey = key.ToBase64String();
+                fileEntry.EncryptionIV = iv.ToBase64String();
             }
             else
             {
                 using (var stream = model.FormFile.OpenReadStream())
                 {
-                    _fileManager.Create(fileEntryDTO, stream);
+                    await _fileManager.CreateAsync(fileEntryDTO, stream);
                 }
             }
 
-            fileEntry.FileLocation = fileEntryDTO.FileLocation;
+            await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<FileEntry>(fileEntry));
 
-            _dispatcher.Dispatch(new AddOrUpdateEntityCommand<FileEntry>(fileEntry));
-
-            return Ok(fileEntry);
+            return Ok(fileEntry.ToModel());
         }
 
+        [AuthorizePolicy(typeof(GetFilePolicy))]
         [HttpGet("{id}")]
-        public ActionResult<IEnumerable<FileEntry>> Get(Guid id)
+        public async Task<ActionResult<IEnumerable<FileEntryModel>>> Get(Guid id)
         {
-            return Ok(_dispatcher.Dispatch(new GetEntityByIdQuery<FileEntry> { Id = id }));
+            var fileEntry = await _dispatcher.DispatchAsync(new GetEntityByIdQuery<FileEntry> { Id = id });
+            return Ok(fileEntry.ToModel());
         }
 
+        [AuthorizePolicy(typeof(DownloadFilePolicy))]
         [HttpGet("{id}/download")]
-        public IActionResult Download(Guid id)
+        public async Task<IActionResult> Download(Guid id)
         {
-            var fileEntry = _dispatcher.Dispatch(new GetEntityByIdQuery<FileEntry> { Id = id });
+            var fileEntry = await _dispatcher.DispatchAsync(new GetEntityByIdQuery<FileEntry> { Id = id });
 
-            var rawData = _fileManager.Read(fileEntry.ToFileEntryDTO());
-            var content = fileEntry.Encrypted
+            var rawData = await _fileManager.ReadAsync(fileEntry.ToModel());
+            var content = fileEntry.Encrypted && fileEntry.FileLocation != "Fake.txt"
                 ? rawData
                 .UseAES(fileEntry.EncryptionKey.FromBase64String())
-                .WithCipher(CipherMode.ECB)
+                .WithCipher(CipherMode.CBC)
+                .WithIV(fileEntry.EncryptionIV.FromBase64String())
                 .WithPadding(PaddingMode.PKCS7)
                 .Decrypt()
                 : rawData;
@@ -112,43 +127,46 @@ namespace ClassifiedAds.Modules.Storage.Controllers
             return File(content, MediaTypeNames.Application.Octet, WebUtility.HtmlEncode(fileEntry.FileName));
         }
 
+        [AuthorizePolicy(typeof(UpdateFilePolicy))]
         [HttpPut("{id}")]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult Put(Guid id, [FromBody] FileEntry model)
+        public async Task<ActionResult> Put(Guid id, [FromBody] FileEntryModel model)
         {
-            var fileEntry = _dispatcher.Dispatch(new GetEntityByIdQuery<FileEntry> { Id = id, ThrowNotFoundIfNull = true });
+            var fileEntry = await _dispatcher.DispatchAsync(new GetEntityByIdQuery<FileEntry> { Id = id, ThrowNotFoundIfNull = true });
 
             fileEntry.Name = model.Name;
             fileEntry.Description = model.Description;
 
-            _dispatcher.Dispatch(new AddOrUpdateEntityCommand<FileEntry>(fileEntry));
+            await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<FileEntry>(fileEntry));
 
             return Ok(model);
         }
 
+        [AuthorizePolicy(typeof(DeleteFilePolicy))]
         [HttpDelete("{id}")]
-        public IActionResult Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
-            var fileEntry = _dispatcher.Dispatch(new GetEntityByIdQuery<FileEntry> { Id = id });
+            var fileEntry = await _dispatcher.DispatchAsync(new GetEntityByIdQuery<FileEntry> { Id = id });
 
-            _dispatcher.Dispatch(new DeleteEntityCommand<FileEntry> { Entity = fileEntry });
-            _fileManager.Delete(fileEntry.ToFileEntryDTO());
+            await _dispatcher.DispatchAsync(new DeleteEntityCommand<FileEntry> { Entity = fileEntry });
+            await _fileManager.DeleteAsync(fileEntry.ToModel());
 
             return Ok();
         }
 
+        [AuthorizePolicy(typeof(GetFileAuditLogsPolicy))]
         [HttpGet("{id}/auditlogs")]
-        public ActionResult<IEnumerable<AuditLogEntryDTO>> GetAuditLogs(Guid id)
+        public async Task<ActionResult<IEnumerable<AuditLogEntryDTO>>> GetAuditLogs(Guid id)
         {
-            var logs = _dispatcher.Dispatch(new GetAuditEntriesQuery { ObjectId = id.ToString() });
+            var logs = await _dispatcher.DispatchAsync(new GetAuditEntriesQuery { ObjectId = id.ToString() });
 
             List<dynamic> entries = new List<dynamic>();
             FileEntry previous = null;
             foreach (var log in logs.OrderBy(x => x.CreatedDateTime))
             {
-                var data = JsonConvert.DeserializeObject<FileEntry>(log.Log);
+                var data = JsonSerializer.Deserialize<FileEntry>(log.Log);
                 var highLight = new
                 {
                     Name = previous != null && data.Name != previous.Name,
@@ -173,22 +191,5 @@ namespace ClassifiedAds.Modules.Storage.Controllers
 
             return Ok(entries.OrderByDescending(x => x.CreatedDateTime));
         }
-    }
-
-    public class UploadFile
-    {
-        [Display(Name = "Name")]
-        [StringLength(50, MinimumLength = 0)]
-        public string Name { get; set; }
-
-        [Display(Name = "Description")]
-        [StringLength(50, MinimumLength = 0)]
-        public string Description { get; set; }
-
-        [Required]
-        [Display(Name = "File")]
-        public IFormFile FormFile { get; set; }
-
-        public bool Encrypted { get; set; }
     }
 }

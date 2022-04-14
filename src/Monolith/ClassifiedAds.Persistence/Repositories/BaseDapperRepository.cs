@@ -11,6 +11,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Persistence.Repositories
 {
@@ -38,17 +39,17 @@ namespace ClassifiedAds.Persistence.Repositories
 
         protected IStockDbContext DbContext => _dbContext;
 
-        public void Add(TEntity entity)
+        public async Task AddAsync(TEntity entity)
         {
-            DapperRepository.Insert(entity);
+            await DapperRepository.InsertAsync(entity);
         }
 
-        public void Update(TEntity entity)
+        public async Task UpdateAsync(TEntity entity)
         {
-            DapperRepository.Update(entity);
+            await DapperRepository.UpdateAsync(entity);
         }
 
-        public int AddOrUpdate(TEntity entity)
+        public async Task<int> AddOrUpdateAsync(TEntity entity)
         {
             int status = 0;
 
@@ -58,73 +59,73 @@ namespace ClassifiedAds.Persistence.Repositories
 
             if (_dbContext.Connection.ExecuteScalar<bool>(sql, param: param))
             {
-                DapperRepository.Update(entity);
+                await DapperRepository.UpdateAsync(entity);
             }
             else
             {
-                DapperRepository.Insert(entity);
+                await DapperRepository.InsertAsync(entity);
                 status = 1;
             }
 
             return status;
         }
 
-        public void Add(IEnumerable<TEntity> entities)
+        public async Task AddAsync(IEnumerable<TEntity> entities)
         {
-            DapperRepository.BulkInsert(entities);
+            await DapperRepository.BulkInsertAsync(entities);
         }
 
-        public void Delete(TEntity entity)
+        public async Task DeleteAsync(TEntity entity)
         {
-            DapperRepository.Delete(entity);
+            await DapperRepository.DeleteAsync(entity);
         }
 
-        public IEnumerable<TEntity> GetAll()
+        public async Task<IEnumerable<TEntity>> GetAllAsync()
         {
-            return DapperRepository.FindAll();
+            return await DapperRepository.FindAllAsync();
         }
 
-        public IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate)
+        public async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return DapperRepository.FindAll(predicate);
+            return await DapperRepository.FindAllAsync(predicate);
         }
 
-        public IEnumerable<TEntity> GetAll<T>(Expression<Func<TEntity, bool>> predicate)
+        public async Task<IEnumerable<TEntity>> GetAllAsync<T>(Expression<Func<TEntity, bool>> predicate)
         {
-            return DapperRepository.FindAll(predicate);
+            return await DapperRepository.FindAllAsync(predicate);
         }
 
-        public IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate, string orderBy)
+        public async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate, string orderBy)
         {
             DapperRepository.SetOrderBy(orderBy);
 
-            return DapperRepository.FindAll(predicate);
+            return await DapperRepository.FindAllAsync(predicate);
         }
 
-        public TEntity Get(Expression<Func<TEntity, bool>> predicate)
+        public async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return DapperRepository.Find(predicate);
+            return await DapperRepository.FindAsync(predicate);
         }
 
-        public TEntity Get(TEntity e)
+        public async Task<TEntity> GetAsync(TEntity e)
         {
-            return DapperRepository.FindById(e);
+            return await DapperRepository.FindByIdAsync(e);
         }
 
-        public void Update(IEnumerable<TEntity> entities)
+        public async Task UpdateAsync(IEnumerable<TEntity> entities)
         {
-            DapperRepository.BulkUpdate(entities);
+            await DapperRepository.BulkUpdateAsync(entities);
         }
 
-        public void Delete(IEnumerable<TEntity> entities)
+        public async Task DeleteAsync(IEnumerable<TEntity> entities)
         {
             foreach (var entity in entities)
             {
-                Delete(entity);
+                await DeleteAsync(entity);
             }
         }
 
-        public PagedResult<TEntity> GetPaged(uint pageIndex, uint pageSize, Expression<Func<TEntity, bool>> predicate, string orderBy)
+        public async Task<PagedResult<TEntity>> GetPaged(uint pageIndex, uint pageSize, Expression<Func<TEntity, bool>> predicate, string orderBy)
         {
             uint count = (uint)DapperRepository.Count(predicate);
             if (pageSize > 0)
@@ -137,10 +138,10 @@ namespace ClassifiedAds.Persistence.Repositories
                 DapperRepository.SetOrderBy(orderBy);
             }
 
-            return new PagedResult<TEntity>(DapperRepository.FindAll(predicate).ToList(), count, pageIndex, pageSize);
+            return new PagedResult<TEntity>((await DapperRepository.FindAllAsync(predicate)).ToList(), count, pageIndex, pageSize);
         }
 
-        public PagedResult<TDto> GetPaged<TDto>(uint pageIndex, uint pageSize, string sql, IDictionary<string, object> param = null, string orderBy = "")
+        public async Task<PagedResult<TDto>> GetPagedAsync<TDto>(uint pageIndex, uint pageSize, string sql, IDictionary<string, object> param = null, string orderBy = "")
         {
             uint count = _dbContext.Connection.ExecuteScalar<uint>($"SELECT COUNT(0) FROM ({sql}) as c", param);
 
@@ -154,7 +155,7 @@ namespace ClassifiedAds.Persistence.Repositories
                 sql = $"{sql} OFFSET {(pageIndex - 1) * pageSize} ROWS FETCH NEXT {pageSize} ROWS ONLY;";
             }
 
-            return new PagedResult<TDto>(_dbContext.Connection.Query<TDto>(sql, param).ToList(), count, pageIndex, pageSize);
+            return new PagedResult<TDto>((await _dbContext.Connection.QueryAsync<TDto>(sql, param)).ToList(), count, pageIndex, pageSize);
         }
     }
 }

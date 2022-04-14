@@ -1,6 +1,6 @@
 using ClassifiedAds.Infrastructure.DistributedTracing;
 using ClassifiedAds.Infrastructure.Web.Filters;
-using ClassifiedAds.Services.Identity.Api.ConfigurationOptions;
+using ClassifiedAds.Services.Identity.ConfigurationOptions;
 using ClassifiedAds.Services.Identity.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -10,6 +10,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Polly;
+using System;
+using System.Reflection;
 
 namespace ClassifiedAds.Services.Identity
 {
@@ -31,6 +34,8 @@ namespace ClassifiedAds.Services.Identity
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            AppSettings.ConnectionStrings.MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+
             services.AddControllers(configure =>
             {
                 configure.Filters.Add(typeof(GlobalExceptionFilter));
@@ -49,7 +54,7 @@ namespace ClassifiedAds.Services.Identity
             services.AddDateTimeProvider();
             services.AddApplicationServices();
 
-            services.AddIdentityModuleCore(AppSettings.ConnectionStrings.ClassifiedAds);
+            services.AddIdentityModuleCore(AppSettings);
 
             services.AddDataProtection()
                     .PersistKeysToDbContext<IdentityDbContext>()
@@ -69,7 +74,16 @@ namespace ClassifiedAds.Services.Identity
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.MigrateIdentityDb();
+            Policy.Handle<Exception>().WaitAndRetry(new[]
+            {
+                TimeSpan.FromSeconds(10),
+                TimeSpan.FromSeconds(20),
+                TimeSpan.FromSeconds(30),
+            })
+            .Execute(() =>
+            {
+                app.MigrateIdentityDb();
+            });
 
             if (env.IsDevelopment())
             {

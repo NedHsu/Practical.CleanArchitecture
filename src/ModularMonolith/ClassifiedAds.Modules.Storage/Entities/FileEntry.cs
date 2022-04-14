@@ -1,5 +1,4 @@
 ﻿using ClassifiedAds.Domain.Entities;
-using ClassifiedAds.Infrastructure.Storages;
 using System;
 
 namespace ClassifiedAds.Modules.Storage.Entities
@@ -22,14 +21,6 @@ namespace ClassifiedAds.Modules.Storage.Entities
 
         public string EncryptionKey { get; set; }
 
-        public FileEntryDTO ToFileEntryDTO()
-        {
-            return new FileEntryDTO
-            {
-                Id = Id,
-                FileName = FileName,
-                FileLocation = FileLocation,
-            };
-        }
+        public string EncryptionIV { get; set; }
     }
 }

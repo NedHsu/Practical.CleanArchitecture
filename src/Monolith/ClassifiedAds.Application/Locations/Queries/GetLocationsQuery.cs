@@ -23,9 +23,9 @@ namespace ClassifiedAds.Application.Locations.Queries
             _locationRepository = locationRepository;
         }
 
-        public List<Location> Handle(GetLocationsQuery query)
+        public async Task<List<Location>> HandleAsync(GetLocationsQuery query, CancellationToken cancellationToken = default)
         {
-            return _locationRepository.GetAll().ToList();
+            return (await _locationRepository.GetAllAsync()).ToList();
         }
     }
 }

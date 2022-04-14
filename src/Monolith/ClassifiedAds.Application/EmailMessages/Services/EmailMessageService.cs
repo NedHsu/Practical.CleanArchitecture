@@ -1,11 +1,11 @@
-﻿using ClassifiedAds.Application.EmailMessages.DTOs;
-using ClassifiedAds.CrossCuttingConcerns.OS;
-using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
+﻿using ClassifiedAds.CrossCuttingConcerns.OS;
 using ClassifiedAds.Domain.Notification;
 using ClassifiedAds.Domain.Repositories;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application.EmailMessages.Services
 {
@@ -13,65 +13,83 @@ namespace ClassifiedAds.Application.EmailMessages.Services
     {
         private readonly ILogger _logger;
         private readonly IEmailMessageRepository _repository;
-        private readonly IMessageSender<EmailMessageCreatedEvent> _emailMessageCreatedEventSender;
         private readonly IEmailNotification _emailNotification;
         private readonly IDateTimeProvider _dateTimeProvider;
 
         public EmailMessageService(ILogger<EmailMessageService> logger,
             IEmailMessageRepository repository,
-            IMessageSender<EmailMessageCreatedEvent> emailMessageCreatedEventSender,
             IEmailNotification emailNotification,
             IDateTimeProvider dateTimeProvider
             )
         {
             _logger = logger;
             _repository = repository;
-            _emailMessageCreatedEventSender = emailMessageCreatedEventSender;
             _emailNotification = emailNotification;
             _dateTimeProvider = dateTimeProvider;
         }
 
-        public int ResendEmailMessages()
+        public async Task<int> SendEmailMessagesAsync()
         {
-            var dateTime = _dateTimeProvider.OffsetNow.AddMinutes(-1);
+            var deplayedTimes = new[]
+            {
+                TimeSpan.FromMinutes(1),
+                TimeSpan.FromMinutes(2),
+                TimeSpan.FromMinutes(3),
+                TimeSpan.FromMinutes(5),
+                TimeSpan.FromMinutes(8),
+                TimeSpan.FromMinutes(13),
+                TimeSpan.FromMinutes(21),
+                TimeSpan.FromMinutes(34),
+                TimeSpan.FromMinutes(55),
+                TimeSpan.FromMinutes(89),
+            };
 
-            var messages = _repository.GetAll()
-                .Where(x => x.SentDateTime == null && x.RetriedCount < 3)
-                .Where(x => (x.RetriedCount == 0 && x.CreatedDateTime < dateTime) || (x.RetriedCount != 0 && x.UpdatedDateTime < dateTime))
+            var dateTime = _dateTimeProvider.OffsetNow;
+            var defaultAttemptCount = 5;
+
+            var messages = (await _repository.GetAllAsync())
+                .Where(x => x.SentDateTime == null)
+                .Where(x => x.ExpiredDateTime == null || x.ExpiredDateTime > dateTime)
+                .Where(x => (x.MaxAttemptCount == 0 && x.AttemptCount < defaultAttemptCount) || x.AttemptCount < x.MaxAttemptCount)
+                .Where(x => x.NextAttemptDateTime == null || x.NextAttemptDateTime <= dateTime)
                 .ToList();
 
             if (messages.Any())
             {
                 foreach (var email in messages)
                 {
-                    _emailMessageCreatedEventSender.Send(new EmailMessageCreatedEvent { Id = email.Id });
+                    string log = Environment.NewLine + Environment.NewLine
+                            + $"[{_dateTimeProvider.OffsetNow.ToString(CultureInfo.InvariantCulture)}] ";
+                    try
+                    {
+                        await _emailNotification.SendAsync(email);
+                        email.SentDateTime = _dateTimeProvider.OffsetNow;
+                        email.Log += log + "Succeed.";
+                    }
+                    catch (Exception ex)
+                    {
+                        email.Log += log + ex.ToString();
+                        email.NextAttemptDateTime = _dateTimeProvider.OffsetNow + deplayedTimes[email.AttemptCount];
+                    }
 
-                    _repository.IncreaseRetry(email.Id);
+                    email.AttemptCount += 1;
+                    email.Log = email.Log.Trim();
+                    email.UpdatedDateTime = _dateTimeProvider.OffsetNow;
+
+                    if (email.MaxAttemptCount == 0)
+                    {
+                        email.MaxAttemptCount = defaultAttemptCount;
+                    }
+
+                    await _repository.UnitOfWork.SaveChangesAsync();
                 }
             }
             else
             {
-                _logger.LogInformation("No email to resend.");
+                _logger.LogInformation("No email to send.");
             }
 
             return messages.Count;
-        }
-
-        public void SendEmailMessage(Guid id)
-        {
-            var emailMessage = _repository.GetAll().FirstOrDefault(x => x.Id == id);
-            if (emailMessage != null && !emailMessage.SentDateTime.HasValue)
-            {
-                try
-                {
-                    _emailNotification.Send(emailMessage);
-                    _repository.UpdateSent(emailMessage.Id);
-                }
-                catch (Exception ex)
-                {
-                    _repository.UpdateFailed(emailMessage.Id, Environment.NewLine + Environment.NewLine + ex.ToString());
-                }
-            }
         }
     }
 }

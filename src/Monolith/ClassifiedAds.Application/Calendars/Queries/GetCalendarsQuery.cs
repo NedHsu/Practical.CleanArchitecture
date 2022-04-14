@@ -22,9 +22,14 @@ namespace ClassifiedAds.Application.Calendars.Queries
             _calendarRepository = calendarRepository;
         }
 
-        public List<Calendar> Handle(GetCalendarsQuery query)
+        public List<Calendar> HandleAsync(GetCalendarsQuery query)
         {
             return _calendarRepository.Get(new CalendarQueryOptions { IncludeCategory = true }).ToList();
+        }
+
+        public Task<List<Calendar>> HandleAsync(GetCalendarsQuery query, CancellationToken cancellationToken = default)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

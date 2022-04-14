@@ -1,41 +1,62 @@
 ﻿using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.Storages.Local
 {
     public class LocalFileStorageManager : IFileStorageManager
     {
-        private readonly string _rootPath;
+        private readonly LocalOption _option;
 
-        public LocalFileStorageManager(string rootPath)
+        public LocalFileStorageManager(LocalOption option)
         {
-            _rootPath = rootPath;
+            _option = option;
         }
 
-        public void Create(FileEntryDTO fileEntry, Stream stream)
+        public async Task CreateAsync(IFileEntry fileEntry, Stream stream, CancellationToken cancellationToken = default)
         {
-            var trustedFileNameForFileStorage = Path.GetRandomFileName();
-            var filePath = Path.Combine(_rootPath, trustedFileNameForFileStorage);
+            var filePath = Path.Combine(_option.Path, fileEntry.FileLocation);
+
+            var folder = Path.GetDirectoryName(filePath);
+
+            if (!Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
 
             using (var fileStream = File.Create(filePath))
             {
-                stream.CopyTo(fileStream);
+                await stream.CopyToAsync(fileStream, cancellationToken);
             }
-
-            fileEntry.FileLocation = trustedFileNameForFileStorage;
         }
 
-        public void Delete(FileEntryDTO fileEntry)
+        public async Task DeleteAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)
         {
-            var path = Path.Combine(_rootPath, fileEntry.FileLocation);
-            if (File.Exists(path))
+            await Task.Run(() =>
             {
-                File.Delete(path);
-            }
+                var path = Path.Combine(_option.Path, fileEntry.FileLocation);
+                if (File.Exists(path))
+                {
+                    File.Delete(path);
+                }
+            }, cancellationToken);
         }
 
-        public byte[] Read(FileEntryDTO fileEntry)
+        public Task<byte[]> ReadAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)
         {
-            return File.ReadAllBytes(Path.Combine(_rootPath, fileEntry.FileLocation));
+            return File.ReadAllBytesAsync(Path.Combine(_option.Path, fileEntry.FileLocation), cancellationToken);
+        }
+
+        public Task ArchiveAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)
+        {
+            // TODO: move to archive storage
+            return Task.CompletedTask;
+        }
+
+        public Task UnArchiveAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)
+        {
+            // TODO: move to active storage
+            return Task.CompletedTask;
         }
     }
 }

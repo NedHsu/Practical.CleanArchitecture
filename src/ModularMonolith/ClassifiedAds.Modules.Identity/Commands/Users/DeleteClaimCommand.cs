@@ -1,6 +1,8 @@
 ﻿using ClassifiedAds.Application;
 using ClassifiedAds.Modules.Identity.Entities;
 using ClassifiedAds.Modules.Identity.Repositories;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Modules.Identity.Commands.Users
 {
@@ -19,11 +21,11 @@ namespace ClassifiedAds.Modules.Identity.Commands.Users
             _userRepository = userRepository;
         }
 
-        public void Handle(DeleteClaimCommand command)
+        public async Task HandleAsync(DeleteClaimCommand command, CancellationToken cancellationToken = default)
         {
             command.User.Claims.Remove(command.Claim);
-            _userRepository.AddOrUpdate(command.User);
-            _userRepository.UnitOfWork.SaveChanges();
+            await _userRepository.AddOrUpdateAsync(command.User);
+            await _userRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 }

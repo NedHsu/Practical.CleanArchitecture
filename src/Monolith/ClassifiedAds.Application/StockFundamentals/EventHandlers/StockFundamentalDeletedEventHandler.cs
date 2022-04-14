@@ -16,14 +16,14 @@ namespace ClassifiedAds.Application.StockFundamentals.EventHandlers
             _serviceProvider = serviceProvider;
         }
 
-        public void Handle(EntityDeletedEvent<StockFundamental> domainEvent)
+        public async Task HandleAsync(EntityDeletedEvent<StockFundamental> domainEvent, CancellationToken cancellationToken = default)
         {
             using (var scope = _serviceProvider.CreateScope())
             {
                 var auditSerivce = scope.ServiceProvider.GetService<ICrudService<AuditLogEntry>>();
                 var currentUser = scope.ServiceProvider.GetService<ICurrentUser>();
 
-                auditSerivce.AddOrUpdate(new AuditLogEntry
+                await auditSerivce.AddOrUpdateAsync(new AuditLogEntry
                 {
                     UserId = currentUser.UserId,
                     CreatedDateTime = domainEvent.EventDateTime,

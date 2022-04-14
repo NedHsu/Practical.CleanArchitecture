@@ -26,7 +26,7 @@ namespace ClassifiedAds.Application.Stocks.Queries
             _stockRepository = stockRepository;
         }
 
-        public PagedResult<Stock> Handle(GetStocksQuery query)
+        public async Task<PagedResult<Stock>> HandleAsync(GetStocksQuery query, CancellationToken cancellationToken = default)
         {
             Expression<Func<Stock, bool>> predicate = null;
             if (!string.IsNullOrWhiteSpace(query.Industry))
@@ -39,7 +39,7 @@ namespace ClassifiedAds.Application.Stocks.Queries
                 predicate = x => x.Code.Contains(query.Keyword) || x.Name.Contains(keyword);
             }
 
-            return _stockRepository.GetPaged(query.PageIndex, query.PageSize, predicate, $"{nameof(Stock.CFICode)} ASC, {nameof(Stock.Code)} ASC ");
+            return await _stockRepository.GetPaged(query.PageIndex, query.PageSize, predicate, $"{nameof(Stock.CFICode)} ASC, {nameof(Stock.Code)} ASC ");
         }
     }
 }

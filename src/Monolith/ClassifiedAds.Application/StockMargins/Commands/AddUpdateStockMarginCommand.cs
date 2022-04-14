@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.Domain.Entities;
+using System.Threading;
 
 namespace ClassifiedAds.Application.StockMargins.Commands
 {
@@ -16,9 +17,9 @@ namespace ClassifiedAds.Application.StockMargins.Commands
             _stockmarginService = stockmarginService;
         }
 
-        public void Handle(AddUpdateStockMarginCommand command)
+        public async Task HandleAsync(AddUpdateStockMarginCommand command, CancellationToken cancellationToken = default)
         {
-            _stockmarginService.AddOrUpdate(command.StockMargin);
+            await _stockmarginService.AddOrUpdateAsync(command.StockMargin);
         }
     }
 }

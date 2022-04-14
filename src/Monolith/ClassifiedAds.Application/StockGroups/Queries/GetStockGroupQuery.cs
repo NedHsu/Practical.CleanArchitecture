@@ -20,9 +20,9 @@ namespace ClassifiedAds.Application.StockGroups.Queries
             _stockgroupRepository = stockgroupRepository;
         }
 
-        public StockGroup Handle(GetStockGroupQuery query)
+        public async Task<StockGroup> HandleAsync(GetStockGroupQuery query, CancellationToken cancellationToken = default)
         {
-            var stockgroup = _stockgroupRepository.Get(x => x.Id == query.Id);
+            var stockgroup = await _stockgroupRepository.GetAsync(x => x.Id == query.Id);
 
             if (query.ThrowNotFoundIfNull && stockgroup == null)
             {

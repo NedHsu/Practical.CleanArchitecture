@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.Domain.Entities;
+using System.Threading;
 
 namespace ClassifiedAds.Application.StockEPSs.Commands
 {
@@ -16,9 +17,9 @@ namespace ClassifiedAds.Application.StockEPSs.Commands
             _stockEpService = stockEpService;
         }
 
-        public void Handle(AddUpdateStockEPSCommand command)
+        public async Task HandleAsync(AddUpdateStockEPSCommand command, CancellationToken cancellationToken = default)
         {
-            _stockEpService.AddOrUpdate(command.StockEPS);
+            await _stockEpService.AddOrUpdateAsync(command.StockEPS);
         }
     }
 }

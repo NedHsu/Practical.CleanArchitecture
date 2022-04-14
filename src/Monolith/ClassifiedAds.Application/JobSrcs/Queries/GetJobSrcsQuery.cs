@@ -22,9 +22,9 @@ namespace ClassifiedAds.Application.JobSrcs.Queries
             _jobSrcRepository = jobSrcRepository;
         }
 
-        public List<JobSrc> Handle(GetJobSrcsQuery query)
+        public async Task<List<JobSrc>> HandleAsync(GetJobSrcsQuery query, CancellationToken cancellationToken = default)
         {
-            return _jobSrcRepository.GetAll().ToList();
+            return (await _jobSrcRepository.GetAllAsync()).ToList();
         }
     }
 }

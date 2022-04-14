@@ -4,7 +4,7 @@
 // Write your JavaScript code.
 
 const connection = new signalR.HubConnectionBuilder()
-    .withUrl(appSettings.NotificationServer.Endpoint + "/SimulatedLongRunningTaskHub")
+    .withUrl("/SimulatedLongRunningTaskHub")
     .configureLogging(signalR.LogLevel.Information)
     .build();
 
@@ -14,6 +14,23 @@ connection.start().then(function () {
 });
 
 connection.on("ReceiveTaskStatus", (message) => {
+    console.log("Received Message from Notification Server: </br>" + message);
+    toastr.info("Received Message from Notification Server: </br>" + message)
+});
+
+// Authorized Hub
+
+const authorizedConnection = new signalR.HubConnectionBuilder()
+    .withUrl("/AuthorizedHub")
+    .configureLogging(signalR.LogLevel.Information)
+    .build();
+
+authorizedConnection.start().then(function () {
+    console.log("Connected to AuthorizedHub");
+    toastr.info("Connected to AuthorizedHub")
+});
+
+authorizedConnection.on("ReceiveTaskStatus", (message) => {
     console.log("Received Message from Notification Server: </br>" + message);
     toastr.info("Received Message from Notification Server: </br>" + message)
 });

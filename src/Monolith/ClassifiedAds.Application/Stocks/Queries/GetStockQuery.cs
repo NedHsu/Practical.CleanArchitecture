@@ -19,9 +19,9 @@ namespace ClassifiedAds.Application.Stocks.Queries
             _stockRepository = stockRepository;
         }
 
-        public Stock Handle(GetStockQuery query)
+        public async Task<Stock> HandleAsync(GetStockQuery query, CancellationToken cancellationToken = default)
         {
-            var stock = _stockRepository.Get(x => x.Code == query.Code);
+            var stock = await _stockRepository.GetAsync(x => x.Code == query.Code);
 
             if (query.ThrowNotFoundIfNull && stock == null)
             {

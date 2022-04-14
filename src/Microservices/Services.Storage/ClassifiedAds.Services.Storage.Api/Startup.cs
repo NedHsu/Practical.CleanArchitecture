@@ -1,7 +1,7 @@
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using ClassifiedAds.Infrastructure.DistributedTracing;
 using ClassifiedAds.Infrastructure.Web.Filters;
-using ClassifiedAds.Services.Storage.Api.ConfigurationOptions;
+using ClassifiedAds.Services.Storage.ConfigurationOptions;
 using ClassifiedAds.Services.Storage.DTOs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -10,8 +10,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Polly;
 using System;
-using System.Threading;
+using System.Reflection;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Services.Storage
 {
@@ -33,6 +35,8 @@ namespace ClassifiedAds.Services.Storage
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            AppSettings.ConnectionStrings.MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+
             services.AddControllers(configure =>
             {
                 configure.Filters.Add(typeof(GlobalExceptionFilter));
@@ -51,7 +55,7 @@ namespace ClassifiedAds.Services.Storage
             services.AddDateTimeProvider();
             services.AddApplicationServices();
 
-            services.AddStorageModule(AppSettings.Storage, AppSettings.MessageBroker, AppSettings.ConnectionStrings.ClassifiedAds);
+            services.AddStorageModule(AppSettings);
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>
@@ -67,7 +71,16 @@ namespace ClassifiedAds.Services.Storage
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.MigrateStorageDb();
+            Policy.Handle<Exception>().WaitAndRetry(new[]
+            {
+                TimeSpan.FromSeconds(10),
+                TimeSpan.FromSeconds(20),
+                TimeSpan.FromSeconds(30),
+            })
+            .Execute(() =>
+            {
+                app.MigrateStorageDb();
+            });
 
             if (env.IsDevelopment())
             {
@@ -94,16 +107,16 @@ namespace ClassifiedAds.Services.Storage
             var fileUploadedMessageQueueReceiver = serviceProvider.GetService<IMessageReceiver<FileUploadedEvent>>();
             var fileDeletedMessageQueueReceiver = serviceProvider.GetService<IMessageReceiver<FileDeletedEvent>>();
 
-            fileUploadedMessageQueueReceiver?.Receive(data =>
+            fileUploadedMessageQueueReceiver?.Receive(async (data, metaData) =>
             {
-                Thread.Sleep(5000); // simulate long running task
+                await Task.Delay(5000); // simulate long running task
 
                 string message = data.FileEntry.Id.ToString();
             });
 
-            fileDeletedMessageQueueReceiver?.Receive(data =>
+            fileDeletedMessageQueueReceiver?.Receive(async (data, metaData) =>
             {
-                Thread.Sleep(5000); // simulate long running task
+                await Task.Delay(5000); // simulate long running task
 
                 string message = data.FileEntry.Id.ToString();
             });

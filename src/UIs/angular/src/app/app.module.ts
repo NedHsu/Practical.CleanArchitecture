@@ -1,6 +1,10 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule, ErrorHandler } from "@angular/core";
+import { StoreModule } from "@ngrx/store";
+import { StoreDevtoolsModule } from "@ngrx/store-devtools";
+import { EffectsModule } from "@ngrx/effects";
 
+import { environment } from "src/environments/environment";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { ProductModule } from "./products/product.module";
@@ -12,6 +16,7 @@ import { CoreModule } from "./core/core.module";
 import { AuditLogModule } from "./auditlogs/audit-log.module";
 import { FileModule } from "./files/file.module";
 import { UserModule } from "./users/user.module";
+import { SettingModule } from "./settings/setting.module";
 
 @NgModule({
   declarations: [AppComponent],
@@ -19,6 +24,7 @@ import { UserModule } from "./users/user.module";
     BrowserModule,
     SharedModule,
     CoreModule,
+    SettingModule,
     AuditLogModule,
     ProductModule,
     FileModule,
@@ -26,6 +32,13 @@ import { UserModule } from "./users/user.module";
     AppRoutingModule,
     AuthModule,
     LoggingModule,
+    StoreModule.forRoot({}),
+    StoreDevtoolsModule.instrument({
+      name: "Practical.CleanArchitecture App DevTools",
+      maxAge: 25,
+      logOnly: environment.production,
+    }),
+    EffectsModule.forRoot([]),
   ],
   providers: [
     {

@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.Domain.Entities;
+using System.Threading;
 
 namespace ClassifiedAds.Application.Matchs.Commands
 {
@@ -16,9 +17,9 @@ namespace ClassifiedAds.Application.Matchs.Commands
             _matchService = matchService;
         }
 
-        public void Handle(AddUpdateMatchCommand command)
+        public async Task HandleAsync(AddUpdateMatchCommand command, CancellationToken cancellationToken = default)
         {
-            _matchService.AddOrUpdate(command.Match);
+            await _matchService.AddOrUpdateAsync(command.Match);
         }
     }
 }

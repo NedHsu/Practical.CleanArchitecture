@@ -1,5 +1,7 @@
 ﻿using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application.Users.Commands
 {
@@ -18,11 +20,11 @@ namespace ClassifiedAds.Application.Users.Commands
             _userRepository = userRepository;
         }
 
-        public void Handle(AddRoleCommand command)
+        public async Task HandleAsync(AddRoleCommand command, CancellationToken cancellationToken = default)
         {
             command.User.UserRoles.Add(command.Role);
-            _userRepository.AddOrUpdate(command.User);
-            _userRepository.UnitOfWork.SaveChanges();
+            await _userRepository.AddOrUpdateAsync(command.User);
+            await _userRepository.UnitOfWork.SaveChangesAsync();
         }
     }
 }

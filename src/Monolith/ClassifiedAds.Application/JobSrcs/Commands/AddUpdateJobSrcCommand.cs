@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.Domain.Entities;
+using System.Threading;
 
 namespace ClassifiedAds.Application.JobSrcs.Commands
 {
@@ -16,9 +17,9 @@ namespace ClassifiedAds.Application.JobSrcs.Commands
             _jobSrcService = jobSrcService;
         }
 
-        public void Handle(AddUpdateJobSrcCommand command)
+        public async Task HandleAsync(AddUpdateJobSrcCommand command, CancellationToken cancellationToken = default)
         {
-            _jobSrcService.AddOrUpdate(command.JobSrc);
+            await _jobSrcService.AddOrUpdateAsync(command.JobSrc);
         }
     }
 }

@@ -1,28 +1,14 @@
-﻿using ClassifiedAds.Domain.Repositories;
+﻿using ClassifiedAds.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
-using System.Data;
 using System.Reflection;
 
 namespace ClassifiedAds.Modules.Storage.Repositories
 {
-    public class StorageDbContext : DbContext, IUnitOfWork
+    public class StorageDbContext : DbContextUnitOfWork<StorageDbContext>
     {
-        private IDbContextTransaction _dbContextTransaction;
-
         public StorageDbContext(DbContextOptions<StorageDbContext> options)
             : base(options)
         {
-        }
-
-        public void BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
-        {
-            _dbContextTransaction = Database.BeginTransaction(isolationLevel);
-        }
-
-        public void CommitTransaction()
-        {
-            _dbContextTransaction.Commit();
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

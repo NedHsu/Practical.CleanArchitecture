@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.Domain.Entities;
+using System.Threading;
 
 namespace ClassifiedAds.Application.StockDays.Commands
 {
@@ -16,9 +17,9 @@ namespace ClassifiedAds.Application.StockDays.Commands
             _stockdayService = stockdayService;
         }
 
-        public void Handle(AddUpdateStockDayCommand command)
+        public async Task HandleAsync(AddUpdateStockDayCommand command, CancellationToken cancellationToken = default)
         {
-            _stockdayService.AddOrUpdate(command.StockDay);
+            await _stockdayService.AddOrUpdateAsync(command.StockDay);
         }
     }
 }

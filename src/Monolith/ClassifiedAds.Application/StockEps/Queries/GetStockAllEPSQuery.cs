@@ -1,6 +1,5 @@
 ﻿using ClassifiedAds.Application.Decorators.AuditLog;
 using ClassifiedAds.Application.Decorators.DatabaseRetry;
-using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,9 +21,9 @@ namespace ClassifiedAds.Application.StockEPSs.Queries
             _stockEpRepository = stockEpRepository;
         }
 
-        public List<StockEPS> Handle(GetStockAllEPSQuery query)
+        public async Task<List<StockEPS>> HandleAsync(GetStockAllEPSQuery query, CancellationToken cancellationToken = default)
         {
-            return _stockEpRepository.GetAll().ToList();
+            return (await _stockEpRepository.GetAllAsync()).ToList();
         }
     }
 }

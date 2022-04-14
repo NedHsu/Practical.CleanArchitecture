@@ -1,7 +1,9 @@
 ﻿using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
-using Newtonsoft.Json;
 using RabbitMQ.Client;
 using System.Text;
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ
 {
@@ -24,12 +26,17 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ
             _routingKey = options.RoutingKey;
         }
 
-        public void Send(T message)
+        public async Task SendAsync(T message, MetaData metaData = null, CancellationToken cancellationToken = default)
         {
-            using (var connection = _connectionFactory.CreateConnection())
-            using (var channel = connection.CreateModel())
+            await Task.Run(() =>
             {
-                var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
+                using var connection = _connectionFactory.CreateConnection();
+                using var channel = connection.CreateModel();
+                var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(new Message<T>
+                {
+                    Data = message,
+                    MetaData = metaData,
+                }));
                 var properties = channel.CreateBasicProperties();
                 properties.Persistent = true;
 
@@ -37,7 +44,7 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.RabbitMQ
                                      routingKey: _routingKey,
                                      basicProperties: properties,
                                      body: body);
-            }
+            }, cancellationToken);
         }
     }
 }

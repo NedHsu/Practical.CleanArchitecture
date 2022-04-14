@@ -1,5 +1,4 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.Exceptions;
-using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
 
 namespace ClassifiedAds.Application.Jobs.Queries
@@ -19,9 +18,9 @@ namespace ClassifiedAds.Application.Jobs.Queries
             _jobRepository = jobRepository;
         }
 
-        public Job Handle(GetJobQuery query)
+        public async Task<Job> HandleAsync(GetJobQuery query, CancellationToken cancellationToken = default)
         {
-            var job = _jobRepository.Get(x => x.Id == query.Id);
+            var job = await _jobRepository.GetAsync(x => x.Id == query.Id);
 
             if (query.ThrowNotFoundIfNull && job == null)
             {

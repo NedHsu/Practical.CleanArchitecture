@@ -16,9 +16,9 @@ namespace ClassifiedAds.Application.StockDays.Commands
             _stockdayService = stockdayService;
         }
 
-        public void Handle(DeleteStockDayCommand command)
+        public async Task HandleAsync(DeleteStockDayCommand command, CancellationToken cancellationToken = default)
         {
-            _stockdayService.Delete(command.StockDay);
+            await _stockdayService.DeleteAsync(command.StockDay);
         }
     }
 }

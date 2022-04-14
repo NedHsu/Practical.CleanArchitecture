@@ -26,9 +26,9 @@ namespace ClassifiedAds.Application.Weathers.Queries
             _weatherService = weatherService;
         }
 
-        public TidalResponse Handle(GetWeatherTidalQuery query)
+        public async Task<TidalResponse> HandleAsync(GetWeatherTidalQuery query, CancellationToken cancellationToken = default)
         {
-            return _weatherService.GetTida(query);
+            return await _weatherService.GetTida(query);
         }
     }
 }

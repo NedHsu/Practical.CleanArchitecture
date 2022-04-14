@@ -57,13 +57,42 @@ namespace Microsoft.Extensions.DependencyInjection
                 context.Database.Migrate();
 
                 var clients = new List<Client>();
+
+                if (!context.Clients.Any(x => x.ClientId == "Swagger"))
+                {
+                    clients.Add(new Client
+                    {
+                        ClientId = "Swagger",
+                        ClientName = "Swagger",
+                        AllowedGrantTypes = GrantTypes.Code.Combines(GrantTypes.ClientCredentials),
+                        RequirePkce = true,
+                        RedirectUris =
+                        {
+                            "https://localhost:44312/oauth2-redirect.html",
+                            "http://host.docker.internal:9002/oauth2-redirect.html",
+                        },
+                        AllowedScopes =
+                        {
+                            IdentityServerConstants.StandardScopes.OpenId,
+                            IdentityServerConstants.StandardScopes.Profile,
+                            "ClassifiedAds.WebAPI",
+                        },
+                        ClientSecrets =
+                        {
+                            new Secret("secret".Sha256()),
+                        },
+                        RequireConsent = false,
+                    });
+                }
+
                 if (!context.Clients.Any(x => x.ClientId == "ClassifiedAds.WebMVC"))
                 {
                     clients.Add(new Client
                     {
                         ClientId = "ClassifiedAds.WebMVC",
                         ClientName = "ClassifiedAds Web MVC",
-                        AllowedGrantTypes = GrantTypes.Hybrid.Combines(GrantTypes.ResourceOwnerPassword),
+                        AllowedGrantTypes = GrantTypes.Code.Combines(GrantTypes.ResourceOwnerPassword),
+                        RequirePkce = true,
                         RedirectUris =
                         {
                             "https://localhost:44364/signin-oidc",
@@ -85,7 +114,6 @@ namespace Microsoft.Extensions.DependencyInjection
                             new Secret("secret".Sha256()),
                         },
                         AllowOfflineAccess = true,
-                        RequirePkce = false,
                         RequireConsent = true,
                     });
                 }
@@ -96,7 +124,8 @@ namespace Microsoft.Extensions.DependencyInjection
                     {
                         ClientId = "ClassifiedAds.BlazorServerSide",
                         ClientName = "ClassifiedAds BlazorServerSide",
-                        AllowedGrantTypes = GrantTypes.Hybrid.Combines(GrantTypes.ResourceOwnerPassword),
+                        AllowedGrantTypes = GrantTypes.Code.Combines(GrantTypes.ResourceOwnerPassword),
+                        RequirePkce = true,
                         RedirectUris =
                         {
                             "https://localhost:44331/signin-oidc",
@@ -118,7 +147,6 @@ namespace Microsoft.Extensions.DependencyInjection
                             new Secret("secret".Sha256()),
                         },
                         AllowOfflineAccess = true,
-                        RequirePkce = false,
                         RequireConsent = true,
                     });
                 }
@@ -161,7 +189,9 @@ namespace Microsoft.Extensions.DependencyInjection
                     {
                         ClientId = "ClassifiedAds.Angular",
                         ClientName = "ClassifiedAds Angular",
-                        AllowedGrantTypes = GrantTypes.Implicit,
+                        AllowedGrantTypes = GrantTypes.Code,
+                        RequireClientSecret = false,
+                        RequirePkce = true,
                         AllowAccessTokensViaBrowser = true,
                         RedirectUris =
                         {
@@ -186,7 +216,6 @@ namespace Microsoft.Extensions.DependencyInjection
                             new Secret("secret".Sha256()),
                         },
                         AllowOfflineAccess = true,
-                        RequirePkce = false,
                         RequireConsent = true,
                     });
                 }
@@ -197,7 +226,9 @@ namespace Microsoft.Extensions.DependencyInjection
                     {
                         ClientId = "ClassifiedAds.React",
                         ClientName = "ClassifiedAds React",
-                        AllowedGrantTypes = GrantTypes.Implicit,
+                        AllowedGrantTypes = GrantTypes.Code,
+                        RequireClientSecret = false,
+                        RequirePkce = true,
                         AllowAccessTokensViaBrowser = true,
                         RedirectUris =
                         {
@@ -222,7 +253,6 @@ namespace Microsoft.Extensions.DependencyInjection
                             new Secret("secret".Sha256()),
                         },
                         AllowOfflineAccess = true,
-                        RequirePkce = false,
                         RequireConsent = true,
                     });
                 }
@@ -233,7 +263,9 @@ namespace Microsoft.Extensions.DependencyInjection
                     {
                         ClientId = "ClassifiedAds.Vue",
                         ClientName = "ClassifiedAds Vue",
-                        AllowedGrantTypes = GrantTypes.Implicit,
+                        AllowedGrantTypes = GrantTypes.Code,
+                        RequireClientSecret = false,
+                        RequirePkce = true,
                         AllowAccessTokensViaBrowser = true,
                         RedirectUris =
                         {
@@ -258,7 +290,6 @@ namespace Microsoft.Extensions.DependencyInjection
                             new Secret("secret".Sha256()),
                         },
                         AllowOfflineAccess = true,
-                        RequirePkce = false,
                         RequireConsent = true,
                     });
                 }

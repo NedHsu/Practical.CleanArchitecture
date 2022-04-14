@@ -21,9 +21,9 @@ namespace ClassifiedAds.Application.StockFunders.Queries
             _stockFunderRepository = stockfunderRepository;
         }
 
-        public List<StockFunderDTO> Handle(GetCreditStockFundersQuery query)
+        public async Task<List<StockFunderDTO>> HandleAsync(GetCreditStockFundersQuery query, CancellationToken cancellationToken = default)
         {
-            return _stockFunderRepository.GetCreditTopBuy();
+            return await _stockFunderRepository.GetCreditTopBuy();
         }
     }
 }

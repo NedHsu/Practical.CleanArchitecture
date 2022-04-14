@@ -6,13 +6,18 @@ namespace ClassifiedAds.WebAPI.Models.Products
 {
     public static class ProductModelMappingConfiguration
     {
-        public static IEnumerable<ProductModel> ToDTOs(this IEnumerable<Product> entities)
+        public static IEnumerable<ProductModel> ToModels(this IEnumerable<Product> entities)
         {
-            return entities.Select(x => x.ToDTO());
+            return entities.Select(x => x.ToModel());
         }
 
-        public static ProductModel ToDTO(this Product entity)
+        public static ProductModel ToModel(this Product entity)
         {
+            if (entity == null)
+            {
+                return null;
+            }
+
             return new ProductModel
             {
                 Id = entity.Id,
@@ -22,14 +27,14 @@ namespace ClassifiedAds.WebAPI.Models.Products
             };
         }
 
-        public static Product ToEntity(this ProductModel dto)
+        public static Product ToEntity(this ProductModel model)
         {
             return new Product
             {
-                Id = dto.Id,
-                Code = dto.Code,
-                Name = dto.Name,
-                Description = dto.Description,
+                Id = model.Id,
+                Code = model.Code,
+                Name = model.Name,
+                Description = model.Description,
             };
         }
     }

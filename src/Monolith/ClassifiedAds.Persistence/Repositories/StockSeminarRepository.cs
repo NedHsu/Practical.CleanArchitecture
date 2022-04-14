@@ -15,7 +15,7 @@ namespace ClassifiedAds.Persistence.Repositories
         {
         }
 
-        public PagedResult<StockSeminarDTO> GetWithStockInfo(DateTime startDate, DateTime endDate, uint pageIndex, uint pageSize)
+        public async Task<PagedResult<StockSeminarDTO>> GetWithStockInfo(DateTime startDate, DateTime endDate, uint pageIndex, uint pageSize)
         {
             string sql = @"
 SELECT 
@@ -32,7 +32,7 @@ WHERE ss.Date >= @StartDate AND ss.Date < @EndDate
                 { "@StartDate", startDate },
                 { "@EndDate", endDate.AddDays(1) },
             };
-            return GetPaged<StockSeminarDTO>(pageIndex, pageSize, sql, param, orderBy);
+            return await GetPagedAsync<StockSeminarDTO>(pageIndex, pageSize, sql, param, orderBy);
         }
     }
 }

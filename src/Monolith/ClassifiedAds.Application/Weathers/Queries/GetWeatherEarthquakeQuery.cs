@@ -26,9 +26,9 @@ namespace ClassifiedAds.Application.Weathers.Queries
             _weatherService = weatherService;
         }
 
-        public EarthquakeResponse Handle(GetWeatherEarthquakeQuery query)
+        public async Task<EarthquakeResponse> HandleAsync(GetWeatherEarthquakeQuery query, CancellationToken cancellationToken = default)
         {
-            return _weatherService.GetEarthquake(query);
+            return await _weatherService.GetEarthquake(query);
         }
     }
 }

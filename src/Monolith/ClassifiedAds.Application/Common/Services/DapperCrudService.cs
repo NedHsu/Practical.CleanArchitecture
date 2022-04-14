@@ -2,14 +2,12 @@
 using ClassifiedAds.Domain.Repositories;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ClassifiedAds.Application
 {
     public class DapperCrudService<T> : IDapperCrudService<T>
         where T : class
     {
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IBaseDapperRepository<T> _repository;
         private readonly IDomainEvents _domainEvents;
 
@@ -20,30 +18,29 @@ namespace ClassifiedAds.Application
             _repository = repository;
             _domainEvents = domainEvents;
         }
-
-        public virtual void AddOrUpdate(T entity)
+        public virtual async Task<IList<T>> Get()
         {
-            var adding = _repository.AddOrUpdate(entity);
+            return (await _repository.GetAllAsync()).ToList();
+        }
+
+        public virtual async Task DeleteAsync(T entity)
+        {
+            await _repository.DeleteAsync(entity);
+            await _domainEvents.DispatchAsync(new EntityDeletedEvent<T>(entity, DateTime.UtcNow));
+        }
+
+        public async Task AddOrUpdateAsync(T entity)
+        {
+            var adding = await _repository.AddOrUpdateAsync(entity);
 
             if (adding == 1)
             {
-                _domainEvents.Dispatch(new EntityCreatedEvent<T>(entity, DateTime.UtcNow));
+                await _domainEvents.DispatchAsync(new EntityCreatedEvent<T>(entity, DateTime.UtcNow));
             }
             else
             {
-                _domainEvents.Dispatch(new EntityUpdatedEvent<T>(entity, DateTime.UtcNow));
+                await _domainEvents.DispatchAsync(new EntityUpdatedEvent<T>(entity, DateTime.UtcNow));
             }
-        }
-
-        public virtual IList<T> Get()
-        {
-            return _repository.GetAll().ToList();
-        }
-
-        public virtual void Delete(T entity)
-        {
-            _repository.Delete(entity);
-            _domainEvents.Dispatch(new EntityDeletedEvent<T>(entity, DateTime.UtcNow));
         }
     }
 }

@@ -1,4 +1,7 @@
-﻿namespace ClassifiedAds.Application.Decorators.DatabaseRetry
+﻿using System.Threading;
+using System.Threading.Tasks;
+
+namespace ClassifiedAds.Application.Decorators.DatabaseRetry
 {
     [Mapping(Type = typeof(DatabaseRetryAttribute))]
     public class DatabaseRetryQueryDecorator<TQuery, TResult> : DatabaseRetryDecoratorBase, IQueryHandler<TQuery, TResult>
@@ -12,11 +15,11 @@
             _handler = handler;
         }
 
-        public TResult Handle(TQuery query)
+        public async Task<TResult> HandleAsync(TQuery query, CancellationToken cancellationToken = default)
         {
-            TResult result = default;
-            WrapExecution(() => result = _handler.Handle(query));
-            return result;
+            Task<TResult> result = default;
+            await WrapExecutionAsync(() => result = _handler.HandleAsync(query, cancellationToken));
+            return await result;
         }
     }
 }

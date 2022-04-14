@@ -27,9 +27,9 @@ namespace ClassifiedAds.Application.Weathers.Queries
             _weatherService = weatherService;
         }
 
-        public ObservationResponse Handle(GetWeatherObservationQuery query)
+        public async Task<ObservationResponse> HandleAsync(GetWeatherObservationQuery query, CancellationToken cancellationToken = default)
         {
-            return _weatherService.GetObservation(query);
+            return await _weatherService.GetObservation(query);
         }
     }
 }

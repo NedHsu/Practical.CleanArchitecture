@@ -1,4 +1,5 @@
-﻿using MicroOrm.Dapper.Repositories;
+﻿using ClassifiedAds.Domain.Repositories;
+using MicroOrm.Dapper.Repositories;
 using MicroOrm.Dapper.Repositories.DbContext;
 using Microsoft.Data.SqlClient;
 using System.Collections.Generic;
@@ -43,6 +44,36 @@ namespace ClassifiedAds.Persistence.DapperContext
         }
 
         public int SaveChanges()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        System.IDisposable IUnitOfWork.BeginTransaction(IsolationLevel isolationLevel)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<System.IDisposable> BeginTransactionAsync(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted, CancellationToken cancellationToken = default)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public System.IDisposable BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted, string lockName = null)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<System.IDisposable> BeginTransactionAsync(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted, string lockName = null, CancellationToken cancellationToken = default)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task CommitTransactionAsync(CancellationToken cancellationToken = default)
         {
             throw new System.NotImplementedException();
         }

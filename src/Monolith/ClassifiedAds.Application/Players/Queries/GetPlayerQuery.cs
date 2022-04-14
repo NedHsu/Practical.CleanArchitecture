@@ -21,9 +21,9 @@ namespace ClassifiedAds.Application.Players.Queries
             _playerRepository = playerRepository;
         }
 
-        public Player Handle(GetPlayerQuery query)
+        public async Task<Player> HandleAsync(GetPlayerQuery query, CancellationToken cancellationToken = default)
         {
-            var player = _playerRepository.GetAll().FirstOrDefault(x => x.Id == query.Id);
+            var player = await _playerRepository.FirstOrDefaultAsync(_playerRepository.GetAll().Where(x => x.Id == query.Id));
 
             if (query.ThrowNotFoundIfNull && player == null)
             {

@@ -21,9 +21,9 @@ namespace ClassifiedAds.Application.StockRevenues.Queries
             _stockrevenueRepository = stockrevenueRepository;
         }
 
-        public List<StockRevenueDTO> Handle(GetTopRevenueStocksQuery query)
+        public async Task<List<StockRevenueDTO>> HandleAsync(GetTopRevenueStocksQuery query, CancellationToken cancellationToken = default)
         {
-            return _stockrevenueRepository.GetTopRevenues();
+            return await _stockrevenueRepository.GetTopRevenues();
         }
     }
 }

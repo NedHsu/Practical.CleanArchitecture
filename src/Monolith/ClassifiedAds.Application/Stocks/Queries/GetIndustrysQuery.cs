@@ -2,16 +2,18 @@
 using ClassifiedAds.Application.Decorators.DatabaseRetry;
 using ClassifiedAds.Domain.Repositories;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application.Stocks.Queries
 {
-    public class GetIndustrysQuery : IQuery<List<string>>
+    public class GetIndustrysQuery : IQuery<IEnumerable<string>>
     {
     }
 
     [AuditLog]
     [DatabaseRetry]
-    internal class GetIndustryQueryHandler : IQueryHandler<GetIndustrysQuery, List<string>>
+    internal class GetIndustryQueryHandler : IQueryHandler<GetIndustrysQuery, IEnumerable<string>>
     {
         private readonly IStockDapperRepository _stockRepository;
 
@@ -20,9 +22,9 @@ namespace ClassifiedAds.Application.Stocks.Queries
             _stockRepository = stockRepository;
         }
 
-        public List<string> Handle(GetIndustrysQuery query)
+        public async Task<IEnumerable<string>> HandleAsync(GetIndustrysQuery query, CancellationToken cancellationToken = default)
         {
-            return _stockRepository.GetAllIndustry();
+            return await _stockRepository.GetAllIndustryAsync();
         }
     }
 }

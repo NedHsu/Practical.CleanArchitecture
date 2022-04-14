@@ -34,5 +34,7 @@ namespace ClassifiedAds.WebAPI.ConfigurationOptions
         public InterceptorsOptions Interceptors { get; set; }
 
         public WeatherServiceConfigs WeatherConfigs { get; set; }
+
+        public CertificatesOptions Certificates { get; set; }
     }
 }

@@ -16,9 +16,9 @@ namespace ClassifiedAds.Application.Notifications.Commands
             _notificationService = notificationService;
         }
 
-        public void Handle(DeleteNotificationCommand command)
+        public async Task HandleAsync(DeleteNotificationCommand command, CancellationToken cancellationToken = default)
         {
-            _notificationService.Delete(command.Notification);
+            await _notificationService.DeleteAsync(command.Notification);
         }
     }
 }

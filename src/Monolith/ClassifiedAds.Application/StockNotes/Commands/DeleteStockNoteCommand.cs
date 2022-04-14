@@ -16,9 +16,9 @@ namespace ClassifiedAds.Application.StockNotes.Commands
             _stocknoteService = stocknoteService;
         }
 
-        public void Handle(DeleteStockNoteCommand command)
+        public async Task HandleAsync(DeleteStockNoteCommand command, CancellationToken cancellationToken = default)
         {
-            _stocknoteService.Delete(command.StockNote);
+            await _stocknoteService.DeleteAsync(command.StockNote);
         }
     }
 }

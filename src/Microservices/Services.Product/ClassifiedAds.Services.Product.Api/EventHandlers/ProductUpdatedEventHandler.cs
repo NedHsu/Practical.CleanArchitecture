@@ -6,6 +6,8 @@ using ClassifiedAds.Services.Product.Commands;
 using ClassifiedAds.Services.Product.DTOs;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Services.Product.EventHandlers
 {
@@ -18,7 +20,7 @@ namespace ClassifiedAds.Services.Product.EventHandlers
             _serviceProvider = serviceProvider;
         }
 
-        public void Handle(EntityUpdatedEvent<Entities.Product> domainEvent)
+        public async Task HandleAsync(EntityUpdatedEvent<Entities.Product> domainEvent, CancellationToken cancellationToken = default)
         {
             using (var scope = _serviceProvider.CreateScope())
             {
@@ -26,7 +28,7 @@ namespace ClassifiedAds.Services.Product.EventHandlers
                 var currentUser = serviceProvider.GetService<ICurrentUser>();
                 var dispatcher = serviceProvider.GetService<Dispatcher>();
 
-                dispatcher.Dispatch(new AddAuditLogEntryCommand
+                await dispatcher.DispatchAsync(new AddAuditLogEntryCommand
                 {
                     AuditLogEntry = new AuditLogEntryDTO
                     {

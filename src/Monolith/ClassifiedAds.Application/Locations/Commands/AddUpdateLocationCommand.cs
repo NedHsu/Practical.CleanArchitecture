@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.Domain.Entities;
+using System.Threading;
 
 namespace ClassifiedAds.Application.Locations.Commands
 {
@@ -16,9 +17,9 @@ namespace ClassifiedAds.Application.Locations.Commands
             _locationService = locationService;
         }
 
-        public void Handle(AddUpdateLocationCommand command)
+        public async Task HandleAsync(AddUpdateLocationCommand command, CancellationToken cancellationToken = default)
         {
-            _locationService.AddOrUpdate(command.Location);
+            await _locationService.AddOrUpdateAsync(command.Location);
         }
     }
 }

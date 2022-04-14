@@ -22,9 +22,9 @@ namespace ClassifiedAds.Application.StockNotes.Queries
             _stocknoteRepository = stocknoteRepository;
         }
 
-        public PagedResult<StockNote> Handle(GetStockNotePagedQuery query)
+        public async Task<PagedResult<StockNote>> HandleAsync(GetStockNotePagedQuery query, CancellationToken cancellationToken = default)
         {
-            return _stocknoteRepository.GetPaged(query.PageIndex, query.PageSize, null, $"ISNULL({nameof(StockNote.Updated)}, {nameof(StockNote.Created)}) desc ");
+            return await _stocknoteRepository.GetPaged(query.PageIndex, query.PageSize, null, $"ISNULL({nameof(StockNote.Updated)}, {nameof(StockNote.Created)}) desc ");
         }
     }
 }

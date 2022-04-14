@@ -5,11 +5,11 @@ namespace ClassifiedAds.Application.Weathers.Services
 {
     public interface IWeatherService
     {
-        CountyResponse GetByCountry(GetWeatherCountyWeatherQuery query);
-        EarthquakeResponse GetEarthquake(GetWeatherEarthquakeQuery query);
-        RecentResponse GetRecent(GetWeatherRecentQuery query);
-        TidalResponse GetTida(GetWeatherTidalQuery query);
-        AlarmResponse GetAlarm(GetWeatherAlarmQuery query);
-        ObservationResponse GetObservation(GetWeatherObservationQuery query);
+        Task<CountyResponse> GetByCountry(GetWeatherCountyWeatherQuery query);
+        Task<EarthquakeResponse> GetEarthquake(GetWeatherEarthquakeQuery query);
+        Task<RecentResponse> GetRecent(GetWeatherRecentQuery query);
+        Task<TidalResponse> GetTida(GetWeatherTidalQuery query);
+        Task<AlarmResponse> GetAlarm(GetWeatherAlarmQuery query);
+        Task<ObservationResponse> GetObservation(GetWeatherObservationQuery query);
     }
 }

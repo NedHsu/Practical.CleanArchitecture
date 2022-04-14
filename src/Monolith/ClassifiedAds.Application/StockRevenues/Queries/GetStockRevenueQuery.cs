@@ -21,9 +21,9 @@ namespace ClassifiedAds.Application.StockRevenues.Queries
             _stockrevenueRepository = stockrevenueRepository;
         }
 
-        public StockRevenue Handle(GetStockRevenueQuery query)
+        public async Task<StockRevenue> HandleAsync(GetStockRevenueQuery query, CancellationToken cancellationToken = default)
         {
-            var stockrevenue = _stockrevenueRepository.Get(x => x.StockCode == query.Code && x.Date == query.Date);
+            var stockrevenue = await _stockrevenueRepository.GetAsync(x => x.StockCode == query.Code && x.Date == query.Date);
 
             if (query.ThrowNotFoundIfNull && stockrevenue == null)
             {

@@ -8,7 +8,7 @@ using System.Data;
 
 namespace ClassifiedAds.Persistence
 {
-    public partial class StockDbContext : DbContext, IUnitOfWork
+    public partial class StockDbContext : DbContext
     {
         public StockDbContext()
         {

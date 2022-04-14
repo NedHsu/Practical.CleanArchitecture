@@ -4,8 +4,10 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import "./App.scss";
 import './i18n/config';
 import Nav from "./components/Nav/Nav";
+import Notification from "./components/Notification/Notification";
 import Home from "./containers/Home/Home";
 import OidcLoginRedirect from "./containers/Auth/OidcLoginRedirect";
+import ListConfigurationEntries from "./containers/Settings/ListConfigurationEntries/ListConfigurationEntries";
 import ListProducts from "./containers/Products/ListProducts/ListProducts";
 import AddProduct from "./containers/Products/AddProduct/AddProduct";
 import ViewProduct from "./containers/Products/ViewProduct/ViewProduct";
@@ -61,6 +63,7 @@ function App() {
       <Switch>
         <Route path="/home" component={Home} />
         <Route path="/oidc-login-redirect" component={OidcLoginRedirect} />
+        <Route path="/settings" component={ListConfigurationEntries} />
         <Route path="/files/upload" component={UploadFile} />
         <Route path="/files/edit/:id" component={EditFile} />
         <Route path="/files" component={ListFiles} />
@@ -118,6 +121,7 @@ function App() {
         draggable
         pauseOnHover
       />
+      <Notification />
     </div>
   );
 }

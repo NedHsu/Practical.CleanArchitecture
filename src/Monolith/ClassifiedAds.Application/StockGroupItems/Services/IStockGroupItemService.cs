@@ -6,8 +6,8 @@ namespace ClassifiedAds.Application.StockGroupItems.Services
 {
     public interface IStockGroupItemService : IDapperCrudService<StockGroupItem>
     {
-        void Update(string stockCode, List<Guid> groupIds);
-        void Update(Guid groupId, List<string> stockCodes);
-        void Add(Guid groupId, List<string> stockCodes);
+        Task UpdateAsync(string stockCode, List<Guid> groupIds);
+        Task UpdateAsync(Guid groupId, List<string> stockCodes);
+        Task AddAsync(Guid groupId, List<string> stockCodes);
     }
 }

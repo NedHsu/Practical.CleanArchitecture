@@ -1,10 +1,13 @@
-﻿namespace ClassifiedAds.Infrastructure.Notification.Email.SmtpClient
+﻿using System.Threading;
+using System.Threading.Tasks;
+
+namespace ClassifiedAds.Infrastructure.Notification.Email.SmtpClient
 {
     public class FakeEmailNotification : IEmailNotification
     {
-        public void Send(EmailMessageDTO emailMessage)
+        public Task SendAsync(IEmailMessage emailMessage, CancellationToken cancellationToken = default)
         {
-            // do nothing
+            return Task.CompletedTask;
         }
     }
 }

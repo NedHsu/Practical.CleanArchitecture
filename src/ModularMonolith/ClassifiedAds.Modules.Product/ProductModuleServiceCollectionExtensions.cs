@@ -1,5 +1,8 @@
-﻿using ClassifiedAds.Domain.Events;
+﻿using ClassifiedAds.CrossCuttingConcerns.Csv;
+using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Repositories;
+using ClassifiedAds.Infrastructure.Csv;
+using ClassifiedAds.Modules.Product.ConfigurationOptions;
 using ClassifiedAds.Modules.Product.Entities;
 using ClassifiedAds.Modules.Product.Repositories;
 using Microsoft.AspNetCore.Builder;
@@ -11,13 +14,18 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ProductModuleServiceCollectionExtensions
     {
-        public static IServiceCollection AddProductModule(this IServiceCollection services, string connectionString, string migrationsAssembly = "")
+        public static IServiceCollection AddProductModule(this IServiceCollection services, ProductModuleOptions moduleOptions)
         {
-            services.AddDbContext<ProductDbContext>(options => options.UseSqlServer(connectionString, sql =>
+            services.Configure<ProductModuleOptions>(op =>
             {
-                if (!string.IsNullOrEmpty(migrationsAssembly))
+                op.ConnectionStrings = moduleOptions.ConnectionStrings;
+            });
+
+            services.AddDbContext<ProductDbContext>(options => options.UseSqlServer(moduleOptions.ConnectionStrings.Default, sql =>
+            {
+                if (!string.IsNullOrEmpty(moduleOptions.ConnectionStrings.MigrationsAssembly))
                 {
-                    sql.MigrationsAssembly(migrationsAssembly);
+                    sql.MigrationsAssembly(moduleOptions.ConnectionStrings.MigrationsAssembly);
                 }
             }));
 
@@ -28,6 +36,11 @@ namespace Microsoft.Extensions.DependencyInjection
             DomainEvents.RegisterHandlers(Assembly.GetExecutingAssembly(), services);
 
             services.AddMessageHandlers(Assembly.GetExecutingAssembly());
+
+            services.AddAuthorizationPolicies(Assembly.GetExecutingAssembly());
+
+            services.AddScoped(typeof(ICsvReader<>), typeof(CsvReader<>));
+            services.AddScoped(typeof(ICsvWriter<>), typeof(CsvWriter<>));
 
             return services;
         }

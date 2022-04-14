@@ -23,7 +23,6 @@ namespace ClassifiedAds.EndToEndTests.Pages
                     {
                         btn.Click();
                     }
-
                 }
                 else
                 {

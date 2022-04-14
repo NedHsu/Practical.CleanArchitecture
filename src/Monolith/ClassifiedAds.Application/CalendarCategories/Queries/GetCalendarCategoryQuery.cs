@@ -19,9 +19,9 @@ namespace ClassifiedAds.Application.CalendarCategories.Queries
             _calendarCategoryRepository = calendarCategoryRepository;
         }
 
-        public CalendarCategory Handle(GetCalendarCategoryQuery query)
+        public async Task<CalendarCategory> HandleAsync(GetCalendarCategoryQuery query, CancellationToken cancellationToken = default)
         {
-            var calendarCategory = _calendarCategoryRepository.Get(x => x.Id == query.Id);
+            var calendarCategory = await _calendarCategoryRepository.GetAsync(x => x.Id == query.Id);
 
             if (query.ThrowNotFoundIfNull && calendarCategory == null)
             {

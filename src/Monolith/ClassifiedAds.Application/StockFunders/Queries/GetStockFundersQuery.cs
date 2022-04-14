@@ -28,9 +28,9 @@ namespace ClassifiedAds.Application.StockFunders.Queries
             _stockFunderRepository = stockfunderRepository;
         }
 
-        public List<StockFunder> Handle(GetStockFundersQuery query)
+        public async Task<List<StockFunder>> HandleAsync(GetStockFundersQuery query, CancellationToken cancellationToken = default)
         {
-            return _stockFunderRepository.GetAll(x => x.Date >= query.StartDate && x.Date <= query.EndDate && x.StockCode == query.StockCode).ToList();
+            return (await _stockFunderRepository.GetAllAsync(x => x.Date >= query.StartDate && x.Date <= query.EndDate && x.StockCode == query.StockCode)).ToList();
         }
     }
 }

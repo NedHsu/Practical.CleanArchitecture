@@ -4,16 +4,24 @@ using ClassifiedAds.Application.AuditLogEntries.Queries;
 using ClassifiedAds.Application.Products.Commands;
 using ClassifiedAds.Application.Products.DTOs;
 using ClassifiedAds.Application.Products.Queries;
+using ClassifiedAds.CrossCuttingConcerns.Csv;
+using ClassifiedAds.CrossCuttingConcerns.HtmlGenerator;
+using ClassifiedAds.CrossCuttingConcerns.PdfConverter;
 using ClassifiedAds.Domain.Entities;
+using ClassifiedAds.Infrastructure.Web.Authorization.Policies;
+using ClassifiedAds.WebAPI.Authorization.Policies.Products;
 using ClassifiedAds.WebAPI.Models.Products;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Mime;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.WebAPI.Controllers
 {
@@ -25,84 +33,103 @@ namespace ClassifiedAds.WebAPI.Controllers
     {
         private readonly Dispatcher _dispatcher;
         private readonly ILogger _logger;
+        private readonly IHtmlGenerator _htmlGenerator;
+        private readonly IPdfConverter _pdfConverter;
+        private readonly ICsvWriter<ProductModel> _productCsvWriter;
+        private readonly ICsvReader<ProductModel> _productCsvReader;
 
-        public ProductsController(Dispatcher dispatcher, ILogger<ProductsController> logger)
+        public ProductsController(Dispatcher dispatcher,
+            ILogger<ProductsController> logger,
+            IHtmlGenerator htmlGenerator,
+            IPdfConverter pdfConverter,
+            ICsvWriter<ProductModel> productCsvWriter,
+            ICsvReader<ProductModel> productCsvReader)
         {
             _dispatcher = dispatcher;
             _logger = logger;
+            _htmlGenerator = htmlGenerator;
+            _pdfConverter = pdfConverter;
+            _productCsvWriter = productCsvWriter;
+            _productCsvReader = productCsvReader;
         }
 
+        [AuthorizePolicy(typeof(GetProductsPolicy))]
         [HttpGet]
-        public ActionResult<IEnumerable<Product>> Get()
+        public async Task<ActionResult<IEnumerable<Product>>> Get()
         {
             _logger.LogInformation("Getting all products");
-            var products = _dispatcher.Dispatch(new GetProductsQuery());
-            var model = products.ToDTOs();
+            var products = await _dispatcher.DispatchAsync(new GetProductsQuery());
+            var model = products.ToModels();
             return Ok(model);
         }
 
+        [AuthorizePolicy(typeof(GetProductPolicy))]
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<Product> Get(Guid id)
+        public async Task<ActionResult<Product>> Get(Guid id)
         {
-            var product = _dispatcher.Dispatch(new GetProductQuery { Id = id, ThrowNotFoundIfNull = true });
-            var model = product.ToDTO();
+            var product = await _dispatcher.DispatchAsync(new GetProductQuery { Id = id, ThrowNotFoundIfNull = true });
+            var model = product.ToModel();
             return Ok(model);
         }
 
+        [AuthorizePolicy(typeof(AddProductPolicy))]
         [HttpPost]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public ActionResult<Product> Post([FromBody] ProductModel model)
+        public async Task<ActionResult<Product>> Post([FromBody] ProductModel model)
         {
             var product = model.ToEntity();
-            _dispatcher.Dispatch(new AddUpdateProductCommand { Product = product });
-            model = product.ToDTO();
+            await _dispatcher.DispatchAsync(new AddUpdateProductCommand { Product = product });
+            model = product.ToModel();
             return Created($"/api/products/{model.Id}", model);
         }
 
+        [AuthorizePolicy(typeof(UpdateProductPolicy))]
         [HttpPut("{id}")]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult Put(Guid id, [FromBody] ProductModel model)
+        public async Task<ActionResult> Put(Guid id, [FromBody] ProductModel model)
         {
-            var product = _dispatcher.Dispatch(new GetProductQuery { Id = id, ThrowNotFoundIfNull = true });
+            var product = await _dispatcher.DispatchAsync(new GetProductQuery { Id = id, ThrowNotFoundIfNull = true });
 
             product.Code = model.Code;
             product.Name = model.Name;
             product.Description = model.Description;
 
-            _dispatcher.Dispatch(new AddUpdateProductCommand { Product = product });
+            await _dispatcher.DispatchAsync(new AddUpdateProductCommand { Product = product });
 
-            model = product.ToDTO();
+            model = product.ToModel();
 
             return Ok(model);
         }
 
+        [AuthorizePolicy(typeof(DeleteProductPolicy))]
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult Delete(Guid id)
+        public async Task<ActionResult> Delete(Guid id)
         {
-            var product = _dispatcher.Dispatch(new GetProductQuery { Id = id, ThrowNotFoundIfNull = true });
+            var product = await _dispatcher.DispatchAsync(new GetProductQuery { Id = id, ThrowNotFoundIfNull = true });
 
-            _dispatcher.Dispatch(new DeleteProductCommand { Product = product });
+            await _dispatcher.DispatchAsync(new DeleteProductCommand { Product = product });
 
             return Ok();
         }
 
+        [AuthorizePolicy(typeof(GetProductAuditLogsPolicy))]
         [HttpGet("{id}/auditlogs")]
-        public ActionResult<IEnumerable<AuditLogEntryDTO>> GetAuditLogs(Guid id)
+        public async Task<ActionResult<IEnumerable<AuditLogEntryDTO>>> GetAuditLogs(Guid id)
         {
-            var logs = _dispatcher.Dispatch(new GetAuditEntriesQuery { ObjectId = id.ToString() });
+            var logs = await _dispatcher.DispatchAsync(new GetAuditEntriesQuery { ObjectId = id.ToString() });
 
             List<dynamic> entries = new List<dynamic>();
             ProductDTO previous = null;
             foreach (var log in logs.OrderBy(x => x.CreatedDateTime))
             {
-                var data = JsonConvert.DeserializeObject<ProductDTO>(log.Log);
+                var data = JsonSerializer.Deserialize<ProductDTO>(log.Log);
                 var highLight = new
                 {
                     Code = previous != null && data.Code != previous.Code,
@@ -125,6 +152,39 @@ namespace ClassifiedAds.WebAPI.Controllers
             }
 
             return Ok(entries.OrderByDescending(x => x.CreatedDateTime));
+        }
+
+        [HttpGet("exportaspdf")]
+        public async Task<IActionResult> ExportAsPdf()
+        {
+            var products = await _dispatcher.DispatchAsync(new GetProductsQuery());
+            var model = products.ToModels();
+
+            var template = Path.Combine(Environment.CurrentDirectory, $"Templates/ProductList.cshtml");
+            var html = await _htmlGenerator.GenerateAsync(template, model);
+            var pdf = await _pdfConverter.ConvertAsync(html);
+
+            return File(pdf, MediaTypeNames.Application.Octet, "Products.pdf");
+        }
+
+        [HttpGet("exportascsv")]
+        public async Task<IActionResult> ExportAsCsv()
+        {
+            var products = await _dispatcher.DispatchAsync(new GetProductsQuery());
+            var model = products.ToModels();
+            using var stream = new MemoryStream();
+            _productCsvWriter.Write(model, stream);
+            return File(stream.ToArray(), MediaTypeNames.Application.Octet, "Products.csv");
+        }
+
+        [HttpPost("importcsv")]
+        public IActionResult ImportCsv([FromForm] UploadFileModel model)
+        {
+            using var stream = model.FormFile.OpenReadStream();
+            var products = _productCsvReader.Read(stream);
+
+            // TODO: import to database
+            return Ok(products);
         }
     }
 }

@@ -2,6 +2,8 @@
 using ClassifiedAds.Domain.Repositories;
 using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application.Users.Queries
 {
@@ -24,7 +26,7 @@ namespace ClassifiedAds.Application.Users.Queries
             _userRepository = userRepository;
         }
 
-        public User Handle(GetUserQuery query)
+        public Task<User> HandleAsync(GetUserQuery query, CancellationToken cancellationToken = default)
         {
             var db = _userRepository.Get(new UserQueryOptions
             {
@@ -34,7 +36,7 @@ namespace ClassifiedAds.Application.Users.Queries
                 AsNoTracking = query.AsNoTracking,
             });
 
-            return string.IsNullOrWhiteSpace(query.UserName) ? db.FirstOrDefault(x => x.Id == query.Id) : db.FirstOrDefault(x => x.UserName == query.UserName);
+            return string.IsNullOrWhiteSpace(query.UserName) ? _userRepository.FirstOrDefaultAsync(db.Where(x => x.Id == query.Id)) : _userRepository.FirstOrDefaultAsync(db.Where(x => x.UserName == query.UserName));
         }
     }
 }

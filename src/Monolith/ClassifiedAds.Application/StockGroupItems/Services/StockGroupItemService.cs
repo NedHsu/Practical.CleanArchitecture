@@ -15,9 +15,9 @@ namespace ClassifiedAds.Application.StockGroupItems.Services
         {
         }
 
-        public void Update(string stockCode, List<Guid> groupIds)
+        public async Task UpdateAsync(string stockCode, List<Guid> groupIds)
         {
-            var oldGroupItems = Repository.GetAll(x => x.StockCode == stockCode).Select(x => new { x.Id, x.GroupId });
+            var oldGroupItems = (await Repository.GetAllAsync(x => x.StockCode == stockCode)).Select(x => new { x.Id, x.GroupId });
             var oldGroupIds = new HashSet<Guid>(oldGroupItems.Select(x => x.GroupId));
             var newGroupIds = new HashSet<Guid>(groupIds);
 
@@ -29,18 +29,18 @@ namespace ClassifiedAds.Application.StockGroupItems.Services
 
             if (deletedItems.Any())
             {
-                Repository.Delete(deletedItems);
+                await Repository.DeleteAsync(deletedItems);
             }
 
             if (newItems.Any())
             {
-                Repository.Add(newItems);
+                await Repository.AddAsync(newItems);
             }
         }
 
-        public void Update(Guid groupId, List<string> stockCodes)
+        public async Task UpdateAsync(Guid groupId, List<string> stockCodes)
         {
-            var oldGroupItems = Repository.GetAll(x => x.GroupId == groupId && stockCodes.Contains(x.StockCode)).Select(x => new { x.Id, x.StockCode });
+            var oldGroupItems = (await Repository.GetAllAsync(x => x.GroupId == groupId && stockCodes.Contains(x.StockCode))).Select(x => new { x.Id, x.StockCode });
             var oldStocks = new HashSet<string>(oldGroupItems.Select(x => x.StockCode));
             var newStocks = new HashSet<string>(stockCodes);
 
@@ -52,18 +52,18 @@ namespace ClassifiedAds.Application.StockGroupItems.Services
 
             if (deletedItems.Any())
             {
-                Repository.Delete(deletedItems);
+                await Repository.DeleteAsync(deletedItems);
             }
 
             if (newItems.Any())
             {
-                Repository.Add(newItems);
+                await Repository.AddAsync(newItems);
             }
         }
 
-        public void Add(Guid groupId, List<string> stockCodes)
+        public async Task AddAsync(Guid groupId, List<string> stockCodes)
         {
-            var oldStocks = new HashSet<string>(Repository.GetAll(x => x.GroupId == groupId && stockCodes.Contains(x.StockCode)).Select(x => x.StockCode));
+            var oldStocks = new HashSet<string>((await Repository.GetAllAsync(x => x.GroupId == groupId && stockCodes.Contains(x.StockCode))).Select(x => x.StockCode));
             var newStocks = new HashSet<string>(stockCodes);
 
             var newItems = newStocks.Where(x => !oldStocks.Contains(x))
@@ -71,7 +71,7 @@ namespace ClassifiedAds.Application.StockGroupItems.Services
 
             if (newItems.Any())
             {
-                Repository.Add(newItems);
+                await Repository.AddAsync(newItems);
             }
         }
     }

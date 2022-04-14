@@ -26,10 +26,9 @@ namespace ClassifiedAds.Application.StockDays.Queries
             _stockdayRepository = stockdayRepository;
         }
 
-        public List<StockDay> Handle(GetStockDaysQuery query)
+        public async Task<List<StockDay>> HandleAsync(GetStockDaysQuery query, CancellationToken cancellationToken = default)
         {
-            return _stockdayRepository.GetAll(x => x.StockCode == query.StockCode && x.Date >= query.StartDate && x.Date <= query.EndDate)
-                                      .ToList();
+            return (await _stockdayRepository.GetAllAsync(x => x.StockCode == query.StockCode && x.Date >= query.StartDate && x.Date <= query.EndDate)).ToList();
         }
     }
 }

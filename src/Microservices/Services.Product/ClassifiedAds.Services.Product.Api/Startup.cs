@@ -1,6 +1,6 @@
 using ClassifiedAds.Infrastructure.DistributedTracing;
 using ClassifiedAds.Infrastructure.Web.Filters;
-using ClassifiedAds.Services.Product.Api.ConfigurationOptions;
+using ClassifiedAds.Services.Product.ConfigurationOptions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Polly;
+using System;
+using System.Reflection;
 
 namespace ClassifiedAds.Services.Product
 {
@@ -29,6 +32,8 @@ namespace ClassifiedAds.Services.Product
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            AppSettings.ConnectionStrings.MigrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+
             services.AddControllers(configure =>
             {
                 configure.Filters.Add(typeof(GlobalExceptionFilter));
@@ -47,7 +52,10 @@ namespace ClassifiedAds.Services.Product
             services.AddDateTimeProvider();
             services.AddApplicationServices();
 
-            services.AddProductModule(AppSettings.ConnectionStrings.ClassifiedAds);
+            services.AddHtmlGenerator();
+            services.AddDinkToPdfConverter();
+
+            services.AddProductModule(AppSettings);
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>
@@ -63,7 +71,16 @@ namespace ClassifiedAds.Services.Product
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.MigrateProductDb();
+            Policy.Handle<Exception>().WaitAndRetry(new[]
+            {
+                TimeSpan.FromSeconds(10),
+                TimeSpan.FromSeconds(20),
+                TimeSpan.FromSeconds(30),
+            })
+            .Execute(() =>
+            {
+                app.MigrateProductDb();
+            });
 
             if (env.IsDevelopment())
             {

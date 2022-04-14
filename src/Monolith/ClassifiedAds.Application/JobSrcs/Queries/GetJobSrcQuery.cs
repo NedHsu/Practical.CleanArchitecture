@@ -19,9 +19,9 @@ namespace ClassifiedAds.Application.JobSrcs.Queries
             _jobSrcRepository = jobSrcRepository;
         }
 
-        public JobSrc Handle(GetJobSrcQuery query)
+        public async Task<JobSrc> HandleAsync(GetJobSrcQuery query, CancellationToken cancellationToken = default)
         {
-            var jobSrc = _jobSrcRepository.Get(x => x.Id == query.Id);
+            var jobSrc = await _jobSrcRepository.GetAsync(x => x.Id == query.Id);
 
             if (query.ThrowNotFoundIfNull && jobSrc == null)
             {

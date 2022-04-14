@@ -16,9 +16,9 @@ namespace ClassifiedAds.Application.StockMargins.Commands
             _stockmarginService = stockmarginService;
         }
 
-        public void Handle(DeleteStockMarginCommand command)
+        public async Task HandleAsync(DeleteStockMarginCommand command, CancellationToken cancellationToken = default)
         {
-            _stockmarginService.Delete(command.StockMargin);
+            await _stockmarginService.DeleteAsync(command.StockMargin);
         }
     }
 }

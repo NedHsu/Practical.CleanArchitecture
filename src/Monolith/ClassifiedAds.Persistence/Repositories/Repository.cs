@@ -1,8 +1,17 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.OS;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
+using EntityFrameworkCore.SqlServer.SimpleBulks.BulkDelete;
+using EntityFrameworkCore.SqlServer.SimpleBulks.BulkInsert;
+using EntityFrameworkCore.SqlServer.SimpleBulks.BulkMerge;
+using EntityFrameworkCore.SqlServer.SimpleBulks.BulkUpdate;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Persistence.Repositories
 {
@@ -28,12 +37,12 @@ namespace ClassifiedAds.Persistence.Repositories
             _dateTimeProvider = dateTimeProvider;
         }
 
-        public void AddOrUpdate(T entity)
+        public async Task AddOrUpdateAsync(T entity, CancellationToken cancellationToken = default)
         {
             if (entity.Id.Equals(default(TKey)))
             {
                 entity.CreatedDateTime = _dateTimeProvider.OffsetNow;
-                DbSet.Add(entity);
+                await DbSet.AddAsync(entity, cancellationToken);
             }
             else
             {
@@ -49,6 +58,51 @@ namespace ClassifiedAds.Persistence.Repositories
         public IQueryable<T> GetAll()
         {
             return _dbContext.Set<T>();
+        }
+
+        public Task<T1> FirstOrDefaultAsync<T1>(IQueryable<T1> query)
+        {
+            return query.FirstOrDefaultAsync();
+        }
+
+        public Task<T1> SingleOrDefaultAsync<T1>(IQueryable<T1> query)
+        {
+            return query.SingleOrDefaultAsync();
+        }
+
+        public Task<List<T1>> ToListAsync<T1>(IQueryable<T1> query)
+        {
+            return query.ToListAsync();
+        }
+
+        public void BulkInsert(IEnumerable<T> entities)
+        {
+            _dbContext.BulkInsert(entities);
+        }
+
+        public void BulkInsert(IEnumerable<T> entities, Expression<Func<T, object>> columnNamesSelector)
+        {
+            _dbContext.BulkInsert(entities, columnNamesSelector);
+        }
+
+        public void BulkUpdate(IEnumerable<T> entities, Expression<Func<T, object>> columnNamesSelector)
+        {
+            _dbContext.BulkUpdate(entities, columnNamesSelector);
+        }
+
+        public void BulkDelete(IEnumerable<T> entities)
+        {
+            _dbContext.BulkDelete(entities);
+        }
+
+        public void BulkMerge(IEnumerable<T> entities, Expression<Func<T, object>> idSelector, Expression<Func<T, object>> updateColumnNamesSelector, Expression<Func<T, object>> insertColumnNamesSelector)
+        {
+            _dbContext.BulkMerge(entities, idSelector, updateColumnNamesSelector, insertColumnNamesSelector);
+        }
+
+        public async Task<List<T>> GetAllAsync()
+        {
+            return await _dbContext.Set<T>().ToListAsync();
         }
     }
 }

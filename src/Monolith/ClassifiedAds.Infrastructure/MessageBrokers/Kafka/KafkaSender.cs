@@ -1,7 +1,8 @@
 ﻿using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using Confluent.Kafka;
-using Newtonsoft.Json;
 using System;
+using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.MessageBrokers.Kafka
@@ -25,14 +26,16 @@ namespace ClassifiedAds.Infrastructure.MessageBrokers.Kafka
             _producer.Dispose();
         }
 
-        public void Send(T message)
+        public async Task SendAsync(T message, MetaData metaData, CancellationToken cancellationToken = default)
         {
-            SendAsync(message).Wait();
-        }
-
-        private async Task SendAsync(T message)
-        {
-            _ = await _producer.ProduceAsync(_topic, new Message<Null, string> { Value = JsonConvert.SerializeObject(message) });
+            _ = await _producer.ProduceAsync(_topic, new Message<Null, string>
+            {
+                Value = JsonSerializer.Serialize(new Message<T>
+                {
+                    Data = message,
+                    MetaData = metaData,
+                }),
+            }, cancellationToken);
         }
     }
 }

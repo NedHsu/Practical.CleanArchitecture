@@ -1,7 +1,10 @@
-﻿namespace ClassifiedAds.Domain.Events
+﻿using System.Threading;
+using System.Threading.Tasks;
+
+namespace ClassifiedAds.Domain.Events
 {
     public interface IDomainEvents
     {
-        void Dispatch(IDomainEvent domainEvent);
+        Task DispatchAsync(IDomainEvent domainEvent, CancellationToken cancellationToken = default);
     }
 }

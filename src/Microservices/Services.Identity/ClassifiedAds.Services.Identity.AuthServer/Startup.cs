@@ -1,15 +1,15 @@
-﻿using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
-using ClassifiedAds.IdentityServer.ConfigurationOptions;
+﻿using ClassifiedAds.IdentityServer.ConfigurationOptions;
 using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.Services.Identity.Entities;
 using ClassifiedAds.Services.Identity.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Reflection;
 
 namespace ClassifiedAds.IdentityServer
 {
@@ -31,6 +31,13 @@ namespace ClassifiedAds.IdentityServer
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+                options.KnownNetworks.Clear();
+                options.KnownProxies.Clear();
+            });
+
             if (AppSettings.CookiePolicyOptions?.IsEnabled ?? false)
             {
                 services.Configure<Microsoft.AspNetCore.Builder.CookiePolicyOptions>(options =>
@@ -43,16 +50,26 @@ namespace ClassifiedAds.IdentityServer
             }
 
             services.AddControllersWithViews();
+            services.AddRazorPages();
 
             services.AddCors();
 
             services.AddDateTimeProvider();
 
-            services.AddIdentityModule(AppSettings.ConnectionStrings.ClassifiedAds)
+            services.AddIdentityModule(AppSettings)
                     .AddApplicationServices();
 
-            services.AddIdentityServer()
-                    .AddSigningCredential(new X509Certificate2(Configuration["Certificates:Default:Path"], Configuration["Certificates:Default:Password"]))
+            services.AddIdentityServer(options =>
+                    {
+                        if (!string.IsNullOrWhiteSpace(AppSettings.IdentityServer.IssuerUri))
+                        {
+                            options.IssuerUri = AppSettings.IdentityServer.IssuerUri;
+                        }
+
+                        options.InputLengthRestrictions.Password = int.MaxValue;
+                        options.InputLengthRestrictions.UserName = int.MaxValue;
+                    })
+                    .AddSigningCredential(AppSettings.IdentityServer.Certificate.FindCertificate())
                     .AddAspNetIdentity<User>()
                     .AddTokenProviderModule(AppSettings.ConnectionStrings.ClassifiedAds, typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
 
@@ -68,6 +85,8 @@ namespace ClassifiedAds.IdentityServer
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.MigrateIdServerDb();
+
+            app.UseForwardedHeaders();
 
             if (env.IsDevelopment())
             {
@@ -100,6 +119,7 @@ namespace ClassifiedAds.IdentityServer
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();
+                endpoints.MapRazorPages();
             });
         }
     }

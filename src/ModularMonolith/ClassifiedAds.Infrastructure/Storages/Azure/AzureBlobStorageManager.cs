@@ -1,50 +1,63 @@
-﻿using Microsoft.Azure.Storage;
-using Microsoft.Azure.Storage.Blob;
+﻿using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Infrastructure.Storages.Azure
 {
     public class AzureBlobStorageManager : IFileStorageManager
     {
-        private readonly string _connectionString;
-        private readonly string _containerName;
-        private readonly CloudBlobContainer _container;
+        private readonly AzureBlobOption _option;
+        private readonly BlobContainerClient _container;
 
-        public AzureBlobStorageManager(string connectionString, string containerName)
+        public AzureBlobStorageManager(AzureBlobOption option)
         {
-            _connectionString = connectionString;
-            _containerName = containerName;
-
-            var storageAccount = CloudStorageAccount.Parse(_connectionString);
-            var blobClient = storageAccount.CreateCloudBlobClient();
-            _container = blobClient.GetContainerReference(_containerName);
+            _option = option;
+            _container = new BlobContainerClient(_option.ConnectionString, _option.Container);
         }
 
-        public void Create(FileEntryDTO fileEntry, Stream stream)
+        private string GetBlobName(IFileEntry fileEntry)
         {
-            _container.CreateIfNotExistsAsync().GetAwaiter().GetResult();
-
-            var name = fileEntry.Id.ToString();
-            CloudBlockBlob blob = _container.GetBlockBlobReference(name);
-            blob.UploadFromStreamAsync(stream).Wait();
-
-            fileEntry.FileLocation = name;
+            return _option.Path + fileEntry.FileLocation;
         }
 
-        public void Delete(FileEntryDTO fileEntry)
+        public async Task CreateAsync(IFileEntry fileEntry, Stream stream, CancellationToken cancellationToken = default)
         {
-            CloudBlockBlob blob = _container.GetBlockBlobReference(fileEntry.FileLocation);
-            blob.DeleteAsync().Wait();
+            await _container.CreateIfNotExistsAsync(cancellationToken: cancellationToken);
+
+            BlobClient blob = _container.GetBlobClient(GetBlobName(fileEntry));
+            await blob.UploadAsync(stream, overwrite: true, cancellationToken);
         }
 
-        public byte[] Read(FileEntryDTO fileEntry)
+        public async Task DeleteAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)
         {
-            CloudBlockBlob blob = _container.GetBlockBlobReference(fileEntry.FileLocation);
-            using (var stream = new MemoryStream())
-            {
-                blob.DownloadToStreamAsync(stream).Wait();
-                return stream.ToArray();
-            }
+            BlobClient blob = _container.GetBlobClient(GetBlobName(fileEntry));
+            await blob.DeleteAsync(cancellationToken: cancellationToken);
+        }
+
+        public async Task<byte[]> ReadAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)
+        {
+            BlobClient blob = _container.GetBlobClient(GetBlobName(fileEntry));
+            using var stream = new MemoryStream();
+            await blob.DownloadToAsync(stream, cancellationToken);
+            return stream.ToArray();
+        }
+
+        public async Task ArchiveAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)
+        {
+            BlobClient blob = _container.GetBlobClient(GetBlobName(fileEntry));
+            await blob.SetAccessTierAsync(AccessTier.Cool, cancellationToken: cancellationToken);
+        }
+
+        public async Task UnArchiveAsync(IFileEntry fileEntry, CancellationToken cancellationToken = default)
+        {
+            BlobClient blob = _container.GetBlobClient(GetBlobName(fileEntry));
+            await blob.SetAccessTierAsync(AccessTier.Hot, cancellationToken: cancellationToken);
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

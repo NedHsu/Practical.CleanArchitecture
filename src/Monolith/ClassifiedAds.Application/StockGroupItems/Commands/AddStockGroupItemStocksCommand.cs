@@ -1,6 +1,7 @@
 ﻿using ClassifiedAds.Application.StockGroupItems.Services;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace ClassifiedAds.Application.StockGroupItems.Commands
 {
@@ -19,9 +20,9 @@ namespace ClassifiedAds.Application.StockGroupItems.Commands
             _stockgroupitemService = stockgroupitemService;
         }
 
-        public void Handle(AddStockGroupItemStocksCommand command)
+        public async Task HandleAsync(AddStockGroupItemStocksCommand command, CancellationToken cancellationToken = default)
         {
-            _stockgroupitemService.Add(command.GroupId, command.StockCodes);
+            await _stockgroupitemService.AddAsync(command.GroupId, command.StockCodes);
         }
     }
 }

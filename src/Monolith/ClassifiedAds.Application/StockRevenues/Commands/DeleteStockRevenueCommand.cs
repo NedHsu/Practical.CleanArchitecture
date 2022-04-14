@@ -16,9 +16,9 @@ namespace ClassifiedAds.Application.StockRevenues.Commands
             _stockrevenueService = stockrevenueService;
         }
 
-        public void Handle(DeleteStockRevenueCommand command)
+        public async Task HandleAsync(DeleteStockRevenueCommand command, CancellationToken cancellationToken = default)
         {
-            _stockrevenueService.Delete(command.StockRevenue);
+            await _stockrevenueService.DeleteAsync(command.StockRevenue);
         }
     }
 }

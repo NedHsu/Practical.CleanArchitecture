@@ -19,9 +19,9 @@ namespace ClassifiedAds.Application.StockGroupItems.Commands
             _stockgroupitemService = stockgroupitemService;
         }
 
-        public void Handle(UpdateStockGroupItemsCommand command)
+        public async Task HandleAsync(UpdateStockGroupItemsCommand command, CancellationToken cancellationToken = default)
         {
-            _stockgroupitemService.Update(command.StockCode, command.StockGroupIds);
+            await _stockgroupitemService.UpdateAsync(command.StockCode, command.StockGroupIds);
         }
     }
 }

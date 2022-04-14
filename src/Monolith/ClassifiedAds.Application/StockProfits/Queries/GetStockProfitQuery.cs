@@ -21,9 +21,9 @@ namespace ClassifiedAds.Application.StockProfits.Queries
             _stockprofitRepository = stockprofitRepository;
         }
 
-        public StockProfit Handle(GetStockProfitQuery query)
+        public async Task<StockProfit> HandleAsync(GetStockProfitQuery query, CancellationToken cancellationToken = default)
         {
-            var stockprofit = _stockprofitRepository.Get(x => x.StockCode == query.Code && x.Date == query.Date);
+            var stockprofit = await _stockprofitRepository.GetAsync(x => x.StockCode == query.Code && x.Date == query.Date);
 
             if (query.ThrowNotFoundIfNull && stockprofit == null)
             {

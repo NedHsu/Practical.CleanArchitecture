@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Domain.Events
 {
@@ -30,7 +32,7 @@ namespace ClassifiedAds.Domain.Events
             _serviceProvider = serviceProvider;
         }
 
-        public void Dispatch(IDomainEvent domainEvent)
+        public async Task DispatchAsync(IDomainEvent domainEvent, CancellationToken cancellationToken = default)
         {
             foreach (Type handlerType in _handlers)
             {
@@ -42,7 +44,7 @@ namespace ClassifiedAds.Domain.Events
                 if (canHandleEvent)
                 {
                     dynamic handler = _serviceProvider.GetService(handlerType);
-                    handler.Handle((dynamic)domainEvent);
+                    await handler.HandleAsync((dynamic)domainEvent, cancellationToken);
                 }
             }
         }

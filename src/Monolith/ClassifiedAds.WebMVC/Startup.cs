@@ -5,10 +5,10 @@ using ClassifiedAds.Infrastructure.Monitoring;
 using ClassifiedAds.WebMVC.Authorization;
 using ClassifiedAds.WebMVC.ClaimsTransformations;
 using ClassifiedAds.WebMVC.ConfigurationOptions;
+using ClassifiedAds.WebMVC.Configurations;
 using ClassifiedAds.WebMVC.Filters;
 using ClassifiedAds.WebMVC.HttpHandlers;
 using ClassifiedAds.WebMVC.Middleware;
-using Hangfire;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -67,6 +67,8 @@ namespace ClassifiedAds.WebMVC
                 });
             }
 
+            services.AddClassifiedAdsSignalR(AppSettings);
+
             services.AddMonitoringServices(AppSettings.Monitoring);
 
             services.AddControllersWithViews(setupAction =>
@@ -104,7 +106,7 @@ namespace ClassifiedAds.WebMVC
                 options.Authority = AppSettings.OpenIdConnect.Authority;
                 options.ClientId = AppSettings.OpenIdConnect.ClientId;
                 options.ClientSecret = AppSettings.OpenIdConnect.ClientSecret;
-                options.ResponseType = "code id_token";
+                options.ResponseType = "code";
                 options.Scope.Add("openid");
                 options.Scope.Add("profile");
                 options.Scope.Add("ClassifiedAds.WebAPI");
@@ -140,12 +142,6 @@ namespace ClassifiedAds.WebMVC
                     failureStatus: HealthStatus.Degraded)
                 .AddUrlGroup(new Uri(AppSettings.ResourceServer.Endpoint),
                     name: "Resource (Web API) Server",
-                    failureStatus: HealthStatus.Degraded)
-                .AddSignalRHub(AppSettings.NotificationServer.Endpoint + "/HealthCheckHub",
-                    name: "Notification (SignalR) Server",
-                    failureStatus: HealthStatus.Degraded)
-                .AddUrlGroup(new Uri(AppSettings.BackgroundServer.Endpoint),
-                    name: "Background Services Server",
                     failureStatus: HealthStatus.Degraded);
 
             services.AddHealthChecksUI(setupSettings: setup =>
@@ -153,11 +149,6 @@ namespace ClassifiedAds.WebMVC
                 setup.AddHealthCheckEndpoint("Basic Health Check", $"{AppSettings.CurrentUrl}/healthcheck");
                 setup.DisableDatabaseMigrations();
             }).AddInMemoryStorage();
-
-            services.AddHangfire(x =>
-            {
-                x.UseSqlServerStorage(AppSettings.ConnectionStrings.ClassifiedAds);
-            });
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<ICurrentUser, CurrentWebUser>();
@@ -221,15 +212,10 @@ namespace ClassifiedAds.WebMVC
 
             app.UseHealthChecksUI(); // /healthchecks-ui#/healthchecks
 
-            app.UseHangfireDashboard("/hangfire", new DashboardOptions
-            {
-                Authorization = new[] { new HangfireDashboardAuthorizationFilter() },
-                IgnoreAntiforgeryToken = true,
-            });
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();
+                endpoints.MapClassifiedAdsHubs();
             });
         }
     }

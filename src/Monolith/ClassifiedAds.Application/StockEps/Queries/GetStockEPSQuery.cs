@@ -20,9 +20,9 @@ namespace ClassifiedAds.Application.StockEPSs.Queries
             _stockEpRepository = stockEpRepository;
         }
 
-        public StockEPS Handle(GetStockEPSQuery query)
+        public async Task<StockEPS> HandleAsync(GetStockEPSQuery query, CancellationToken cancellationToken = default)
         {
-            var stockEp = _stockEpRepository.Get(x => x.StockCode == query.Code && x.Year == query.Year);
+            var stockEp = await _stockEpRepository.GetAsync(x => x.StockCode == query.Code && x.Year == query.Year);
 
             if (query.ThrowNotFoundIfNull && stockEp == null)
             {

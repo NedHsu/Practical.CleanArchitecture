@@ -16,9 +16,9 @@ namespace ClassifiedAds.Application.Locations.Commands
             _locationService = locationService;
         }
 
-        public void Handle(DeleteLocationCommand command)
+        public async Task HandleAsync(DeleteLocationCommand command, CancellationToken cancellationToken = default)
         {
-            _locationService.Delete(command.Location);
+            await _locationService.DeleteAsync(command.Location);
         }
     }
 }

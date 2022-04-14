@@ -3,7 +3,8 @@ using ClassifiedAds.Application.Decorators.DatabaseRetry;
 using ClassifiedAds.Modules.Identity.Entities;
 using ClassifiedAds.Modules.Identity.Repositories;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Modules.Identity.Queries.Roles
 {
@@ -24,7 +25,7 @@ namespace ClassifiedAds.Modules.Identity.Queries.Roles
             _roleRepository = roleRepository;
         }
 
-        public List<Role> Handle(GetRolesQuery query)
+        public Task<List<Role>> HandleAsync(GetRolesQuery query, CancellationToken cancellationToken = default)
         {
             var db = _roleRepository.Get(new RoleQueryOptions
             {
@@ -33,7 +34,7 @@ namespace ClassifiedAds.Modules.Identity.Queries.Roles
                 AsNoTracking = query.AsNoTracking,
             });
 
-            return db.ToList();
+            return _roleRepository.ToListAsync(db);
         }
     }
 }

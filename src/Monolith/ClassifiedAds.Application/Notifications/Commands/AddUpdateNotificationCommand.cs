@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.Domain.Entities;
+using System.Threading;
 
 namespace ClassifiedAds.Application.Notifications.Commands
 {
@@ -16,9 +17,9 @@ namespace ClassifiedAds.Application.Notifications.Commands
             _notificationService = notificationService;
         }
 
-        public void Handle(AddUpdateNotificationCommand command)
+        public async Task HandleAsync(AddUpdateNotificationCommand command, CancellationToken cancellationToken = default)
         {
-            _notificationService.AddOrUpdate(command.Notification);
+            await _notificationService.AddOrUpdateAsync(command.Notification);
         }
     }
 }

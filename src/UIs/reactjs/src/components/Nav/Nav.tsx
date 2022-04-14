@@ -10,8 +10,8 @@ import { resources, setI18nLanguage } from "../../i18n/config";
 import i18n from 'i18next';
 
 type Props = {
-  authService: any
-}
+  authService: any;
+};
 
 class Nav extends Component<Props> {
   prevScrollpos: number = 0;
@@ -171,7 +171,9 @@ class Nav extends Component<Props> {
                   </li>
                 ) : null}
                 <li>
-
+                    <NavLink className="nav-link" to="/settings">
+                        Settings
+                    </NavLink>
                 </li>
                 {this.props.authService.isAuthenticated() ? (
                   <li>

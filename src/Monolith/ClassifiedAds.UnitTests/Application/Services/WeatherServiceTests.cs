@@ -25,7 +25,7 @@ namespace ClassifiedAds.UnitTests.Application.Services
         }
 
         [Fact]
-        public void GetAlarm_StateUnderTest_ExpectedBehavior()
+        public async void GetAlarm_StateUnderTest_ExpectedBehavior()
         {
             // Arrange
             var service = this.CreateService();
@@ -38,7 +38,7 @@ namespace ClassifiedAds.UnitTests.Application.Services
             };
 
             // Act
-            var result = service.GetAlarm(
+            var result = await service.GetAlarm(
                 query);
 
             // Assert
@@ -47,7 +47,7 @@ namespace ClassifiedAds.UnitTests.Application.Services
         }
 
         [Fact]
-        public void GetByCountry_StateUnderTest_ExpectedBehavior()
+        public async void GetByCountry_StateUnderTest_ExpectedBehavior()
         {
             // Arrange
             var service = this.CreateService();
@@ -58,7 +58,7 @@ namespace ClassifiedAds.UnitTests.Application.Services
             };
 
             // Act
-            var result = service.GetByCountry(
+            var result = await service.GetByCountry(
                 query);
 
             // Assert
@@ -67,7 +67,7 @@ namespace ClassifiedAds.UnitTests.Application.Services
         }
 
         [Fact]
-        public void GetEarthquake_StateUnderTest_ExpectedBehavior()
+        public async void GetEarthquake_StateUnderTest_ExpectedBehavior()
         {
             // Arrange
             var service = this.CreateService();
@@ -76,7 +76,7 @@ namespace ClassifiedAds.UnitTests.Application.Services
             };
 
             // Act
-            var result = service.GetEarthquake(
+            var result = await service.GetEarthquake(
                 query);
 
             // Assert
@@ -85,7 +85,7 @@ namespace ClassifiedAds.UnitTests.Application.Services
         }
 
         [Fact]
-        public void GetRecent_StateUnderTest_ExpectedBehavior()
+        public async void GetRecent_StateUnderTest_ExpectedBehavior()
         {
             // Arrange
             var service = this.CreateService();
@@ -94,7 +94,7 @@ namespace ClassifiedAds.UnitTests.Application.Services
             };
 
             // Act
-            var result = service.GetRecent(
+            var result = await service.GetRecent(
                 query);
 
             // Assert
@@ -103,7 +103,7 @@ namespace ClassifiedAds.UnitTests.Application.Services
         }
 
         [Fact]
-        public void GetTida_StateUnderTest_ExpectedBehavior()
+        public async void GetTida_StateUnderTest_ExpectedBehavior()
         {
             // Arrange
             var service = this.CreateService();
@@ -112,7 +112,7 @@ namespace ClassifiedAds.UnitTests.Application.Services
             };
 
             // Act
-            var result = service.GetTida(
+            var result = await service.GetTida(
                 query);
 
             // Assert
@@ -121,7 +121,7 @@ namespace ClassifiedAds.UnitTests.Application.Services
         }
 
         [Fact]
-        public void GetObservation_StateUnderTest_ExpectedBehavior()
+        public async void GetObservation_StateUnderTest_ExpectedBehavior()
         {
             // Arrange
             var service = this.CreateService();
@@ -130,7 +130,7 @@ namespace ClassifiedAds.UnitTests.Application.Services
             };
 
             // Act
-            var result = service.GetObservation(
+            var result = await service.GetObservation(
                 query);
 
             // Assert

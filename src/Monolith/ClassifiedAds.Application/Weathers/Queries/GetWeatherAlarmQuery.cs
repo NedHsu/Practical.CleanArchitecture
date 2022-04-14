@@ -21,9 +21,9 @@ namespace ClassifiedAds.Application.Weathers.Queries
             _weatherService = weatherService;
         }
 
-        public AlarmResponse Handle(GetWeatherAlarmQuery query)
+        public async Task<AlarmResponse> HandleAsync(GetWeatherAlarmQuery query, CancellationToken cancellationToken = default)
         {
-            return _weatherService.GetAlarm(query);
+            return await _weatherService.GetAlarm(query);
         }
     }
 }

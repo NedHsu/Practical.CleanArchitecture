@@ -26,9 +26,9 @@ namespace ClassifiedAds.Application.StockSeminars.Queries
             _stockseminarRepository = stockseminarRepository;
         }
 
-        public PagedResult<StockSeminarDTO> Handle(GetStockSeminarsQuery query)
+        public async Task<PagedResult<StockSeminarDTO>> HandleAsync(GetStockSeminarsQuery query, CancellationToken cancellationToken = default)
         {
-            return _stockseminarRepository.GetWithStockInfo(query.StartDate, query.EndDate, query.PageIndex, query.PageSize);
+            return await _stockseminarRepository.GetWithStockInfo(query.StartDate, query.EndDate, query.PageIndex, query.PageSize);
         }
     }
 }

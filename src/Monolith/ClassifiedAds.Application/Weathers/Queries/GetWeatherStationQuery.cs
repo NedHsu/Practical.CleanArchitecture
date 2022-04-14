@@ -9,7 +9,6 @@ namespace ClassifiedAds.Application.Weathers.Queries
 {
     public class GetWeatherStationQuery : IQuery<List<WeatherStationDTO>>
     {
-
     }
 
     internal class GetStationQueryHandler : IQueryHandler<GetWeatherStationQuery, List<WeatherStationDTO>>
@@ -21,15 +20,15 @@ namespace ClassifiedAds.Application.Weathers.Queries
             _repository = repository;
         }
 
-        public List<WeatherStationDTO> Handle(GetWeatherStationQuery query)
+        public async Task<List<WeatherStationDTO>> HandleAsync(GetWeatherStationQuery query, CancellationToken cancellationToken = default)
         {
-            return _repository.GetAll()
-                              .Where(x => x.Layer == 10)
-                              .Select(x => new WeatherStationDTO { County = x.County, Lat = x.Lat, Lon = x.Lon })
-                              .ToList()
-                              .GroupBy(x => x.County)
-                              .Select(x => x.First())
-                              .ToList();
+            var result = await _repository.GetAllAsync();
+            return result.Where(x => x.Layer == 10)
+                    .Select(x => new WeatherStationDTO { County = x.County, Lat = x.Lat, Lon = x.Lon })
+                    .ToList()
+                    .GroupBy(x => x.County)
+                    .Select(x => x.First())
+                    .ToList();
         }
     }
 }

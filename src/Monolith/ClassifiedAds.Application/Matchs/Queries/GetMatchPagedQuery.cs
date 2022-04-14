@@ -34,8 +34,7 @@ namespace ClassifiedAds.Application.Matchs.Queries
         {
             _matchRepository = matchRepository;
         }
-
-        public PagedResult<Match> Handle(GetMatchPagedQuery options)
+        public async Task<PagedResult<Match>> HandleAsync(GetMatchPagedQuery options, CancellationToken cancellationToken = default)
         {
             var query = _matchRepository.GetAll();
             if (options.StartDate.HasValue && options.EndDate.HasValue)

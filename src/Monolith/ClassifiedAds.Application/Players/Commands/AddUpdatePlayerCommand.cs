@@ -1,4 +1,5 @@
 ﻿using ClassifiedAds.Domain.Entities;
+using System.Threading;
 
 namespace ClassifiedAds.Application.Players.Commands
 {
@@ -16,9 +17,9 @@ namespace ClassifiedAds.Application.Players.Commands
             _playerService = playerService;
         }
 
-        public void Handle(AddUpdatePlayerCommand command)
+        public async Task HandleAsync(AddUpdatePlayerCommand command, CancellationToken cancellationToken = default)
         {
-            _playerService.AddOrUpdate(command.Player);
+            await _playerService.AddOrUpdateAsync(command.Player);
         }
     }
 }

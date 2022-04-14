@@ -20,9 +20,9 @@ namespace ClassifiedAds.Application.Notifications.Queries
             _notificationRepository = notificationRepository;
         }
 
-        public Notification Handle(GetNotificationQuery query)
+        public async Task<Notification> HandleAsync(GetNotificationQuery query, CancellationToken cancellationToken = default)
         {
-            var notification = _notificationRepository.Get(x => x.Id == query.Id);
+            var notification = await _notificationRepository.GetAsync(x => x.Id == query.Id);
 
             if (query.ThrowNotFoundIfNull && notification == null)
             {

@@ -51,6 +51,24 @@ export class ProductService {
       .pipe(catchError(this.handleError));
   }
 
+  exportAsPdf() {
+    return this.http
+      .get(this.productUrl + "/ExportAsPdf", { responseType: "blob" })
+      .pipe(catchError(this.handleError));
+  }
+
+  exportAsCsv() {
+    return this.http
+      .get(this.productUrl + "/ExportAsCsv", { responseType: "blob" })
+      .pipe(catchError(this.handleError));
+  }
+
+  importCsvFile(file: File): Observable<IProduct[] | undefined> {
+    const formData: FormData = new FormData();
+    formData.append("formFile", file);
+    return this.http.post<IProduct[]>(this.productUrl + "/ImportCsv", formData);
+  }
+
   private handleError(err: HttpErrorResponse) {
     // in a real world app, we may send the server to some remote logging infrastructure
     // instead of just logging it to the console

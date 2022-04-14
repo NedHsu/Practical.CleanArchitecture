@@ -1,28 +1,14 @@
-﻿using ClassifiedAds.Domain.Repositories;
+﻿using ClassifiedAds.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
-using System.Data;
 using System.Reflection;
 
 namespace ClassifiedAds.Modules.Notification.Repositories
 {
-    public class NotificationDbContext : DbContext, IUnitOfWork
+    public class NotificationDbContext : DbContextUnitOfWork<NotificationDbContext>
     {
-        private IDbContextTransaction _dbContextTransaction;
-
         public NotificationDbContext(DbContextOptions<NotificationDbContext> options)
             : base(options)
         {
-        }
-
-        public void BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
-        {
-            _dbContextTransaction = Database.BeginTransaction(isolationLevel);
-        }
-
-        public void CommitTransaction()
-        {
-            _dbContextTransaction.Commit();
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

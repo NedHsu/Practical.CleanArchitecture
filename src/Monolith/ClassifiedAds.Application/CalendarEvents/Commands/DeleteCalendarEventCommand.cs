@@ -1,4 +1,4 @@
-﻿using ClassifiedAds.Domain.Entities;
+﻿using System.Threading;
 
 namespace ClassifiedAds.Application.CalendarEvents.Commands
 {
@@ -16,9 +16,9 @@ namespace ClassifiedAds.Application.CalendarEvents.Commands
             _calendareventService = calendareventService;
         }
 
-        public void Handle(DeleteCalendarEventCommand command)
+        public async Task HandleAsync(DeleteCalendarEventCommand command, CancellationToken cancellationToken = default)
         {
-            _calendareventService.Delete(command.CalendarEvent);
+            await _calendareventService.DeleteAsync(command.CalendarEvent);
         }
     }
 }

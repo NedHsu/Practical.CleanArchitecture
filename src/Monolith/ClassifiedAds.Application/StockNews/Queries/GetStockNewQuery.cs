@@ -20,9 +20,9 @@ namespace ClassifiedAds.Application.StockNews.Queries
             _stockNewRepository = stockNewRepository;
         }
 
-        public StockNew Handle(GetStockNewQuery query)
+        public async Task<StockNew> HandleAsync(GetStockNewQuery query, CancellationToken cancellationToken = default)
         {
-            var stockNew = _stockNewRepository.Get(x => x.Id == query.Id);
+            var stockNew = await _stockNewRepository.GetAsync(x => x.Id == query.Id);
 
             if (query.ThrowNotFoundIfNull && stockNew == null)
             {

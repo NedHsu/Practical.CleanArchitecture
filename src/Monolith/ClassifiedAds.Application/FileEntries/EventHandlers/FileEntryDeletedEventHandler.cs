@@ -6,6 +6,8 @@ using ClassifiedAds.Domain.Identity;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application.FileEntries.EventHandlers
 {
@@ -20,14 +22,14 @@ namespace ClassifiedAds.Application.FileEntries.EventHandlers
             _serviceProvider = serviceProvider;
         }
 
-        public void Handle(EntityDeletedEvent<FileEntry> domainEvent)
+        public async Task HandleAsync(EntityDeletedEvent<FileEntry> domainEvent, CancellationToken cancellationToken = default)
         {
             using (var scope = _serviceProvider.CreateScope())
             {
                 var auditSerivce = scope.ServiceProvider.GetService<ICrudService<AuditLogEntry>>();
                 var currentUser = scope.ServiceProvider.GetService<ICurrentUser>();
 
-                auditSerivce.AddOrUpdate(new AuditLogEntry
+                await auditSerivce.AddOrUpdateAsync(new AuditLogEntry
                 {
                     UserId = currentUser.IsAuthenticated ? currentUser.UserId : Guid.Empty,
                     CreatedDateTime = domainEvent.EventDateTime,
@@ -38,7 +40,7 @@ namespace ClassifiedAds.Application.FileEntries.EventHandlers
             }
 
             // Forward to external systems
-            _fileDeletedEventSender.Send(new FileDeletedEvent
+            await _fileDeletedEventSender.SendAsync(new FileDeletedEvent
             {
                 FileEntry = domainEvent.Entity,
             });

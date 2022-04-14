@@ -1,10 +1,12 @@
 ﻿using ClassifiedAds.Infrastructure.HealthChecks;
-using ClassifiedAds.Persistence.MiniProfiler;
+using DbUp;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Polly;
+using System;
 using System.Reflection;
 
 namespace ClassifiedAds.Migrator
@@ -35,19 +37,35 @@ namespace ClassifiedAds.Migrator
             services.AddIdentityServer()
                 .AddIdServerPersistence(Configuration.GetConnectionString("ClassifiedAds"),
                 typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
-
-            services.AddDbContext<MiniProfilerDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ClassifiedAds"), sql =>
-            {
-                sql.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
-            }));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.MigrateAdsDb();
-            app.MigrateIdServerDb();
-            app.MigrateMiniProfilerDb();
+            Policy.Handle<Exception>().WaitAndRetry(new[]
+            {
+                TimeSpan.FromSeconds(10),
+                TimeSpan.FromSeconds(20),
+                TimeSpan.FromSeconds(30),
+            })
+            .Execute(() =>
+            {
+                app.MigrateAdsDb();
+                app.MigrateIdServerDb();
+
+                var upgrader = DeployChanges.To
+                .SqlDatabase(Configuration.GetConnectionString("ClassifiedAds"))
+                .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
+                .LogToConsole()
+                .Build();
+
+                var result = upgrader.PerformUpgrade();
+
+                if (!result.Successful)
+                {
+                    throw result.Error;
+                }
+            });
         }
     }
 }

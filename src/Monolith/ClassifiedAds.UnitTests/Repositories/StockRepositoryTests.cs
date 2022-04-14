@@ -18,15 +18,15 @@ namespace ClassifiedAds.Persistence.Repositories.Tests
         }
 
         [Fact]
-        public void StockRepositoryTest()
+        public async void StockRepositoryTest()
         {
             var dbContext = new DapperContext.StockDbContext("Server=localhost,1433;Database=ClassifiedAds;User Id=sa;Password=Zxc@123456;MultipleActiveResultSets=true");
             var repository = new BaseDapperRepository<Stock>(dbContext, _dateTimeProvider.Object);
 
             var testDto = new Stock { Code = "test", Ex = "otc" };
-            repository.Delete(testDto);
-            repository.Add(testDto);
-            repository.Delete(testDto);
+            await repository.DeleteAsync(testDto);
+            await repository.AddAsync(testDto);
+            await repository.DeleteAsync(testDto);
         }
     }
 }

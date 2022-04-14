@@ -19,9 +19,9 @@ namespace ClassifiedAds.Application.StockSeminars.Queries
             _stockseminarRepository = stockseminarRepository;
         }
 
-        public StockSeminar Handle(GetStockSeminarQuery query)
+        public async Task<StockSeminar> HandleAsync(GetStockSeminarQuery query, CancellationToken cancellationToken = default)
         {
-            var stockseminar = _stockseminarRepository.Get(x => x.StockCode == query.StockCode);
+            var stockseminar = await _stockseminarRepository.GetAsync(x => x.StockCode == query.StockCode);
 
             if (query.ThrowNotFoundIfNull && stockseminar == null)
             {
