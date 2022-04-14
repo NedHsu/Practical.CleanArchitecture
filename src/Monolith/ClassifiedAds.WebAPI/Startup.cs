@@ -94,6 +94,8 @@ namespace ClassifiedAds.WebAPI
 
             services.AddDateTimeProvider();
 
+            services.AddPersistence(AppSettings.ConnectionStrings.ClassifiedAds);
+
             services.AddMultiTenantPersistence(typeof(AdsDbContextMultiTenantConnectionStringResolver), typeof(TenantResolver))
                     .AddDomainServices()
                     .AddApplicationServices((Type serviceType, Type implementationType, ServiceLifetime serviceLifetime) =>

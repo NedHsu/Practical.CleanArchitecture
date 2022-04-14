@@ -121,7 +121,7 @@ function App() {
         draggable
         pauseOnHover
       />
-      <Notification />
+       <Notification /> 
     </div>
   );
 }

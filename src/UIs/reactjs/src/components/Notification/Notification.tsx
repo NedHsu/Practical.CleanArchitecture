@@ -9,7 +9,7 @@ import env from "../..//environments";
 function Notification() {
   useEffect(() => {
     const connection = new HubConnectionBuilder()
-      .withUrl(env.ResourceServer.NotificationEndpoint, {
+      .withUrl(env.ResourceServer.NotificationHub, {
         accessTokenFactory: () => authService.getAccessToken(),
       })
       .withAutomaticReconnect()
@@ -23,11 +23,11 @@ function Notification() {
       function () {
         console.log(
           "Cannot connect to NotificationHub: " +
-            env.ResourceServer.NotificationEndpoint
+          env.ResourceServer.NotificationHub
         );
         toast.error(
           "Cannot connect to NotificationHub: " +
-            env.ResourceServer.NotificationEndpoint
+          env.ResourceServer.NotificationHub
         );
       }
     );

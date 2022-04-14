@@ -5,13 +5,13 @@
 
 - Update Connection Strings:
 
-  | Project  | Configuration File | Configuration Key |
-  | -------- | ------------------ | ----------------- |
-  | ClassifiedAds.Migrator | [appsettings.json](ClassifiedAds.Migrator/appsettings.json) | ConnectionStrings:ClassifiedAds |
+  | Project                        | Configuration File                                                  | Configuration Key               |
+  | ------------------------------ | ------------------------------------------------------------------- | ------------------------------- |
+  | ClassifiedAds.Migrator         | [appsettings.json](ClassifiedAds.Migrator/appsettings.json)         | ConnectionStrings:ClassifiedAds |
   | ClassifiedAds.BackgroundServer | [appsettings.json](ClassifiedAds.BackgroundServer/appsettings.json) | ConnectionStrings:ClassifiedAds |
-  | ClassifiedAds.IdentityServer | [appsettings.json](ClassifiedAds.IdentityServer/appsettings.json) | ConnectionStrings:ClassifiedAds |
-  | ClassifiedAds.WebAPI | [appsettings.json](ClassifiedAds.WebAPI/appsettings.json) | ConnectionStrings:ClassifiedAds |
-  | ClassifiedAds.WebMVC | [appsettings.json](ClassifiedAds.WebMVC/appsettings.json) | ConnectionStrings:ClassifiedAds |
+  | ClassifiedAds.IdentityServer   | [appsettings.json](ClassifiedAds.IdentityServer/appsettings.json)   | ConnectionStrings:ClassifiedAds |
+  | ClassifiedAds.WebAPI           | [appsettings.json](ClassifiedAds.WebAPI/appsettings.json)           | ConnectionStrings:ClassifiedAds |
+  | ClassifiedAds.WebMVC           | [appsettings.json](ClassifiedAds.WebMVC/appsettings.json)           | ConnectionStrings:ClassifiedAds |
 
 
 - Run Migration:
@@ -178,4 +178,14 @@
 # MiniPorfile
 ```
 /profiler/results
+```
+
+Identity Clients -> GrantTypes.Code
+```
+implicit
+->
+authorization_code
+
+RequireClientSecret -> false
+
 ```
