@@ -11,7 +11,7 @@ class AuthService {
             client_id: env.OpenIdConnect.ClientId,
             redirect_uri: `${env.CurrentUrl}oidc-login-redirect`,
             scope: "openid profile ClassifiedAds.WebAPI",
-            response_type: "id_token token",
+            response_type: "code",
             post_logout_redirect_uri: `${env.CurrentUrl}?postLogout=true`,
             userStore: new WebStorageStateStore({ store: window.localStorage })
         };
