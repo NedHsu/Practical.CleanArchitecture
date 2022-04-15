@@ -1,6 +1,4 @@
-﻿using ClassifiedAds.Domain.Entities;
-
-namespace ClassifiedAds.Domain.DTOs
+﻿namespace ClassifiedAds.Domain.DTOs
 {
     public class StockMarginFunderDTO : StockMargin
     {

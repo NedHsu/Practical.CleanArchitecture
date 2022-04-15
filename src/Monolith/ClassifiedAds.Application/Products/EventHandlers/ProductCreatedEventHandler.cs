@@ -1,11 +1,8 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
-using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application.Products.EventHandlers
 {

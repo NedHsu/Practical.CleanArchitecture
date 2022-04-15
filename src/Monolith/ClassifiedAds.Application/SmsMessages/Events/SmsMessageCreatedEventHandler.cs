@@ -1,9 +1,6 @@
 ﻿using ClassifiedAds.Application.SmsMessages.DTOs;
-using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application.SmsMessages.Events
 {

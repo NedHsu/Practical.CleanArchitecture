@@ -1,11 +1,8 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.Exceptions;
-using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Repositories;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application
 {

@@ -1,13 +1,10 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.OS;
 using ClassifiedAds.Domain.DTOs;
-using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Persistence.DapperContext;
 using Dapper;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ClassifiedAds.Persistence.Repositories
 {
@@ -27,7 +24,7 @@ FROM StockGroupItem i
 WHERE i.GroupId = @GroupId
 ORDER BY i.Sort, s.code
 ";
-            Dictionary<string, object> param = new Dictionary<string, object>()
+            var param = new Dictionary<string, object>()
             {
                 { "@GroupId", groupId },
             };
@@ -64,7 +61,7 @@ SELECT Code, Name
 FROM Stock
 WHERE Code IN @Codes
 ";
-            Dictionary<string, object> param = new Dictionary<string, object>()
+            var param = new Dictionary<string, object>()
             {
                 { "@Codes", codes },
             };
@@ -108,7 +105,7 @@ ORDER BY PE
 
 DROP TABLE #t
 ";
-            Dictionary<string, object> param = new Dictionary<string, object>()
+            var param = new Dictionary<string, object>()
             {
                 { "@Year", year },
                 { "@GrowthRatio", growthRatio },
@@ -138,7 +135,7 @@ ORDER BY PE
 
 DROP TABLE #t
 ";
-            Dictionary<string, object> param = new Dictionary<string, object>()
+            var param = new Dictionary<string, object>()
             {
                 { "@Code", code },
             };

@@ -4,8 +4,6 @@ using ClassifiedAds.Domain.Repositories;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application.EmailMessages.Services
 {

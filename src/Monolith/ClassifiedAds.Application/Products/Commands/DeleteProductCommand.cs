@@ -1,8 +1,4 @@
-﻿using ClassifiedAds.Domain.Entities;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace ClassifiedAds.Application.Products.Commands
+﻿namespace ClassifiedAds.Application.Products.Commands
 {
     public class DeleteProductCommand : ICommand
     {

@@ -1,10 +1,10 @@
 ﻿using ClassifiedAds.Application.EmailMessages.DTOs;
 using ClassifiedAds.Application.FileEntries.DTOs;
 using ClassifiedAds.Application.SmsMessages.DTOs;
+using ClassifiedAds.Application.Weathers.Services;
 using ClassifiedAds.CrossCuttingConcerns.Csv;
 using ClassifiedAds.CrossCuttingConcerns.Excel;
 using ClassifiedAds.Domain.Entities;
-using ClassifiedAds.Application.Weathers.Services;
 using ClassifiedAds.Domain.Identity;
 using ClassifiedAds.Infrastructure.Csv;
 using ClassifiedAds.Infrastructure.Excel.ClosedXML;

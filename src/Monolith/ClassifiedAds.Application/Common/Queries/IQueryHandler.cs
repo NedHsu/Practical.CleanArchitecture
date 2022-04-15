@@ -1,7 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-
-namespace ClassifiedAds.Application
+﻿namespace ClassifiedAds.Application
 {
     public interface IQueryHandler<TQuery, TResult>
         where TQuery : IQuery<TResult>

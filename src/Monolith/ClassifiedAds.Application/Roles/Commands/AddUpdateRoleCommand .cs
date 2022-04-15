@@ -1,7 +1,4 @@
-﻿using ClassifiedAds.Domain.Entities;
-using ClassifiedAds.Domain.Repositories;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using ClassifiedAds.Domain.Repositories;
 
 namespace ClassifiedAds.Application.Roles.Commands
 {

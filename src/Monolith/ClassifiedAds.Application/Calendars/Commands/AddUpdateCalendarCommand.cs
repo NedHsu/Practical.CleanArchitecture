@@ -1,7 +1,4 @@
-﻿using ClassifiedAds.Domain.Entities;
-using System.Threading;
-
-namespace ClassifiedAds.Application.Calendars.Commands
+﻿namespace ClassifiedAds.Application.Calendars.Commands
 {
     public class AddUpdateCalendarCommand : ICommand
     {

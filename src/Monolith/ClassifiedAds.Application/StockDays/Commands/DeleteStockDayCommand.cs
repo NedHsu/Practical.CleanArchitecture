@@ -1,6 +1,4 @@
-﻿using ClassifiedAds.Domain.Entities;
-
-namespace ClassifiedAds.Application.StockDays.Commands
+﻿namespace ClassifiedAds.Application.StockDays.Commands
 {
     public class DeleteStockDayCommand : ICommand
     {

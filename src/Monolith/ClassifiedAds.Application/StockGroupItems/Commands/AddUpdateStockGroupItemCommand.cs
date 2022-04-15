@@ -1,7 +1,4 @@
-﻿using ClassifiedAds.Domain.Entities;
-using System.Threading;
-
-namespace ClassifiedAds.Application.StockGroupItems.Commands
+﻿namespace ClassifiedAds.Application.StockGroupItems.Commands
 {
     public class AddUpdateStockGroupItemCommand : ICommand
     {

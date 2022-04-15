@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace ClassifiedAds.Domain.Specifications
@@ -47,7 +46,6 @@ namespace ClassifiedAds.Domain.Specifications
             return new NotSpecification<T>(this);
         }
     }
-
 
     internal sealed class AndSpecification<T> : Specification<T>
     {

@@ -1,7 +1,4 @@
-﻿using ClassifiedAds.Domain.Entities;
-using System.Threading;
-
-namespace ClassifiedAds.Application.Locations.Commands
+﻿namespace ClassifiedAds.Application.Locations.Commands
 {
     public class AddUpdateLocationCommand : ICommand
     {

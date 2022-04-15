@@ -1,6 +1,5 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.OS;
 using ClassifiedAds.Domain.DTOs;
-using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Persistence.DapperContext;
 using System;

@@ -1,9 +1,7 @@
 ﻿using ClassifiedAds.Application.Decorators.AuditLog;
 using ClassifiedAds.Application.Decorators.DatabaseRetry;
-using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ClassifiedAds.Application.Calendars.Queries
 {
@@ -22,14 +20,9 @@ namespace ClassifiedAds.Application.Calendars.Queries
             _calendarRepository = calendarRepository;
         }
 
-        public List<Calendar> HandleAsync(GetCalendarsQuery query)
+        public async Task<List<Calendar>> HandleAsync(GetCalendarsQuery query, CancellationToken cancellationToken = default)
         {
-            return _calendarRepository.Get(new CalendarQueryOptions { IncludeCategory = true }).ToList();
-        }
-
-        public Task<List<Calendar>> HandleAsync(GetCalendarsQuery query, CancellationToken cancellationToken = default)
-        {
-            throw new System.NotImplementedException();
+            return await _calendarRepository.ToListAsync(_calendarRepository.Get(new CalendarQueryOptions { IncludeCategory = true }));
         }
     }
 }

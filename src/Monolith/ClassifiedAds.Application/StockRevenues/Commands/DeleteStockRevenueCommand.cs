@@ -1,6 +1,4 @@
-﻿using ClassifiedAds.Domain.Entities;
-
-namespace ClassifiedAds.Application.StockRevenues.Commands
+﻿namespace ClassifiedAds.Application.StockRevenues.Commands
 {
     public class DeleteStockRevenueCommand : ICommand
     {

@@ -1,6 +1,4 @@
-﻿using ClassifiedAds.Domain.Entities;
-
-namespace ClassifiedAds.Application.Notifications.Commands
+﻿namespace ClassifiedAds.Application.Notifications.Commands
 {
     public class DeleteNotificationCommand : ICommand
     {

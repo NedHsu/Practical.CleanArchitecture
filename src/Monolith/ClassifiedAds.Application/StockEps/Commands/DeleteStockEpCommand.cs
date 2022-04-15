@@ -1,6 +1,4 @@
-﻿using ClassifiedAds.Domain.Entities;
-
-namespace ClassifiedAds.Application.StockEPSs.Commands
+﻿namespace ClassifiedAds.Application.StockEPSs.Commands
 {
     public class DeleteStockEPSCommand : ICommand
     {

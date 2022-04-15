@@ -1,7 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-
-namespace ClassifiedAds.Domain.Infrastructure.Networking
+﻿namespace ClassifiedAds.Domain.Infrastructure.Networking
 {
     public interface IFileDownloader
     {

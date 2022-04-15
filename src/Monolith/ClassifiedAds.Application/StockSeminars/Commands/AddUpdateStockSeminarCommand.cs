@@ -1,6 +1,4 @@
-﻿using ClassifiedAds.Domain.Entities;
-
-namespace ClassifiedAds.Application.StockSeminars.Commands
+﻿namespace ClassifiedAds.Application.StockSeminars.Commands
 {
     public class AddUpdateStockSeminarCommand : ICommand
     {

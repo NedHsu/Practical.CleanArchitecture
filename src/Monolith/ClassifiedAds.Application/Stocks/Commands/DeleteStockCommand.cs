@@ -1,7 +1,4 @@
-﻿using ClassifiedAds.Domain.Entities;
-using System.Threading;
-
-namespace ClassifiedAds.Application.Stocks.Commands
+﻿namespace ClassifiedAds.Application.Stocks.Commands
 {
     public class DeleteStockCommand : ICommand
     {

@@ -1,10 +1,8 @@
-﻿using ClassifiedAds.Domain.Entities;
-using ClassifiedAds.Domain.Events;
+﻿using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Identity;
 using ClassifiedAds.Domain.Repositories;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ClassifiedAds.Application.StockGroupItems.Services
 {

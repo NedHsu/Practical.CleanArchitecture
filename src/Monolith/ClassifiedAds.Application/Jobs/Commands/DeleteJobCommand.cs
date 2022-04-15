@@ -1,6 +1,4 @@
-﻿using ClassifiedAds.Domain.Entities;
-
-namespace ClassifiedAds.Application.Jobs.Commands
+﻿namespace ClassifiedAds.Application.Jobs.Commands
 {
     public class DeleteJobCommand : ICommand
     {

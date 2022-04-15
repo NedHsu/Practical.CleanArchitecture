@@ -1,9 +1,7 @@
 ﻿using ClassifiedAds.Application.Weathers.DTOs;
-using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ClassifiedAds.Application.Weathers.Queries
 {

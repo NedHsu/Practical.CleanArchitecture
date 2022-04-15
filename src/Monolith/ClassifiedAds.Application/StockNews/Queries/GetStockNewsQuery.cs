@@ -1,16 +1,13 @@
 ﻿using ClassifiedAds.Application.Decorators.AuditLog;
 using ClassifiedAds.Application.Decorators.DatabaseRetry;
-using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application.StockNews.Queries
 {
     public class GetStockNewsQuery : IQuery<IEnumerable<StockNew>>
     {
+        public string StockCode { get; set; }
     }
 
     [AuditLog]

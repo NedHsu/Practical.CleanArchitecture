@@ -1,7 +1,4 @@
-﻿using ClassifiedAds.Domain.Entities;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace ClassifiedAds.Domain.Repositories
 {

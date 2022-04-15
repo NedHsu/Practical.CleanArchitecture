@@ -1,6 +1,4 @@
-﻿using ClassifiedAds.Domain.Entities;
-
-namespace ClassifiedAds.Application.Locations.Commands
+﻿namespace ClassifiedAds.Application.Locations.Commands
 {
     public class DeleteLocationCommand : ICommand
     {

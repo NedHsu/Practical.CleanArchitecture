@@ -17,7 +17,6 @@ namespace ClassifiedAds.CrossCuttingConcerns.Exceptions
 
         public ValidationException(string message, Exception innerException) : base(message, innerException)
         {
-
         }
     }
 }

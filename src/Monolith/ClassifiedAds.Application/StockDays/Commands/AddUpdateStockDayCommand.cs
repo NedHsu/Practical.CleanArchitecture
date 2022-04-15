@@ -1,7 +1,4 @@
-﻿using ClassifiedAds.Domain.Entities;
-using System.Threading;
-
-namespace ClassifiedAds.Application.StockDays.Commands
+﻿namespace ClassifiedAds.Application.StockDays.Commands
 {
     public class AddUpdateStockDayCommand : ICommand
     {

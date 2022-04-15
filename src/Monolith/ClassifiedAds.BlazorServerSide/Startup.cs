@@ -7,7 +7,6 @@ using ClassifiedAds.Blazor.Modules.Core.Services;
 using ClassifiedAds.Blazor.Modules.Files.Services;
 using ClassifiedAds.Blazor.Modules.Matchs.Services;
 using ClassifiedAds.Blazor.Modules.Products.Services;
-using ClassifiedAds.Blazor.Modules.Settings.Services;
 using ClassifiedAds.Blazor.Modules.Users.Services;
 using ClassifiedAds.BlazorServerSide.ConfigurationOptions;
 using ClassifiedAds.BlazorServerSide.Services;

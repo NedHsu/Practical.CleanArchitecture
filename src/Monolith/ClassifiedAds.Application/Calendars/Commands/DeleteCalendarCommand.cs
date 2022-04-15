@@ -1,6 +1,4 @@
-﻿using ClassifiedAds.Domain.Entities;
-
-namespace ClassifiedAds.Application.Calendars.Commands
+﻿namespace ClassifiedAds.Application.Calendars.Commands
 {
     public class DeleteCalendarCommand : ICommand
     {

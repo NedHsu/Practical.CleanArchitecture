@@ -1,6 +1,4 @@
-﻿using ClassifiedAds.Domain.Entities;
-
-namespace ClassifiedAds.Application.StockGroupItems.Commands
+﻿namespace ClassifiedAds.Application.StockGroupItems.Commands
 {
     public class DeleteStockGroupItemCommand : ICommand
     {

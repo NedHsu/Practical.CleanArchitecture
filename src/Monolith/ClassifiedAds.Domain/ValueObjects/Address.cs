@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace ClassifiedAds.Domain.ValueObjects
+﻿namespace ClassifiedAds.Domain.ValueObjects
 {
     public class Address : ValueObject
     {

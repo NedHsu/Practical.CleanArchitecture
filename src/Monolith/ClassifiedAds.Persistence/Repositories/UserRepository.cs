@@ -1,9 +1,7 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.OS;
-using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Linq;
 
 namespace ClassifiedAds.Persistence.Repositories
 {

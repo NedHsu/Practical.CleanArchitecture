@@ -1,7 +1,4 @@
-﻿using System;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
-using ClassifiedAds.Application.EmailMessages.DTOs;
+﻿using ClassifiedAds.Application.EmailMessages.DTOs;
 using ClassifiedAds.Application.SmsMessages.DTOs;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.IdentityServer.ConfigurationOptions;
@@ -18,10 +15,16 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using reCAPTCHA.AspNetCore;
+using System;
+using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 
-namespace ClassifiedAds.IdentityServer {
-    public class Startup {
-        public Startup(IConfiguration configuration, IWebHostEnvironment env) {
+namespace ClassifiedAds.IdentityServer
+{
+    public class Startup
+    {
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
+        {
             Configuration = configuration;
 
             AppSettings = new AppSettings();
@@ -34,8 +37,10 @@ namespace ClassifiedAds.IdentityServer {
 
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-        public void ConfigureServices(IServiceCollection services) {
-            services.Configure<ForwardedHeadersOptions>(options => {
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
                 options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
                 options.KnownNetworks.Clear();
                 options.KnownProxies.Clear();
@@ -43,8 +48,10 @@ namespace ClassifiedAds.IdentityServer {
 
             services.Configure<AppSettings>(Configuration);
 
-            if (AppSettings.CookiePolicyOptions?.IsEnabled ?? false) {
-                services.Configure<Microsoft.AspNetCore.Builder.CookiePolicyOptions>(options => {
+            if (AppSettings.CookiePolicyOptions?.IsEnabled ?? false)
+            {
+                services.Configure<Microsoft.AspNetCore.Builder.CookiePolicyOptions>(options =>
+                {
                     // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                     options.CheckConsentNeeded = context => true;
                     options.MinimumSameSitePolicy = AppSettings.CookiePolicyOptions.MinimumSameSitePolicy;
@@ -63,22 +70,25 @@ namespace ClassifiedAds.IdentityServer {
 
             services.AddPersistence(AppSettings.ConnectionStrings.ClassifiedAds)
                 .AddDomainServices()
-                .AddApplicationServices((Type serviceType, Type implementationType, ServiceLifetime serviceLifetime) => {
+                .AddApplicationServices((Type serviceType, Type implementationType, ServiceLifetime serviceLifetime) =>
+                {
                     services.AddInterceptors(serviceType, implementationType, serviceLifetime, AppSettings.Interceptors);
                 })
                 .AddMessageHandlers()
                 .ConfigureInterceptors()
                 .AddIdentity();
 
-            services.AddIdentityServer(options => {
-                    if (!string.IsNullOrWhiteSpace(AppSettings.IdentityServer.IssuerUri)) {
-                        options.IssuerUri = AppSettings.IdentityServer.IssuerUri;
-                    }
+            services.AddIdentityServer(options =>
+            {
+                if (!string.IsNullOrWhiteSpace(AppSettings.IdentityServer.IssuerUri))
+                {
+                    options.IssuerUri = AppSettings.IdentityServer.IssuerUri;
+                }
 
-                    options.InputLengthRestrictions.Password = int.MaxValue;
-                    options.InputLengthRestrictions.UserName = int.MaxValue;
-                })
-                .AddSigningCredential(AppSettings.IdentityServer.Certificate.FindCertificate())
+                options.InputLengthRestrictions.Password = int.MaxValue;
+                options.InputLengthRestrictions.UserName = int.MaxValue;
+            })
+                .AddSigningCredential(new X509Certificate2(AppSettings.IdentityServer.Certificate.Path, AppSettings.IdentityServer.Certificate.Password))
                 .AddAspNetIdentity<User>()
                 .AddIdServerPersistence(AppSettings.ConnectionStrings.ClassifiedAds);
 
@@ -90,8 +100,10 @@ namespace ClassifiedAds.IdentityServer {
 
             var authenBuilder = services.AddAuthentication();
 
-            if (AppSettings?.ExternalLogin?.AzureActiveDirectory?.IsEnabled ?? false) {
-                authenBuilder.AddOpenIdConnect("AAD", "Azure Active Directory", options => {
+            if (AppSettings?.ExternalLogin?.AzureActiveDirectory?.IsEnabled ?? false)
+            {
+                authenBuilder.AddOpenIdConnect("AAD", "Azure Active Directory", options =>
+                {
                     options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
                     options.SignOutScheme = IdentityServerConstants.SignoutScheme;
                     options.Authority = AppSettings.ExternalLogin.AzureActiveDirectory.Authority;
@@ -104,47 +116,59 @@ namespace ClassifiedAds.IdentityServer {
                     options.Scope.Add("offline_access");
                     options.SaveTokens = true;
                     options.GetClaimsFromUserInfoEndpoint = true;
-                    options.Events.OnTicketReceived = (ct) => {
+                    options.Events.OnTicketReceived = (ct) =>
+                    {
                         return Task.CompletedTask;
                     };
-                    options.Events.OnTokenResponseReceived = (ct) => {
+                    options.Events.OnTokenResponseReceived = (ct) =>
+                    {
                         return Task.CompletedTask;
                     };
-                    options.Events.OnTokenValidated = (ct) => {
+                    options.Events.OnTokenValidated = (ct) =>
+                    {
                         return Task.CompletedTask;
                     };
-                    options.Events.OnUserInformationReceived = (ct) => {
+                    options.Events.OnUserInformationReceived = (ct) =>
+                    {
                         return Task.CompletedTask;
                     };
                 });
             }
 
-            if (AppSettings?.ExternalLogin?.Microsoft?.IsEnabled ?? false) {
-                authenBuilder.AddMicrosoftAccount(options => {
+            if (AppSettings?.ExternalLogin?.Microsoft?.IsEnabled ?? false)
+            {
+                authenBuilder.AddMicrosoftAccount(options =>
+                {
                     options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
                     options.ClientId = AppSettings.ExternalLogin.Microsoft.ClientId;
                     options.ClientSecret = AppSettings.ExternalLogin.Microsoft.ClientSecret;
                 });
             }
 
-            if (AppSettings?.ExternalLogin?.Google?.IsEnabled ?? false) {
-                authenBuilder.AddGoogle(options => {
+            if (AppSettings?.ExternalLogin?.Google?.IsEnabled ?? false)
+            {
+                authenBuilder.AddGoogle(options =>
+                {
                     options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
                     options.ClientId = AppSettings.ExternalLogin.Google.ClientId;
                     options.ClientSecret = AppSettings.ExternalLogin.Google.ClientSecret;
                 });
             }
 
-            if (AppSettings?.ExternalLogin?.Facebook?.IsEnabled ?? false) {
-                authenBuilder.AddFacebook(options => {
+            if (AppSettings?.ExternalLogin?.Facebook?.IsEnabled ?? false)
+            {
+                authenBuilder.AddFacebook(options =>
+                {
                     options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
                     options.AppId = AppSettings.ExternalLogin.Facebook.AppId;
                     options.AppSecret = AppSettings.ExternalLogin.Facebook.AppSecret;
                 });
             }
 
-            if (AppSettings?.ExternalLogin?.Line?.IsEnabled ?? false) {
-                authenBuilder.AddLine(options => {
+            if (AppSettings?.ExternalLogin?.Line?.IsEnabled ?? false)
+            {
+                authenBuilder.AddLine(options =>
+                {
                     options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
                     options.ClientId = AppSettings.ExternalLogin.Line.ClientId;
                     options.ClientSecret = AppSettings.ExternalLogin.Line.ClientSecret;
@@ -159,16 +183,19 @@ namespace ClassifiedAds.IdentityServer {
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
             app.UseForwardedHeaders();
 
-            if (env.IsDevelopment()) {
+            if (env.IsDevelopment())
+            {
                 app.UseDeveloperExceptionPage();
             }
 
             app.UseStaticFiles();
 
-            if (AppSettings.CookiePolicyOptions?.IsEnabled ?? false) {
+            if (AppSettings.CookiePolicyOptions?.IsEnabled ?? false)
+            {
                 app.UseCookiePolicy();
             }
 
@@ -188,7 +215,8 @@ namespace ClassifiedAds.IdentityServer {
 
             app.UseMonitoringServices(AppSettings.Monitoring);
 
-            app.UseEndpoints(endpoints => {
+            app.UseEndpoints(endpoints =>
+            {
                 endpoints.MapDefaultControllerRoute();
                 endpoints.MapRazorPages();
             });

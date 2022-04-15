@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
-using ClassifiedAds.Domain.Entities;
+﻿using ClassifiedAds.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.IdentityServer.Areas.Identity.Pages.Account.Manage
 {

@@ -1,6 +1,5 @@
 ﻿using ClassifiedAds.Domain.Notification;
 using System;
-using System.Collections.Generic;
 
 namespace ClassifiedAds.Domain.Entities
 {

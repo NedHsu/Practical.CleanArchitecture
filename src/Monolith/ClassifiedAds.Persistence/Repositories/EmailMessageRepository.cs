@@ -1,5 +1,4 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.OS;
-using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
 using System;
 

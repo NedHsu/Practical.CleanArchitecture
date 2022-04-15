@@ -1,7 +1,4 @@
-﻿using ClassifiedAds.Domain.Entities;
-using System.Threading;
-
-namespace ClassifiedAds.Application.CalendarCategories.Commands
+﻿namespace ClassifiedAds.Application.CalendarCategories.Commands
 {
     public class DeleteCalendarCategoryCommand : ICommand
     {

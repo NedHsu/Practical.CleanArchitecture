@@ -3,7 +3,6 @@ using ClassifiedAds.Application.Weathers.Queries;
 using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Web;
 

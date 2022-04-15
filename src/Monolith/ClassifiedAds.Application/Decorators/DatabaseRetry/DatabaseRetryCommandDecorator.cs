@@ -1,7 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-
-namespace ClassifiedAds.Application.Decorators.DatabaseRetry
+﻿namespace ClassifiedAds.Application.Decorators.DatabaseRetry
 {
     [Mapping(Type = typeof(DatabaseRetryAttribute))]
     public class DatabaseRetryCommandDecorator<TCommand> : DatabaseRetryDecoratorBase, ICommandHandler<TCommand>

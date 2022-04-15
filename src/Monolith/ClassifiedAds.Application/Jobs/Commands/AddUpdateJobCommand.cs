@@ -1,7 +1,4 @@
-﻿using ClassifiedAds.Domain.Entities;
-using System.Threading;
-
-namespace ClassifiedAds.Application.Jobs.Commands
+﻿namespace ClassifiedAds.Application.Jobs.Commands
 {
     public class AddUpdateJobCommand : ICommand
     {

@@ -1,13 +1,10 @@
 ﻿using ClassifiedAds.Application.FileEntries.DTOs;
 using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
-using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Identity;
 using ClassifiedAds.Domain.Infrastructure.MessageBrokers;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application.FileEntries.EventHandlers
 {

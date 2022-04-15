@@ -1,6 +1,4 @@
-﻿using ClassifiedAds.Domain.Entities;
-
-namespace ClassifiedAds.Application.Matchs.Commands
+﻿namespace ClassifiedAds.Application.Matchs.Commands
 {
     public class DeleteMatchCommand : ICommand
     {

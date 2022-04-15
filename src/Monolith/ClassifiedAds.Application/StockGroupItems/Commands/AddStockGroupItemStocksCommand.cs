@@ -1,7 +1,6 @@
 ﻿using ClassifiedAds.Application.StockGroupItems.Services;
 using System;
 using System.Collections.Generic;
-using System.Threading;
 
 namespace ClassifiedAds.Application.StockGroupItems.Commands
 {

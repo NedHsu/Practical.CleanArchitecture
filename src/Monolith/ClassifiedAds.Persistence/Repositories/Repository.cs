@@ -1,5 +1,4 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.OS;
-using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
 using EntityFrameworkCore.SqlServer.SimpleBulks.BulkDelete;
 using EntityFrameworkCore.SqlServer.SimpleBulks.BulkInsert;
@@ -8,10 +7,7 @@ using EntityFrameworkCore.SqlServer.SimpleBulks.BulkUpdate;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ClassifiedAds.Persistence.Repositories
 {

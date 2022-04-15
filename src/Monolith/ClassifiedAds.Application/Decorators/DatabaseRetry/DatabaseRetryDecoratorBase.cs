@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application.Decorators.DatabaseRetry
 {

@@ -1,6 +1,4 @@
-﻿using ClassifiedAds.Domain.Entities;
-
-namespace ClassifiedAds.Application.JobSrcs.Commands
+﻿namespace ClassifiedAds.Application.JobSrcs.Commands
 {
     public class DeleteJobSrcCommand : ICommand
     {

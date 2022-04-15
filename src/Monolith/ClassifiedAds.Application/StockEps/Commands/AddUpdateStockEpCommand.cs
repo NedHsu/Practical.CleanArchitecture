@@ -1,7 +1,4 @@
-﻿using ClassifiedAds.Domain.Entities;
-using System.Threading;
-
-namespace ClassifiedAds.Application.StockEPSs.Commands
+﻿namespace ClassifiedAds.Application.StockEPSs.Commands
 {
     public class AddUpdateStockEPSCommand : ICommand
     {

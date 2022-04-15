@@ -1,5 +1,4 @@
-﻿using ClassifiedAds.Domain.Entities;
-using ClassifiedAds.Domain.Events;
+﻿using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Identity;
 using ClassifiedAds.Domain.Repositories;
 

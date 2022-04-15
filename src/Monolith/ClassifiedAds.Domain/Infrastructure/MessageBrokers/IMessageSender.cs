@@ -1,7 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-
-namespace ClassifiedAds.Domain.Infrastructure.MessageBrokers
+﻿namespace ClassifiedAds.Domain.Infrastructure.MessageBrokers
 {
     public interface IMessageSender<T>
     {

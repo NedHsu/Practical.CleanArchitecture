@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-
-#nullable disable
+﻿#nullable disable
 
 namespace ClassifiedAds.Domain.Entities
 {

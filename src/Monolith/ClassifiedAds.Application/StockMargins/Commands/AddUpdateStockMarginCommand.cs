@@ -1,7 +1,4 @@
-﻿using ClassifiedAds.Domain.Entities;
-using System.Threading;
-
-namespace ClassifiedAds.Application.StockMargins.Commands
+﻿namespace ClassifiedAds.Application.StockMargins.Commands
 {
     public class AddUpdateStockMarginCommand : ICommand
     {

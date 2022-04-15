@@ -8,10 +8,8 @@ using ClassifiedAds.Application.StockGroupItems.Services;
 using ClassifiedAds.Application.Stocks.Services;
 using ClassifiedAds.Application.Users.Services;
 using ClassifiedAds.Application.Weathers.Services;
-using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Events;
 using System;
-using System.Linq;
 using System.Reflection;
 
 namespace Microsoft.Extensions.DependencyInjection

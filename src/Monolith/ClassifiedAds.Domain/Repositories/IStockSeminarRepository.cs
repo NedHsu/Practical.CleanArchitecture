@@ -1,5 +1,4 @@
 ﻿using ClassifiedAds.Domain.DTOs;
-using ClassifiedAds.Domain.Entities;
 using System;
 
 namespace ClassifiedAds.Domain.Repositories

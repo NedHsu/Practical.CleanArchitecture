@@ -1,6 +1,4 @@
-﻿using ClassifiedAds.Domain.Entities;
-
-namespace ClassifiedAds.Application.StockMargins.Commands
+﻿namespace ClassifiedAds.Application.StockMargins.Commands
 {
     public class DeleteStockMarginCommand : ICommand
     {

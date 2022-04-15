@@ -1,7 +1,4 @@
-﻿using ClassifiedAds.Domain.Entities;
-using System.Threading;
-
-namespace ClassifiedAds.Application.StockFundamentals.Commands
+﻿namespace ClassifiedAds.Application.StockFundamentals.Commands
 {
     public class AddUpdateStockFundamentalCommand : ICommand
     {

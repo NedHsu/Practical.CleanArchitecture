@@ -1,7 +1,4 @@
-﻿using ClassifiedAds.Domain.Entities;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace ClassifiedAds.Application
 {

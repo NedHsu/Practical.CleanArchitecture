@@ -1,7 +1,4 @@
-﻿using ClassifiedAds.Domain.Entities;
-
-
-namespace ClassifiedAds.Application.StockProfits.Commands
+﻿namespace ClassifiedAds.Application.StockProfits.Commands
 {
     public class AddUpdateStockProfitCommand : ICommand
     {

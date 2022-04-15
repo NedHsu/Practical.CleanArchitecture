@@ -1,7 +1,4 @@
-﻿using ClassifiedAds.Domain.Entities;
-using System.Threading;
-
-namespace ClassifiedAds.Application.Notifications.Commands
+﻿namespace ClassifiedAds.Application.Notifications.Commands
 {
     public class AddUpdateNotificationCommand : ICommand
     {

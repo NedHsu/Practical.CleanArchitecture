@@ -1,9 +1,6 @@
 ﻿using ClassifiedAds.Application.AuditLogEntries.DTOs;
 using ClassifiedAds.Domain.Repositories;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application.AuditLogEntries.Queries
 {

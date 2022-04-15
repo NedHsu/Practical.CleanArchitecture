@@ -2,8 +2,6 @@
 using ClassifiedAds.Application.Decorators.DatabaseRetry;
 using ClassifiedAds.Domain.Repositories;
 using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ClassifiedAds.Application.Stocks.Queries
 {

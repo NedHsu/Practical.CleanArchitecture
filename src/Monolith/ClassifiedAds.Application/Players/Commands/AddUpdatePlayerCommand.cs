@@ -1,7 +1,4 @@
-﻿using ClassifiedAds.Domain.Entities;
-using System.Threading;
-
-namespace ClassifiedAds.Application.Players.Commands
+﻿namespace ClassifiedAds.Application.Players.Commands
 {
     public class AddUpdatePlayerCommand : ICommand
     {

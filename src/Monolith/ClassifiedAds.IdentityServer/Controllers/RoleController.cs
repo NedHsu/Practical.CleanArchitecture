@@ -1,13 +1,13 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using ClassifiedAds.Application;
+﻿using ClassifiedAds.Application;
 using ClassifiedAds.Application.Roles.Commands;
 using ClassifiedAds.Application.Roles.Queries;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.IdentityServer.Models.RoleModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ClassifiedAds.IdentityServer.Controllers
 {

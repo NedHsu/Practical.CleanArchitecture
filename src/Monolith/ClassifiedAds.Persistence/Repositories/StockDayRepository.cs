@@ -1,11 +1,9 @@
 ﻿using ClassifiedAds.CrossCuttingConcerns.OS;
-using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.Domain.Repositories;
 using ClassifiedAds.Persistence.DapperContext;
 using Dapper;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ClassifiedAds.Persistence.Repositories
 {
