@@ -69,7 +69,6 @@ namespace ClassifiedAds.Domain.Specifications
         }
     }
 
-
     internal sealed class OrSpecification<T> : Specification<T>
     {
         private readonly Specification<T> _left;

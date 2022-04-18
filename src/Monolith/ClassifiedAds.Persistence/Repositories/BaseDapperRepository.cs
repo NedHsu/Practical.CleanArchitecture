@@ -54,7 +54,7 @@ namespace ClassifiedAds.Persistence.Repositories
             var param = TableKeys.Select(x => new KeyValuePair<string, object>($"@{x.Name}", x.GetValue(entity)));
             var sql = $"select (case when exists (select 1 from {TableName} where {filters}) then 1 else 0 end)";
 
-            if (_dbContext.Connection.ExecuteScalar<bool>(sql, param: param))
+            if (await _dbContext.Connection.ExecuteScalarAsync<bool>(sql, param: param))
             {
                 await DapperRepository.UpdateAsync(entity);
             }
