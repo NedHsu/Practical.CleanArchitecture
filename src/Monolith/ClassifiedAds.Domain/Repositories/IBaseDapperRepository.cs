@@ -25,7 +25,7 @@ namespace ClassifiedAds.Domain.Repositories
 
         Task<IEnumerable<TEntity>> GetAllAsync<T>(Expression<Func<TEntity, bool>> predicate);
 
-        Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate, string orderBy);
+        Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate, string orderBy, uint? limit = null, uint? offset = null);
 
         Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate);
 

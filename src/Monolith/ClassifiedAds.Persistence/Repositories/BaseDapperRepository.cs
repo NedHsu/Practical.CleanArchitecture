@@ -92,9 +92,13 @@ namespace ClassifiedAds.Persistence.Repositories
             return await DapperRepository.FindAllAsync(predicate);
         }
 
-        public async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate, string orderBy)
+        public async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate, string orderBy, uint? limit, uint? offset)
         {
             DapperRepository.SetOrderBy(orderBy);
+            if (limit.HasValue)
+            {
+                DapperRepository.SetLimit(limit.Value, offset, false);
+            }
 
             return await DapperRepository.FindAllAsync(predicate);
         }

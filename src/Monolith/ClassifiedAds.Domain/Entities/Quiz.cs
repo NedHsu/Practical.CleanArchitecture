@@ -1,10 +1,12 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 #nullable disable
 
 namespace ClassifiedAds.Domain.Entities
 {
+    [Table("Quizzes")]
     public class Quiz
     {
         [Key]

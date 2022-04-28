@@ -2,6 +2,7 @@ import Vuex from 'vuex'
 import authService from './modules/authService';
 import product from './modules/product';
 //--import
+import question from './modules/question';
 import stock from './modules/stock';
 import awesomePage from './modules/awesomePage';
 import calendar from './modules/calendar';
@@ -13,6 +14,7 @@ export default new Vuex.Store({
     product: product,
     authService: authService,
     //--modules
+    question: question,
     stock: stock,
     awesomePage: awesomePage,
     calendar: calendar,

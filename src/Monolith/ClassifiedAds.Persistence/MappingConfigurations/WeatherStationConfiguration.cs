@@ -9,6 +9,7 @@ namespace ClassifiedAds.Persistence.MappingConfigurations
         {
             builder.ToTable("WeatherStations");
             builder.Property(x => x.Id).HasDefaultValueSql("newsequentialid()");
+            builder.Property(x => x.Elevation).HasColumnType("decimal(6, 2)");
             builder.Property(x => x.StationId).HasMaxLength(30);
             builder.Property(x => x.Name).HasMaxLength(20);
             builder.Property(x => x.Address).HasMaxLength(200);

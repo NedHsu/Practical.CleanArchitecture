@@ -8,6 +8,7 @@ namespace ClassifiedAds.Application.StockRevenues.Queries
     public class GetStockRevenuesQuery : IQuery<List<StockRevenue>>
     {
         public string StockCode { get; set; }
+        public uint Limit { get; set; } = 12;
     }
 
     [AuditLog]
@@ -23,8 +24,8 @@ namespace ClassifiedAds.Application.StockRevenues.Queries
 
         public async Task<List<StockRevenue>> HandleAsync(GetStockRevenuesQuery query, CancellationToken cancellationToken = default)
         {
-            var result = await _stockrevenueRepository.GetAllAsync(x => x.StockCode == query.StockCode, " [Date] DESC");
-            return result.Take(12).ToList();
+            var result = await _stockrevenueRepository.GetAllAsync(x => x.StockCode == query.StockCode, " [Date] DESC", query.Limit);
+            return result.ToList();
         }
     }
 }

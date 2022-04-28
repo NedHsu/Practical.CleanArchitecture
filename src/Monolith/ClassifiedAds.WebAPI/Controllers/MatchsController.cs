@@ -73,7 +73,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         public ActionResult<Match> Post([FromBody] MatchModel model)
         {
             var match = model.ToEntity();
-            match.CreaterId = base.User.GetUserId();
+            match.CreaterId = User.GetUserId();
             _dispatcher.Dispatch(new AddUpdateMatchCommand { Match = match });
             model = match.ToDTO();
             return Created($"/api/matchs/{model.Id}", model);
