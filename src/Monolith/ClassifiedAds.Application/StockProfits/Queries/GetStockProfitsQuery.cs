@@ -23,7 +23,7 @@ namespace ClassifiedAds.Application.StockProfits.Queries
 
         public async Task<List<StockProfit>> HandleAsync(GetStockProfitsQuery query, CancellationToken cancellationToken = default)
         {
-            return (await _stockprofitRepository.GetAllAsync(x => x.StockCode == query.StockCode, " [Date] DESC", 12)).ToList();
+            return (await _stockprofitRepository.GetAllAsync(x => x.StockCode == query.StockCode, "[Date] DESC", 12)).ToList();
         }
     }
 }

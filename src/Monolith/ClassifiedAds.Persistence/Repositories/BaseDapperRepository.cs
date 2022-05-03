@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -17,6 +18,9 @@ namespace ClassifiedAds.Persistence.Repositories
     {
         private readonly IStockDbContext _dbContext;
         private readonly IDateTimeProvider _dateTimeProvider;
+        private IDbTransaction _dbTransaction;
+
+        public IDbTransaction DbTransaction { set { _dbTransaction = value; } }
 
         protected string TableName { get; }
         protected PropertyInfo[] TableKeys { get; }
@@ -36,14 +40,19 @@ namespace ClassifiedAds.Persistence.Repositories
 
         protected IStockDbContext DbContext => _dbContext;
 
+        public async Task<IDbTransaction> BeginTransactionAsync(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted, CancellationToken cancellationToken = default)
+        {
+            return (IDbTransaction)await _dbContext.BeginTransactionAsync(isolationLevel, cancellationToken);
+        }
+
         public async Task AddAsync(TEntity entity)
         {
-            await DapperRepository.InsertAsync(entity);
+            await DapperRepository.InsertAsync(entity, _dbTransaction);
         }
 
         public async Task UpdateAsync(TEntity entity)
         {
-            await DapperRepository.UpdateAsync(entity);
+            await DapperRepository.UpdateAsync(entity, _dbTransaction);
         }
 
         public async Task<int> AddOrUpdateAsync(TEntity entity)
@@ -56,11 +65,11 @@ namespace ClassifiedAds.Persistence.Repositories
 
             if (await _dbContext.Connection.ExecuteScalarAsync<bool>(sql, param: param))
             {
-                await DapperRepository.UpdateAsync(entity);
+                await DapperRepository.UpdateAsync(entity, _dbTransaction);
             }
             else
             {
-                await DapperRepository.InsertAsync(entity);
+                await DapperRepository.InsertAsync(entity, _dbTransaction);
                 status = 1;
             }
 
@@ -69,12 +78,12 @@ namespace ClassifiedAds.Persistence.Repositories
 
         public async Task AddAsync(IEnumerable<TEntity> entities)
         {
-            await DapperRepository.BulkInsertAsync(entities);
+            await DapperRepository.BulkInsertAsync(entities, _dbTransaction);
         }
 
         public async Task DeleteAsync(TEntity entity)
         {
-            await DapperRepository.DeleteAsync(entity);
+            await DapperRepository.DeleteAsync(entity, _dbTransaction);
         }
 
         public async Task<IEnumerable<TEntity>> GetAllAsync()
@@ -94,7 +103,11 @@ namespace ClassifiedAds.Persistence.Repositories
 
         public async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate, string orderBy, uint? limit, uint? offset)
         {
-            DapperRepository.SetOrderBy(orderBy);
+            if (!string.IsNullOrWhiteSpace(orderBy))
+            {
+                DapperRepository.SetOrderBy(orderBy + " ");
+            }
+
             if (limit.HasValue)
             {
                 DapperRepository.SetLimit(limit.Value, offset, false);
@@ -115,7 +128,7 @@ namespace ClassifiedAds.Persistence.Repositories
 
         public async Task UpdateAsync(IEnumerable<TEntity> entities)
         {
-            await DapperRepository.BulkUpdateAsync(entities);
+            await DapperRepository.BulkUpdateAsync(entities, _dbTransaction);
         }
 
         public async Task DeleteAsync(IEnumerable<TEntity> entities)
@@ -136,7 +149,7 @@ namespace ClassifiedAds.Persistence.Repositories
 
             if (!string.IsNullOrWhiteSpace(orderBy))
             {
-                DapperRepository.SetOrderBy(orderBy);
+                DapperRepository.SetOrderBy(orderBy + " ");
             }
 
             return new PagedResult<TEntity>((await DapperRepository.FindAllAsync(predicate)).ToList(), count, pageIndex, pageSize);
@@ -144,7 +157,7 @@ namespace ClassifiedAds.Persistence.Repositories
 
         public async Task<PagedResult<TDto>> GetPagedAsync<TDto>(uint pageIndex, uint pageSize, string sql, IDictionary<string, object> param = null, string orderBy = "")
         {
-            uint count = _dbContext.Connection.ExecuteScalar<uint>($"SELECT COUNT(0) FROM ({sql}) as c", param);
+            uint count = await _dbContext.Connection.ExecuteScalarAsync<uint>($"SELECT COUNT(0) FROM ({sql}) as c", param);
 
             if (!string.IsNullOrWhiteSpace(orderBy))
             {

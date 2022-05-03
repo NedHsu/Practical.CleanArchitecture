@@ -33,11 +33,6 @@ namespace ClassifiedAds.Persistence.DapperContext
             return newInstance;
         }
 
-        public void BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
-        {
-            trans = base.BeginTransaction();
-        }
-
         public void CommitTransaction()
         {
             trans.Commit();
@@ -55,12 +50,13 @@ namespace ClassifiedAds.Persistence.DapperContext
 
         System.IDisposable IUnitOfWork.BeginTransaction(IsolationLevel isolationLevel)
         {
-            throw new System.NotImplementedException();
+            var transaction = base.BeginTransaction();
+            return transaction;
         }
 
-        public Task<System.IDisposable> BeginTransactionAsync(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted, CancellationToken cancellationToken = default)
+        public async Task<System.IDisposable> BeginTransactionAsync(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted, CancellationToken cancellationToken = default)
         {
-            throw new System.NotImplementedException();
+            return await (Connection as SqlConnection).BeginTransactionAsync(isolationLevel, cancellationToken);
         }
 
         public System.IDisposable BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted, string lockName = null)

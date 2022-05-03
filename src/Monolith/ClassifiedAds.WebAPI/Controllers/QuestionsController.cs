@@ -60,7 +60,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             var question = _mapper.Map<Question>(model);
             _dispatcher.Dispatch(new AddUpdateQuestionCommand { Question = question });
             model = _mapper.Map<QuestionModel>(question);
-            return Created($"/api/questions/{model.Code}", model);
+            return Created($"/api/questions/{model.Id}", model);
         }
 
         [HttpPut("{id}")]

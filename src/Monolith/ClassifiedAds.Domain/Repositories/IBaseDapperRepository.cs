@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Data;
 using System.Linq.Expressions;
 
 namespace ClassifiedAds.Domain.Repositories
 {
     public interface IBaseDapperRepository<TEntity>
     {
+        Task<IDbTransaction> BeginTransactionAsync(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted, CancellationToken cancellationToken = default);
+
         Task AddAsync(TEntity entity);
 
         Task UpdateAsync(TEntity entity);

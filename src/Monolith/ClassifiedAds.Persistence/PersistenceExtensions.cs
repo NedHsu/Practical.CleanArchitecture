@@ -6,8 +6,10 @@ using ClassifiedAds.Persistence.DapperContext;
 using ClassifiedAds.Persistence.Locks;
 using ClassifiedAds.Persistence.Repositories;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Data;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
