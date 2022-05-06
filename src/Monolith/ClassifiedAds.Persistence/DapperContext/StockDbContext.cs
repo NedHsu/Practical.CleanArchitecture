@@ -1,16 +1,18 @@
-﻿using ClassifiedAds.Domain.Repositories;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
+using ClassifiedAds.Domain.Repositories;
 using MicroOrm.Dapper.Repositories;
 using MicroOrm.Dapper.Repositories.DbContext;
 using Microsoft.Data.SqlClient;
-using System.Collections.Generic;
-using System.Data;
 
 namespace ClassifiedAds.Persistence.DapperContext
 {
     public class StockDbContext : DapperDbContext, IStockDbContext
     {
         private Dictionary<string, object> _repositorys;
-        private IDbTransaction trans;
+        private DbTransaction trans;
 
         public StockDbContext(string connection)
             : base(new SqlConnection(connection))
@@ -40,38 +42,41 @@ namespace ClassifiedAds.Persistence.DapperContext
 
         public int SaveChanges()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        System.IDisposable IUnitOfWork.BeginTransaction(IsolationLevel isolationLevel)
+        IDisposable IUnitOfWork.BeginTransaction(IsolationLevel isolationLevel)
         {
-            var transaction = base.BeginTransaction();
-            return transaction;
+            trans = (Connection as SqlConnection).BeginTransaction(isolationLevel);
+            return trans;
         }
 
-        public async Task<System.IDisposable> BeginTransactionAsync(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted, CancellationToken cancellationToken = default)
+        public async Task<IDisposable> BeginTransactionAsync(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted, CancellationToken cancellationToken = default)
         {
-            return await (Connection as SqlConnection).BeginTransactionAsync(isolationLevel, cancellationToken);
+            trans = await (Connection as SqlConnection).BeginTransactionAsync(isolationLevel, cancellationToken);
+            return trans;
         }
 
-        public System.IDisposable BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted, string lockName = null)
+        public IDisposable BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted, string lockName = null)
         {
-            throw new System.NotImplementedException();
+            trans = (Connection as SqlConnection).BeginTransaction(isolationLevel, lockName);
+            return trans;
         }
 
-        public Task<System.IDisposable> BeginTransactionAsync(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted, string lockName = null, CancellationToken cancellationToken = default)
+        public async Task<IDisposable> BeginTransactionAsync(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted, string lockName = null, CancellationToken cancellationToken = default)
         {
-            throw new System.NotImplementedException();
+            trans = await (Connection as SqlConnection).BeginTransactionAsync(isolationLevel, cancellationToken);
+            return trans;
         }
 
-        public Task CommitTransactionAsync(CancellationToken cancellationToken = default)
+        public async Task CommitTransactionAsync(CancellationToken cancellationToken = default)
         {
-            throw new System.NotImplementedException();
+            await trans.CommitAsync();
         }
     }
 }
