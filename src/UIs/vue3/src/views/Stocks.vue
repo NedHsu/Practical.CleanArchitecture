@@ -27,7 +27,7 @@
             </Column>
             <Column header="Edit">
                 <template #body="slotProps">
-                    <router-link :to="'/stocks/edit/'+ slotProps.data.id"><Button icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-plain" /></router-link>&nbsp;
+                    <router-link :to="{ name: 'CalendarEdit', params: { id: slotProps.data.id } }"><Button icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-plain" /></router-link>&nbsp;
                     <Button icon="pi pi-trash" class="p-button-rounded p-button-text p-button-plain" @click="deleteStock(slotProps.data.id)" />
                 </template>
             </Column>

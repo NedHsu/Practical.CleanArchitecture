@@ -29,7 +29,23 @@ export function setupRouter(i18n: I18n): Router {
         {
             path: "/:locale/products",
             name: "Products",
-            component: () => import("../views/Products.vue"),
+            component: () => import("../views/products/List.vue"),
+            meta: {
+                index: 1
+            }
+        },
+        {
+            path: "/:locale/products/edit/:id",
+            name: "ProductEdit",
+            component: () => import("../views/products/Edit.vue"),
+            meta: {
+                index: 1
+            }
+        },
+        {
+            path: "/:locale/products/add",
+            name: "ProductAdd",
+            component: () => import("../views/products/Edit.vue"),
             meta: {
                 index: 1
             }
