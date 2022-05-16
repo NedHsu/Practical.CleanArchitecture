@@ -297,6 +297,14 @@ export default defineComponent({
                         },
                     ],
                 },
+                {
+                    label: "Questions",
+                    command: () => {
+                        router.push({
+                            name: "Questions",
+                        });
+                    },
+                },
             ],
         };
     },

@@ -116,8 +116,9 @@
 <script lang="ts">
 import { required, minLength, maxLength, helpers } from "@vuelidate/validators";
 import { useStore, createNamespacedHelpers } from "vuex";
-import useVuelidate from "@vuelidate/core";
-import { useI18n } from 'vue-i18n';
+import useVuelidate, { Validation } from "@vuelidate/core";
+import { useI18n } from "vue-i18n";
+import { Ref } from 'vue';
 
 const { mapState, mapActions } = createNamespacedHelpers("product");
 
@@ -126,8 +127,12 @@ export default {
         const store = useStore();
         const { t } = useI18n();
 
+        interface ValidType {
+            product: any;
+        }
+        
         return {
-            v$: useVuelidate(),
+            v$: <Ref<Validation<ValidType>>>useVuelidate(),
             store,
             t$: t,
         };
@@ -143,7 +148,10 @@ export default {
         return {
             product: {
                 name: {
-                    required: helpers.withMessage(this.t$('valid.required'), required),
+                    required: helpers.withMessage(
+                        this.t$("valid.required"),
+                        required
+                    ),
                     minLength: minLength(3),
                 },
                 code: {
@@ -166,7 +174,7 @@ export default {
     methods: {
         onSubmit() {
             this.isSubmitted = true;
-            if ((this.v$ as any).product.$invalid) {
+            if (this.v$.product.$invalid) {
                 return;
             }
 

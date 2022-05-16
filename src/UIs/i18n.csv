@@ -16,3 +16,5 @@ labels/language,Languages,語系
 labels/save,Save,儲存
 labels/delete,Delete,刪除
 labels/test/test,entest,twtest
+valid,,
+valid/required,Value is required,必填

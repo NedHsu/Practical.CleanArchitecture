@@ -12,8 +12,14 @@ namespace ClassifiedAds.Domain.Entities
         [Key]
         public Guid Id { get; set; }
 
+        public int Sort { get; set; }
+
         public string Content { get; set; }
 
         public List<QuestionOption> QuestionOptions { get; set; }
+
+        public List<Quiz> Quizzes { get; set; }
+
+        public List<QuestionGroup> QuestionGroups { get; set; }
     }
 }

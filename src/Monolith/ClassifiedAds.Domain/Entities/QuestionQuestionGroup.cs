@@ -6,15 +6,21 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ClassifiedAds.Domain.Entities
 {
-    [Table("QuestionGroups")]
-    public class QuestionGroup
+    [Table("QuestionQuestionGroups")]
+    public class QuestionQuestionGroup
     {
         [Key]
         public Guid Id { get; set; }
 
+        public int Sort { get; set; }
+
         public string Title { get; set; }
 
+        public string Description { get; set; }
+
         public List<Question> Questions { get; set; }
+
+        public QuestionGroup QuestionGroup { get; set; }
 
         public Quiz Quiz { get; set; }
     }

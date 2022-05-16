@@ -20,6 +20,8 @@ namespace ClassifiedAds.Domain.Entities
 
         public User User { get; set; }
 
+        public DateTime Created { get; set; }
+
         public List<QuestionAnswer> QuestionAnswers { get; set; }
     }
 }

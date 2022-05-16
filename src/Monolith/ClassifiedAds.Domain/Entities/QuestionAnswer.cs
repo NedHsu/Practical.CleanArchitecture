@@ -20,5 +20,7 @@ namespace ClassifiedAds.Domain.Entities
 
         public Guid QuizId { get; set; }
         public Quiz Quiz { get; set; }
+
+        public DateTime Created { get; set; }
     }
 }
