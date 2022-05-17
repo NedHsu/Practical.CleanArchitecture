@@ -1,0 +1,7 @@
+export default {
+    FETCH_WORDS: "FETCH_WORDS",
+    FETCH_WORD: "FETCH_WORD",
+    ADD_WORD: "ADD_WORD",
+    UPDATE_WORD: "UPDATE_WORD",
+    DEL_WORD: "DEL_WORD",
+};

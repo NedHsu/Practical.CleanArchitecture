@@ -56,6 +56,38 @@ export function setupRouter(i18n: I18n): Router {
         },
         //--routes
         {
+            path: "/:locale/words",
+            name: "Words",
+            component: () => import("../views/words/List.vue"),
+            meta: {
+                index: 1
+            }
+        },
+        {
+            path: "/:locale/words/edit/:id",
+            name: "WordEdit",
+            component: () => import("../views/words/Edit.vue"),
+            meta: {
+                index: 1
+            }
+        },
+        {
+            path: "/:locale/words/add",
+            name: "WordAdd",
+            component: () => import("../views/words/Edit.vue"),
+            meta: {
+                index: 1
+            }
+        },
+        {
+            path: "/:locale/words/view",
+            name: "WordView",
+            component: () => import("../views/words/View.vue"),
+            meta: {
+                index: 1
+            }
+        },
+        {
             path: "/:locale/questions",
             name: "Questions",
             component: () => import("../views/Questions.vue"),

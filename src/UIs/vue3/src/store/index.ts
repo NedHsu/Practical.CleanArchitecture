@@ -2,6 +2,7 @@ import Vuex from 'vuex'
 import authService from './modules/authService';
 import product from './modules/product';
 //--import
+import word from './modules/word';
 import question from './modules/question';
 import stock from './modules/stock';
 import awesomePage from './modules/awesomePage';
@@ -14,6 +15,7 @@ export default new Vuex.Store({
     product: product,
     authService: authService,
     //--modules
+    word: word,
     question: question,
     stock: stock,
     awesomePage: awesomePage,

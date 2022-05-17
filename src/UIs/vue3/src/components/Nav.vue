@@ -305,6 +305,14 @@ export default defineComponent({
                         });
                     },
                 },
+                {
+                    label: "Words",
+                    command: () => {
+                        router.push({
+                            name: "WordView",
+                        });
+                    },
+                },
             ],
         };
     },
