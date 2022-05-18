@@ -128,6 +128,7 @@ npm install cypress --save-dev
 
 ### Valid
 
+#### vee-validate
 ```
 npm install vee-validate@next --save
 ```
@@ -142,3 +143,10 @@ import SimpleVueValidator from 'simple-vue3-validator'
 ...
 app.use(SimpleVueValidator)
 ```
+
+#### vuelidate
+```
+npm install @vuelidate/core @vuelidate/validators
+```
+
+### [Tinder Card](https://codepen.io/RobVermeer/pen/japZpY)

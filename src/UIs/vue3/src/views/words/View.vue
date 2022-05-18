@@ -1,48 +1,47 @@
 <template>
     <div class="container">
-        <div>test</div>
         <div class="tinder" ref="containerRef">
-            <div class="tinder--status">
+            <div class="tinder-status">
                 <i class="fa fa-remove"></i>
                 <i class="fa fa-heart"></i>
             </div>
 
-            <div class="tinder--cards">
+            <div class="tinder-cards">
                 <div
-                    class="tinder--card"
-                    v-for="(item, index) in words"
+                    class="tinder-card"
+                    v-for="item in words"
                     :key="item.id"
-                    :style="{
-                        zIndex: index,
-                        transform: `scale(${(20 - index) / 20}) translateY(${
-                            -30 * index
-                        }px)`,
-                        opacity: (10 - index) / 10,
-                    }"
                     :ref="setItemRef"
                 >
                     <div class="flip-card">
                         <div class="flip-card-inner">
                             <div class="flip-card-front">
-                                {{ item.text }}
+                                <p>
+                                    {{ item.text }}
+                                </p>
                             </div>
                             <div class="flip-card-back">
-                                {{ item.description }}
+                                <p>
+                                    {{ item.description }}
+                                </p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="tinder--buttons">
-                <button id="nope"><i class="fa fa-remove"></i></button>
-                <button id="love"><i class="fa fa-heart"></i></button>
+            <div class="tinder-buttons">
+                <button @click="nope">N</button>
+                <button @click="love">Y</button>
             </div>
+        </div>
+        <div class="recent-board">
+            
         </div>
     </div>
 </template>
 <script lang="ts">
-import { defineComponent, onBeforeUpdate, onUpdated, ref } from "vue";
+import { onBeforeUpdate, onUpdated, ref } from "vue";
 import { createNamespacedHelpers } from "vuex";
 import Hammer from "hammerjs";
 
@@ -70,15 +69,17 @@ export default {
         };
     },
     mounted() {
-        const { containerRef } = this;
+        const { containerRef, initCards } = this;
         this.itemRefs.forEach((el, i) => {
             var hammertime = new Hammer(el);
 
             hammertime.on("pan", function (event) {
+                if (event.target !== el) return;
                 el.classList.add("moving");
             });
 
             hammertime.on("pan", function (event) {
+                if (event.target !== el) return;
                 if (event.deltaX === 0) return;
                 if (event.center.x === 0 && event.center.y === 0) return;
 
@@ -100,6 +101,7 @@ export default {
             });
 
             hammertime.on("panend", function (event) {
+                if (event.target !== el) return;
                 el.classList.remove("moving");
                 containerRef?.classList.remove("tinder_love");
                 containerRef?.classList.remove("tinder_nope");
@@ -133,16 +135,18 @@ export default {
                         "px) rotate(" +
                         rotate +
                         "deg)";
+                    initCards();
                 }
             });
         });
+        initCards();
     },
     data() {
         return {
             words: [
                 {
                     id: "1",
-                    text: "text",
+                    text: "tetexttexttexttexttexttexttextxt text text text texttexttexttext",
                     description: "description",
                 },
                 {
@@ -160,30 +164,67 @@ export default {
     },
     computed: {
         ...mapState(["word"]),
+        wordLength(): number {
+            return this.words.length;
+        },
     },
     methods: {
-        love: () => {},
-        nope: () => {},
+        love(event: PointerEvent) {
+            this.ok(event, true);
+        },
+        nope(event: PointerEvent) {
+            this.ok(event, false);
+        },
+        ok(event: PointerEvent, love: boolean) {
+            const { initCards } = this;
+            const activeCards = this.itemRefs.filter(
+                (x) => !x.classList.contains("removed")
+            );
+            var moveOutWidth = document.body.clientWidth * 1.5;
+
+            if (!activeCards.length) return false;
+
+            var card = activeCards[0];
+
+            card.classList.add("removed");
+
+            if (love) {
+                card.style.transform =
+                    "translate(" + moveOutWidth + "px, -100px) rotate(-30deg)";
+            } else {
+                card.style.transform =
+                    "translate(-" + moveOutWidth + "px, -100px) rotate(30deg)";
+            }
+
+            initCards();
+
+            event.preventDefault();
+        },
+        initCards() {
+            const { containerRef, wordLength } = this;
+            const activeCards = this.itemRefs.filter(
+                (x) => !x.classList.contains("removed")
+            );
+            activeCards.forEach((card, index) => {
+                card.style.zIndex = wordLength - index + "";
+                card.style.transform =
+                    "scale(" +
+                    (20 - index) / 20 +
+                    ") translateY(-" +
+                    30 * index +
+                    "px)";
+                card.style.opacity = (10 - index) / 10 + "";
+            });
+            containerRef?.classList.add("loaded");
+        },
+        flipCard(e: PointerEvent) {
+            if (e.target instanceof Element) {
+                e.target.parentElement?.classList.toggle("back");
+            }
+        },
     },
 };
 /* 
-function initCards(card, index) {
-  var newCards = document.querySelectorAll('.tinder--card:not(.removed)');
-
-  newCards.forEach(function (card, index) {
-    card.style.zIndex = allCards.length - index;
-    card.style.transform = 'scale(' + (20 - index) / 20 + ') translateY(-' + 30 * index + 'px)';
-    card.style.opacity = (10 - index) / 10;
-  });
-  
-  tinderContainer.classList.add('loaded');
-}
-
-var tinderContainer = document.querySelector(".tinder");
-var allCards = document.querySelectorAll(".tinder--card");
-var nope = document.getElementById("nope");
-var love = document.getElementById("love");
-
 allCards.forEach(function (el) {
     var hammertime = new Hammer(el);
 
@@ -252,7 +293,7 @@ allCards.forEach(function (el) {
 
 function createButtonListener(love: any) {
     return function (event: { preventDefault: () => void }) {
-        var cards = document.querySelectorAll(".tinder--card:not(.removed)");
+        var cards = document.querySelectorAll(".tinder-card:not(.removed)");
         var moveOutWidth = document.body.clientWidth * 1.5;
 
         if (!cards.length) return false;
@@ -283,9 +324,8 @@ function createButtonListener(love: any) {
 /* The flip card container - set the width and height to whatever you want. We have added the border property to demonstrate that the flip itself goes out of the box on hover (remove perspective if you don't want the 3D effect */
 .flip-card {
     background-color: transparent;
-    width: 300px;
-    height: 200px;
-    border: 1px solid #f1f1f1;
+    width: 100%;
+    height: 100%;
     perspective: 1000px; /* Remove this if you don't want the 3D effect */
 }
 
@@ -312,17 +352,24 @@ function createButtonListener(love: any) {
     height: 100%;
     -webkit-backface-visibility: hidden; /* Safari */
     backface-visibility: hidden;
+    p {
+        position: inherit;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
 }
 
 /* Style the front side (fallback if image is missing) */
 .flip-card-front {
-    background-color: #bbb;
+    background-color: #fff;
     color: black;
 }
 
 /* Style the back side */
 .flip-card-back {
     background-color: dodgerblue;
+    color: #fff;
     transform: rotateY(180deg);
 }
 
@@ -337,7 +384,7 @@ function createButtonListener(love: any) {
     transition: opacity 0.1s ease-in-out;
 }
 
-.tinder--status {
+.tinder-status {
     position: absolute;
     top: 50%;
     margin-top: -30px;
@@ -347,7 +394,7 @@ function createButtonListener(love: any) {
     pointer-events: none;
 }
 
-.tinder--status i {
+.tinder-status i {
     font-size: 100px;
     opacity: 0;
     transform: scale(0.3);
@@ -367,7 +414,7 @@ function createButtonListener(love: any) {
     transform: scale(1);
 }
 
-.tinder--cards {
+.tinder-cards {
     flex-grow: 1;
     padding-top: 40px;
     text-align: center;
@@ -377,12 +424,11 @@ function createButtonListener(love: any) {
     z-index: 1;
 }
 
-.tinder--card {
+.tinder-card {
     display: inline-block;
     width: 90vw;
     max-width: 400px;
     height: 70vh;
-    padding-bottom: 40px;
     border-radius: 8px;
     overflow: hidden;
     position: absolute;
@@ -391,43 +437,28 @@ function createButtonListener(love: any) {
     cursor: -webkit-grab;
     cursor: -moz-grab;
     cursor: grab;
-    border: 0.0625rem solid #bbb;
-    background: #bbb;
+    border: 0.0625rem solid #f1f1f1;
+    background: rgb(255, 255, 255);
 }
 
-.moving.tinder--card {
+.moving.tinder-card {
     transition: none;
     cursor: -webkit-grabbing;
     cursor: -moz-grabbing;
     cursor: grabbing;
 }
 
-.tinder--card img {
-    max-width: 100%;
-    pointer-events: none;
-}
+// .tinder-card div {
+//     pointer-events: none;
+// }
 
-.tinder--card h3 {
-    margin-top: 32px;
-    font-size: 32px;
-    padding: 0 16px;
-    pointer-events: none;
-}
-
-.tinder--card p {
-    margin-top: 24px;
-    font-size: 20px;
-    padding: 0 16px;
-    pointer-events: none;
-}
-
-.tinder--buttons {
+.tinder-buttons {
     flex: 0 0 100px;
     text-align: center;
     padding-top: 20px;
 }
 
-.tinder--buttons button {
+.tinder-buttons button {
     border-radius: 50%;
     line-height: 60px;
     width: 60px;
@@ -437,11 +468,11 @@ function createButtonListener(love: any) {
     margin: 0 8px;
 }
 
-.tinder--buttons button:focus {
+.tinder-buttons button:focus {
     outline: 0;
 }
 
-.tinder--buttons i {
+.tinder-buttons i {
     font-size: 32px;
     vertical-align: middle;
 }
