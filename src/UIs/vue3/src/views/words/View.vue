@@ -1,5 +1,9 @@
 <template>
     <div class="container">
+        <div class="left-tools">
+            Tools
+            <Button @click="addWord">Add</Button>
+        </div>
         <div class="tinder" ref="containerRef">
             <div class="tinder-status">
                 <i class="fa fa-remove"></i>
@@ -36,7 +40,7 @@
             </div>
         </div>
         <div class="recent-board">
-            
+            Recent
         </div>
     </div>
 </template>
@@ -222,6 +226,11 @@ export default {
                 e.target.parentElement?.classList.toggle("back");
             }
         },
+        addWord() {
+            this.$router.push({
+                name: "Words",
+            });
+        },
     },
 };
 /* 
@@ -319,7 +328,14 @@ function createButtonListener(love: any) {
 </script>
 <style lang="scss" scoped>
 .container {
+    display: flex;
     background: #bbb;
+    .left-tools {
+        float: left;
+    }
+    .recent-board {
+        float: right;
+    }
 }
 /* The flip card container - set the width and height to whatever you want. We have added the border property to demonstrate that the flip itself goes out of the box on hover (remove perspective if you don't want the 3D effect */
 .flip-card {

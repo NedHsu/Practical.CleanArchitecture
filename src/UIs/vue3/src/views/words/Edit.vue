@@ -17,7 +17,7 @@
                             v-model="v$.word.name.$model"
                             @input="v$.word.name.$touch()"
                             :class="{
-                                'is-invalid':
+                                'p-invalid':
                                     isSubmitted && v$.word.name.$invalid,
                             }"
                         />
@@ -45,7 +45,7 @@
                             type="text"
                             v-model="word.code"
                             :class="{
-                                'is-invalid':
+                                'p-invalid':
                                     isSubmitted && v$.word.code.$invalid,
                             }"
                             @input="v$.word.code.$touch()"
@@ -76,7 +76,7 @@
                             type="text"
                             v-model="word.description"
                             :class="{
-                                'is-invalid':
+                                'p-invalid':
                                     isSubmitted &&
                                     v$.word.description.$invalid,
                             }"

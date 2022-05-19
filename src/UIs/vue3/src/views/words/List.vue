@@ -1,6 +1,10 @@
 <template>
     <div>
-        <DataTable :value="words" stripedRows responsiveLayout="scroll">
+        <DataTable
+            :value="words.filter((x) => x.action != Actions.delete)"
+            stripedRows
+            responsiveLayout="scroll"
+        >
             <template #header>
                 <div class="p-d-flex p-jc-between p-ai-center">
                     <div class="table-header">Words</div>
@@ -22,12 +26,44 @@
                     />
                 </template>
             </Column>
-            <Column field="name" header="Name"></Column>
-            <Column field="description" header="Description"></Column>
-            <Column field="price" header="Price">
-                <template #body="slotProps">{{
-                    slotProps.data.price || 5
-                }}</template>
+            <Column header="Text">
+                <template #body="{ data, index }">
+                    <InputText
+                        v-model="data.text"
+                        :class="{
+                            'p-invalid':
+                                isSubmitted &&
+                                v$.words.$each.$response.$errors[index].text
+                                    .length,
+                        }"
+                        autofocus
+                    />
+                    <small
+                        v-show="isSubmitted"
+                        v-for="error in v$.words.$each.$response.$errors[index]
+                            .text"
+                        :key="error"
+                        class="p-error"
+                    >
+                        {{ error.$message }}
+                    </small>
+                </template>
+            </Column>
+            <Column header="PartOfSpeach">
+                <template #body="{ data }">
+                    <Dropdown
+                        v-model="data.partOfSpeach"
+                        :options="partOfSpeachOptions"
+                        optionLabel="text"
+                        optionValue="text"
+                        autofocus
+                    />
+                </template>
+            </Column>
+            <Column header="Description">
+                <template #body="{ data }">
+                    <Textarea rows="5" v-model="data.description" autofocus />
+                </template>
             </Column>
             <Column field="rating" header="Reviews">
                 <template #body="slotProps">
@@ -39,11 +75,11 @@
                 </template>
             </Column>
             <Column header="Edit">
-                <template #body="slotProps">
+                <template #body="{ data }">
                     <router-link
                         :to="{
                             name: 'WordEdit',
-                            params: { id: slotProps.data.id },
+                            params: { id: data.id },
                         }"
                         ><Button
                             icon="pi pi-pencil"
@@ -54,24 +90,40 @@
                     <Button
                         icon="pi pi-trash"
                         class="p-button-rounded p-button-text p-button-plain"
-                        @click="deleteWord(slotProps.data.id)"
+                        @click="deleteWord(data)"
                     />
                 </template>
             </Column>
-            <template #footer
-                >In total there are
-                {{ words ? words.length : 0 }} words.</template
-            >
+            <template #footer>
+                <div class="p-d-flex p-jc-between p-ai-center">
+                    <div class="buttons">
+                        <Button icon="" @click="pushWord">Add</Button>
+
+                        <Button icon="" @click="submit">Save</Button>
+                    </div>
+                    > In total there are
+                    {{ words ? words.length : 0 }} words.
+                </div>
+            </template>
         </DataTable>
         <Spinner :loading="loading" :fullscreen="true"></Spinner>
     </div>
 </template>
 <script lang="ts">
-import { onMounted, onUnmounted, withCtx } from "@vue/runtime-core";
+import { onUnmounted } from "@vue/runtime-core";
 import { createNamespacedHelpers, useStore } from "vuex";
 import Spinner from "../../components/Spinner.vue";
+import { useVuelidate, Validation } from "@vuelidate/core";
+import { Ref } from "vue";
+import { Word } from "../../store/modules/word/types";
+import { helpers, maxLength, required } from "@vuelidate/validators";
+import { Actions } from "../../store/types";
 
 const { mapState, mapActions, mapGetters } = createNamespacedHelpers("word");
+
+interface ValidType {
+    words: Array<Word>;
+}
 
 export default {
     components: { Spinner },
@@ -84,14 +136,38 @@ export default {
     props: {},
     setup() {
         const store = useStore();
-
-        onMounted(() => {
-            store.dispatch("word/fetchWords").then(() => {
-                console.log(store.state.word.words);
-            });
-            console.log("onMounted");
-        });
         onUnmounted(() => {});
+
+        return {
+            store,
+            v$: <Ref<Validation<ValidType>>>useVuelidate(),
+            Actions,
+        };
+    },
+    mounted() {
+        this.FETCH_WORDS();
+    },
+    data() {
+        return {
+            isSubmitted: false,
+            partOfSpeachOptions: [
+                {
+                    text: "adj",
+                },
+                {
+                    text: "noun",
+                },
+                {
+                    text: "verb",
+                },
+                {
+                    text: "adv",
+                },
+                {
+                    text: "pron",
+                },
+            ],
+        };
     },
     methods: {
         addWord() {
@@ -99,9 +175,44 @@ export default {
                 name: "WordAdd",
             });
         },
-        ...mapActions(["fetchWords", "deleteWord"]),
+        pushWord() {
+            this.words.push({
+                text: "",
+                partOfSpeach: "noun",
+                action: Actions.new,
+            } as Word);
+        },
+        deleteWord(word: Word) {
+            word.action = Actions.delete;
+        },
+        submit() {
+            this.isSubmitted = true;
+            if (this.v$.words.$invalid) {
+                return;
+            }
+
+            this.UPDATE_WORDS()
+        },
+        ...mapActions(["FETCH_WORDS", "DEL_WORD", "UPDATE_WORDS"]),
+    },
+    validations() {
+        return {
+            words: {
+                $each: helpers.forEach({
+                    text: {
+                        required,
+                        maxLength: maxLength(100),
+                    },
+                }),
+            },
+        };
     },
 };
 </script>
 <style lang="scss" scoped>
+.buttons {
+    Button {
+        margin-right: 0.625rem;
+    }
+}
 </style>

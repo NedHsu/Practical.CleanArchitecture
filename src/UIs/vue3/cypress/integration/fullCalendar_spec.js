@@ -1,5 +1,6 @@
+/// <reference types="cypress" />
 describe('Calendar Event CUD', () => {
-    it('successfully loads', () => {
-        cy.visit('/');
+    it('successfully loads', async () => {
+        await cy.visit('/');
     })
 })

@@ -17,7 +17,7 @@
                             v-model="v$.product.name.$model"
                             @input="v$.product.name.$touch()"
                             :class="{
-                                'is-invalid':
+                                'p-invalid':
                                     isSubmitted && v$.product.name.$invalid,
                             }"
                         />
@@ -45,7 +45,7 @@
                             type="text"
                             v-model="product.code"
                             :class="{
-                                'is-invalid':
+                                'p-invalid':
                                     isSubmitted && v$.product.code.$invalid,
                             }"
                             @input="v$.product.code.$touch()"
@@ -76,7 +76,7 @@
                             type="text"
                             v-model="product.description"
                             :class="{
-                                'is-invalid':
+                                'p-invalid':
                                     isSubmitted &&
                                     v$.product.description.$invalid,
                             }"

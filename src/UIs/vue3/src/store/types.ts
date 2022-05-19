@@ -21,3 +21,9 @@ export interface RootState {
     notification: NotificationState,
     calendarEvent: CalendarEventState,
 }
+
+export enum Actions {
+    new = "new",
+    update = "update",
+    delete = "delete",
+}

@@ -9,7 +9,8 @@ export interface WordState {
 
 export interface Word {
     id: string;
-    name: string;
-    code: string;
+    text: string;
     description: string;
+    partOfSpeach: string;
+    action: string;
 }

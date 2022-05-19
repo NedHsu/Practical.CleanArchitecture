@@ -3,5 +3,6 @@ export default {
     FETCH_WORD: "FETCH_WORD",
     ADD_WORD: "ADD_WORD",
     UPDATE_WORD: "UPDATE_WORD",
+    UPDATE_WORDS: "UPDATE_WORDS",
     DEL_WORD: "DEL_WORD",
 };

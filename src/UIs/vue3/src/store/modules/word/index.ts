@@ -26,8 +26,12 @@ export default {
             state.words.push(data);
             state.loading = false;
         },
+        [TYPES.UPDATE_WORDS_SUCCESS](state: WordState, data: any) {
+            state.words = data;
+            state.loading = false;
+        },
         [TYPES.UPDATE_WORD_SUCCESS](state: WordState, data: any) {
-            
+
             state.loading = false;
         },
         [TYPES.DEL_WORD_SUCCESS](state: WordState, id: string) {
@@ -76,10 +80,18 @@ export default {
                     commit(TYPES.FETCH_WORDS_FAIL, error);
                 });
         },
+        [ACTIONS.UPDATE_WORDS]({ commit }, words) {
+            commit(TYPES.FETCH_WORDS_START);
+            request.put("words", words)
+                .then(rs => {
+                    commit(TYPES.UPDATE_WORDS_SUCCESS, rs.data);
+                })
+                .catch((error) => {
+                    commit(TYPES.FETCH_WORDS_FAIL, error);
+                });
+        },
     },
     getters: {
         words: (state) => state.words,
     },
 } as Module<WordState, any>;
-
-
