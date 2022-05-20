@@ -7,11 +7,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace ClassifiedAds.Domain.Entities
 {
     [Table("Words")]
-    public class Word
+    public class Word : AggregateRoot<Guid>
     {
-        [Key]
-        public Guid Id { get; set; }
-
         public string Text { get; set; }
 
         public string PartOfSpeach { get; set; }

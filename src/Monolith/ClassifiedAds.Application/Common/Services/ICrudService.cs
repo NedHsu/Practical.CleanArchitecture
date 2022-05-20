@@ -13,5 +13,10 @@ namespace ClassifiedAds.Application
         Task AddOrUpdateAsync(T entity);
 
         Task DeleteAsync(T entity);
+
+        Task DeleteAsync(List<T> entites);
+
+        Task CUDAsync<T2>(List<T2> entities)
+            where T2 : T, ICommandAction;
     }
 }

@@ -33,5 +33,7 @@ namespace ClassifiedAds.Domain.Repositories
         Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate);
 
         Task<PagedResult<TEntity>> GetPaged(uint pageIndex, uint pageSize, Expression<Func<TEntity, bool>> predicate, string orderBy);
+
+        IDbTransaction DbTransaction { set; } 
     }
 }

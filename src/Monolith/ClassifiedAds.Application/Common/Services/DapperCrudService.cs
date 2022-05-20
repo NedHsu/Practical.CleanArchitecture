@@ -42,5 +42,18 @@ namespace ClassifiedAds.Application
                 await _domainEvents.DispatchAsync(new EntityUpdatedEvent<T>(entity, DateTime.UtcNow));
             }
         }
+
+        public async Task AddOrUpdateAsync(List<T> entities)
+        {
+            foreach (var entity in entities)
+            {
+                await AddOrUpdateAsync(entity);
+            }
+        }
+
+        public Task CUDAsync(List<T> entity)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

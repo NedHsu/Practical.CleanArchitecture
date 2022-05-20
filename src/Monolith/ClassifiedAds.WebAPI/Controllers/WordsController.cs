@@ -78,6 +78,16 @@ namespace ClassifiedAds.WebAPI.Controllers
             return Ok(model);
         }
 
+        [HttpPut]
+        [Consumes("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> Put([FromBody] List<WordModel> model)
+        {
+            await _dispatcher.DispatchAsync(new CUDEntititesCommand<WordModel, Word>(model));
+            return Ok();
+        }
+
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

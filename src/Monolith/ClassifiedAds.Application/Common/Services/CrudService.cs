@@ -54,5 +54,20 @@ namespace ClassifiedAds.Application
             await _unitOfWork.SaveChangesAsync();
             await _domainEvents.DispatchAsync(new EntityDeletedEvent<T>(entity, DateTime.UtcNow));
         }
+
+        public async Task DeleteAsync(List<T> entites)
+        {
+            _repository.BulkDelete(entites);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task CUDAsync<T2>(List<T2> entities)
+            where T2 : T, ICommandAction
+        {
+            _repository.BulkDelete(entities.Where(x => x.Action.Equals(CUDActionType.Delete)));
+            _repository.BulkUpdate(entities.Where(x => x.Action.Equals(CUDActionType.Update)), x => new { x.Id });
+            _repository.BulkInsert(entities.Where(x => x.Action.Equals(CUDActionType.Create)));
+            await _unitOfWork.SaveChangesAsync();
+        }
     }
 }

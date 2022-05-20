@@ -9,8 +9,8 @@ namespace ClassifiedAds.Persistence.MappingConfigurations
         {
             builder.ToTable("Words");
 
-            builder.Property(x => x.Id).ValueGeneratedOnAdd();
-            builder.Property(x => x.PartOfSpeach).HasMaxLength(10);
+            builder.Property(x => x.Id).HasDefaultValueSql("NEWID()");
+            builder.Property(x => x.PartOfSpeach).HasMaxLength(100);
             builder.Property(x => x.Text).HasMaxLength(100);
         }
     }
