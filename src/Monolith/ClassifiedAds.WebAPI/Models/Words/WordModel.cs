@@ -4,11 +4,14 @@ using System;
 
 namespace ClassifiedAds.WebAPI.Models.Words
 {
-    public class WordModel : Word, ICommandAction
+    public class WordModel
     {
         public Guid Id { get; set; }
+
         public string Text { get; set; }
 
-        public Application.CUDActionType Action { get; set; }
+        public string PartOfSpeach { get; set; }
+
+        public string Description { get; set; }
     }
 }

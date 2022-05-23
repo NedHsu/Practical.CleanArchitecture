@@ -86,6 +86,11 @@ namespace ClassifiedAds.Persistence.Repositories
             _dbContext.BulkUpdate(entities, columnNamesSelector);
         }
 
+        public void BulkUpdate(IEnumerable<T> entities, IEnumerable<string> columnNames)
+        {
+            _dbContext.BulkUpdate(entities, columnNames);
+        }
+
         public void BulkDelete(IEnumerable<T> entities)
         {
             _dbContext.BulkDelete(entities);

@@ -2,6 +2,7 @@
 using ClassifiedAds.Application;
 using ClassifiedAds.Application.Words.Commands;
 using ClassifiedAds.Application.Words.Queries;
+using ClassifiedAds.Domain.DTOs;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.WebAPI.Models.Words;
 using Microsoft.AspNetCore.Authorization;
@@ -38,6 +39,14 @@ namespace ClassifiedAds.WebAPI.Controllers
             var words = await _dispatcher.DispatchAsync(new GetWordsQuery() { });
             var model = _mapper.Map<IEnumerable<WordModel>>(words);
             return Ok(model);
+        }
+
+        [HttpGet("stats/paged")]
+        public async Task<ActionResult<PagedResult<WordStatsDTO>>> Get([FromQuery] GetWordStatsPagedQuery quey)
+        {
+            _logger.LogInformation("Getting paged word stats");
+            var words = await _dispatcher.DispatchAsync(quey);
+            return Ok(words);
         }
 
         [HttpGet("{id}")]
@@ -82,9 +91,9 @@ namespace ClassifiedAds.WebAPI.Controllers
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> Put([FromBody] List<WordModel> model)
+        public async Task<ActionResult> Put([FromBody] Dictionary<CUDActionType, List<Word>> model)
         {
-            await _dispatcher.DispatchAsync(new CUDEntititesCommand<WordModel, Word>(model));
+            await _dispatcher.DispatchAsync(new CUDEntititesCommand<Word>(model));
             return Ok();
         }
 

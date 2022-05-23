@@ -15,16 +15,16 @@ namespace ClassifiedAds.Application.Words.Queries
     [DatabaseRetry]
     internal class GetWordsQueryHandler : IQueryHandler<GetWordsQuery, List<Word>>
     {
-        private readonly IBaseDapperRepository<Word> _wordRepository;
+        private readonly IRepository<Word, Guid> _wordRepository;
 
-        public GetWordsQueryHandler(IBaseDapperRepository<Word> wordRepository)
+        public GetWordsQueryHandler(IRepository<Word, Guid> wordRepository)
         {
             _wordRepository = wordRepository;
         }
 
         public async Task<List<Word>> HandleAsync(GetWordsQuery query, CancellationToken cancellationToken = default)
         {
-            return (await _wordRepository.GetAllAsync()).ToList();
+            return await _wordRepository.ToListAsync(_wordRepository.GetAll());
         }
     }
 }

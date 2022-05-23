@@ -56,7 +56,8 @@ namespace Microsoft.Extensions.DependencyInjection
                     .AddScoped(typeof(IStockFunderRepository), typeof(StockFunderRepository))
                     .AddScoped(typeof(IStockRevenueRepository), typeof(StockRevenueRepository))
                     .AddScoped(typeof(IStockSeminarRepository), typeof(StockSeminarRepository))
-                    .AddScoped(typeof(IStockDapperRepository), typeof(StockDapperRepository));
+                    .AddScoped(typeof(IStockDapperRepository), typeof(StockDapperRepository))
+                    .AddScoped(typeof(IWordRepository), typeof(WordDapperRepository));
 
             services.AddScoped<ILockManager, LockManager>();
 

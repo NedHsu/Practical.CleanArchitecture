@@ -102,6 +102,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 typeof(GetEntityByIdQueryHandler<>),
                 typeof(AddOrUpdateEntityCommandHandler<>),
                 typeof(DeleteEntityCommandHandler<>),
+                typeof(CUDEntititesCommandHandler<>),
             };
 
             foreach (var aggregateRootType in aggregateRootTypes)

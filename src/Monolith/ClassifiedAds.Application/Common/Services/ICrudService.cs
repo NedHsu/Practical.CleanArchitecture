@@ -16,7 +16,6 @@ namespace ClassifiedAds.Application
 
         Task DeleteAsync(List<T> entites);
 
-        Task CUDAsync<T2>(List<T2> entities)
-            where T2 : T, ICommandAction;
+        Task CUDAsync(Dictionary<CUDActionType, List<T>> entityActions);
     }
 }

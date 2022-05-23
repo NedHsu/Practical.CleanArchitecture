@@ -3,20 +3,18 @@ using System.Collections.Generic;
 
 namespace ClassifiedAds.Application
 {
-    public class CUDEntititesCommand<TActionDTO, TEntity> : ICommand
-        where TActionDTO : TEntity, ICommandAction
+    public class CUDEntititesCommand<TEntity> : ICommand
         where TEntity : AggregateRoot<Guid>
     {
-        public CUDEntititesCommand(List<TActionDTO> entities)
+        public CUDEntititesCommand(Dictionary<CUDActionType, List<TEntity>> entityActions)
         {
-            Entities = entities;
+            EntityActions = entityActions;
         }
 
-        public List<TActionDTO> Entities { get; set; }
+        public Dictionary<CUDActionType, List<TEntity>> EntityActions { get; set; }
     }
 
-    internal class CUDEntititesCommandHandler<T2, TEntity> : ICommandHandler<CUDEntititesCommand<T2, TEntity>>
-    where T2 : TEntity, ICommandAction
+    internal class CUDEntititesCommandHandler<TEntity> : ICommandHandler<CUDEntititesCommand<TEntity>>
     where TEntity : AggregateRoot<Guid>
     {
         private readonly ICrudService<TEntity> _crudService;
@@ -26,9 +24,9 @@ namespace ClassifiedAds.Application
             _crudService = crudService;
         }
 
-        public async Task HandleAsync(CUDEntititesCommand<T2, TEntity> command, CancellationToken cancellationToken = default)
+        public async Task HandleAsync(CUDEntititesCommand<TEntity> command, CancellationToken cancellationToken = default)
         {
-            await _crudService.CUDAsync(command.Entities);
+            await _crudService.CUDAsync(command.EntityActions);
         }
     }
 }

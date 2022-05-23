@@ -1,8 +1,8 @@
-﻿using ClassifiedAds.CrossCuttingConcerns.Exceptions;
-using ClassifiedAds.Domain.Events;
+﻿using ClassifiedAds.Domain.Events;
 using ClassifiedAds.Domain.Repositories;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace ClassifiedAds.Application
 {
@@ -27,7 +27,7 @@ namespace ClassifiedAds.Application
 
         public Task<T> GetByIdAsync(Guid Id)
         {
-            ValidationException.Requires(Id != Guid.Empty, "Invalid Id");
+            CrossCuttingConcerns.Exceptions.ValidationException.Requires(Id != Guid.Empty, "Invalid Id");
             return _repository.FirstOrDefaultAsync(_repository.GetAll().Where(x => x.Id == Id));
         }
 
@@ -61,12 +61,13 @@ namespace ClassifiedAds.Application
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task CUDAsync<T2>(List<T2> entities)
-            where T2 : T, ICommandAction
+        public async Task CUDAsync(Dictionary<CUDActionType, List<T>> entityActions)
         {
-            _repository.BulkDelete(entities.Where(x => x.Action.Equals(CUDActionType.Delete)));
-            _repository.BulkUpdate(entities.Where(x => x.Action.Equals(CUDActionType.Update)), x => new { x.Id });
-            _repository.BulkInsert(entities.Where(x => x.Action.Equals(CUDActionType.Create)));
+
+            _repository.BulkDelete(entityActions[CUDActionType.Delete]);
+            _repository.BulkUpdate(entityActions[CUDActionType.Update], typeof(T)
+                .GetProperties().Where(x => !x.IsDefined(typeof(KeyAttribute), true) && !x.IsDefined(typeof(TimestampAttribute), true)).Select(x => x.Name).ToList());
+            _repository.BulkInsert(entityActions[CUDActionType.Create]);
             await _unitOfWork.SaveChangesAsync();
         }
     }

@@ -28,6 +28,8 @@ namespace ClassifiedAds.Domain.Repositories
 
         void BulkUpdate(IEnumerable<TEntity> entities, Expression<Func<TEntity, object>> columnNamesSelector);
 
+        void BulkUpdate(IEnumerable<TEntity> entities, IEnumerable<string> columnNames);
+
         void BulkMerge(IEnumerable<TEntity> entities, Expression<Func<TEntity, object>> idSelector, Expression<Func<TEntity, object>> updateColumnNamesSelector, Expression<Func<TEntity, object>> insertColumnNamesSelector);
 
         void BulkDelete(IEnumerable<TEntity> entities);
