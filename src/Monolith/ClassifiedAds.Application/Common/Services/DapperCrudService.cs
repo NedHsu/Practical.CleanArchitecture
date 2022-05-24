@@ -51,9 +51,29 @@ namespace ClassifiedAds.Application
             }
         }
 
+        public async Task AddAsync(List<T> entities)
+        {
+            await _repository.AddAsync(entities);
+        }
+
         public Task CUDAsync(List<T> entity)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task AddAsync(T entity)
+        {
+            await _repository.AddAsync(entity);
+        }
+
+        public async Task UpdateAsync(T entity)
+        {
+            await _repository.UpdateAsync(entity);
+        }
+
+        public async Task UpdateAsync(List<T> entities)
+        {
+            await _repository.UpdateAsync(entities);
         }
     }
 }

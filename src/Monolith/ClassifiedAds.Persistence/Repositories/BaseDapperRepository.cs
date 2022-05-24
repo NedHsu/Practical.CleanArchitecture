@@ -59,6 +59,8 @@ namespace ClassifiedAds.Persistence.Repositories
         {
             int status = 0;
 
+            var isAdd = TableKeys.All(x => x.GetValue(entity) == default);
+
             var filters = string.Join(" AND ", TableKeys.Select(x => $"{x.Name} = @{x.Name}"));
             var param = TableKeys.Select(x => new KeyValuePair<string, object>($"@{x.Name}", x.GetValue(entity)));
             var sql = $"select (case when exists (select 1 from {TableName} where {filters}) then 1 else 0 end)";
@@ -161,7 +163,7 @@ namespace ClassifiedAds.Persistence.Repositories
 
             if (!string.IsNullOrWhiteSpace(orderBy))
             {
-                sql = $"{sql} {orderBy}";
+                sql = $"{sql} ORDER  BY {orderBy}";
             }
 
             if (pageSize > 0)

@@ -19,23 +19,52 @@ namespace ClassifiedAds.Persistence.Repositories
         {
             string sql = @"
 SELECT
-    w.[Id],
-    [Text],
-    [PartOfSpeach],
-    [Description],
-    [Wrong],
-    [Correct],
-    [UpdatedDateTime]
+    w.Id WordId,
+    Text,
+    PartOfSpeach,
+    Description,
+    ws.Id,
+    Wrong,
+    Correct,
+    ws.UpdatedDateTime
 FROM
     Words w
-    LEFT JOIN WordStats ws ON w.Id = ws.WordId AND ws.UserId = @UserId";
+    LEFT JOIN WordStats ws ON w.Id = ws.WordId AND ws.UserId = @UserId
+WHERE ws.UpdatedDateTime is NULL OR DATEDIFF(MINUTE, ws.UpdatedDateTime, GETDATE()) > 30";
 
-            string orderBy = "ORDER BY ISNULL(ws.Correct, 0) - ISNULL(ws.Wrong, 0)";
+            string orderBy = "ISNULL(ws.Correct, 0) - ISNULL(ws.Wrong, 0)";
             var param = new Dictionary<string, object>()
             {
                 { "@UserId", userId },
             };
             return await GetPagedAsync<WordStatsDTO>(pageIndex, pageSize, sql, param, orderBy);
+        }
+
+        public async Task<IEnumerable<WordStatsDTO>> GetWordStatsRecentAsync(Guid userId)
+        {
+            string sql = @"
+SELECT
+    TOP 20
+    ws.Id,
+    ws.Wrong,
+    ws.Correct,
+    w.Id WordId,
+    w.Text,
+    w.PartOfSpeach,
+    w.Description,
+	ws.UpdatedDateTime
+FROM
+    WordStats ws
+    JOIN Words w ON w.Id = ws.WordId
+WHERE
+    UserId = @UserId
+ORDER BY ws.UpdatedDateTime DESC";
+
+            var param = new Dictionary<string, object>()
+            {
+                { "@UserId", userId },
+            };
+            return await DbContext.Connection.QueryAsync<WordStatsDTO>(sql, param);
         }
     }
 }

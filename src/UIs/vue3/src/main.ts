@@ -29,6 +29,7 @@ import TabMenu from 'primevue/tabmenu';
 import Calendar from 'primevue/calendar';
 import Textarea from 'primevue/textarea';
 import Checkbox from 'primevue/checkbox';
+import Tag from 'primevue/tag';
 
 import en from './locales/en.yaml';
 import 'primeflex/primeflex.css';
@@ -81,6 +82,7 @@ authService.loadUser().then(user => {
     app.component('Calendar', Calendar);
     app.component('Textarea', Textarea);
     app.component('Checkbox', Checkbox);
+    app.component('Tag', Tag);
 
     app.mount('#app');
 });

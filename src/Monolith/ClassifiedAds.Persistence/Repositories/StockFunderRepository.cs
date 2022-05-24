@@ -57,7 +57,7 @@ WHERE  t.CreditSum > 0
                              AND f.date > Dateadd(day, -20, t.date) 
                              AND f.date < t.date)
 ";
-            var orderby = "ORDER  BY date DESC, CreditSum DESC";
+            var orderby = "date DESC, CreditSum DESC";
             return await GetPagedAsync<StockFunderDTO>(pageIndex, pageSize, sql, orderBy: orderby);
         }
 

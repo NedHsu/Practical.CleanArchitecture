@@ -3,13 +3,14 @@ import { Module } from 'vuex';
 import request from '../../../utils/request';
 import TYPES from './mutationTypes';
 import ACTIONS from './actionTypes';
-import { Word, WordState, WordStatsPaged } from './types';
+import { Word, WordState, WordStats, WordStatsPaged } from './types';
 
 export default {
     namespaced: true,
     state: () => ({
         word: {},
         words: [] as Word[],
+        wordIndex: 0,
         wordStatsPaged: {
             items: [],
             total: 0,
@@ -17,7 +18,7 @@ export default {
             totalCount: 0,
             totalPages: 0,
         } as WordStatsPaged,
-        recentWords: [] as Word[],
+        recentWords: [] as WordStats[],
     } as WordState),
     mutations: {
         [TYPES.FETCH_WORDS_START](state: WordState) {
@@ -48,8 +49,26 @@ export default {
         },
         [TYPES.FETCH_WORD_STATS_PAGED_SUCCESS](state: WordState, data: any) {
             state.wordStatsPaged = data;
+            state.wordIndex = 0;
             state.loading = false;
         },
+        [TYPES.FETCH_WORD_STATS_RECENT_SUCCESS](state: WordState, data: any) {
+            state.recentWords = data;
+            state.loading = false;
+        },
+        [TYPES.UPDATE_WORD_STATS_SUCCESS](state: WordState, data: any) {
+            state.loading = false;
+        },
+        [TYPES.PUT_WORD_RECENT](state: WordState, data: any) {
+            state.recentWords.push(data);
+            state.wordIndex++;
+        },
+        [TYPES.REVIEW_WORD_STATS](state: WordState) {
+            console.log('review');
+            state.wordIndex = 0;
+            state.wordStatsPaged.items = state.recentWords;
+            state.recentWords = [];
+        }
     },
     actions: {
         [ACTIONS.FETCH_WORDS]({ commit }) {
@@ -67,6 +86,37 @@ export default {
             return request.get("words/stats/paged", { params: quey })
                 .then((rs) => {
                     commit(TYPES.FETCH_WORD_STATS_PAGED_SUCCESS, rs.data);
+                })
+                .catch((error) => {
+                    commit(TYPES.FETCH_WORDS_FAIL, error);
+                });
+        },
+        [ACTIONS.FETCH_WORD_STATS_RECENT]({ commit }, quey) {
+            commit(TYPES.FETCH_WORDS_START);
+            return request.get("words/stats/recent", { params: quey })
+                .then((rs) => {
+                    commit(TYPES.FETCH_WORD_STATS_RECENT_SUCCESS, rs.data);
+                })
+                .catch((error) => {
+                    commit(TYPES.FETCH_WORDS_FAIL, error);
+                });
+        },
+        [ACTIONS.UPDATE_WORD_STATS]({ commit, state }, ok) {
+            let wordStats = {
+                ...state.wordStatsPaged.items[state.wordIndex],
+            }
+            if (ok) {
+                wordStats.correct++;
+            } else {
+                wordStats.wrong++;
+            }
+            commit(TYPES.PUT_WORD_RECENT, wordStats);
+            return request.put("words/stats", {
+                OK: ok,
+                wordId: wordStats.wordId,
+            })
+                .then((rs) => {
+                    commit(TYPES.UPDATE_WORD_STATS_SUCCESS, rs.data);
                 })
                 .catch((error) => {
                     commit(TYPES.FETCH_WORDS_FAIL, error);

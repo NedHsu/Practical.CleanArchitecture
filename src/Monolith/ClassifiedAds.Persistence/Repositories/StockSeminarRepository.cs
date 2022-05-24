@@ -24,7 +24,7 @@ FROM StockSeminar ss
 	JOIN Stock s ON ss.StockCode = s.Code
 WHERE ss.Date >= @StartDate AND ss.Date < @EndDate
 ";
-            string orderBy = "ORDER BY Date DESC";
+            string orderBy = "Date DESC";
 
             var param = new Dictionary<string, object>()
             {

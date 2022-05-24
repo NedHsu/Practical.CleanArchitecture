@@ -7,17 +7,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace ClassifiedAds.Domain.Entities
 {
     [Table("WordStats")]
-    public class WordStats
+    public class WordStats : AggregateRoot<Guid>
     {
-        [Key]
-        public Guid Id { get; set; }
-
         public int Wrong { get; set; }
 
         public int Correct { get; set; }
 
+        public Guid WordId { get; set; }
         public Word Word { get; set; }
 
+        public Guid UserId { get; set; }
         public User User { get; set; }
     }
 }

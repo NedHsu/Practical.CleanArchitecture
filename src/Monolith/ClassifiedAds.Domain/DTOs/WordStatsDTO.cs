@@ -6,6 +6,8 @@ namespace ClassifiedAds.Domain.DTOs
     {
         public Guid Id { get; set; }
 
+        public Guid WordId { get; set; }
+
         public string Text { get; set; }
 
         public string PartOfSpeach { get; set; }

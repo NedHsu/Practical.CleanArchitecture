@@ -1,8 +1,9 @@
 export interface WordState {
     words: Word[];
     word: Word;
+    wordIndex: number;
     wordStatsPaged: WordStatsPaged;
-    recentWords: Word[];
+    recentWords: WordStats[];
     loading: boolean;
     saved: boolean;
     deleted: boolean;
@@ -19,6 +20,7 @@ export interface Word {
 
 export interface WordStats {
     id: string;
+    wordId: string;
     text: string;
     description: string;
     partOfSpeach: string;

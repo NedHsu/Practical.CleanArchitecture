@@ -51,7 +51,7 @@ FROM StockRevenue r
 	JOIN Stock s ON r.StockCode = s.Code
 WHERE {filters}
 ";
-            var orderby = "ORDER BY Date DESC, r.MoM DESC, r.YoY DESC";
+            var orderby = "Date DESC, r.MoM DESC, r.YoY DESC";
             return await GetPagedAsync<StockRevenueDTO>(query.PageIndex, query.PageSize, sql, param, orderBy: orderby);
         }
     }

@@ -21,11 +21,18 @@
                         <div class="flip-card-inner">
                             <div class="flip-card-front">
                                 <p>
-                                    {{ item.text }}
+                                    <span>
+                                        <h1>
+                                            {{ item.text }}
+                                        </h1>
+                                    </span>
                                 </p>
                             </div>
                             <div class="flip-card-back">
                                 <p>
+                                    <Tag severity="success">
+                                        {{ item.partOfSpeach }}
+                                    </Tag>
                                     {{ item.description }}
                                 </p>
                             </div>
@@ -35,8 +42,26 @@
             </div>
 
             <div class="tinder-buttons">
-                <button @click="nope">N</button>
-                <button @click="love">Y</button>
+                <Button
+                    icon="pi pi-history"
+                    class="p-button-rounded p-button-secondary"
+                    @click="previous"
+                />
+                <Button
+                    icon="pi pi-times"
+                    class="p-button-rounded p-button-danger"
+                    @click="nope"
+                />
+                <Button
+                    icon="pi pi-check"
+                    class="p-button-rounded p-button-success"
+                    @click="love"
+                />
+                <Button
+                    icon="pi pi-step-forward-alt"
+                    class="p-button-rounded p-button-help"
+                    @click="next"
+                />
             </div>
         </div>
         <div class="recent-board">
@@ -45,7 +70,9 @@
                 v-for="(item, index) in recentWords"
                 :key="index"
                 :class="recentClass(item)"
-            ></div>
+            >
+                {{ item.text }}
+            </div>
         </div>
     </div>
 </template>
@@ -55,7 +82,7 @@ import { createNamespacedHelpers } from "vuex";
 import Hammer from "hammerjs";
 import { WordStats } from "../../store/modules/word/types";
 
-const { mapState, mapActions } = createNamespacedHelpers("word");
+const { mapState, mapActions, mapMutations } = createNamespacedHelpers("word");
 
 export default {
     setup() {
@@ -109,6 +136,7 @@ export default {
 
             initCards();
             event.preventDefault();
+            return true;
         };
 
         onBeforeUpdate(() => {
@@ -129,12 +157,8 @@ export default {
         };
     },
     mounted() {
-        const { FETCH_WORD_STATS_PAGED, pageSize, pageIndex } = this;
-
-        FETCH_WORD_STATS_PAGED({
-            pageSize: pageSize,
-            pageIndex: pageIndex,
-        });
+        this.next();
+        this.FETCH_WORD_STATS_RECENT();
     },
     data() {
         return {
@@ -143,7 +167,7 @@ export default {
         };
     },
     computed: {
-        ...mapState(["word", "wordStatsPaged", "recentWords"]),
+        ...mapState(["word", "wordStatsPaged", "recentWords", "wordIndex"]),
         wordLength(): number {
             return this.wordStatsPaged.items.length;
         },
@@ -161,18 +185,36 @@ export default {
         },
         love(event: PointerEvent) {
             this.ok(event, true);
+            this.UPDATE_WORD_STATS(true);
         },
         nope(event: PointerEvent) {
             this.ok(event, false);
+            this.UPDATE_WORD_STATS(false);
+        },
+        next() {
+            const { FETCH_WORD_STATS_PAGED, pageSize, pageIndex } = this;
+
+            FETCH_WORD_STATS_PAGED({
+                pageSize: pageSize,
+                pageIndex: pageIndex,
+            });
+        },
+        previous() {
+            this.REVIEW_WORD_STATS();
         },
         recentClass(item: WordStats) {
             const v = item.correct + item.wrong;
             if (v === 0) {
                 return "";
             }
-            return v > 0 ? "positive" : "negtive";
+            return v > 0 ? "positive" : "negative";
         },
-        ...mapActions(["FETCH_WORD_STATS_PAGED"]),
+        ...mapActions([
+            "FETCH_WORD_STATS_PAGED",
+            "UPDATE_WORD_STATS",
+            "FETCH_WORD_STATS_RECENT",
+        ]),
+        ...mapMutations(["REVIEW_WORD_STATS"]),
     },
     watch: {
         wordStatsPaged(newVal) {
@@ -257,7 +299,7 @@ export default {
 <style lang="scss" scoped>
 .container {
     display: flex;
-    background: #bbb;
+    background: #e9ecef;
     .left-tools {
         float: left;
     }
@@ -403,29 +445,9 @@ export default {
 }
 
 .tinder-buttons button {
-    border-radius: 50%;
-    line-height: 60px;
-    width: 60px;
-    border: 0;
-    background: #ffffff;
-    display: inline-block;
     margin: 0 8px;
 }
-
 .tinder-buttons button:focus {
     outline: 0;
-}
-
-.tinder-buttons i {
-    font-size: 32px;
-    vertical-align: middle;
-}
-
-.fa-heart {
-    color: #fface4;
-}
-
-.fa-remove {
-    color: #cdd6dd;
 }
 </style>

@@ -9,7 +9,7 @@ namespace ClassifiedAds.Persistence.MappingConfigurations
         {
             builder.ToTable("WordStats");
 
-            builder.Property(x => x.Id).ValueGeneratedOnAdd();
+            builder.Property(x => x.Id).HasDefaultValueSql("NEWID()");
         }
     }
 }

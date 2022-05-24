@@ -2,6 +2,8 @@
 using ClassifiedAds.Application;
 using ClassifiedAds.Application.Words.Commands;
 using ClassifiedAds.Application.Words.Queries;
+using ClassifiedAds.Application.WordStatss.Queries;
+using ClassifiedAds.CrossCuttingConcerns.ExtensionMethods;
 using ClassifiedAds.Domain.DTOs;
 using ClassifiedAds.Domain.Entities;
 using ClassifiedAds.WebAPI.Models.Words;
@@ -45,8 +47,45 @@ namespace ClassifiedAds.WebAPI.Controllers
         public async Task<ActionResult<PagedResult<WordStatsDTO>>> Get([FromQuery] GetWordStatsPagedQuery quey)
         {
             _logger.LogInformation("Getting paged word stats");
+            quey.UserId = User.GetUserId();
             var words = await _dispatcher.DispatchAsync(quey);
             return Ok(words);
+        }
+
+        [HttpGet("stats/recent")]
+        public async Task<ActionResult<List<WordStatsDTO>>> GetRecent()
+        {
+            _logger.LogInformation("Getting recent word stats");
+            var query = new GetWordStatsRecentQuery()
+            {
+                UserId = User.GetUserId(),
+            };
+            var words = await _dispatcher.DispatchAsync(query);
+            return Ok(words);
+        }
+
+        [HttpPut("stats")]
+        public async Task<ActionResult<List<WordStatsDTO>>> PutStats(WordStatsActionModel vm)
+        {
+            _logger.LogInformation("Decrease word stats");
+            var query = new GetWordStatsQuery()
+            {
+                UserId = User.GetUserId(),
+                WordId = vm.WordId,
+            };
+            var wordStats = await _dispatcher.DispatchAsync(query) ?? new WordStats() { UserId = query.UserId, WordId = query.WordId };
+            if (vm.OK)
+            {
+                wordStats.Correct++;
+            }
+            else
+            {
+                wordStats.Wrong++;
+            }
+
+            wordStats.UpdatedDateTime = DateTime.Now;
+            await _dispatcher.DispatchAsync(new AddOrUpdateEntityCommand<WordStats>(wordStats));
+            return Ok(wordStats);
         }
 
         [HttpGet("{id}")]
