@@ -26,7 +26,8 @@ SELECT
     ws.Id,
     Wrong,
     Correct,
-    ws.UpdatedDateTime
+    ws.UpdatedDateTime,
+    AudioFile
 FROM
     Words w
     LEFT JOIN WordStats ws ON w.Id = ws.WordId AND ws.UserId = @UserId
@@ -52,7 +53,8 @@ SELECT
     w.Text,
     w.PartOfSpeach,
     w.Description,
-	ws.UpdatedDateTime
+	ws.UpdatedDateTime,
+    AudioFile
 FROM
     WordStats ws
     JOIN Words w ON w.Id = ws.WordId

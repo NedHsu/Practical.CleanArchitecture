@@ -12,6 +12,8 @@ namespace ClassifiedAds.Persistence.MappingConfigurations
             builder.Property(x => x.Id).HasDefaultValueSql("NEWID()");
             builder.Property(x => x.PartOfSpeach).HasMaxLength(100);
             builder.Property(x => x.Text).HasMaxLength(100);
+            builder.Property(x => x.Description).HasMaxLength(200);
+            builder.Property(x => x.AudioFile).HasMaxLength(100);
         }
     }
 }

@@ -43,6 +43,7 @@ namespace ClassifiedAds.Persistence.Repositories
             else
             {
                 entity.UpdatedDateTime = _dateTimeProvider.OffsetNow;
+                DbSet.Update(entity);
             }
         }
 
@@ -104,6 +105,19 @@ namespace ClassifiedAds.Persistence.Repositories
         public async Task<List<T>> GetAllAsync()
         {
             return await _dbContext.Set<T>().ToListAsync();
+        }
+
+        public async Task<PagedResult<T>> GetPagedAsync(uint pageIndex, uint pageSize, Func<T, object> order = null)
+        {
+            uint count = (uint)await _dbContext.Set<T>().CountAsync();
+            int skip = (int)((pageIndex - 1) * pageSize);
+            var quey = _dbContext.Set<T>().AsQueryable();
+            if (order != null)
+            {
+                quey = quey.OrderBy(order).AsQueryable();
+            }
+
+            return new PagedResult<T>(await quey.Skip(skip).Take((int)pageSize).ToListAsync(), count, pageIndex, pageSize);
         }
     }
 }

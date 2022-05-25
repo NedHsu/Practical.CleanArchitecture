@@ -26,6 +26,7 @@ export interface WordStats {
     partOfSpeach: string;
     wrong: number;
     correct: number;
+    ok?: boolean;
 }
 
 export interface WordStatsPaged {

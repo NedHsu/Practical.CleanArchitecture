@@ -112,7 +112,6 @@
 <script lang="ts">
 import { onUnmounted } from "@vue/runtime-core";
 import { createNamespacedHelpers, useStore } from "vuex";
-import Spinner from "../../components/Spinner.vue";
 import { useVuelidate, Validation } from "@vuelidate/core";
 import { Ref } from "vue";
 import { Word } from "../../store/modules/word/types";
@@ -126,7 +125,6 @@ interface ValidType {
 }
 
 export default {
-    components: { Spinner },
     computed: {
         ...mapGetters([
             // "words"

@@ -63,7 +63,6 @@
 import { defineComponent } from "vue";
 import { onMounted, onUnmounted } from "@vue/runtime-core";
 import { mapActions, mapGetters, mapState, useStore } from "vuex";
-import Spinner from "../components/Spinner.vue";
 import { useI18n } from "vue-i18n";
 
 export default defineComponent({

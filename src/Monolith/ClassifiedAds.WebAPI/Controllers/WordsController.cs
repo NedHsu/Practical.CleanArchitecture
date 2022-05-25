@@ -67,7 +67,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         [HttpPut("stats")]
         public async Task<ActionResult<List<WordStatsDTO>>> PutStats(WordStatsActionModel vm)
         {
-            _logger.LogInformation("Decrease word stats");
+            _logger.LogInformation("Increase word stats");
             var query = new GetWordStatsQuery()
             {
                 UserId = User.GetUserId(),

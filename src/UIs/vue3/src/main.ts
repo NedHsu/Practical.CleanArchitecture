@@ -30,6 +30,8 @@ import Calendar from 'primevue/calendar';
 import Textarea from 'primevue/textarea';
 import Checkbox from 'primevue/checkbox';
 import Tag from 'primevue/tag';
+import Panel from 'primevue/panel';
+import Spinner from "./components/Spinner.vue";
 
 import en from './locales/en.yaml';
 import 'primeflex/primeflex.css';
@@ -83,6 +85,8 @@ authService.loadUser().then(user => {
     app.component('Textarea', Textarea);
     app.component('Checkbox', Checkbox);
     app.component('Tag', Tag);
+    app.component('Spinner', Spinner);
+    app.component('Panel', Panel);
 
     app.mount('#app');
 });

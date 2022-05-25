@@ -19,6 +19,7 @@ export default {
             totalPages: 0,
         } as WordStatsPaged,
         recentWords: [] as WordStats[],
+        loading: true,
     } as WordState),
     mutations: {
         [TYPES.FETCH_WORDS_START](state: WordState) {
@@ -48,8 +49,8 @@ export default {
             state.loading = false;
         },
         [TYPES.FETCH_WORD_STATS_PAGED_SUCCESS](state: WordState, data: any) {
-            state.wordStatsPaged = data;
             state.wordIndex = 0;
+            state.wordStatsPaged.items = data.items;
             state.loading = false;
         },
         [TYPES.FETCH_WORD_STATS_RECENT_SUCCESS](state: WordState, data: any) {
@@ -59,8 +60,18 @@ export default {
         [TYPES.UPDATE_WORD_STATS_SUCCESS](state: WordState, data: any) {
             state.loading = false;
         },
-        [TYPES.PUT_WORD_RECENT](state: WordState, data: any) {
-            state.recentWords.push(data);
+        [TYPES.PUT_WORD_RECENT](state: WordState, ok: boolean) {
+            const item = state.wordStatsPaged.items[state.wordIndex];
+            let wordStats = {
+                ...item,
+            }
+            if (ok) {
+                wordStats.correct++;
+            } else {
+                wordStats.wrong++;
+            }
+            state.recentWords = [...state.recentWords.slice(-19), wordStats];
+            item.ok = ok;
             state.wordIndex++;
         },
         [TYPES.REVIEW_WORD_STATS](state: WordState) {
@@ -102,15 +113,8 @@ export default {
                 });
         },
         [ACTIONS.UPDATE_WORD_STATS]({ commit, state }, ok) {
-            let wordStats = {
-                ...state.wordStatsPaged.items[state.wordIndex],
-            }
-            if (ok) {
-                wordStats.correct++;
-            } else {
-                wordStats.wrong++;
-            }
-            commit(TYPES.PUT_WORD_RECENT, wordStats);
+            const wordStats = state.wordStatsPaged.items[state.wordIndex];
+            commit(TYPES.PUT_WORD_RECENT, ok);
             return request.put("words/stats", {
                 OK: ok,
                 wordId: wordStats.wordId,
@@ -165,5 +169,6 @@ export default {
     },
     getters: {
         words: (state) => state.words,
+        wordStatsItems: (state) => state.wordStatsPaged.items,
     },
 } as Module<WordState, any>;

@@ -49,7 +49,6 @@
 import { onMounted, onUnmounted } from "@vue/runtime-core";
 import { defineComponent, Ref, ref, watchEffect } from "vue";
 import { mapGetters, mapState, useStore } from "vuex";
-import Spinner from "../components/Spinner.vue";
 import Calendar, {
     IEventObject,
     IEventScheduleObject,
@@ -64,9 +63,6 @@ import dayjs from "dayjs";
 import ACTIONS from "../store/modules/calendarEvent/actionTypes";
 
 export default defineComponent({
-    components: {
-        Spinner,
-    },
     computed: {
         ...mapGetters("calendarEvent", [
             // "calendarEvents"

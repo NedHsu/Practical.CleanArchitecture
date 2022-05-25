@@ -69,12 +69,10 @@
 <script lang="ts">
 import { onMounted, onUnmounted, withCtx } from "@vue/runtime-core";
 import { createNamespacedHelpers, useStore } from "vuex";
-import Spinner from "../../components/Spinner.vue";
 
 const { mapState, mapActions, mapGetters } = createNamespacedHelpers("product");
 
 export default {
-    components: { Spinner },
     computed: {
         ...mapGetters([
             // "products"

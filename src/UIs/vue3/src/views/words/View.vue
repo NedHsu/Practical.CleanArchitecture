@@ -1,10 +1,9 @@
 <template>
     <div class="container">
         <div class="left-tools">
-            Tools
-            <Button @click="addWord">Add</Button>
+            <Menu :model="menuItems" />
         </div>
-        <div class="tinder" ref="containerRef">
+        <div :class="{ tinder: true, loaded: !loading }" ref="containerRef">
             <div class="tinder-status">
                 <i class="fa fa-remove"></i>
                 <i class="fa fa-heart"></i>
@@ -12,10 +11,19 @@
 
             <div class="tinder-cards">
                 <div
-                    class="tinder-card"
-                    v-for="item in wordStatsPaged.items"
-                    :key="item.id"
+                    :class="{
+                        'tinder-card': true,
+                        removed: item.ok !== undefined,
+                    }"
+                    v-for="(item, i) in wordStatsItems"
+                    :key="i"
                     :ref="setItemRef"
+                    :style="{
+                        transform:
+                            `translate(${item.ok ? '' : '-'}` +
+                            moveOutWidth +
+                            `px, -100px) rotate(${item.ok ? '-' : ''}30deg)`,
+                    }"
                 >
                     <div class="flip-card">
                         <div class="flip-card-inner">
@@ -65,28 +73,33 @@
             </div>
         </div>
         <div class="recent-board">
-            Recent
-            <div
-                v-for="(item, index) in recentWords"
-                :key="index"
-                :class="recentClass(item)"
-            >
-                {{ item.text }}
-            </div>
+            <Panel header="Recent">
+                <ul>
+                    <li
+                        v-for="(item, index) in recentWords"
+                        :key="index"
+                        :class="recentClass(item)"
+                    >
+                        {{ item.text }}
+                    </li>
+                </ul>
+            </Panel>
         </div>
     </div>
 </template>
 <script lang="ts">
-import { onBeforeUpdate, onUpdated, ref } from "vue";
+import { onBeforeUpdate, onUpdated, reactive, ref } from "vue";
 import { createNamespacedHelpers } from "vuex";
 import Hammer from "hammerjs";
 import { WordStats } from "../../store/modules/word/types";
 
-const { mapState, mapActions, mapMutations } = createNamespacedHelpers("word");
+const { mapState, mapActions, mapMutations, mapGetters } =
+    createNamespacedHelpers("word");
 
 export default {
     setup() {
-        let itemRefs: HTMLElement[] = [];
+        const moveOutWidth = document.body.clientWidth * 1.5;
+        let itemRefs: any[] = reactive([]);
         const containerRef = ref<HTMLElement>();
         const setItemRef = (el: HTMLElement) => {
             if (el) {
@@ -109,38 +122,10 @@ export default {
                     "px)";
                 card.style.opacity = (10 - index) / 10 + "";
             });
-            if (containerRef instanceof HTMLElement) {
-                containerRef.classList.add("loaded");
-            }
-        };
-
-        const ok = (event: PointerEvent, love: boolean) => {
-            const activeCards = itemRefs.filter(
-                (x) => !x.classList.contains("removed")
-            );
-            var moveOutWidth = document.body.clientWidth * 1.5;
-
-            if (!activeCards.length) return false;
-
-            var card = activeCards[0];
-
-            card.classList.add("removed");
-
-            if (love) {
-                card.style.transform =
-                    "translate(" + moveOutWidth + "px, -100px) rotate(-30deg)";
-            } else {
-                card.style.transform =
-                    "translate(-" + moveOutWidth + "px, -100px) rotate(30deg)";
-            }
-
-            initCards();
-            event.preventDefault();
-            return true;
         };
 
         onBeforeUpdate(() => {
-            itemRefs = [];
+            itemRefs = reactive([]);
         });
 
         onUpdated(() => {
@@ -153,7 +138,7 @@ export default {
             itemRefs,
             containerRef,
             initCards,
-            ok,
+            moveOutWidth,
         };
     },
     mounted() {
@@ -164,12 +149,29 @@ export default {
         return {
             pageSize: 10,
             pageIndex: 1,
+            menuItems: [
+                {
+                    label: "Words",
+                    items: [
+                        {
+                            label: "Add",
+                            icon: "pi pi-book",
+                            command: () => {
+                                this.$router.push({
+                                    name: "Words",
+                                });
+                            },
+                        },
+                    ],
+                },
+            ],
         };
     },
     computed: {
-        ...mapState(["word", "wordStatsPaged", "recentWords", "wordIndex"]),
+        ...mapState(["word", "recentWords", "wordIndex", "loading"]),
+        ...mapGetters(["wordStatsItems"]),
         wordLength(): number {
-            return this.wordStatsPaged.items.length;
+            return this.wordStatsItems.length;
         },
     },
     methods: {
@@ -178,18 +180,13 @@ export default {
                 e.target.parentElement?.classList.toggle("back");
             }
         },
-        addWord() {
-            this.$router.push({
-                name: "Words",
-            });
-        },
         love(event: PointerEvent) {
-            this.ok(event, true);
             this.UPDATE_WORD_STATS(true);
+            event.preventDefault();
         },
         nope(event: PointerEvent) {
-            this.ok(event, false);
             this.UPDATE_WORD_STATS(false);
+            event.preventDefault();
         },
         next() {
             const { FETCH_WORD_STATS_PAGED, pageSize, pageIndex } = this;
@@ -203,7 +200,7 @@ export default {
             this.REVIEW_WORD_STATS();
         },
         recentClass(item: WordStats) {
-            const v = item.correct + item.wrong;
+            const v = item.correct - item.wrong;
             if (v === 0) {
                 return "";
             }
@@ -216,11 +213,7 @@ export default {
         ]),
         ...mapMutations(["REVIEW_WORD_STATS"]),
     },
-    watch: {
-        wordStatsPaged(newVal) {
-            console.log(newVal);
-        },
-    },
+    watch: {},
     updated() {
         const { containerRef, initCards, itemRefs } = this;
 
@@ -303,10 +296,20 @@ export default {
     .left-tools {
         float: left;
     }
-    .recent-board {
-        float: right;
+}
+.recent-board {
+    float: right;
+    .positive {
+        color: forestgreen;
+    }
+    .negative {
+        color: maroon;
+    }
+    li {
+        cursor: pointer;
     }
 }
+
 /* The flip card container - set the width and height to whatever you want. We have added the border property to demonstrate that the flip itself goes out of the box on hover (remove perspective if you don't want the 3D effect */
 .flip-card {
     background-color: transparent;
@@ -361,7 +364,7 @@ export default {
 
 .tinder {
     width: 100vw;
-    height: 100vh;
+    height: calc(70vh + 140px);
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -406,7 +409,7 @@ export default {
     text-align: center;
     display: flex;
     justify-content: center;
-    align-items: flex-end;
+    align-items: flex-start;
     z-index: 1;
 }
 
