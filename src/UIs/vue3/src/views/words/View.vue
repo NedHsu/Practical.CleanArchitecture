@@ -56,6 +56,7 @@
                     @click="previous"
                 />
                 <Button
+                    
                     icon="pi pi-volume-up"
                     class="p-button-rounded p-button-warning"
                     @click="speech"
@@ -63,12 +64,12 @@
                 <Button
                     icon="pi pi-times"
                     class="p-button-rounded p-button-danger"
-                    @click="nope"
+                    @click="e => love(e, false)"
                 />
                 <Button
                     icon="pi pi-check"
                     class="p-button-rounded p-button-success"
-                    @click="love"
+                    @click="e => love(e, true)"
                 />
                 <Button
                     icon="pi pi-heart"
@@ -102,6 +103,7 @@ import { onBeforeUpdate, onUpdated, reactive, ref } from "vue";
 import { createNamespacedHelpers } from "vuex";
 import Hammer from "hammerjs";
 import { WordStats } from "../../store/modules/word/types";
+import { useRouter } from 'vue-router';
 
 const { mapState, mapActions, mapMutations, mapGetters } =
     createNamespacedHelpers("word");
@@ -110,12 +112,43 @@ export default {
     setup() {
         const moveOutWidth = document.body.clientWidth * 1.5;
         let itemRefs: any[] = reactive([]);
+        let autoPlay = ref(false);
         const containerRef = ref<HTMLElement>();
+        const router = useRouter();
         const setItemRef = (el: HTMLElement) => {
             if (el) {
                 itemRefs.push(el);
             }
         };
+
+        const menuItems = [
+                {
+                    label: "Words",
+                    items: [
+                        {
+                            label: "Add",
+                            icon: "pi pi-book",
+                            command: () => {
+                                router.push({
+                                    name: "Words",
+                                });
+                            },
+                        },
+                    ],
+                },
+                {
+                    label: "Settings",
+                    items: [
+                        {
+                            label: "Auto play",
+                            icon: "pi pi-volume-up",
+                            command: () => {
+                                autoPlay.value = !autoPlay;
+                            },
+                        },
+                    ]
+                }
+            ];
 
         const initCards = () => {
             const wordLength = itemRefs.length;
@@ -149,6 +182,7 @@ export default {
             containerRef,
             initCards,
             moveOutWidth,
+            menuItems,
         };
     },
     mounted() {
@@ -157,24 +191,9 @@ export default {
     },
     data() {
         return {
+            autoPlay: true,
             pageSize: 10,
             pageIndex: 1,
-            menuItems: [
-                {
-                    label: "Words",
-                    items: [
-                        {
-                            label: "Add",
-                            icon: "pi pi-book",
-                            command: () => {
-                                this.$router.push({
-                                    name: "Words",
-                                });
-                            },
-                        },
-                    ],
-                },
-            ],
         };
     },
     computed: {
@@ -190,13 +209,10 @@ export default {
                 e.target.parentElement?.classList.toggle("back");
             }
         },
-        love(event: PointerEvent) {
-            this.UPDATE_WORD_STATS(true);
+        love(event: PointerEvent, ok: boolean) {
+            this.UPDATE_WORD_STATS(ok);
             event.preventDefault();
-        },
-        nope(event: PointerEvent) {
-            this.UPDATE_WORD_STATS(false);
-            event.preventDefault();
+            this.speech();
         },
         next() {
             const { FETCH_WORD_STATS_PAGED, pageSize, pageIndex } = this;
@@ -210,7 +226,12 @@ export default {
             this.REVIEW_WORD_STATS();
         },
         speech() {
-            const audio = new Audio(require(`./${this.wordStats.audioFile}`));
+            if (!this.wordStats.audioFile) {
+                return;
+            }
+
+            const url = new URL(`../../assets/audio/${this.wordStats.audioFile}`, import.meta.url).href;
+            const audio = new Audio(url);
             audio.play();
         },
         recentClass(item: WordStats) {
