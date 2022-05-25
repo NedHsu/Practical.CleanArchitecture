@@ -56,6 +56,11 @@
                     @click="previous"
                 />
                 <Button
+                    icon="pi pi-volume-up"
+                    class="p-button-rounded p-button-warning"
+                    @click="speech"
+                />
+                <Button
                     icon="pi pi-times"
                     class="p-button-rounded p-button-danger"
                     @click="nope"
@@ -66,8 +71,13 @@
                     @click="love"
                 />
                 <Button
-                    icon="pi pi-step-forward-alt"
+                    icon="pi pi-heart"
                     class="p-button-rounded p-button-help"
+                    @click="speech"
+                />
+                <Button
+                    icon="pi pi-step-forward-alt"
+                    class="p-button-rounded p-button-info"
                     @click="next"
                 />
             </div>
@@ -168,8 +178,8 @@ export default {
         };
     },
     computed: {
-        ...mapState(["word", "recentWords", "wordIndex", "loading"]),
-        ...mapGetters(["wordStatsItems"]),
+        ...mapState(["word", "recentWords", "loading"]),
+        ...mapGetters(["wordStatsItems", "wordStats"]),
         wordLength(): number {
             return this.wordStatsItems.length;
         },
@@ -198,6 +208,10 @@ export default {
         },
         previous() {
             this.REVIEW_WORD_STATS();
+        },
+        speech() {
+            const audio = new Audio(require(`./${this.wordStats.audioFile}`));
+            audio.play();
         },
         recentClass(item: WordStats) {
             const v = item.correct - item.wrong;

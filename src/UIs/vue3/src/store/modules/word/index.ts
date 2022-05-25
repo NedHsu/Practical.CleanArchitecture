@@ -170,5 +170,6 @@ export default {
     getters: {
         words: (state) => state.words,
         wordStatsItems: (state) => state.wordStatsPaged.items,
+        wordStats: (state) => state.wordStatsPaged.items[state.wordIndex],
     },
 } as Module<WordState, any>;
