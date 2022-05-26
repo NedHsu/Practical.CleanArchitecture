@@ -19,5 +19,7 @@ namespace ClassifiedAds.Domain.DTOs
         public int Wrong { get; set; }
 
         public int Correct { get; set; }
+
+        public string AudioFile { get; set; }
     }
 }

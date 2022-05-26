@@ -43,6 +43,14 @@ namespace ClassifiedAds.WebAPI.Controllers
             return Ok(model);
         }
 
+        [HttpGet("paged")]
+        public async Task<ActionResult<PagedResult<Word>>> Get([FromQuery] GetWordPagedQuery quey)
+        {
+            _logger.LogInformation("Getting paged word");
+            var words = await _dispatcher.DispatchAsync(quey);
+            return Ok(words);
+        }
+
         [HttpGet("stats/paged")]
         public async Task<ActionResult<PagedResult<WordStatsDTO>>> Get([FromQuery] GetWordStatsPagedQuery quey)
         {
