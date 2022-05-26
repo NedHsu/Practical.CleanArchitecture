@@ -13,6 +13,8 @@ namespace ClassifiedAds.Domain.Entities
 
         public int Correct { get; set; }
 
+        public bool IsFav { get; set; }
+
         public Guid WordId { get; set; }
         public Word Word { get; set; }
 

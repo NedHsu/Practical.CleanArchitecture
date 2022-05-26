@@ -5,6 +5,7 @@ export interface WordState {
     wordStatsPaged: WordStatsPaged;
     recentWords: WordStats[];
     loading: boolean;
+    wordsLoading: boolean;
     saved: boolean;
     deleted: boolean;
     error?: any;
@@ -27,6 +28,7 @@ export interface WordStats {
     wrong: number;
     correct: number;
     ok?: boolean;
+    isFav: boolean;
 }
 
 export interface WordStatsPaged {

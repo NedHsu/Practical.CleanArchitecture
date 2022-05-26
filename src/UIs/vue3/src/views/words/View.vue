@@ -2,11 +2,34 @@
     <div class="container">
         <div class="left-tools">
             <Menu :model="menuItems" />
+            <Panel header="Settings">
+                <InputNumber v-model="intervalMins" prefix="Over  " suffix="  mins" :min="0" :max="99999" />
+                <ToggleButton
+                    v-model="autoPlay"
+                    onLabel="Auto Play"
+                    offLabel="Mute"
+                    onIcon="pi pi-volume-up"
+                    offIcon="pi pi-volume-off"
+                />
+            </Panel>
         </div>
-        <div :class="{ tinder: true, loaded: !loading }" ref="containerRef">
-            <div class="tinder-status">
-                <i class="fa fa-remove"></i>
-                <i class="fa fa-heart"></i>
+        <div
+            :class="{ tinder: true, loaded: !wordsLoading }"
+            ref="containerRef"
+        >
+            <div
+                :class="{
+                    'tinder-status': true,
+                    tinder_ok: loved == true,
+                    tinder_like: loved == 'like',
+                    tinder_unlike: loved == 'unlike',
+                    tinder_nope: loved == false,
+                }"
+            >
+                <i class="pi pi-times"></i>
+                <i class="pi pi-heart-fill"></i>
+                <i class="pi pi-heart"></i>
+                <i class="pi pi-thumbs-up"></i>
             </div>
 
             <div class="tinder-cards">
@@ -56,7 +79,6 @@
                     @click="previous"
                 />
                 <Button
-                    
                     icon="pi pi-volume-up"
                     class="p-button-rounded p-button-warning"
                     @click="speech"
@@ -64,17 +86,17 @@
                 <Button
                     icon="pi pi-times"
                     class="p-button-rounded p-button-danger"
-                    @click="e => love(e, false)"
+                    @click="(e) => love(false, e)"
                 />
                 <Button
                     icon="pi pi-check"
                     class="p-button-rounded p-button-success"
-                    @click="e => love(e, true)"
+                    @click="(e) => love(true, e)"
                 />
                 <Button
-                    icon="pi pi-heart"
+                    icon="pi pi-heart-fill"
                     class="p-button-rounded p-button-help"
-                    @click="speech"
+                    @click="favorite"
                 />
                 <Button
                     icon="pi pi-step-forward-alt"
@@ -90,12 +112,15 @@
                         v-for="(item, index) in recentWords"
                         :key="index"
                         :class="recentClass(item)"
+                        @click="popRecentWord(item)"
                     >
                         {{ item.text }}
                     </li>
                 </ul>
             </Panel>
         </div>
+        <Spinner :loading="wordsLoading" :fullscreen="true" />
+        <Toast position="bottom-right" group="br" />
     </div>
 </template>
 <script lang="ts">
@@ -103,7 +128,7 @@ import { onBeforeUpdate, onUpdated, reactive, ref } from "vue";
 import { createNamespacedHelpers } from "vuex";
 import Hammer from "hammerjs";
 import { WordStats } from "../../store/modules/word/types";
-import { useRouter } from 'vue-router';
+import { useRouter } from "vue-router";
 
 const { mapState, mapActions, mapMutations, mapGetters } =
     createNamespacedHelpers("word");
@@ -112,7 +137,8 @@ export default {
     setup() {
         const moveOutWidth = document.body.clientWidth * 1.5;
         let itemRefs: any[] = reactive([]);
-        let autoPlay = ref(false);
+        let autoPlay = ref(true);
+        let intervalMins = ref(30);
         const containerRef = ref<HTMLElement>();
         const router = useRouter();
         const setItemRef = (el: HTMLElement) => {
@@ -122,33 +148,30 @@ export default {
         };
 
         const menuItems = [
-                {
-                    label: "Words",
-                    items: [
-                        {
-                            label: "Add",
-                            icon: "pi pi-book",
-                            command: () => {
-                                router.push({
-                                    name: "Words",
-                                });
-                            },
+            {
+                label: "Words",
+                items: [
+                    {
+                        label: "Add",
+                        icon: "pi pi-book",
+                        command: () => {
+                            router.push({
+                                name: "Words",
+                            });
                         },
-                    ],
-                },
-                {
-                    label: "Settings",
-                    items: [
-                        {
-                            label: "Auto play",
-                            icon: "pi pi-volume-up",
-                            command: () => {
-                                autoPlay.value = !autoPlay;
-                            },
+                    },
+                    {
+                        label: "Favorite",
+                        icon: "pi pi-heart",
+                        command: () => {
+                            router.push({
+                                name: "Favorite",
+                            });
                         },
-                    ]
-                }
-            ];
+                    },
+                ],
+            },
+        ];
 
         const initCards = () => {
             const wordLength = itemRefs.length;
@@ -172,7 +195,6 @@ export default {
         });
 
         onUpdated(() => {
-            console.log(itemRefs);
             initCards();
         });
 
@@ -183,21 +205,29 @@ export default {
             initCards,
             moveOutWidth,
             menuItems,
+            autoPlay,
+            intervalMins,
         };
     },
-    mounted() {
-        this.next();
+    async mounted() {
         this.FETCH_WORD_STATS_RECENT();
+        await this.next();
+        this.first = false;
+        document.addEventListener("keypress", this.keyHandler);
+    },
+    unmounted() {
+        document.removeEventListener("keypress", this.keyHandler);
     },
     data() {
         return {
-            autoPlay: true,
             pageSize: 10,
             pageIndex: 1,
+            first: true,
+            loved: null as "like" | "unlike" | boolean | null,
         };
     },
     computed: {
-        ...mapState(["word", "recentWords", "loading"]),
+        ...mapState(["word", "recentWords", "loading", "wordsLoading"]),
         ...mapGetters(["wordStatsItems", "wordStats"]),
         wordLength(): number {
             return this.wordStatsItems.length;
@@ -209,30 +239,94 @@ export default {
                 e.target.parentElement?.classList.toggle("back");
             }
         },
-        love(event: PointerEvent, ok: boolean) {
-            this.UPDATE_WORD_STATS(ok);
-            event.preventDefault();
-            this.speech();
+        popRecentWord(word: WordStats) {
+            this.POP_WORD_STATS(word);
         },
-        next() {
-            const { FETCH_WORD_STATS_PAGED, pageSize, pageIndex } = this;
-
-            FETCH_WORD_STATS_PAGED({
-                pageSize: pageSize,
-                pageIndex: pageIndex,
+        love(ok: boolean, event?: PointerEvent) {
+            this.setStatus(ok);
+            this.UPDATE_WORD_STATS({ ok: ok }).then(() => {
+                this.loved = null;
             });
+            event?.preventDefault();
+            if (this.autoPlay) {
+                this.speech();
+            }
+        },
+        async next() {
+            const { FETCH_WORD_STATS_PAGED, pageSize, pageIndex, intervalMins } = this;
+
+            await FETCH_WORD_STATS_PAGED({
+                pageSize,
+                pageIndex,
+                intervalMins,
+            });
+            if (!this.first && this.autoPlay) {
+                this.speech();
+            }
         },
         previous() {
             this.REVIEW_WORD_STATS();
         },
         speech() {
-            if (!this.wordStats.audioFile) {
+            if (!this.wordStats?.audioFile) {
                 return;
             }
 
-            const url = new URL(`../../assets/audio/${this.wordStats.audioFile}`, import.meta.url).href;
+            const url = new URL(
+                `../../assets/audio/${this.wordStats.audioFile}`,
+                import.meta.url
+            ).href;
             const audio = new Audio(url);
             audio.play();
+        },
+        favorite() {
+            if (!this.wordStats) return;
+            this.setStatus(this.wordStats.isFav ? "like" : "unlike");
+            this.UPDATE_WORD_STATS({ isFav: !this.wordStats.isFav });
+        },
+        copy() {
+            if (!this.wordStats) return;
+            const text = (this.wordStats.text as string).replaceAll(/[^a-zA-Z.]+/g, '');
+            navigator.clipboard.writeText(text).then(() => {
+                this.$toast.add({severity:'success', summary: 'Text Coppied!', detail: text, group: 'br', life: 3000})
+            });
+        },
+        setStatus(loved: "like" | "unlike" | boolean) {
+            this.loved = loved;
+            setTimeout(() => {
+                this.loved = null;
+            }, 500);
+        },
+        keyHandler(e: KeyboardEvent) {
+            if (!e) {
+                return;
+            }
+
+            const { love, next, previous, favorite, speech, copy } = this;
+            switch (e.key) {
+                case "f":
+                    love(true);
+                    break;
+                case "d":
+                    love(false);
+                    break;
+                case "g":
+                    favorite();
+                    break;
+                case "s":
+                    next();
+                    break;
+                case "a":
+                    previous();
+                    break;
+                case "v":
+                    speech();
+                    break;
+                case "c":
+                    copy();
+                    break;
+            }
+            e.preventDefault();
         },
         recentClass(item: WordStats) {
             const v = item.correct - item.wrong;
@@ -246,7 +340,7 @@ export default {
             "UPDATE_WORD_STATS",
             "FETCH_WORD_STATS_RECENT",
         ]),
-        ...mapMutations(["REVIEW_WORD_STATS"]),
+        ...mapMutations(["REVIEW_WORD_STATS", "POP_WORD_STATS"]),
     },
     watch: {},
     updated() {
@@ -265,7 +359,7 @@ export default {
                 if (event.deltaX === 0) return;
                 if (event.center.x === 0 && event.center.y === 0) return;
 
-                containerRef?.classList.toggle("tinder_love", event.deltaX > 0);
+                containerRef?.classList.toggle("tinder_like", event.deltaX > 0);
                 containerRef?.classList.toggle("tinder_nope", event.deltaX < 0);
 
                 var xMulti = event.deltaX * 0.03;
@@ -285,7 +379,7 @@ export default {
             hammertime.on("panend", function (event) {
                 if (event.target !== el) return;
                 el.classList.remove("moving");
-                containerRef?.classList.remove("tinder_love");
+                containerRef?.classList.remove("tinder_like");
                 containerRef?.classList.remove("tinder_nope");
 
                 var moveOutWidth = document.body.clientWidth;
@@ -428,12 +522,10 @@ export default {
     margin-left: -50px;
 }
 
-.tinder_love .fa-heart {
-    opacity: 0.7;
-    transform: scale(1);
-}
-
-.tinder_nope .fa-remove {
+.tinder_like .pi-heart-fill,
+.tinder_unlike .pi-heart-fill,
+.tinder_nope .pi-times,
+.tinder_ok .pi-thumbs-up {
     opacity: 0.7;
     transform: scale(1);
 }

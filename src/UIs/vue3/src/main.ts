@@ -20,6 +20,7 @@ import Toast from 'primevue/toast';
 import SelectButton from 'primevue/selectbutton';
 import ToastService from 'primevue/toastservice';
 import InputText from 'primevue/inputtext';
+import InputNumber from 'primevue/inputnumber';
 import ColorPicker from 'primevue/colorpicker';
 import Card from 'primevue/card';
 import Dropdown from 'primevue/dropdown';
@@ -31,6 +32,7 @@ import Textarea from 'primevue/textarea';
 import Checkbox from 'primevue/checkbox';
 import Tag from 'primevue/tag';
 import Panel from 'primevue/panel';
+import ToggleButton from 'primevue/togglebutton';
 import Spinner from "./components/Spinner.vue";
 
 import en from './locales/en.yaml';
@@ -87,6 +89,8 @@ authService.loadUser().then(user => {
     app.component('Tag', Tag);
     app.component('Spinner', Spinner);
     app.component('Panel', Panel);
+    app.component('ToggleButton', ToggleButton);
+    app.component('InputNumber', InputNumber);
 
     app.mount('#app');
 });

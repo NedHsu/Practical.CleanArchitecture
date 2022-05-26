@@ -15,7 +15,7 @@ namespace ClassifiedAds.Persistence.Repositories
         {
         }
 
-        public async Task<PagedResult<WordStatsDTO>> GetWordStatsPagedAsync(Guid userId, uint pageIndex, uint pageSize)
+        public async Task<PagedResult<WordStatsDTO>> GetWordStatsPagedAsync(Guid userId, uint pageIndex, uint pageSize, uint intervalMins)
         {
             string sql = @"
 SELECT
@@ -31,12 +31,13 @@ SELECT
 FROM
     Words w
     LEFT JOIN WordStats ws ON w.Id = ws.WordId AND ws.UserId = @UserId
-WHERE ws.UpdatedDateTime is NULL OR DATEDIFF(MINUTE, ws.UpdatedDateTime, GETDATE()) > 30";
+WHERE ws.UpdatedDateTime is NULL OR DATEDIFF(MINUTE, ws.UpdatedDateTime, GETDATE()) > @IntervalMins";
 
             string orderBy = "ISNULL(ws.Correct, 0) - ISNULL(ws.Wrong, 0)";
             var param = new Dictionary<string, object>()
             {
                 { "@UserId", userId },
+                { "@IntervalMins", (int)intervalMins },
             };
             return await GetPagedAsync<WordStatsDTO>(pageIndex, pageSize, sql, param, orderBy);
         }

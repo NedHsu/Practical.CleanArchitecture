@@ -82,13 +82,21 @@ namespace ClassifiedAds.WebAPI.Controllers
                 WordId = vm.WordId,
             };
             var wordStats = await _dispatcher.DispatchAsync(query) ?? new WordStats() { UserId = query.UserId, WordId = query.WordId };
-            if (vm.OK)
+            if (vm.OK.HasValue)
             {
-                wordStats.Correct++;
+                if (vm.OK.Value)
+                {
+                    wordStats.Correct++;
+                }
+                else
+                {
+                    wordStats.Wrong++;
+                }
             }
-            else
+            
+            if (vm.IsFav.HasValue)
             {
-                wordStats.Wrong++;
+                wordStats.IsFav = vm.IsFav.Value;
             }
 
             wordStats.UpdatedDateTime = DateTime.Now;

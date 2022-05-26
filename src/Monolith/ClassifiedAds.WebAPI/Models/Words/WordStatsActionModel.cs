@@ -8,6 +8,8 @@ namespace ClassifiedAds.WebAPI.Models.Words
     {
         public Guid WordId { get; set; }
 
-        public bool OK { get; set; }
+        public bool? OK { get; set; }
+
+        public bool? IsFav { get; set; }
     }
 }

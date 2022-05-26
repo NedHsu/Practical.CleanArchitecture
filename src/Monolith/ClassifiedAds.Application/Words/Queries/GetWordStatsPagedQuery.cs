@@ -15,6 +15,8 @@ namespace ClassifiedAds.Application.Words.Queries
         public uint PageSize { get; set; } = 100;
 
         public uint PageIndex { get; set; } = 1;
+
+        public uint IntervalMins { get; set; } = 30;
     }
 
     [AuditLog]
@@ -30,7 +32,7 @@ namespace ClassifiedAds.Application.Words.Queries
 
         public async Task<PagedResult<WordStatsDTO>> HandleAsync(GetWordStatsPagedQuery query, CancellationToken cancellationToken = default)
         {
-            return await _wordRepository.GetWordStatsPagedAsync(query.UserId, query.PageIndex, query.PageSize);
+            return await _wordRepository.GetWordStatsPagedAsync(query.UserId, query.PageIndex, query.PageSize, query.IntervalMins);
         }
     }
 }

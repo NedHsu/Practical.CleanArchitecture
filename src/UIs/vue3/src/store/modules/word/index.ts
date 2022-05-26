@@ -4,6 +4,7 @@ import request from '../../../utils/request';
 import TYPES from './mutationTypes';
 import ACTIONS from './actionTypes';
 import { Word, WordState, WordStats, WordStatsPaged } from './types';
+import { boolean } from 'yup';
 
 export default {
     namespaced: true,
@@ -20,14 +21,18 @@ export default {
         } as WordStatsPaged,
         recentWords: [] as WordStats[],
         loading: true,
+        wordsLoading: true,
     } as WordState),
     mutations: {
-        [TYPES.FETCH_WORDS_START](state: WordState) {
+        [TYPES.FETCH_WORD_START](state: WordState) {
             state.loading = true;
+        },
+        [TYPES.FETCH_WORDS_START](state: WordState) {
+            state.wordsLoading = true;
         },
         [TYPES.FETCH_WORDS_SUCCESS](state: WordState, data: any) {
             state.words = data;
-            state.loading = false;
+            state.wordsLoading = false;
         },
         [TYPES.FETCH_WORDS_FAIL](state: WordState) {
             state.loading = false;
@@ -41,7 +46,6 @@ export default {
             state.loading = false;
         },
         [TYPES.UPDATE_WORD_SUCCESS](state: WordState, data: any) {
-
             state.loading = false;
         },
         [TYPES.DEL_WORD_SUCCESS](state: WordState, id: string) {
@@ -51,7 +55,7 @@ export default {
         [TYPES.FETCH_WORD_STATS_PAGED_SUCCESS](state: WordState, data: any) {
             state.wordIndex = 0;
             state.wordStatsPaged.items = data.items;
-            state.loading = false;
+            state.wordsLoading = false;
         },
         [TYPES.FETCH_WORD_STATS_RECENT_SUCCESS](state: WordState, data: any) {
             state.recentWords = data;
@@ -60,26 +64,34 @@ export default {
         [TYPES.UPDATE_WORD_STATS_SUCCESS](state: WordState, data: any) {
             state.loading = false;
         },
-        [TYPES.PUT_WORD_RECENT](state: WordState, ok: boolean) {
+        [TYPES.PUT_WORD_RECENT](state: WordState, actions: { ok?: boolean, isFav?: boolean, }) {
             const item = state.wordStatsPaged.items[state.wordIndex];
-            let wordStats = {
-                ...item,
+            if (actions.ok !== undefined) {
+                if (actions.ok) {
+                    item.correct++;
+                } else {
+                    item.wrong++;
+                }
+                state.wordIndex++;
+                item.ok = actions.ok;
+                state.recentWords = [...state.recentWords.slice(-19), item];
             }
-            if (ok) {
-                wordStats.correct++;
-            } else {
-                wordStats.wrong++;
+
+            if (actions.isFav !== undefined) {
+                item.isFav = actions.isFav;
             }
-            state.recentWords = [...state.recentWords.slice(-19), wordStats];
-            item.ok = ok;
-            state.wordIndex++;
         },
         [TYPES.REVIEW_WORD_STATS](state: WordState) {
-            console.log('review');
             state.wordIndex = 0;
             state.wordStatsPaged.items = state.recentWords;
             state.recentWords = [];
-        }
+        },
+        [TYPES.POP_WORD_STATS](state: WordState, word: WordStats) {
+            state.recentWords = state.recentWords.filter(x => x !== word);
+            word.ok = undefined;
+            state.wordStatsPaged.items = [word, ...state.wordStatsPaged.items.filter(x => x.ok == null)];
+            state.wordIndex = 0;
+        },
     },
     actions: {
         [ACTIONS.FETCH_WORDS]({ commit }) {
@@ -112,12 +124,12 @@ export default {
                     commit(TYPES.FETCH_WORDS_FAIL, error);
                 });
         },
-        [ACTIONS.UPDATE_WORD_STATS]({ commit, state }, ok) {
+        [ACTIONS.UPDATE_WORD_STATS]({ commit, state }, actions) {
             const wordStats = state.wordStatsPaged.items[state.wordIndex];
-            commit(TYPES.PUT_WORD_RECENT, ok);
+            commit(TYPES.PUT_WORD_RECENT, actions);
             return request.put("words/stats", {
-                OK: ok,
                 wordId: wordStats.wordId,
+                ...actions,
             })
                 .then((rs) => {
                     commit(TYPES.UPDATE_WORD_STATS_SUCCESS, rs.data);

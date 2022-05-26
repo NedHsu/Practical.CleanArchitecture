@@ -5,7 +5,7 @@ namespace ClassifiedAds.Domain.Repositories
 {
     public interface IWordRepository : IBaseDapperRepository<Word>
     {
-        Task<PagedResult<WordStatsDTO>> GetWordStatsPagedAsync(Guid userId, uint pageIndex, uint pageSize);
+        Task<PagedResult<WordStatsDTO>> GetWordStatsPagedAsync(Guid userId, uint pageIndex, uint pageSize, uint intervalMins = 30);
 
         Task<IEnumerable<WordStatsDTO>> GetWordStatsRecentAsync(Guid userId);
     }
