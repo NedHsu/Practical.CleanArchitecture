@@ -1,9 +1,19 @@
 <template>
-    <div class="container">
-        <div class="left-tools">
-            <Menu :model="menuItems" />
-            <Panel header="Settings">
-                <InputNumber v-model="intervalMins" prefix="Over  " suffix="  mins" :min="0" :max="99999" />
+    <div class="grid grid-nogutter container">
+        <div class="col-3 tools">
+            <PanelMenu
+                :model="menuItems"
+                class="tool"
+                :expandedKeys="expandedKeys"
+            />
+            <Panel header="Settings" class="tool">
+                <InputNumber
+                    v-model="intervalMins"
+                    prefix="Over  "
+                    suffix="  mins"
+                    :min="0"
+                    :max="99999"
+                />
                 <ToggleButton
                     v-model="autoPlay"
                     onLabel="Auto Play"
@@ -14,7 +24,7 @@
             </Panel>
         </div>
         <div
-            :class="{ tinder: true, loaded: !wordsLoading }"
+            :class="{ tinder: true, loaded: !wordsLoading, col: true }"
             ref="containerRef"
         >
             <div
@@ -105,7 +115,7 @@
                 />
             </div>
         </div>
-        <div class="recent-board">
+        <div class="col-3 recent-board">
             <Panel header="Recent">
                 <ul>
                     <li
@@ -118,10 +128,19 @@
                     </li>
                 </ul>
             </Panel>
+            <div class="stats-bar">
+                <div
+                    class="correct"
+                    :style="{ width: correctPercentage + '%' }"
+                >
+                    {{ correct }}
+                </div>
+                <div class="wrong">{{ wrong }}</div>
+            </div>
         </div>
-        <Spinner :loading="wordsLoading" :fullscreen="true" />
-        <Toast position="bottom-right" group="br" />
     </div>
+    <Spinner :loading="wordsLoading" :fullscreen="true" />
+    <Toast position="bottom-right" group="br" />
 </template>
 <script lang="ts">
 import { onBeforeUpdate, onUpdated, reactive, ref } from "vue";
@@ -149,10 +168,12 @@ export default {
 
         const menuItems = [
             {
+                key: "w",
                 label: "Words",
                 items: [
                     {
-                        label: "Add",
+                        key: "w_1",
+                        label: "Edit",
                         icon: "pi pi-book",
                         command: () => {
                             router.push({
@@ -160,15 +181,16 @@ export default {
                             });
                         },
                     },
-                    {
-                        label: "Favorite",
-                        icon: "pi pi-heart",
-                        command: () => {
-                            router.push({
-                                name: "Favorite",
-                            });
-                        },
-                    },
+                    // {
+                    //     key: "w_2",
+                    //     label: "Favorite",
+                    //     icon: "pi pi-heart",
+                    //     command: () => {
+                    //         router.push({
+                    //             name: "Favorite",
+                    //         });
+                    //     },
+                    // },
                 ],
             },
         ];
@@ -210,6 +232,9 @@ export default {
         };
     },
     async mounted() {
+        this.expandedKeys = this.menuItems.reduce((p, n) => {
+            return { [n.key]: true, ...p };
+        }, {});
         this.FETCH_WORD_STATS_RECENT();
         await this.next();
         this.first = false;
@@ -220,6 +245,7 @@ export default {
     },
     data() {
         return {
+            expandedKeys: {},
             pageSize: 10,
             pageIndex: 1,
             first: true,
@@ -227,10 +253,21 @@ export default {
         };
     },
     computed: {
-        ...mapState(["word", "recentWords", "loading", "wordsLoading"]),
+        ...mapState([
+            "word",
+            "recentWords",
+            "loading",
+            "wordsLoading",
+            "correct",
+            "wrong",
+        ]),
         ...mapGetters(["wordStatsItems", "wordStats"]),
         wordLength(): number {
             return this.wordStatsItems.length;
+        },
+        correctPercentage(): number {
+            const total = this.correct + this.wrong;
+            return total <= 0 ? 50 : Math.ceil((this.correct / total) * 100);
         },
     },
     methods: {
@@ -253,7 +290,12 @@ export default {
             }
         },
         async next() {
-            const { FETCH_WORD_STATS_PAGED, pageSize, pageIndex, intervalMins } = this;
+            const {
+                FETCH_WORD_STATS_PAGED,
+                pageSize,
+                pageIndex,
+                intervalMins,
+            } = this;
 
             await FETCH_WORD_STATS_PAGED({
                 pageSize,
@@ -286,9 +328,18 @@ export default {
         },
         copy() {
             if (!this.wordStats) return;
-            const text = (this.wordStats.text as string).replaceAll(/[^a-zA-Z.]+/g, '');
+            const text = (this.wordStats.text as string).replaceAll(
+                /[^a-zA-Z.]+/g,
+                ""
+            );
             navigator.clipboard.writeText(text).then(() => {
-                this.$toast.add({severity:'success', summary: 'Text Coppied!', detail: text, group: 'br', life: 3000})
+                this.$toast.add({
+                    severity: "success",
+                    summary: "Text Coppied!",
+                    detail: text,
+                    group: "br",
+                    life: 3000,
+                });
             });
         },
         setStatus(loved: "like" | "unlike" | boolean) {
@@ -420,19 +471,20 @@ export default {
 </script>
 <style lang="scss" scoped>
 .container {
-    display: flex;
     background: #e9ecef;
-    .left-tools {
-        float: left;
+    min-height: calc(100vh - 20px);
+}
+.tools {
+    .tool {
+        width: 100%;
     }
 }
 .recent-board {
-    float: right;
     .positive {
-        color: forestgreen;
+        color: var(--green-600);
     }
     .negative {
-        color: maroon;
+        color: var(--red-600);
     }
     li {
         cursor: pointer;
@@ -569,7 +621,7 @@ export default {
 // }
 
 .tinder-buttons {
-    flex: 0 0 100px;
+    flex: 0 0 90px;
     text-align: center;
     padding-top: 20px;
 }
@@ -579,5 +631,25 @@ export default {
 }
 .tinder-buttons button:focus {
     outline: 0;
+}
+.stats-bar {
+    display: flex;
+    color: white;
+    div {
+        padding: 0.2rem;
+    }
+    .correct {
+        background-color: var(--green-600);
+        -webkit-transition: width 0.5s ease-in-out;
+        -moz-transition: width 0.5s ease-in-out;
+        -o-transition: width 0.5s ease-in-out;
+        transition: width 0.5s ease-in-out;
+    }
+    .wrong {
+        width: fit-content;
+        background-color: var(--red-600);
+        flex-grow: 1;
+        flex-basis: 0;
+    }
 }
 </style>

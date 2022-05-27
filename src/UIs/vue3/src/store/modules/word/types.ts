@@ -9,6 +9,8 @@ export interface WordState {
     saved: boolean;
     deleted: boolean;
     error?: any;
+    correct: number;
+    wrong: number;
 }
 
 export interface Word {

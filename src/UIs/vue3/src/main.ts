@@ -32,6 +32,7 @@ import Textarea from 'primevue/textarea';
 import Checkbox from 'primevue/checkbox';
 import Tag from 'primevue/tag';
 import Panel from 'primevue/panel';
+import PanelMenu from 'primevue/panelmenu';
 import ToggleButton from 'primevue/togglebutton';
 import Spinner from "./components/Spinner.vue";
 
@@ -91,6 +92,7 @@ authService.loadUser().then(user => {
     app.component('Panel', Panel);
     app.component('ToggleButton', ToggleButton);
     app.component('InputNumber', InputNumber);
+    app.component('PanelMenu', PanelMenu);
 
     app.mount('#app');
 });

@@ -189,7 +189,7 @@ export default {
                 return;
             }
 
-            this.UPDATE_WORDS()
+            this.UPDATE_WORDS();
         },
         ...mapActions(["FETCH_WORDS", "DEL_WORD", "UPDATE_WORDS"]),
     },

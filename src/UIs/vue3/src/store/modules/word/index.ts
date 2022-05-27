@@ -4,7 +4,6 @@ import request from '../../../utils/request';
 import TYPES from './mutationTypes';
 import ACTIONS from './actionTypes';
 import { Word, WordState, WordStats, WordStatsPaged } from './types';
-import { boolean } from 'yup';
 
 export default {
     namespaced: true,
@@ -22,6 +21,8 @@ export default {
         recentWords: [] as WordStats[],
         loading: true,
         wordsLoading: true,
+        correct: 0,
+        wrong: 0,
     } as WordState),
     mutations: {
         [TYPES.FETCH_WORD_START](state: WordState) {
@@ -34,8 +35,11 @@ export default {
             state.words = data;
             state.wordsLoading = false;
         },
-        [TYPES.FETCH_WORDS_FAIL](state: WordState) {
+        [TYPES.FETCH_WORD_FAIL](state: WordState) {
             state.loading = false;
+        },
+        [TYPES.FETCH_WORDS_FAIL](state: WordState) {
+            state.wordsLoading = false;
         },
         [TYPES.ADD_WORD_SUCCESS](state: WordState, data: any) {
             state.words.push(data);
@@ -69,8 +73,10 @@ export default {
             if (actions.ok !== undefined) {
                 if (actions.ok) {
                     item.correct++;
+                    state.correct++;
                 } else {
                     item.wrong++;
+                    state.wrong++;
                 }
                 state.wordIndex++;
                 item.ok = actions.ok;
@@ -82,14 +88,14 @@ export default {
             }
         },
         [TYPES.REVIEW_WORD_STATS](state: WordState) {
-            state.wordIndex = 0;
-            state.wordStatsPaged.items = state.recentWords;
+            state.wordStatsPaged.items = state.recentWords.map(x => {return { ...x, ok: undefined, } as WordStats; });
             state.recentWords = [];
+            state.wordIndex = 0;
         },
         [TYPES.POP_WORD_STATS](state: WordState, word: WordStats) {
             state.recentWords = state.recentWords.filter(x => x !== word);
-            word.ok = undefined;
             state.wordStatsPaged.items = [word, ...state.wordStatsPaged.items.filter(x => x.ok == null)];
+            word.ok = undefined;
             state.wordIndex = 0;
         },
     },
@@ -135,7 +141,7 @@ export default {
                     commit(TYPES.UPDATE_WORD_STATS_SUCCESS, rs.data);
                 })
                 .catch((error) => {
-                    commit(TYPES.FETCH_WORDS_FAIL, error);
+                    commit(TYPES.FETCH_WORD_FAIL, error);
                 });
         },
         [ACTIONS.ADD_WORD]({ commit }, word) {
@@ -145,7 +151,7 @@ export default {
                     commit(TYPES.ADD_WORD_SUCCESS, rs.data);
                 })
                 .catch((error) => {
-                    commit(TYPES.FETCH_WORDS_FAIL, error);
+                    commit(TYPES.FETCH_WORD_FAIL, error);
                 });
         },
         [ACTIONS.UPDATE_WORD]({ commit }, word) {
@@ -155,7 +161,7 @@ export default {
                     commit(TYPES.UPDATE_WORD_SUCCESS, rs.data);
                 })
                 .catch((error) => {
-                    commit(TYPES.FETCH_WORDS_FAIL, error);
+                    commit(TYPES.FETCH_WORD_FAIL, error);
                 });
         },
         [ACTIONS.DEL_WORD]({ commit }, id) {
@@ -165,7 +171,7 @@ export default {
                     commit(TYPES.DEL_WORD_SUCCESS, rs.data);
                 })
                 .catch((error) => {
-                    commit(TYPES.FETCH_WORDS_FAIL, error);
+                    commit(TYPES.FETCH_WORD_FAIL, error);
                 });
         },
         [ACTIONS.UPDATE_WORDS]({ commit }, words) {
