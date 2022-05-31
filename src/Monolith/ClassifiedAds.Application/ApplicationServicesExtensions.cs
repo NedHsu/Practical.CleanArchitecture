@@ -34,6 +34,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddScoped<SmsMessageService>()
 
                 //--AddScoped
+                .AddScoped<IWordCustomService, WordCustomService>()
                 .AddScoped<IWordStatsService, WordStatsService>()
                 .AddScoped<IWordService, WordService>()
                 .AddScoped<IQuestionService, QuestionService>()
@@ -58,6 +59,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 configureInterceptor(typeof(IStockService), typeof(StockService), ServiceLifetime.Scoped);
 
                 //--configureInterceptor
+                configureInterceptor(typeof(IWordCustomService), typeof(WordCustomService), ServiceLifetime.Scoped);
                 configureInterceptor(typeof(IWordStatsService), typeof(WordStatsService), ServiceLifetime.Scoped);
                 configureInterceptor(typeof(IWordService), typeof(WordService), ServiceLifetime.Scoped);
                 configureInterceptor(typeof(IQuestionService), typeof(QuestionService), ServiceLifetime.Scoped);

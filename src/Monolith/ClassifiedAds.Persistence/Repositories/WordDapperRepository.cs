@@ -20,17 +20,19 @@ namespace ClassifiedAds.Persistence.Repositories
             string sql = @"
 SELECT
     w.Id WordId,
-    Text,
-    PartOfSpeach,
-    Description,
+    ISNULL(wc.Text, w.Text) Text,
+    ISNULL(wc.PartOfSpeach, w.PartOfSpeach) PartOfSpeach,
+    ISNULL(wc.Description, w.Description) Description,
     ws.Id,
     Wrong,
     Correct,
     ws.UpdatedDateTime,
-    AudioFile
+    AudioFile,
+    wc.Id customId
 FROM
     Words w
     LEFT JOIN WordStats ws ON w.Id = ws.WordId AND ws.UserId = @UserId
+	LEFT JOIN WordCustoms wc ON w.Id = wc.WordId AND wc.UserId = @UserId
 WHERE ws.UpdatedDateTime is NULL OR DATEDIFF(MINUTE, ws.UpdatedDateTime, GETDATE()) > @IntervalMins";
 
             string orderBy = "ISNULL(ws.Correct, 0) - ISNULL(ws.Wrong, 0)";

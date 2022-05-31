@@ -118,7 +118,7 @@ import { Word } from "../../store/modules/word/types";
 import { helpers, maxLength, required } from "@vuelidate/validators";
 import { Actions } from "../../store/types";
 
-const { mapState, mapActions, mapGetters } = createNamespacedHelpers("word");
+const { mapState, mapActions } = createNamespacedHelpers("word");
 
 interface ValidType {
     words: Array<Word>;
@@ -126,9 +126,6 @@ interface ValidType {
 
 export default {
     computed: {
-        ...mapGetters([
-            // "words"
-        ]),
         ...mapState(["words", "loading"]),
     },
     props: {},

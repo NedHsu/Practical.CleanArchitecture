@@ -70,12 +70,34 @@
                                 </p>
                             </div>
                             <div class="flip-card-back">
+                                <div class="edit">
+                                    <Button v-if="item.customId"
+                                        icon="pi pi-undo"
+                                        class="p-button-rounded p-button-text"
+                                        @click="DEL_WORD_CUSTOM(item.customId)"
+                                    />
+                                    <Button
+                                        icon="pi pi-pencil"
+                                        class="p-button-rounded p-button-text"
+                                        @click="OPEN_WORD_MODAL"
+                                    />
+                                </div>
                                 <p>
                                     <Tag severity="success">
                                         {{ item.partOfSpeach }}
                                     </Tag>
                                     {{ item.description }}
                                 </p>
+                                <div class="stats">
+                                    <span class="correct"
+                                        ><i class="pi pi-thumbs-up"></i>
+                                        {{ item.correct }}</span
+                                    >
+                                    <span class="wrong"
+                                        ><i class="pi pi-thumbs-down"></i>
+                                        {{ item.wrong }}</span
+                                    >
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -87,31 +109,37 @@
                     icon="pi pi-history"
                     class="p-button-rounded p-button-secondary"
                     @click="previous"
+                    v-tooltip="'Review recent words\npress \'a\''"
                 />
                 <Button
                     icon="pi pi-volume-up"
                     class="p-button-rounded p-button-warning"
                     @click="speech"
+                    v-tooltip="'Speech\npress \'v\''"
                 />
                 <Button
                     icon="pi pi-times"
                     class="p-button-rounded p-button-danger"
                     @click="(e) => love(false, e)"
+                    v-tooltip="'I don\'t know\npress \'d\''"
                 />
                 <Button
                     icon="pi pi-check"
                     class="p-button-rounded p-button-success"
                     @click="(e) => love(true, e)"
+                    v-tooltip="'I got it\npress \'f\''"
                 />
                 <Button
                     icon="pi pi-heart-fill"
                     class="p-button-rounded p-button-help"
                     @click="favorite"
+                    v-tooltip="'Add to favorite\npress \'g\''"
                 />
                 <Button
                     icon="pi pi-step-forward-alt"
                     class="p-button-rounded p-button-info"
                     @click="next"
+                    v-tooltip="'More words\npress \'s\''"
                 />
             </div>
         </div>
@@ -141,6 +169,7 @@
     </div>
     <Spinner :loading="wordsLoading" :fullscreen="true" />
     <Toast position="bottom-right" group="br" />
+    <WordEditor />
 </template>
 <script lang="ts">
 import { onBeforeUpdate, onUpdated, reactive, ref } from "vue";
@@ -148,11 +177,15 @@ import { createNamespacedHelpers } from "vuex";
 import Hammer from "hammerjs";
 import { WordStats } from "../../store/modules/word/types";
 import { useRouter } from "vue-router";
+import WordEditor from "../../components/words/WordEditor.vue";
 
 const { mapState, mapActions, mapMutations, mapGetters } =
     createNamespacedHelpers("word");
 
 export default {
+    components: {
+        WordEditor,
+    },
     setup() {
         const moveOutWidth = document.body.clientWidth * 1.5;
         let itemRefs: any[] = reactive([]);
@@ -280,6 +313,7 @@ export default {
             this.POP_WORD_STATS(word);
         },
         love(ok: boolean, event?: PointerEvent) {
+            if (!this.wordStats) return;
             this.setStatus(ok);
             this.UPDATE_WORD_STATS({ ok: ok }).then(() => {
                 this.loved = null;
@@ -309,15 +343,17 @@ export default {
         previous() {
             this.REVIEW_WORD_STATS();
         },
-        speech() {
-            if (!this.wordStats?.audioFile) {
+        speech(file?: string) {
+            file =
+                file ?? this.wordStats?.audioFile
+                    ? this.wordStats.audioFile.split(",")[0]
+                    : "";
+            if (!file) {
                 return;
             }
 
-            const url = new URL(
-                `../../assets/audio/${this.wordStats.audioFile}`,
-                import.meta.url
-            ).href;
+            const url = new URL(`../../assets/audio/${file}`, import.meta.url)
+                .href;
             const audio = new Audio(url);
             audio.play();
         },
@@ -390,8 +426,13 @@ export default {
             "FETCH_WORD_STATS_PAGED",
             "UPDATE_WORD_STATS",
             "FETCH_WORD_STATS_RECENT",
+            "DEL_WORD_CUSTOM",
         ]),
-        ...mapMutations(["REVIEW_WORD_STATS", "POP_WORD_STATS"]),
+        ...mapMutations([
+            "REVIEW_WORD_STATS",
+            "OPEN_WORD_MODAL",
+            "POP_WORD_STATS",
+        ]),
     },
     watch: {},
     updated() {
@@ -470,6 +511,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+$wrong-color: var(--red-600);
+$correct-color: var(--green-600);
+
 .container {
     background: #e9ecef;
     min-height: calc(100vh - 20px);
@@ -481,10 +525,10 @@ export default {
 }
 .recent-board {
     .positive {
-        color: var(--green-600);
+        color: $correct-color;
     }
     .negative {
-        color: var(--red-600);
+        color: $wrong-color;
     }
     li {
         cursor: pointer;
@@ -527,6 +571,23 @@ export default {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+    }
+    .stats {
+        position: inherit;
+        bottom: 1rem;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        span {
+            padding: 0 1rem;
+        }
+    }
+    .edit {
+        position: inherit;
+        top: 0;
+        right: 0;
+        Button {
+            color: #fff;
+        }
     }
 }
 
@@ -639,7 +700,7 @@ export default {
         padding: 0.2rem;
     }
     .correct {
-        background-color: var(--green-600);
+        background-color: $correct-color;
         -webkit-transition: width 0.5s ease-in-out;
         -moz-transition: width 0.5s ease-in-out;
         -o-transition: width 0.5s ease-in-out;
@@ -647,7 +708,7 @@ export default {
     }
     .wrong {
         width: fit-content;
-        background-color: var(--red-600);
+        background-color: $wrong-color;
         flex-grow: 1;
         flex-basis: 0;
     }

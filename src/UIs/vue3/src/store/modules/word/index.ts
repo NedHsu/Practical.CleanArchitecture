@@ -9,6 +9,7 @@ export default {
     namespaced: true,
     state: () => ({
         word: {},
+        wordCustom: {},
         words: [] as Word[],
         wordIndex: 0,
         wordStatsPaged: {
@@ -23,6 +24,7 @@ export default {
         wordsLoading: true,
         correct: 0,
         wrong: 0,
+        editting: false,
     } as WordState),
     mutations: {
         [TYPES.FETCH_WORD_START](state: WordState) {
@@ -50,6 +52,21 @@ export default {
             state.loading = false;
         },
         [TYPES.UPDATE_WORD_SUCCESS](state: WordState, data: any) {
+            state.loading = false;
+        },
+        [TYPES.UPDATE_WORD_CUSTOM_SUCCESS](state: WordState, data: any) {
+            const word = state.wordStatsPaged.items[state.wordIndex];
+            word.text = data.text;
+            word.description = data.description;
+            word.customId = data.id;
+            state.loading = false;
+            state.editting = false;
+        },
+        [TYPES.DEL_WORD_CUSTOM_SUCCESS](state: WordState, data: any) {
+            const word = state.wordStatsPaged.items[state.wordIndex];
+            word.text = data.text;
+            word.description = data.description;
+            word.customId = undefined;
             state.loading = false;
         },
         [TYPES.DEL_WORD_SUCCESS](state: WordState, id: string) {
@@ -97,6 +114,20 @@ export default {
             state.wordStatsPaged.items = [word, ...state.wordStatsPaged.items.filter(x => x.ok == null)];
             word.ok = undefined;
             state.wordIndex = 0;
+        },
+        [TYPES.CLOSE_WORD_MODAL](state: WordState) {
+            state.editting = false;
+        },
+        [TYPES.OPEN_WORD_MODAL](state: WordState) {
+            const word = state.wordStatsPaged.items[state.wordIndex];
+            state.wordCustom = {
+                id: word.customId,
+                wordId: word.wordId,
+                text: word.text,
+                description: word.description,
+                partOfSpeach: word.partOfSpeach,
+            };
+            state.editting = true;
         },
     },
     actions: {
@@ -155,7 +186,7 @@ export default {
                 });
         },
         [ACTIONS.UPDATE_WORD]({ commit }, word) {
-            commit(TYPES.FETCH_WORDS_START);
+            commit(TYPES.FETCH_WORD_START);
             request.put("words", word)
                 .then(rs => {
                     commit(TYPES.UPDATE_WORD_SUCCESS, rs.data);
@@ -169,6 +200,26 @@ export default {
             request.delete("words/" + id)
                 .then(rs => {
                     commit(TYPES.DEL_WORD_SUCCESS, rs.data);
+                })
+                .catch((error) => {
+                    commit(TYPES.FETCH_WORD_FAIL, error);
+                });
+        },
+        [ACTIONS.UPDATE_WORD_CUSTOM]({ commit, state }) {
+            commit(TYPES.FETCH_WORD_START);
+            request.put("wordCustoms", state.wordCustom)
+                .then(rs => {
+                    commit(TYPES.UPDATE_WORD_CUSTOM_SUCCESS, rs.data);
+                })
+                .catch((error) => {
+                    commit(TYPES.FETCH_WORD_FAIL, error);
+                });
+        },
+        [ACTIONS.DEL_WORD_CUSTOM]({ commit }, id) {
+            commit(TYPES.FETCH_WORD_START);
+            request.delete("wordCustoms/" + id)
+                .then(rs => {
+                    commit(TYPES.DEL_WORD_CUSTOM_SUCCESS, rs.data);
                 })
                 .catch((error) => {
                     commit(TYPES.FETCH_WORD_FAIL, error);

@@ -34,6 +34,7 @@ import Tag from 'primevue/tag';
 import Panel from 'primevue/panel';
 import PanelMenu from 'primevue/panelmenu';
 import ToggleButton from 'primevue/togglebutton';
+import Tooltip from 'primevue/tooltip';
 import Spinner from "./components/Spinner.vue";
 
 import en from './locales/en.yaml';
@@ -94,5 +95,7 @@ authService.loadUser().then(user => {
     app.component('InputNumber', InputNumber);
     app.component('PanelMenu', PanelMenu);
 
+    app.directive('tooltip', Tooltip);
+    
     app.mount('#app');
 });

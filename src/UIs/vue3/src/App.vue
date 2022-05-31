@@ -74,4 +74,8 @@ body {
   padding: 10px;
   -webkit-overflow-scrolling: touch;
 }
+#app .p-menubar .p-submenu-list
+{
+  z-index: 999;
+}
 </style>
