@@ -72,6 +72,15 @@ namespace ClassifiedAds.WebAPI.Controllers
             return Ok(words);
         }
 
+        [HttpGet("stats/recent/paged")]
+        public async Task<ActionResult<PagedResult<WordStatsDTO>>> GetRecentPaged([FromQuery] GetWordStatsRecentPagedQuery quey)
+        {
+            _logger.LogInformation("Getting paged word stats");
+            quey.UserId = User.GetUserId();
+            var words = await _dispatcher.DispatchAsync(quey);
+            return Ok(words);
+        }
+
         [HttpPut("stats")]
         public async Task<ActionResult<List<WordStatsDTO>>> PutStats(WordStatsActionModel vm)
         {

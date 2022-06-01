@@ -19,7 +19,7 @@ export interface Word {
     id: string;
     text: string;
     description: string;
-    partOfSpeach: string;
+    partOfSpeech: string;
     action?: string;
 }
 
@@ -28,7 +28,7 @@ export interface WordCustom {
     wordId?: string;
     text: string;
     description: string;
-    partOfSpeach: string;
+    partOfSpeech: string;
 }
 
 export interface WordStats {
@@ -37,7 +37,7 @@ export interface WordStats {
     customId?: string ;
     text: string;
     description: string;
-    partOfSpeach: string;
+    partOfSpeech: string;
     wrong: number;
     correct: number;
     ok?: boolean;
@@ -46,8 +46,8 @@ export interface WordStats {
 
 export interface WordStatsPaged {
     items: WordStats[];
-    total: number;
     pageIndex: number;
+    pageSize: number;
     totalCount: number;
     totalPages: number;
 }

@@ -14,8 +14,8 @@ export default {
         wordIndex: 0,
         wordStatsPaged: {
             items: [],
-            total: 0,
             pageIndex: 0,
+            pageSize: 10,
             totalCount: 0,
             totalPages: 0,
         } as WordStatsPaged,
@@ -76,6 +76,10 @@ export default {
         [TYPES.FETCH_WORD_STATS_PAGED_SUCCESS](state: WordState, data: any) {
             state.wordIndex = 0;
             state.wordStatsPaged.items = data.items;
+            state.wordStatsPaged.pageSize = data.pageSize;
+            state.wordStatsPaged.pageIndex = data.pageIndex;
+            state.wordStatsPaged.totalCount = data.totalCount;
+            state.wordStatsPaged.totalPages = data.totalPages;
             state.wordsLoading = false;
         },
         [TYPES.FETCH_WORD_STATS_RECENT_SUCCESS](state: WordState, data: any) {
@@ -125,7 +129,7 @@ export default {
                 wordId: word.wordId,
                 text: word.text,
                 description: word.description,
-                partOfSpeach: word.partOfSpeach,
+                partOfSpeech: word.partOfSpeech,
             };
             state.editting = true;
         },
@@ -145,7 +149,17 @@ export default {
             commit(TYPES.FETCH_WORDS_START);
             return request.get("words/stats/paged", { params: quey })
                 .then((rs) => {
-                    commit(TYPES.FETCH_WORD_STATS_PAGED_SUCCESS, rs.data);
+                    commit(TYPES.FETCH_WORD_STATS_PAGED_SUCCESS, {...rs.data, pageSize: quey.pageSize});
+                })
+                .catch((error) => {
+                    commit(TYPES.FETCH_WORDS_FAIL, error);
+                });
+        },
+        [ACTIONS.FETCH_WORD_STATS_RECENT_PAGED]({ commit }, quey) {
+            commit(TYPES.FETCH_WORDS_START);
+            return request.get("words/stats/recent/paged", { params: quey })
+                .then((rs) => {
+                    commit(TYPES.FETCH_WORD_STATS_PAGED_SUCCESS, {...rs.data, pageSize: quey.pageSize});
                 })
                 .catch((error) => {
                     commit(TYPES.FETCH_WORDS_FAIL, error);
@@ -240,5 +254,7 @@ export default {
         words: (state) => state.words,
         wordStatsItems: (state) => state.wordStatsPaged.items,
         wordStats: (state) => state.wordStatsPaged.items[state.wordIndex],
+        pageFirst: (state) => state.wordStatsPaged.pageIndex * state.wordStatsPaged.pageSize + 1,
+        pageLast: (state) => Math.min(state.wordStatsPaged.pageIndex * state.wordStatsPaged.pageSize + state.wordStatsPaged.pageSize, state.wordStatsPaged.totalCount),
     },
 } as Module<WordState, any>;

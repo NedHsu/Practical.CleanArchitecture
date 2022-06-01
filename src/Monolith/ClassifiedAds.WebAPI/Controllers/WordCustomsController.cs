@@ -69,7 +69,7 @@ namespace ClassifiedAds.WebAPI.Controllers
             wordCustom.Text = model.Text;
             wordCustom.WordId = model.WordId;
             wordCustom.Description = model.Description;
-            wordCustom.PartOfSpeach = model.PartOfSpeach;
+            wordCustom.PartOfSpeech = model.PartOfSpeech;
 
             await _dispatcher.DispatchAsync(new AddUpdateWordCustomCommand { WordCustom = wordCustom });
 

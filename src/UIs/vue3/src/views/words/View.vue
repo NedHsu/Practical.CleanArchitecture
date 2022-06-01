@@ -84,7 +84,7 @@
                                 </div>
                                 <p>
                                     <Tag severity="success">
-                                        {{ item.partOfSpeach }}
+                                        {{ item.partOfSpeech }}
                                     </Tag>
                                     {{ item.description }}
                                 </p>
@@ -214,16 +214,16 @@ export default {
                             });
                         },
                     },
-                    // {
-                    //     key: "w_2",
-                    //     label: "Favorite",
-                    //     icon: "pi pi-heart",
-                    //     command: () => {
-                    //         router.push({
-                    //             name: "Favorite",
-                    //         });
-                    //     },
-                    // },
+                    {
+                        key: "w_2",
+                        label: "History",
+                        icon: "pi pi-history",
+                        command: () => {
+                            router.push({
+                                name: "WordHistory",
+                            });
+                        },
+                    },
                 ],
             },
         ];

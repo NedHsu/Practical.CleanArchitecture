@@ -49,11 +49,11 @@
                     </small>
                 </template>
             </Column>
-            <Column header="PartOfSpeach">
+            <Column header="PartOfSpeech">
                 <template #body="{ data }">
                     <Dropdown
-                        v-model="data.partOfSpeach"
-                        :options="partOfSpeachOptions"
+                        v-model="data.partOfSpeech"
+                        :options="partOfSpeechOptions"
                         optionLabel="text"
                         optionValue="text"
                         autofocus
@@ -145,7 +145,7 @@ export default {
     data() {
         return {
             isSubmitted: false,
-            partOfSpeachOptions: [
+            partOfSpeechOptions: [
                 {
                     text: "adj",
                 },
@@ -173,7 +173,7 @@ export default {
         pushWord() {
             this.words.push({
                 text: "",
-                partOfSpeach: "noun",
+                partOfSpeech: "noun",
                 action: Actions.new,
             } as Word);
         },

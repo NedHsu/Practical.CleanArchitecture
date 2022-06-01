@@ -21,7 +21,7 @@ namespace ClassifiedAds.Persistence.Repositories
 SELECT
     w.Id WordId,
     ISNULL(wc.Text, w.Text) Text,
-    ISNULL(wc.PartOfSpeach, w.PartOfSpeach) PartOfSpeach,
+    ISNULL(wc.PartOfSpeech, w.PartOfSpeech) PartOfSpeech,
     ISNULL(wc.Description, w.Description) Description,
     ws.Id,
     Wrong,
@@ -35,7 +35,7 @@ FROM
 	LEFT JOIN WordCustoms wc ON w.Id = wc.WordId AND wc.UserId = @UserId
 WHERE ws.UpdatedDateTime is NULL OR DATEDIFF(MINUTE, ws.UpdatedDateTime, GETDATE()) > @IntervalMins";
 
-            string orderBy = "ISNULL(ws.Correct, 0) - ISNULL(ws.Wrong, 0)";
+            var orderBy = "ISNULL(ws.Correct, 0) - ISNULL(ws.Wrong, 0)";
             var param = new Dictionary<string, object>()
             {
                 { "@UserId", userId },
@@ -53,16 +53,18 @@ SELECT
     ws.Wrong,
     ws.Correct,
     w.Id WordId,
-    w.Text,
-    w.PartOfSpeach,
-    w.Description,
+    ISNULL(wc.Text, w.Text) Text,
+    ISNULL(wc.PartOfSpeech, w.PartOfSpeech) PartOfSpeech,
+    ISNULL(wc.Description, w.Description) Description,
 	ws.UpdatedDateTime,
-    AudioFile
+    AudioFile,
+    wc.Id customId
 FROM
     WordStats ws
     JOIN Words w ON w.Id = ws.WordId
+	LEFT JOIN WordCustoms wc ON w.Id = wc.WordId AND wc.UserId = @UserId
 WHERE
-    UserId = @UserId
+    ws.UserId = @UserId
 ORDER BY ws.UpdatedDateTime DESC";
 
             var param = new Dictionary<string, object>()
@@ -70,6 +72,41 @@ ORDER BY ws.UpdatedDateTime DESC";
                 { "@UserId", userId },
             };
             return await DbContext.Connection.QueryAsync<WordStatsDTO>(sql, param);
+        }
+
+        public async Task<PagedResult<WordStatsDTO>> GetWordStatsRecentPagedAsync(Guid userId, uint pageIndex, uint pageSize, bool isFav)
+        {
+            var filters = "ws.UserId = @UserId";
+            if (isFav)
+            {
+                filters += " AND ws.IsFav = 1";
+            }
+
+            var sql = @$"
+SELECT
+    ws.Id,
+    ws.Wrong,
+    ws.Correct,
+    w.Id WordId,
+    ISNULL(wc.Text, w.Text) Text,
+    ISNULL(wc.PartOfSpeech, w.PartOfSpeech) PartOfSpeech,
+    ISNULL(wc.Description, w.Description) Description,
+	ws.UpdatedDateTime,
+    AudioFile,
+    wc.Id customId
+FROM
+    WordStats ws
+    JOIN Words w ON w.Id = ws.WordId
+	LEFT JOIN WordCustoms wc ON w.Id = wc.WordId AND wc.UserId = @UserId
+WHERE
+    {filters}";
+
+            var orderBy = "ws.UpdatedDateTime DESC";
+            var param = new Dictionary<string, object>()
+            {
+                { "@UserId", userId },
+            };
+            return await GetPagedAsync<WordStatsDTO>(pageIndex, pageSize, sql, param, orderBy);
         }
     }
 }

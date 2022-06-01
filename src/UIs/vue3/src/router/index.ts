@@ -64,6 +64,14 @@ export function setupRouter(i18n: I18n): Router {
             }
         },
         {
+            path: "/:locale/words/history",
+            name: "WordHistory",
+            component: () => import("../views/words/History.vue"),
+            meta: {
+                index: 1
+            }
+        },
+        {
             path: "/:locale/words/edit/:id",
             name: "WordEdit",
             component: () => import("../views/words/Edit.vue"),
