@@ -16,5 +16,7 @@ namespace ClassifiedAds.Domain.Entities
         public string Description { get; set; }
 
         public string AudioFile { get; set; }
+
+        public string Sentence { get; set; }
     }
 }

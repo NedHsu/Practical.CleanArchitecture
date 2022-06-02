@@ -28,6 +28,7 @@ SELECT
     Correct,
     ws.UpdatedDateTime,
     AudioFile,
+    Sentence,
     wc.Id customId
 FROM
     Words w
@@ -58,6 +59,7 @@ SELECT
     ISNULL(wc.Description, w.Description) Description,
 	ws.UpdatedDateTime,
     AudioFile,
+    Sentence,
     wc.Id customId
 FROM
     WordStats ws
@@ -93,6 +95,7 @@ SELECT
     ISNULL(wc.Description, w.Description) Description,
 	ws.UpdatedDateTime,
     AudioFile,
+    Sentence,
     wc.Id customId
 FROM
     WordStats ws

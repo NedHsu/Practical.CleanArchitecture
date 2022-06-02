@@ -22,6 +22,8 @@ namespace ClassifiedAds.Domain.DTOs
 
         public string AudioFile { get; set; }
 
+        public string Sentence { get; set; }
+
         public Guid? CustomId { get; set; }
     }
 }

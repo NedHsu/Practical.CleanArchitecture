@@ -71,7 +71,8 @@
                             </div>
                             <div class="flip-card-back">
                                 <div class="edit">
-                                    <Button v-if="item.customId"
+                                    <Button
+                                        v-if="item.customId"
                                         icon="pi pi-undo"
                                         class="p-button-rounded p-button-text"
                                         @click="DEL_WORD_CUSTOM(item.customId)"
@@ -344,9 +345,13 @@ export default {
             this.REVIEW_WORD_STATS();
         },
         speech(file?: string) {
+            let i = 0;
+            let files = this.wordStats?.audioFile
+                    ? this.wordStats.audioFile.split(",")
+                    : [];
             file =
                 file ?? this.wordStats?.audioFile
-                    ? this.wordStats.audioFile.split(",")[0]
+                    ? files[i++]
                     : "";
             if (!file) {
                 return;
@@ -356,6 +361,12 @@ export default {
                 .href;
             const audio = new Audio(url);
             audio.play();
+            audio.onended = (e) => {
+                if (i < files.length) {
+                    audio.src = files[i++];
+                    audio.play();
+                }
+            };
         },
         favorite() {
             if (!this.wordStats) return;
