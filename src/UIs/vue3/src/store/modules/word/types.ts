@@ -37,6 +37,8 @@ export interface WordStats {
     customId?: string ;
     text: string;
     description: string;
+    sentence: string;
+    sentenceArr: string[];
     partOfSpeech: string;
     wrong: number;
     correct: number;

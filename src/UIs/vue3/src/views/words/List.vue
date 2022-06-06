@@ -17,15 +17,6 @@
                     </span>
                 </div>
             </template>
-            <Column header="Image">
-                <template #body="slotProps">
-                    <img
-                        src="https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png"
-                        :alt="slotProps.data.image"
-                        class="word-image"
-                    />
-                </template>
-            </Column>
             <Column header="Text">
                 <template #body="{ data, index }">
                     <InputText
@@ -140,11 +131,17 @@ export default {
         };
     },
     mounted() {
-        this.FETCH_WORDS();
+        const { pageSize, pageIndex } = this;
+        this.FETCH_WORDS({
+            pageSize,
+            pageIndex,
+        });
     },
     data() {
         return {
             isSubmitted: false,
+            pageSize: 20,
+            pageIndex: 1,
             partOfSpeechOptions: [
                 {
                     text: "adj",

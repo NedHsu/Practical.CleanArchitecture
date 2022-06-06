@@ -34,7 +34,7 @@ export default {
             state.wordsLoading = true;
         },
         [TYPES.FETCH_WORDS_SUCCESS](state: WordState, data: any) {
-            state.words = data;
+            state.words = data.items;
             state.wordsLoading = false;
         },
         [TYPES.FETCH_WORD_FAIL](state: WordState) {
@@ -80,10 +80,16 @@ export default {
             state.wordStatsPaged.pageIndex = data.pageIndex;
             state.wordStatsPaged.totalCount = data.totalCount;
             state.wordStatsPaged.totalPages = data.totalPages;
+            state.wordStatsPaged.items.forEach(x => {
+                x.sentenceArr = x.sentence.split(';');
+            })
             state.wordsLoading = false;
         },
         [TYPES.FETCH_WORD_STATS_RECENT_SUCCESS](state: WordState, data: any) {
             state.recentWords = data;
+            state.recentWords.forEach(x => {
+                x.sentenceArr = x.sentence.split(';');
+            })
             state.loading = false;
         },
         [TYPES.UPDATE_WORD_STATS_SUCCESS](state: WordState, data: any) {
@@ -135,9 +141,9 @@ export default {
         },
     },
     actions: {
-        [ACTIONS.FETCH_WORDS]({ commit }) {
+        [ACTIONS.FETCH_WORDS]({ commit }, quey) {
             commit(TYPES.FETCH_WORDS_START);
-            request.get("words")
+            request.get("words/paged", { params: quey })
                 .then((rs) => {
                     commit(TYPES.FETCH_WORDS_SUCCESS, rs.data);
                 })

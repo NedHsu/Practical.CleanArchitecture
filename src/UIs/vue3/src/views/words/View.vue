@@ -21,6 +21,12 @@
                     onIcon="pi pi-volume-up"
                     offIcon="pi pi-volume-off"
                 />
+                <ToggleButton
+                    v-model="flipOn"
+                    onLabel="Flip Card"
+                    offLabel="Pin Card"
+                    v-tooltip="'Press \'x\''"
+                />
             </Panel>
         </div>
         <div
@@ -46,6 +52,8 @@
                 <div
                     :class="{
                         'tinder-card': true,
+                        'flip-card': true,
+                        'flip-on': flipOn,
                         removed: item.ok !== undefined,
                     }"
                     v-for="(item, i) in wordStatsItems"
@@ -58,47 +66,48 @@
                             `px, -100px) rotate(${item.ok ? '-' : ''}30deg)`,
                     }"
                 >
-                    <div class="flip-card">
-                        <div class="flip-card-inner">
-                            <div class="flip-card-front">
-                                <p>
-                                    <span>
-                                        <h1>
-                                            {{ item.text }}
-                                        </h1>
-                                    </span>
-                                </p>
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <p>
+                                <span>
+                                    <h1>
+                                        {{ item.text }}
+                                    </h1>
+                                </span>
+                            </p>
+                            <div class="sentence">
+                                {{ item.sentenceArr[0] }}
                             </div>
-                            <div class="flip-card-back">
-                                <div class="edit">
-                                    <Button
-                                        v-if="item.customId"
-                                        icon="pi pi-undo"
-                                        class="p-button-rounded p-button-text"
-                                        @click="DEL_WORD_CUSTOM(item.customId)"
-                                    />
-                                    <Button
-                                        icon="pi pi-pencil"
-                                        class="p-button-rounded p-button-text"
-                                        @click="OPEN_WORD_MODAL"
-                                    />
-                                </div>
-                                <p>
-                                    <Tag severity="success">
-                                        {{ item.partOfSpeech }}
-                                    </Tag>
-                                    {{ item.description }}
-                                </p>
-                                <div class="stats">
-                                    <span class="correct"
-                                        ><i class="pi pi-thumbs-up"></i>
-                                        {{ item.correct }}</span
-                                    >
-                                    <span class="wrong"
-                                        ><i class="pi pi-thumbs-down"></i>
-                                        {{ item.wrong }}</span
-                                    >
-                                </div>
+                        </div>
+                        <div class="flip-card-back">
+                            <div class="edit">
+                                <Button
+                                    v-if="item.customId"
+                                    icon="pi pi-undo"
+                                    class="p-button-rounded p-button-text"
+                                    @click="DEL_WORD_CUSTOM(item.customId)"
+                                />
+                                <Button
+                                    icon="pi pi-pencil"
+                                    class="p-button-rounded p-button-text"
+                                    @click="OPEN_WORD_MODAL"
+                                />
+                            </div>
+                            <p>
+                                <Tag severity="success">
+                                    {{ item.partOfSpeech }}
+                                </Tag>
+                                {{ item.description }}
+                            </p>
+                            <div class="stats">
+                                <span class="correct"
+                                    ><i class="pi pi-thumbs-up"></i>
+                                    {{ item.correct }}</span
+                                >
+                                <span class="wrong"
+                                    ><i class="pi pi-thumbs-down"></i>
+                                    {{ item.wrong }}</span
+                                >
                             </div>
                         </div>
                     </div>
@@ -146,14 +155,20 @@
         </div>
         <div class="col-3 recent-board">
             <Panel header="Recent">
-                <ul>
+                <ul class="recent-list">
                     <li
                         v-for="(item, index) in recentWords"
                         :key="index"
                         :class="recentClass(item)"
                         @click="popRecentWord(item)"
                     >
-                        {{ item.text }}
+                        <div>
+                            <span>{{ item.text }}</span>
+                            <span class="description" :title="item.description">
+                                {{ item.partOfSpeech }}
+                                {{ item.description }}
+                            </span>
+                        </div>
                     </li>
                 </ul>
             </Panel>
@@ -284,6 +299,7 @@ export default {
             pageIndex: 1,
             first: true,
             loved: null as "like" | "unlike" | boolean | null,
+            flipOn: true,
         };
     },
     computed: {
@@ -347,12 +363,9 @@ export default {
         speech(file?: string) {
             let i = 0;
             let files = this.wordStats?.audioFile
-                    ? this.wordStats.audioFile.split(",")
-                    : [];
-            file =
-                file ?? this.wordStats?.audioFile
-                    ? files[i++]
-                    : "";
+                ? this.wordStats.audioFile.split(",")
+                : [];
+            file = file ?? this.wordStats?.audioFile ? files[i++] : "";
             if (!file) {
                 return;
             }
@@ -423,6 +436,9 @@ export default {
                 case "c":
                     copy();
                     break;
+                case "x":
+                    this.flipOn = !this.flipOn;
+                    break;
             }
             e.preventDefault();
         },
@@ -447,77 +463,66 @@ export default {
     },
     watch: {},
     updated() {
-        const { containerRef, initCards, itemRefs } = this;
-
-        itemRefs.forEach((el, i) => {
-            var hammertime = new Hammer(el);
-
-            hammertime.on("pan", function (event) {
-                if (event.target !== el) return;
-                el.classList.add("moving");
-            });
-
-            hammertime.on("pan", function (event) {
-                if (event.target !== el) return;
-                if (event.deltaX === 0) return;
-                if (event.center.x === 0 && event.center.y === 0) return;
-
-                containerRef?.classList.toggle("tinder_like", event.deltaX > 0);
-                containerRef?.classList.toggle("tinder_nope", event.deltaX < 0);
-
-                var xMulti = event.deltaX * 0.03;
-                var yMulti = event.deltaY / 80;
-                var rotate = xMulti * yMulti;
-
-                event.target.style.transform =
-                    "translate(" +
-                    event.deltaX +
-                    "px, " +
-                    event.deltaY +
-                    "px) rotate(" +
-                    rotate +
-                    "deg)";
-            });
-
-            hammertime.on("panend", function (event) {
-                if (event.target !== el) return;
-                el.classList.remove("moving");
-                containerRef?.classList.remove("tinder_like");
-                containerRef?.classList.remove("tinder_nope");
-
-                var moveOutWidth = document.body.clientWidth;
-                var keep =
-                    Math.abs(event.deltaX) < 80 ||
-                    Math.abs(event.velocityX) < 0.5;
-
-                event.target.classList.toggle("removed", !keep);
-
-                if (keep) {
-                    event.target.style.transform = "";
-                } else {
-                    var endX = Math.max(
-                        Math.abs(event.velocityX) * moveOutWidth,
-                        moveOutWidth
-                    );
-                    var toX = event.deltaX > 0 ? endX : -endX;
-                    var endY = Math.abs(event.velocityY) * moveOutWidth;
-                    var toY = event.deltaY > 0 ? endY : -endY;
-                    var xMulti = event.deltaX * 0.03;
-                    var yMulti = event.deltaY / 80;
-                    var rotate = xMulti * yMulti;
-
-                    event.target.style.transform =
-                        "translate(" +
-                        toX +
-                        "px, " +
-                        (toY + event.deltaY) +
-                        "px) rotate(" +
-                        rotate +
-                        "deg)";
-                    initCards();
-                }
-            });
-        });
+        // const { containerRef, initCards, itemRefs } = this;
+        // itemRefs.forEach((el, i) => {
+        //     var hammertime = new Hammer(el);
+        //     hammertime.on("pan", function (event) {
+        //         if (event.target !== el) return;
+        //         el.classList.add("moving");
+        //     });
+        //     hammertime.on("pan", function (event) {
+        //         if (event.target !== el) return;
+        //         if (event.deltaX === 0) return;
+        //         if (event.center.x === 0 && event.center.y === 0) return;
+        //         containerRef?.classList.toggle("tinder_like", event.deltaX > 0);
+        //         containerRef?.classList.toggle("tinder_nope", event.deltaX < 0);
+        //         var xMulti = event.deltaX * 0.03;
+        //         var yMulti = event.deltaY / 80;
+        //         var rotate = xMulti * yMulti;
+        //         event.target.style.transform =
+        //             "translate(" +
+        //             event.deltaX +
+        //             "px, " +
+        //             event.deltaY +
+        //             "px) rotate(" +
+        //             rotate +
+        //             "deg)";
+        //     });
+        //     hammertime.on("panend", function (event) {
+        //         if (event.target !== el) return;
+        //         el.classList.remove("moving");
+        //         containerRef?.classList.remove("tinder_like");
+        //         containerRef?.classList.remove("tinder_nope");
+        //         var moveOutWidth = document.body.clientWidth;
+        //         var keep =
+        //             Math.abs(event.deltaX) < 80 ||
+        //             Math.abs(event.velocityX) < 0.5;
+        //         event.target.classList.toggle("removed", !keep);
+        //         if (keep) {
+        //             event.target.style.transform = "";
+        //         } else {
+        //             var endX = Math.max(
+        //                 Math.abs(event.velocityX) * moveOutWidth,
+        //                 moveOutWidth
+        //             );
+        //             var toX = event.deltaX > 0 ? endX : -endX;
+        //             var endY = Math.abs(event.velocityY) * moveOutWidth;
+        //             var toY = event.deltaY > 0 ? endY : -endY;
+        //             var xMulti = event.deltaX * 0.03;
+        //             var yMulti = event.deltaY / 80;
+        //             var rotate = xMulti * yMulti;
+        //             event.target.style.transform =
+        //                 "translate(" +
+        //                 toX +
+        //                 "px, " +
+        //                 (toY + event.deltaY) +
+        //                 "px) rotate(" +
+        //                 rotate +
+        //                 "deg)";
+        //             initCards();
+        //         }
+        //     });
+        // });
     },
 };
 </script>
@@ -565,7 +570,7 @@ $correct-color: var(--green-600);
 }
 
 /* Do an horizontal flip when you move the mouse over the flip box container */
-.flip-card:hover .flip-card-inner {
+.flip-on:hover .flip-card-inner {
     transform: rotateY(180deg);
 }
 
@@ -606,6 +611,13 @@ $correct-color: var(--green-600);
 .flip-card-front {
     background-color: #fff;
     color: black;
+    .sentence {
+        position: inherit;
+        margin: 0 1rem;
+        bottom: 1rem;
+        cursor: text;
+        color: var(--gray-700);
+    }
 }
 
 /* Style the back side */
@@ -674,7 +686,7 @@ $correct-color: var(--green-600);
     position: absolute;
     will-change: transform;
     transition: all 0.3s ease-in-out;
-    cursor: -webkit-grab;
+    cursor: default;
     cursor: -moz-grab;
     cursor: grab;
     border: 0.0625rem solid #f1f1f1;
@@ -722,6 +734,19 @@ $correct-color: var(--green-600);
         background-color: $wrong-color;
         flex-grow: 1;
         flex-basis: 0;
+    }
+}
+
+.recent-list li div {
+    justify-content: space-between;
+    display: flex;
+    span {
+        max-width: 50%;
+    }
+    .description {
+        color: var(--gray-600);
+        overflow: hidden;
+        white-space: nowrap;
     }
 }
 </style>
