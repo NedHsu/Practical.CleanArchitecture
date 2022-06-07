@@ -69,12 +69,6 @@ namespace ClassifiedAds.WebAPI
                     .AllowAnyMethod()
                     .AllowAnyHeader());
 
-                options.AddPolicy("SignalRHubs", builder => builder
-                    .WithOrigins(AppSettings.CORS.AllowedOrigins)
-                    .AllowAnyHeader()
-                    .WithMethods("GET", "POST")
-                    .AllowCredentials());
-
                 options.AddPolicy("AllowAnyOrigin", builder => builder
                     .AllowAnyOrigin()
                     .AllowAnyMethod()
@@ -302,7 +296,8 @@ namespace ClassifiedAds.WebAPI
                     .RequireCors("HubPolicy");
                 endpoints.MapHub<JobHub>("/jobHub")
                     .RequireCors("HubPolicy");
-                endpoints.MapHub<NotificationHub>("/hubs/notification").RequireCors("SignalRHubs");
+                endpoints.MapHub<NotificationHub>("/hubs/notification")
+                    .RequireCors("HubPolicy");
             });
         }
     }

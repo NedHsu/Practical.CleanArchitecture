@@ -4,6 +4,7 @@ using ClassifiedAds.Infrastructure.Interceptors;
 using ClassifiedAds.Infrastructure.Logging;
 using ClassifiedAds.Infrastructure.MessageBrokers;
 using ClassifiedAds.Infrastructure.Monitoring;
+using ClassifiedAds.Infrastructure.Payment;
 using ClassifiedAds.Infrastructure.Storages;
 using System.Collections.Generic;
 
@@ -36,5 +37,7 @@ namespace ClassifiedAds.WebAPI.ConfigurationOptions
         public WeatherServiceConfigs WeatherConfigs { get; set; }
 
         public CertificatesOptions Certificates { get; set; }
+
+        public PaymentOptions Payment { get; set; }
     }
 }

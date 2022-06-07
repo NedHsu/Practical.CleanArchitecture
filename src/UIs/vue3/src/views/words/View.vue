@@ -747,6 +747,7 @@ $correct-color: var(--green-600);
         color: var(--gray-600);
         overflow: hidden;
         white-space: nowrap;
+        text-overflow: ellipsis;
     }
 }
 </style>
