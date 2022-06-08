@@ -1,6 +1,9 @@
 ﻿using Amazon;
 using Amazon.S3;
+using ClassifiedAds.Domain.Infrastructure.Payment;
 using ClassifiedAds.Domain.Infrastructure.Storages;
+using ClassifiedAds.Infrastructure.Payment;
+using ClassifiedAds.Infrastructure.Payment.ECPay;
 using ClassifiedAds.Infrastructure.Storages;
 using ClassifiedAds.Infrastructure.Storages.Amazon;
 using ClassifiedAds.Infrastructure.Storages.Azure;
@@ -90,6 +93,16 @@ namespace Microsoft.Extensions.DependencyInjection
             else
             {
                 services.AddFakeStorageManager();
+            }
+
+            return services;
+        }
+
+        public static IServiceCollection AddPaymentManager(this IServiceCollection services, PaymentOptions options)
+        {
+            if (options.ECPay != null)
+            {
+                services.AddSingleton<IPaymentManager, ECPayManager>();
             }
 
             return services;

@@ -219,6 +219,7 @@ namespace ClassifiedAds.WebAPI
             services.AddScoped<ICurrentUser, CurrentWebUser>();
 
             services.AddStorageManager(AppSettings.Storage);
+            services.AddPaymentManager(AppSettings.Payment);
             services.AddHtmlGenerator();
             services.AddDinkToPdfConverter();
             services.AddClassifiedAdsLocalization();
