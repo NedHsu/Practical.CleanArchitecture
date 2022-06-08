@@ -11,7 +11,9 @@
         public string PlatformID { get; set; }
 
         public string ServiceURL { get; set; }
+
         public string ReturnURL { get; set; }
+
         public string ClientBackURL { get; set; }
     }
 }

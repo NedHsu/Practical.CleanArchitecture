@@ -56,6 +56,54 @@ export function setupRouter(i18n: I18n): Router {
         },
         //--routes
         {
+            path: "/:locale/profiles",
+            name: "Profiles",
+            component: () => import("../views/profiles/View.vue"),
+            meta: {
+                index: 1
+            }
+        },
+        {
+            path: "/:locale/profiles/edit/:id",
+            name: "ProfileEdit",
+            component: () => import("../views/profiles/Edit.vue"),
+            meta: {
+                index: 1
+            }
+        },
+        {
+            path: "/:locale/profiles/add",
+            name: "ProfileAdd",
+            component: () => import("../views/profiles/Edit.vue"),
+            meta: {
+                index: 1
+            }
+        },
+        {
+            path: "/:locale/payments",
+            name: "Payments",
+            component: () => import("../views/payments/List.vue"),
+            meta: {
+                index: 1
+            }
+        },
+        {
+            path: "/:locale/payments/edit/:id",
+            name: "PaymentEdit",
+            component: () => import("../views/payments/Edit.vue"),
+            meta: {
+                index: 1
+            }
+        },
+        {
+            path: "/:locale/payments/add",
+            name: "PaymentAdd",
+            component: () => import("../views/payments/Edit.vue"),
+            meta: {
+                index: 1
+            }
+        },
+        {
             path: "/:locale/words",
             name: "Words",
             component: () => import("../views/words/List.vue"),

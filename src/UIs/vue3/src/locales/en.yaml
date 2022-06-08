@@ -19,3 +19,10 @@ labels:
   test: entest
 valid:
  required: Value is required
+stocks:
+ stocks: Stocks
+ legalPerson: Legal person
+ revenues: Revenues
+ notes: Notes
+ seminars: Seminars
+ EPS: EPS

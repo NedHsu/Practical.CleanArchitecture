@@ -2,6 +2,8 @@ import Vuex from 'vuex'
 import authService from './modules/authService';
 import product from './modules/product';
 //--import
+import profile from './modules/profile';
+import payment from './modules/payment';
 import word from './modules/word';
 import question from './modules/question';
 import stock from './modules/stock';
@@ -15,6 +17,8 @@ export default new Vuex.Store({
     product: product,
     authService: authService,
     //--modules
+    profile: profile,
+    payment: payment,
     word: word,
     question: question,
     stock: stock,

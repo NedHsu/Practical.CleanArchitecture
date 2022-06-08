@@ -149,7 +149,7 @@ export default defineComponent({
             pageTitle: `ClassifiedAds.Vue ${version}`,
             userMenu: [
                 {
-                    label: "Quit",
+                    label: t("navigations.logout"),
                     icon: "pi pi-fw pi-power-off",
                     command: () => {
                         store.dispatch("LOGOUT");

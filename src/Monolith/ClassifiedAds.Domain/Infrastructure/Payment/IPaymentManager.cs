@@ -3,6 +3,6 @@
     public interface IPaymentManager
     {
         CheckOutResult CheckOut(CheckOutParameters paras);
-        ActionResult Action(PaymentActionParameters paras);
+        PayActionResult Action(PaymentActionParameters paras);
     }
 }

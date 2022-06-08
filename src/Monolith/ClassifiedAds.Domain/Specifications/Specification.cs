@@ -91,7 +91,6 @@ namespace ClassifiedAds.Domain.Specifications
         }
     }
 
-
     internal sealed class NotSpecification<T> : Specification<T>
     {
         private readonly Specification<T> _specification;

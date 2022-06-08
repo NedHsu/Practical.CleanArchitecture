@@ -29,7 +29,7 @@ namespace ClassifiedAds.Infrastructure.Payment.ECPay
                 oPayment.Send.ClientBackURL = _options.ClientBackURL;
                 oPayment.Send.OrderResultURL = string.Empty;
                 oPayment.Send.MerchantTradeNo = paras.MerchantTradeNo;
-                oPayment.Send.MerchantTradeDate = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
+                oPayment.Send.MerchantTradeDate = paras.MerchantTradeDate.ToString("yyyy/MM/dd HH:mm:ss");
                 oPayment.Send.TotalAmount = paras.TotalAmount;
                 oPayment.Send.TradeDesc = paras.TradeDesc;
                 oPayment.Send.ChoosePayment = PaymentMethod.ALL;
@@ -112,9 +112,9 @@ namespace ClassifiedAds.Infrastructure.Payment.ECPay
             return result;
         }
 
-        public ActionResult Action(PaymentActionParameters paras)
+        public PayActionResult Action(PaymentActionParameters paras)
         {
-            var result = new ActionResult();
+            var result = new PayActionResult();
             AllInOneHandle(result, oPayment =>
             {
                 /* 基本參數 */
@@ -130,6 +130,22 @@ namespace ClassifiedAds.Infrastructure.Payment.ECPay
                     PaymentAction.Abandon => ActionType.N,
                     _ => throw new NotImplementedException(),
                 };
+
+                var oResult = new Hashtable();
+                var errors = oPayment.DoAction(ref oResult);
+                result.Errors.AddRange(errors);
+                result.Data = oResult;
+            });
+            return result;
+        }
+
+        public PayActionResult QueryTradeInfo(QueryTradeInfoParameters paras)
+        {
+            var result = new PayActionResult();
+            AllInOneHandle(result, oPayment =>
+            {
+                /* 基本參數 */
+                oPayment.Query.MerchantTradeNo = paras.MerchantTradeNo; // 廠商的交易編號
 
                 var oResult = new Hashtable();
                 var errors = oPayment.DoAction(ref oResult);

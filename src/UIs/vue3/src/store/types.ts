@@ -1,6 +1,8 @@
 import { ProductState } from "./modules/product/types";
 import { AuthServiceState } from "./modules/authService/types";
 //--import
+import { ProfileState } from "./modules/profile/types";
+import { PaymentState } from "./modules/payment/types";
 import { WordState } from "./modules/word/types";
 import { QuestionState } from "./modules/question/types";
 import { StockState } from "./modules/stock/types";
@@ -13,6 +15,8 @@ export interface RootState {
     authService: AuthServiceState,
     product: ProductState,
     //--RootState
+    profile: ProfileState,
+    payment: PaymentState,
     word: WordState,
     question: QuestionState,
     stock: StockState,
