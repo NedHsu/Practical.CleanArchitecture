@@ -5,11 +5,12 @@ export interface PaymentState {
     saved: boolean;
     deleted: boolean;
     error?: any;
+    checkoutKeys: string[];
 }
 
 export interface Payment {
     id: string;
-    name: string;
-    code: string;
-    description: string;
+    errors: Array<string>;
+    url: string;
+    data: object;
 }

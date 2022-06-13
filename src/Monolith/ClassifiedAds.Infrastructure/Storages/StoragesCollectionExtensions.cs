@@ -102,7 +102,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             if (options.ECPay != null)
             {
-                services.AddSingleton<IPaymentManager, ECPayManager>();
+                services.AddSingleton<IPaymentManager>(new ECPayManager(options.ECPay));
             }
 
             return services;

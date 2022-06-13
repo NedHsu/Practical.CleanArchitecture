@@ -3,10 +3,20 @@ import { Module } from 'vuex';
 import request from '../../../utils/request';
 import TYPES from './mutationTypes';
 import ACTIONS from './actionTypes';
-import { PaymentState } from './types';
+import { Payment, PaymentState } from './types';
+import dayjs from 'dayjs';
 
 export default {
     namespaced: true,
+    state: () => ({
+        payments: [],
+        payment: {} as Payment,
+        loading: false,
+        saved: false,
+        deleted: false,
+        error: null,
+        checkoutKeys: ['MerchantID', 'MerchantTradeNo', 'MerchantTradeDate', 'PaymentType', 'TotalAmount', 'TradeDesc', 'ItemName', 'ReturnURL', 'ChoosePayment', 'CheckMacValue', 'EncryptType'],
+    } as PaymentState),
     mutations: {
         [TYPES.FETCH_PAYMENTS_START](state: PaymentState) {
             state.loading = true;
@@ -16,6 +26,10 @@ export default {
             state.loading = false;
         },
         [TYPES.FETCH_PAYMENTS_FAIL](state: PaymentState) {
+            state.loading = false;
+        },
+        [TYPES.FETCH_PAYMENT_SUCCESS](state: PaymentState, data: any) {
+            state.payment = data;
             state.loading = false;
         },
         [TYPES.ADD_PAYMENT_SUCCESS](state: PaymentState, data: any) {
@@ -39,6 +53,32 @@ export default {
                 })
                 .catch((error) => {
                     commit(TYPES.FETCH_PAYMENTS_FAIL, error);
+                });
+        },
+        async [ACTIONS.FETCH_PAYMENT]({ commit }) {
+            commit(TYPES.FETCH_PAYMENTS_START);
+            return await request.post("payments", {
+                "tradeDesc": dayjs().format('YYYYMMDDHHmmss'),
+                "merchantTradeNo": dayjs().format('YYYYMMDDHHmmss'),
+                "totalAmount": 1000,
+                "platformID": "platformID",
+                "items": [
+                    {
+                        "name": "name",
+                        "price": 1000,
+                        "url": "url",
+                        "quantity": 1
+                    }
+                ],
+                "merchantTradeDate": dayjs().format('YYYY-MM-DDTHH:mm:ssZ'),
+            })
+                .then((rs) => {
+                    commit(TYPES.FETCH_PAYMENT_SUCCESS, rs.data);
+                })
+                .catch((error) => {
+                    commit(TYPES.FETCH_PAYMENTS_FAIL, error);
+                }).finally(() => {
+                    console.log('finally');
                 });
         },
         [ACTIONS.ADD_PAYMENT]({ commit }, payment) {

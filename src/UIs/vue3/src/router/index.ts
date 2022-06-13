@@ -88,6 +88,14 @@ export function setupRouter(i18n: I18n): Router {
             }
         },
         {
+            path: "/:locale/payments/ecpay",
+            name: "Payments",
+            component: () => import("../views/payments/ECPay.vue"),
+            meta: {
+                index: 1
+            }
+        },
+        {
             path: "/:locale/payments/edit/:id",
             name: "PaymentEdit",
             component: () => import("../views/payments/Edit.vue"),

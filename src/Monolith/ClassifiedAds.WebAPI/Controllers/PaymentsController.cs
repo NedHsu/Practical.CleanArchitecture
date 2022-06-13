@@ -38,5 +38,11 @@ namespace ClassifiedAds.WebAPI.Controllers
             var model = _mapper.Map<IEnumerable<PaymentModel>>(payments);
             return Ok(model);
         }
+
+        [HttpPost]
+        public async Task<ActionResult<IEnumerable<PaymentModel>>> Post(CheckOutParameters paras)
+        {
+            return Ok(_paymentManager.CheckOut(paras));
+        }
     }
 }

@@ -190,7 +190,7 @@
 <script lang="ts">
 import { onBeforeUpdate, onUpdated, reactive, ref } from "vue";
 import { createNamespacedHelpers } from "vuex";
-import Hammer from "hammerjs";
+// import Hammer from "hammerjs";
 import { WordStats } from "../../store/modules/word/types";
 import { useRouter } from "vue-router";
 import WordEditor from "../../components/words/WordEditor.vue";
@@ -570,8 +570,11 @@ $correct-color: var(--green-600);
 }
 
 /* Do an horizontal flip when you move the mouse over the flip box container */
-.flip-on:hover .flip-card-inner {
-    transform: rotateY(180deg);
+.flip-on:hover,
+.back {
+    .flip-card-inner {
+        transform: rotateY(180deg);
+    }
 }
 
 /* Position the front and back side */

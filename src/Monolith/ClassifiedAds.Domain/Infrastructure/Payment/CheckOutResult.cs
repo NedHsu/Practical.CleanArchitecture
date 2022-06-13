@@ -6,5 +6,6 @@ namespace ClassifiedAds.Domain.Infrastructure.Payment
     {
         public List<string> Errors { get; set; }
         public Hashtable Data { get; set; }
+        public string Url { get; set; }
     }
 }

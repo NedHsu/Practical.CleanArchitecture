@@ -21,6 +21,7 @@ namespace ClassifiedAds.Infrastructure.Payment.ECPay
             var result = new CheckOutResult()
             {
                 Errors = new List<string>(),
+                Url = $"{_options.ServiceURL}Cashier/AioCheckOut/V5",
             };
             AllInOneHandle(result, oPayment =>
             {
