@@ -47,6 +47,7 @@ namespace Microsoft.Extensions.DependencyInjection
                     .AddScoped(typeof(IAuditLogEntryRepository), typeof(AuditLogEntryRepository))
                     .AddScoped(typeof(IEmailMessageRepository), typeof(EmailMessageRepository))
                     .AddScoped(typeof(ISmsMessageRepository), typeof(SmsMessageRepository))
+                    .AddScoped(typeof(IOrderRepository), typeof(OrderRepository))
                     .AddScoped(typeof(IUserRepository), typeof(UserRepository))
                     .AddScoped(typeof(IRoleRepository), typeof(RoleRepository))
                     .AddScoped(typeof(ICalendarRepository), typeof(CalendarRepository))

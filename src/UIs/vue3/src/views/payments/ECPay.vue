@@ -1,6 +1,12 @@
 <template>
     <form v-if="payment.url" :action="payment.url" method="post" ref="form">
-        <input type="hidden" v-for="(key, i) in checkoutKeys" :key="i" :name="key" :value="payment.data[key]" />
+        <input
+            type="hidden"
+            v-for="(key, i) in Object.keys(payment.data)"
+            :key="i"
+            :name="key"
+            :value="payment.data[key]"
+        />
     </form>
 </template>
 <script lang="ts">
@@ -12,15 +18,16 @@ export default defineComponent({
     setup() {
         const form = ref<HTMLFormElement>();
         return {
-            form
-        }
+            form,
+        };
     },
-    async mounted() {
-        await this.FETCH_PAYMENT();
-        this.form?.submit();
+    mounted() {
+        this.FETCH_PAYMENT().then(() => {
+            this.form?.submit();
+        });
     },
     computed: {
-        ...mapState(["payment", "checkoutKeys"]),
+        ...mapState(["payment"]),
         ...mapGetters([]),
     },
     methods: {

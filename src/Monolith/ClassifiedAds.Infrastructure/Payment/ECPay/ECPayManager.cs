@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 
 namespace ClassifiedAds.Infrastructure.Payment.ECPay
 {
@@ -37,7 +38,7 @@ namespace ClassifiedAds.Infrastructure.Payment.ECPay
                 oPayment.Send.Remark = string.Empty;
                 oPayment.Send.ChooseSubPayment = PaymentMethodItem.None;
                 oPayment.Send.NeedExtraPaidInfo = ExtraPaymentInfo.No;
-                oPayment.Send.DeviceSource = DeviceType.PC;
+                oPayment.Send.DeviceSource = DeviceType.None;
                 oPayment.Send.IgnorePayment = string.Empty;
                 oPayment.Send.PlatformID = paras.PlatformID;
                 oPayment.Send.HoldTradeAMT = HoldTradeType.Yes;
@@ -156,7 +157,7 @@ namespace ClassifiedAds.Infrastructure.Payment.ECPay
             return result;
         }
 
-        private void AllInOneHandle(IResult result, Action<AllInOne> Action)
+        private void AllInOneHandle(IResult result, Action<AllInOne> action)
         {
             try
             {
@@ -168,7 +169,7 @@ namespace ClassifiedAds.Infrastructure.Payment.ECPay
                     oPayment.HashKey = _options.HashKey;
                     oPayment.HashIV = _options.HashIV;
                     oPayment.MerchantID = _options.MerchantID;
-                    Action(oPayment);
+                    action(oPayment);
                 }
             }
             catch (Exception ex)

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ClassifiedAds.Application;
+using ClassifiedAds.Application.Orders.Queries;
 using ClassifiedAds.Domain.Infrastructure.Payment;
 using ClassifiedAds.WebAPI.Models.Payments;
 using Microsoft.AspNetCore.Authorization;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ClassifiedAds.WebAPI.Controllers
@@ -32,7 +34,7 @@ namespace ClassifiedAds.WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PaymentModel>>> Get()
+        public ActionResult<IEnumerable<PaymentModel>> Get()
         {
             var payments = _paymentManager.Action(new PaymentActionParameters { });
             var model = _mapper.Map<IEnumerable<PaymentModel>>(payments);
@@ -40,9 +42,26 @@ namespace ClassifiedAds.WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<PaymentModel>>> Post(CheckOutParameters paras)
+        public async Task<ActionResult<IEnumerable<PaymentModel>>> Post(PaymentModel vm)
         {
-            return Ok(_paymentManager.CheckOut(paras));
+            var order = await _dispatcher.DispatchAsync(new GetOrderQuery
+            {
+                Id = vm.OrderId,
+            });
+            return Ok(_paymentManager.CheckOut(new CheckOutParameters
+            {
+                MerchantTradeDate = DateTime.Now,
+                TotalAmount = order.TotalAmount,
+                TradeDesc = "",
+                MerchantTradeNo = order.Id.ToString(),
+                Items = order.Items.Select(x => new PaymentItem
+                {
+                    Name = x.Product.Name,
+                    Price = x.Product.Price,
+                    Quantity = x.Quantity,
+                    URL = "",
+                }),
+            }));
         }
     }
 }

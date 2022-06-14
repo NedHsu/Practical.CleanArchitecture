@@ -15,7 +15,6 @@ export default {
         saved: false,
         deleted: false,
         error: null,
-        checkoutKeys: ['MerchantID', 'MerchantTradeNo', 'MerchantTradeDate', 'PaymentType', 'TotalAmount', 'TradeDesc', 'ItemName', 'ReturnURL', 'ChoosePayment', 'CheckMacValue', 'EncryptType'],
     } as PaymentState),
     mutations: {
         [TYPES.FETCH_PAYMENTS_START](state: PaymentState) {
@@ -60,12 +59,11 @@ export default {
             return await request.post("payments", {
                 "tradeDesc": dayjs().format('YYYYMMDDHHmmss'),
                 "merchantTradeNo": dayjs().format('YYYYMMDDHHmmss'),
-                "totalAmount": 1000,
-                "platformID": "platformID",
+                "totalAmount": 37000,
                 "items": [
                     {
                         "name": "name",
-                        "price": 1000,
+                        "price": 37000,
                         "url": "url",
                         "quantity": 1
                     }

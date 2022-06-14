@@ -5,7 +5,6 @@ export interface PaymentState {
     saved: boolean;
     deleted: boolean;
     error?: any;
-    checkoutKeys: string[];
 }
 
 export interface Payment {
