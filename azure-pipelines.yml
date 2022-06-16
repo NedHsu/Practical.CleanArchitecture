@@ -1,0 +1,65 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+ branches:
+  include:
+    - minsDream
+ paths:
+  include:
+    - src/Monolith/ClassifiedAds.Migrator/**
+
+pool: Default
+
+steps:
+- checkout: self
+- task: DotNetCoreCLI@2
+  displayName: New Manifest for tool
+  inputs:
+    command: custom
+    custom: 'new '
+    arguments: tool-manifest
+- task: DotNetCoreCLI@2
+  displayName: Install EF Tool
+  inputs:
+    command: custom
+    custom: 'tool '
+    arguments: install dotnet-ef --version $(BuildEFVersion)
+- task: DotNetCoreCLI@2
+  displayName: Restore
+  inputs:
+    command: restore
+    projects: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/ClassifiedAds.Migrator.csproj
+- task: DotNetCoreCLI@2
+  displayName: Build
+  inputs:
+    projects: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/ClassifiedAds.Migrator.csproj
+    arguments: --configuration $(BuildConfiguration)
+
+- task: PowerShell@2
+  displayName: SetConnectionString
+  inputs:
+    workingDirectory: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
+    targetType: inline
+    script: | 
+      $content = gc appsettings.json -raw | ConvertFrom-Json
+      $content.ConnectionStrings.ClassifiedAds='$(ConnectionString)'
+      $content | ConvertTo-Json | Set-Content ./appsettings.json
+
+- task: DotNetCoreCLI@2
+  displayName: Migration AdsDbContext
+  inputs:
+    workingDirectory: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
+    command: custom
+    custom: 'ef '
+    arguments: migrations add $(Build.BuildNumber) --context AdsDbContext -o $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/Migrations/AdsDb
+
+- task: DotNetCoreCLI@2
+  displayName: Migration StockDbContext
+  inputs:
+    workingDirectory: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
+    command: custom
+    custom: 'ef '
+    arguments: migrations add $(Build.BuildNumber) --context StockDbContext -o $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/Migrations/StockDb
