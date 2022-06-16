@@ -15,6 +15,7 @@ pool: Default
 
 steps:
 - checkout: self
+  persistCredentials: true
 - task: DotNetCoreCLI@2
   displayName: New Manifest for tool
   inputs:
@@ -52,6 +53,22 @@ steps:
       $content | ConvertTo-Json | Set-Content ./appsettings.json
 
 - task: DotNetCoreCLI@2
+  displayName: Migration AdsDbContext
+  inputs:
+    workingDirectory: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
+    command: custom
+    custom: 'ef '
+    arguments: migrations add $(Build.BuildNumber) --context AdsDbContext -o $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/Migrations/AdsDb
+
+- task: DotNetCoreCLI@2
+  displayName: Upadte AdsDbContext
+  inputs:
+    workingDirectory: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
+    command: custom
+    custom: 'ef '
+    arguments: database update --context AdsDbContext
+
+- task: DotNetCoreCLI@2
   displayName: Migration ConfigurationDbContext
   inputs:
     workingDirectory: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
@@ -84,22 +101,6 @@ steps:
     arguments: database update --context PersistedGrantDbContext
 
 - task: DotNetCoreCLI@2
-  displayName: Migration AdsDbContext
-  inputs:
-    workingDirectory: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
-    command: custom
-    custom: 'ef '
-    arguments: migrations add $(Build.BuildNumber) --context AdsDbContext -o $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/Migrations/AdsDb
-
-- task: DotNetCoreCLI@2
-  displayName: Upadte AdsDbContext
-  inputs:
-    workingDirectory: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
-    command: custom
-    custom: 'ef '
-    arguments: database update --context AdsDbContext
-
-- task: DotNetCoreCLI@2
   displayName: Migration StockDbContext
   inputs:
     workingDirectory: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
@@ -114,3 +115,4 @@ steps:
     command: custom
     custom: 'ef '
     arguments: database update --context StockDbContext
+
