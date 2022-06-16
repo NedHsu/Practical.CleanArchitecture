@@ -21,17 +21,20 @@ steps:
     command: custom
     custom: 'new '
     arguments: tool-manifest
+
 - task: DotNetCoreCLI@2
   displayName: Install EF Tool
   inputs:
     command: custom
     custom: 'tool '
     arguments: install dotnet-ef --version $(BuildEFVersion)
+
 - task: DotNetCoreCLI@2
   displayName: Restore
   inputs:
     command: restore
     projects: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/ClassifiedAds.Migrator.csproj
+
 - task: DotNetCoreCLI@2
   displayName: Build
   inputs:
@@ -57,12 +60,28 @@ steps:
     arguments: migrations add $(Build.BuildNumber) --context ConfigurationDbContext -o $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/Migrations/ConfigurationDb
 
 - task: DotNetCoreCLI@2
+  displayName: Upadte ConfigurationDbContext
+  inputs:
+    workingDirectory: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
+    command: custom
+    custom: 'ef '
+    arguments: migrations database update --context ConfigurationDbContext
+
+- task: DotNetCoreCLI@2
   displayName: Migration PersistedGrantDbContext
   inputs:
     workingDirectory: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
     command: custom
     custom: 'ef '
     arguments: migrations add $(Build.BuildNumber) --context PersistedGrantDbContext -o $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/Migrations/PersistedGrantDb
+
+- task: DotNetCoreCLI@2
+  displayName: Upadte PersistedGrantDbContext
+  inputs:
+    workingDirectory: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
+    command: custom
+    custom: 'ef '
+    arguments: migrations database update --context PersistedGrantDbContext
 
 - task: DotNetCoreCLI@2
   displayName: Migration AdsDbContext
@@ -73,9 +92,25 @@ steps:
     arguments: migrations add $(Build.BuildNumber) --context AdsDbContext -o $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/Migrations/AdsDb
 
 - task: DotNetCoreCLI@2
+  displayName: Upadte AdsDbContext
+  inputs:
+    workingDirectory: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
+    command: custom
+    custom: 'ef '
+    arguments: migrations database update --context AdsDbContext
+
+- task: DotNetCoreCLI@2
   displayName: Migration StockDbContext
   inputs:
     workingDirectory: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
     command: custom
     custom: 'ef '
     arguments: migrations add $(Build.BuildNumber) --context StockDbContext -o $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/Migrations/StockDb
+
+- task: DotNetCoreCLI@2
+  displayName: Upadte StockDbContext
+  inputs:
+    workingDirectory: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
+    command: custom
+    custom: 'ef '
+    arguments: migrations database update --context StockDbContext
