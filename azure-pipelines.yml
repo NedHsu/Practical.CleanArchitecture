@@ -54,7 +54,7 @@ steps:
     workingDirectory: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
     command: custom
     custom: 'ef '
-    arguments: migrations add $(Build.BuildNumber) --context AdsDbContext -o $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/Migrations/AdsDb
+    arguments: migrations add $(Build.BuildNumber) --context AdsDbContext -o $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/Migrations/AdsDb --idempotent
 
 - task: DotNetCoreCLI@2
   displayName: Migration StockDbContext
@@ -62,4 +62,4 @@ steps:
     workingDirectory: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
     command: custom
     custom: 'ef '
-    arguments: migrations add $(Build.BuildNumber) --context StockDbContext -o $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/Migrations/StockDb
+    arguments: migrations add $(Build.BuildNumber) --context StockDbContext -o $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/Migrations/StockDb --idempotent
