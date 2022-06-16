@@ -37,6 +37,11 @@ namespace ClassifiedAds.Migrator
             services.AddIdentityServer()
                 .AddIdServerPersistence(Configuration.GetConnectionString("ClassifiedAds"),
                 typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
+
+            services.AddDbContext<Persistence.StockDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ClassifiedAds"), sql =>
+            {
+                sql.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
+            }));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
