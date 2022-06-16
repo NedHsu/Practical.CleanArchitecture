@@ -120,3 +120,4 @@ steps:
   displayName: Commit And Push
   inputs:
     filename: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/migrations.bat
+    arguments: $(Build.BuildNumber)
