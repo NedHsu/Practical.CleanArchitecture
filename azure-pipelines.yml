@@ -58,7 +58,7 @@ steps:
     workingDirectory: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
     command: custom
     custom: 'ef '
-    arguments: migrations add $(Build.BuildNumber) --context AdsDbContext -o $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/Migrations/AdsDb
+    arguments: migrations add $(Build.BuildNumber) --context AdsDbContext -o MinsDream/Migrations/AdsDb
 
 - task: DotNetCoreCLI@2
   displayName: Upadte AdsDbContext
@@ -74,7 +74,7 @@ steps:
     workingDirectory: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
     command: custom
     custom: 'ef '
-    arguments: migrations add $(Build.BuildNumber) --context ConfigurationDbContext -o $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/Migrations/ConfigurationDb
+    arguments: migrations add $(Build.BuildNumber) --context ConfigurationDbContext -o MinsDream/Migrations/ConfigurationDb
 
 - task: DotNetCoreCLI@2
   displayName: Upadte ConfigurationDbContext
@@ -90,7 +90,7 @@ steps:
     workingDirectory: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
     command: custom
     custom: 'ef '
-    arguments: migrations add $(Build.BuildNumber) --context PersistedGrantDbContext -o $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/Migrations/PersistedGrantDb
+    arguments: migrations add $(Build.BuildNumber) --context PersistedGrantDbContext -o MinsDream/Migrations/PersistedGrantDb
 
 - task: DotNetCoreCLI@2
   displayName: Upadte PersistedGrantDbContext
@@ -106,7 +106,7 @@ steps:
     workingDirectory: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
     command: custom
     custom: 'ef '
-    arguments: migrations add $(Build.BuildNumber) --context StockDbContext -o $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/Migrations/StockDb
+    arguments: migrations add $(Build.BuildNumber) --context StockDbContext -o MinsDream/Migrations/StockDb
 
 - task: DotNetCoreCLI@2
   displayName: Upadte StockDbContext
@@ -116,3 +116,8 @@ steps:
     custom: 'ef '
     arguments: database update --context StockDbContext
 
+- task: BatchScript@1
+  displayName: Commit And Push
+  inputs:
+    filename: migrations.bat
+    workingFolder: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
