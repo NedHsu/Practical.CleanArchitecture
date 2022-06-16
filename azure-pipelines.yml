@@ -49,6 +49,22 @@ steps:
       $content | ConvertTo-Json | Set-Content ./appsettings.json
 
 - task: DotNetCoreCLI@2
+  displayName: Migration ConfigurationDbContext
+  inputs:
+    workingDirectory: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
+    command: custom
+    custom: 'ef '
+    arguments: migrations add $(Build.BuildNumber) --context ConfigurationDbContext -o $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/Migrations/ConfigurationDb
+
+- task: DotNetCoreCLI@2
+  displayName: Migration PersistedGrantDbContext
+  inputs:
+    workingDirectory: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
+    command: custom
+    custom: 'ef '
+    arguments: migrations add $(Build.BuildNumber) --context PersistedGrantDbContext -o $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/Migrations/PersistedGrantDb
+
+- task: DotNetCoreCLI@2
   displayName: Migration AdsDbContext
   inputs:
     workingDirectory: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
