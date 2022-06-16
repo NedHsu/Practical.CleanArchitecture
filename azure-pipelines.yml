@@ -119,5 +119,4 @@ steps:
 - task: BatchScript@1
   displayName: Commit And Push
   inputs:
-    workingFolder: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
-    filename: migrations.bat
+    filename: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/migrations.bat
