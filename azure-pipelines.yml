@@ -65,7 +65,7 @@ steps:
     workingDirectory: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
     command: custom
     custom: 'ef '
-    arguments: migrations database update --context ConfigurationDbContext
+    arguments: database update --context ConfigurationDbContext
 
 - task: DotNetCoreCLI@2
   displayName: Migration PersistedGrantDbContext
@@ -81,7 +81,7 @@ steps:
     workingDirectory: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
     command: custom
     custom: 'ef '
-    arguments: migrations database update --context PersistedGrantDbContext
+    arguments: database update --context PersistedGrantDbContext
 
 - task: DotNetCoreCLI@2
   displayName: Migration AdsDbContext
@@ -97,7 +97,7 @@ steps:
     workingDirectory: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
     command: custom
     custom: 'ef '
-    arguments: migrations database update --context AdsDbContext
+    arguments: database update --context AdsDbContext
 
 - task: DotNetCoreCLI@2
   displayName: Migration StockDbContext
@@ -113,4 +113,4 @@ steps:
     workingDirectory: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
     command: custom
     custom: 'ef '
-    arguments: migrations database update --context StockDbContext
+    arguments: database update --context StockDbContext
