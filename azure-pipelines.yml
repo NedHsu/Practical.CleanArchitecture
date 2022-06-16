@@ -9,7 +9,10 @@ trigger:
     - minsDream
  paths:
   include:
-    - src/Monolith/ClassifiedAds.Migrator/**
+    - src/Monolith/ClassifiedAds.Migrator/Scripts/**
+    - src/Monolith/ClassifiedAds.Persistence/AdsDbContext.cs
+    - src/Monolith/ClassifiedAds.Persistence/StockDbContext.cs
+    - src/Monolith/ClassifiedAds.Domain/Entities/**
 
 pool: Default
 
