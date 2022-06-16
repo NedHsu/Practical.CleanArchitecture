@@ -12,4 +12,4 @@ git add src/Monolith/ClassifiedAds.Migrator/MinsDream/
 ECHO GIT COMMIT
 git commit -m "migrations - %1"
 ECHO GIT PUSH
-git push
+git push origin HEAD:%BUILD_SOURCEBRANCH%
