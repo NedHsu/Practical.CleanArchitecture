@@ -1,6 +1,6 @@
 @echo off
 ECHO SOURCE BRANCH IS %BUILD_SOURCEBRANCH%
-IF %BUILD_SOURCEBRANCH% != refs/heads/minsDream (
+IF %BUILD_SOURCEBRANCH% NEQ refs/heads/minsDream (
    ECHO "Not building minsDream branch."
    EXIT
 )
