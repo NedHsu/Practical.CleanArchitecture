@@ -21,6 +21,6 @@ namespace ClassifiedAds.Domain.Entities
         public Guid? LocationId { get; set; }
         public Location Location { get; set; }
 
-        public IList<MatchPlayer> Players { get; set; }
+        public IList<Player> Players { get; set; }
     }
 }
