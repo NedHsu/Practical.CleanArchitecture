@@ -1,0 +1,126 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+ branches:
+  include:
+    - minsDream
+ paths:
+  include:
+    - src/Monolith/ClassifiedAds.Migrator/Scripts/**
+    - src/Monolith/ClassifiedAds.Persistence/AdsDbContext.cs
+    - src/Monolith/ClassifiedAds.Persistence/StockDbContext.cs
+    - src/Monolith/ClassifiedAds.Domain/Entities/**
+
+pool: Default
+
+steps:
+- checkout: self
+  persistCredentials: true
+- task: DotNetCoreCLI@2
+  displayName: New Manifest for tool
+  inputs:
+    command: custom
+    custom: 'new '
+    arguments: tool-manifest
+
+- task: DotNetCoreCLI@2
+  displayName: Install EF Tool
+  inputs:
+    command: custom
+    custom: 'tool '
+    arguments: install dotnet-ef --version $(BuildEFVersion)
+
+- task: DotNetCoreCLI@2
+  displayName: Restore
+  inputs:
+    command: restore
+    projects: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/ClassifiedAds.Migrator.csproj
+
+- task: DotNetCoreCLI@2
+  displayName: Build
+  inputs:
+    projects: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/ClassifiedAds.Migrator.csproj
+    arguments: --configuration $(BuildConfiguration)
+
+- task: PowerShell@2
+  displayName: SetConnectionString
+  inputs:
+    workingDirectory: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
+    targetType: inline
+    script: | 
+      $content = gc appsettings.json -raw | ConvertFrom-Json
+      $content.ConnectionStrings.ClassifiedAds='$(ConnectionString)'
+      $content | ConvertTo-Json | Set-Content ./appsettings.json
+
+- task: DotNetCoreCLI@2
+  displayName: Migration AdsDbContext
+  inputs:
+    workingDirectory: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
+    command: custom
+    custom: 'ef '
+    arguments: migrations add $(Build.BuildNumber) --context AdsDbContext -o MinsDream/Migrations/AdsDb
+
+- task: DotNetCoreCLI@2
+  displayName: Upadte AdsDbContext
+  inputs:
+    workingDirectory: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
+    command: custom
+    custom: 'ef '
+    arguments: database update --context AdsDbContext
+
+- task: DotNetCoreCLI@2
+  displayName: Migration ConfigurationDbContext
+  inputs:
+    workingDirectory: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
+    command: custom
+    custom: 'ef '
+    arguments: migrations add $(Build.BuildNumber) --context ConfigurationDbContext -o MinsDream/Migrations/ConfigurationDb
+
+- task: DotNetCoreCLI@2
+  displayName: Upadte ConfigurationDbContext
+  inputs:
+    workingDirectory: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
+    command: custom
+    custom: 'ef '
+    arguments: database update --context ConfigurationDbContext
+
+- task: DotNetCoreCLI@2
+  displayName: Migration PersistedGrantDbContext
+  inputs:
+    workingDirectory: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
+    command: custom
+    custom: 'ef '
+    arguments: migrations add $(Build.BuildNumber) --context PersistedGrantDbContext -o MinsDream/Migrations/PersistedGrantDb
+
+- task: DotNetCoreCLI@2
+  displayName: Upadte PersistedGrantDbContext
+  inputs:
+    workingDirectory: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
+    command: custom
+    custom: 'ef '
+    arguments: database update --context PersistedGrantDbContext
+
+- task: DotNetCoreCLI@2
+  displayName: Migration StockDbContext
+  inputs:
+    workingDirectory: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
+    command: custom
+    custom: 'ef '
+    arguments: migrations add $(Build.BuildNumber) --context StockDbContext -o MinsDream/Migrations/StockDb
+
+- task: DotNetCoreCLI@2
+  displayName: Upadte StockDbContext
+  inputs:
+    workingDirectory: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/
+    command: custom
+    custom: 'ef '
+    arguments: database update --context StockDbContext
+
+- task: BatchScript@1
+  displayName: Commit And Push
+  inputs:
+    filename: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.Migrator/migrations.bat
+    arguments: $(Build.BuildNumber)
