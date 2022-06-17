@@ -9,7 +9,7 @@ WORKDIR /src/Monolith
 COPY ["ClassifiedAds.VueWeb/ClassifiedAds.VueWeb.csproj", "ClassifiedAds.VueWeb/"]
 RUN dotnet restore "ClassifiedAds.VueWeb/ClassifiedAds.VueWeb.csproj"
 COPY . .
-WORKDIR "/src/ClassifiedAds.VueWeb"
+WORKDIR "/src/Monolith/ClassifiedAds.VueWeb"
 RUN dotnet build "ClassifiedAds.VueWeb.csproj" -c Release -o /app/build
 
 FROM build AS publish
