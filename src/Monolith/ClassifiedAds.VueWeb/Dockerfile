@@ -5,7 +5,7 @@ WORKDIR /app
 EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR /src
+WORKDIR /src/Monolith
 COPY ["ClassifiedAds.VueWeb/ClassifiedAds.VueWeb.csproj", "ClassifiedAds.VueWeb/"]
 RUN dotnet restore "ClassifiedAds.VueWeb/ClassifiedAds.VueWeb.csproj"
 COPY . .
