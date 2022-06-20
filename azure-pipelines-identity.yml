@@ -34,6 +34,13 @@ steps:
     arguments: '--configuration $(buildConfiguration)'
     zipAfterPublish: true
 
+- task: DotNetCoreCLI@2
+  inputs:
+    command: publish
+    publishWebProjects: True
+    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    zipAfterPublish: True
+
 - task: AzureWebApp@1
   inputs:
     azureSubscription: 'Azure subscription 1(12f9fe73-501c-467e-b224-dc534d3b5bb3)'
