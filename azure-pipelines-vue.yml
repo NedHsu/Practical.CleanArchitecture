@@ -10,6 +10,8 @@ trigger:
    include:
      - src/Monolith/ClassifiedAds.VueWeb/**
 
+pool: Default
+
 resources:
 - repo: self
 
