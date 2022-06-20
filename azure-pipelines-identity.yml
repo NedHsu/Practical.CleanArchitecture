@@ -29,7 +29,7 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: 'build'
-    workingDirectory: $(project)
+    projects: $(project)
 
 - task: AzureRmWebAppDeployment@4
   inputs:
