@@ -1,0 +1,40 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+ branches:
+  include:
+    - minsDream
+ paths:
+  include:
+    - src/Monolith/ClassifiedAds.IdentityServer/**
+
+pool: Default
+
+variables:
+  project: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.IdentityServer/ClassifiedAds.IdentityServer.csproj
+
+steps:
+- checkout: self
+  persistCredentials: true
+
+- task: DotNetCoreCLI@2
+  displayName: Restore
+  inputs:
+    command: restore
+    projects: $(project)
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'build'
+    workingDirectory: $(project)
+
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Azure subscription 1(12f9fe73-501c-467e-b224-dc534d3b5bb3)'
+    appType: 'webApp'
+    WebAppName: 'minsDream-tst-identity'
+    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
