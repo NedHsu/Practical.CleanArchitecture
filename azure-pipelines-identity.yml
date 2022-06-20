@@ -15,6 +15,7 @@ pool: Default
 
 variables:
   project: $(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.IdentityServer/ClassifiedAds.IdentityServer.csproj
+  buildConfiguration: 'Release'
 
 steps:
 - checkout: self
@@ -30,6 +31,7 @@ steps:
   inputs:
     command: 'build'
     projects: $(project)
+    arguments: '--configuration $(buildConfiguration)'
 
 - task: AzureRmWebAppDeployment@4
   inputs:
