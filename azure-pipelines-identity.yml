@@ -37,9 +37,9 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: publish
+    projects: $(project)
     publishWebProjects: True
     arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-    projects: $(project)
     zipAfterPublish: True
 
 - task: AzureWebApp@1
@@ -50,5 +50,5 @@ steps:
     deployToSlotOrASE: true
     resourceGroupName: 'Test'
     slotName: 'production'
-    package: '$(System.DefaultWorkingDirectory)/**/*.zip'
+    package: '$(Build.ArtifactStagingDirectory)/ClassifiedAds.Services.Identity.AuthServer.zip'
     deploymentMethod: 'zipDeploy'
