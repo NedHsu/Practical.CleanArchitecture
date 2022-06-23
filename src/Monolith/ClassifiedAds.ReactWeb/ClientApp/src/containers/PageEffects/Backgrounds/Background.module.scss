@@ -1,0 +1,25 @@
+.bg01 {
+    background-color: purple;
+}
+
+.bg02 {
+    background-color: blue;
+}
+
+.bg03 {
+    background-color: green;
+}
+
+.bg04 {
+    background-color: orange;
+}
+
+.bg05 {
+    background-color: red;
+}
+
+.box {
+    width: 100%;
+    height: calc(100vh - 59px);
+    background-attachment: scroll, local;
+}

@@ -1,0 +1,36 @@
+{
+  "locale": "tw",
+  "pages": {
+    "home": "這是首頁",
+    "about": "這是關於頁"
+  },
+  "language": "繁中",
+  "navigations": {
+    "home": "首頁",
+    "about": "關於",
+    "product": "產品",
+    "stock": "股票",
+    "map": "地圖",
+    "logout": "登出",
+    "login": "登入"
+  },
+  "labels": {
+    "language": "語系",
+    "save": "儲存",
+    "delete": "刪除",
+    "test": {
+      "test": "twtest"
+    }
+  },
+  "valid": {
+    "required": "必填"
+  },
+  "stocks": {
+    "stocks": "選股",
+    "legalPerson": "法人",
+    "revenues": "營收",
+    "notes": "筆記",
+    "seminars": "會議",
+    "EPS": "EPS"
+  }
+}

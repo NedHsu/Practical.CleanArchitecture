@@ -1,0 +1,36 @@
+.bicycle {
+    overflow: hidden;
+    position: absolute;
+    animation: ride 6s ease-in 1s infinite normal none;
+}
+
+@keyframes ride {
+    0% {
+        right: -50%;
+        left: unset;
+    }
+    50% {
+        right: 100%;
+        left: unset;
+        -moz-transform: scaleX(1);
+        -webkit-transform: scaleX(1);
+        -o-transform: scaleX(1);
+        transform: scaleX(1);
+    }
+    51% {
+        right: unset;
+        left: -50%;
+        -moz-transform: scaleX(-1);
+        -webkit-transform: scaleX(-1);
+        -o-transform: scaleX(-1);
+        transform: scaleX(-1);
+    }
+    100% {
+        right: unset;
+        left: 100%;
+        -moz-transform: scaleX(-1);
+        -webkit-transform: scaleX(-1);
+        -o-transform: scaleX(-1);
+        transform: scaleX(-1);
+    }
+}

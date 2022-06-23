@@ -1,0 +1,41 @@
+.container {
+    svg {
+        // margin-bottom: 1.25rem;
+        margin-left: 1.25rem;
+        .axis {
+            color: slategray;
+            font-size: 0.05rem;
+            stroke-width: 0.0063rem;
+            g {
+                font-size: 0.05rem;
+            }
+        }
+        .rectText {
+            font-size: 0.05rem;
+        }
+    }
+}
+
+.text0 {
+}
+
+.text1 {
+    margin-top: 0.625rem;
+}
+
+.mark {
+    display: inline-block;
+    padding-right: 1rem;
+    .circle {
+        margin: auto 0.2rem;
+        vertical-align: middle;
+        display: inline-block;
+        width: 1rem;
+        height: 1rem;
+        border-radius: 50%;
+    }
+}
+
+.groups {
+    padding-left: 10rem;
+}

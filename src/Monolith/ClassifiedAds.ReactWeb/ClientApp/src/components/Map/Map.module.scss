@@ -1,0 +1,42 @@
+.map_container {
+    height: calc(100vh - 100px);
+}
+
+.weatherIcon {
+    background-color: unset;
+    border: none;
+    > div {
+        width: 50px;
+        margin-top: -30px;
+    }
+    span {
+        background-color: antiquewhite;
+    }
+}
+
+.weatherRainfall {
+    > div {
+        width: fit-content;
+        background-color: antiquewhite;
+    }
+}
+
+.earthquakeMark {
+}
+
+.earthquakePopup {
+    img {
+        max-width: calc(100vw - 5rem);
+        max-height: calc(100vh - 10rem);
+    }
+}
+
+.coordinate {
+    float: right;
+}
+
+.weather_menu {
+    button {
+        margin: 10px;
+    }
+}

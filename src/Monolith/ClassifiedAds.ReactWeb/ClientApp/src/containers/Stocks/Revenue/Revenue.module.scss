@@ -1,0 +1,19 @@
+.tableTools {
+    padding: 0px 20px;
+}
+
+.table {
+    td {
+        vertical-align: middle;
+    }
+    .number {
+        text-align: right;
+    }
+}
+
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: white;
+}
