@@ -1,0 +1,108 @@
+//colors
+$bgColor: #182c51;
+$sunColor: rgb(250, 245, 237);
+$earthColor: rgb(0, 183, 255);
+$moonColor: rgb(85, 85, 85);
+$lightColor: #c7938b;
+$peak: #efdbd8;
+//sizes
+
+.space {
+  background-color: $bgColor;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  overflow: hidden;
+  z-index: -1;
+  top: 0%;
+  left: 0%;
+  .orbit {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    transform-style: preserve-3d;
+    animation: orbit 10s linear infinite;
+  }
+  .sun {
+    background-color: $sunColor;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    animation: cresent 3s linear infinite alternate;
+  }
+  .earth {
+    background-color: $earthColor;
+    position: relative;
+    left: 200px;
+    top: 100px;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    box-shadow: 0 0 2px lighten($earthColor, 30%), 0 0 20px 2px $earthColor;
+  }
+  .moon {
+    background-color: $moonColor;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    transform: rotateX(0deg);
+  }
+  .ship {
+    .body {
+      .windows {
+      }
+      .wings {
+        .wing1 {
+          border-bottom: 100px solid rgb(179, 179, 179);
+          border-left: 25px solid transparent;
+          border-right: 25px solid transparent;
+          height: 0;
+          width: 100px;
+        }
+        .wing2 {
+        }
+        .wing3 {
+        }
+      }
+    }
+    .power {
+    }
+  }
+}
+
+$ground-class: up;
+@for $i from 1 through 20 {
+}
+//animation
+
+@keyframes cresent {
+  0% {
+    box-shadow: none;
+  }
+  50% {
+    box-shadow: 0 0 10px lighten($lightColor, 30%), 0 0 80px 8px $lightColor;
+  }
+  100% {
+    box-shadow: none;
+  }
+}
+
+@keyframes orbit {
+  0% {
+    transform: rotateZ(0deg);
+  }
+
+  100% {
+    transform: rotateZ(-360deg);
+  }
+}
+
+@keyframes invert {
+  0% {
+    transform: rotateX(-90deg) rotateY(360deg) rotateZ(0deg);
+  }
+
+  100% {
+    transform: rotateX(-90deg) rotateY(0deg) rotateZ(0deg);
+  }
+}

@@ -1,0 +1,43 @@
+.container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    .inner {
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+    }
+}
+
+.fullscreen {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+}
+
+.icon {
+    position: absolute;
+    top: calc(50% - 50px);
+    left: calc(50% - 50px);
+    width: 100px;
+    height: 100px;
+    opacity: 1;
+    z-index: 2001;
+}
+.mask {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    opacity: 0.3;
+    z-index: 2000;
+}
+
+.svg {
+    margin: auto;
+    display: block;
+    shape-rendering: auto;
+}

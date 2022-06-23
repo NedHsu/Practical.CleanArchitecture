@@ -1,0 +1,333 @@
+import { updateObject } from "../../shared/utility";
+import * as actionTypes from "./actionTypes";
+
+const initialState = {
+  stocks: new Array<any>(),
+  stockFunders: {},
+  showTrendLine: false,
+  stockRevenues: [],
+  stockRevenuePaged: {},
+  stockProfits: [],
+  totalPage: 0,
+  totalCount: 0,
+  stock: {
+    name: "",
+    code: "",
+    description: "",
+  },
+  industrys: [],
+  auditLogs: [],
+  loading: false,
+  saved: false,
+  deleted: false,
+  error: null,
+  stockOptions: [],
+  optionsLoading: false,
+  stockFetchDates: {
+    stockDay: "",
+    stockFundamental: "",
+    stockFunder: "",
+    stockMargin: "",
+    stockRevenue: "",
+  },
+};
+
+/// Stocks
+const fetchStocksStart = (state, action) => {
+  return updateObject(state, { loading: true });
+};
+
+const fetchStocksSuccess = (state, action) => {
+  return updateObject(state, {
+    stocks: action.stocks,
+    loading: false,
+    totalPage: action.totalPage,
+    totalCount: action.totalCount,
+    pageIndex: action.pageIndex,
+  });
+};
+
+const fetchGroupStocksSuccess = (state, action) => {
+  return updateObject(state, {
+    stocks: action.stocks,
+    loading: false,
+  });
+};
+
+const fetchStocksFail = (state, action) => {
+  return updateObject(state, { loading: false });
+};
+
+const fetchStockOptionsStart = (state, action) => {
+  return updateObject(state, { optionsLoading: true });
+};
+
+const fetchStockOptionsSuccess = (state, action) => {
+  return updateObject(state, {
+    stockOptions: action.stocks,
+    optionsLoading: false,
+  });
+};
+
+const fetchStockOptionsFail = (state, action) => {
+  return updateObject(state, { optionsLoading: false });
+};
+/// Stocks
+
+/// StockFunders
+const fetchStockFundersStart = (state, action) => {
+  return updateObject(state, { loading: true });
+};
+
+const fetchStockFundersSuccess = (state, action) => {
+  return updateObject(state, {
+    stockFunders: action.stockFunders,
+    loading: false,
+    totalPage: action.totalPage,
+    totalCount: action.totalCount,
+  });
+};
+
+const fetchStockFundersFail = (state, action) => {
+  return updateObject(state, { loading: false });
+};
+/// StockFunders
+
+/// StockFunderScores
+const fetchStockFunderScoresStart = (state, action) => {
+  return updateObject(state, { scoreLoading: true });
+};
+
+const fetchStockFunderScoresSuccess = (state, action) => {
+  return updateObject(state, {
+    stockFunderScores: action.stockFunderScores,
+    scoreLoading: false,
+  });
+};
+
+const fetchStockFunderScoresFail = (state, action) => {
+  return updateObject(state, { scoreLoading: false });
+};
+
+const toggleStockTrendLine = (state, action) => {
+  return updateObject(state, { showTrendLine: !state.showTrendLine });
+};
+/// StockFunderScores
+
+/// StockRevenues
+const fetchStockRevenuesStart = (state, action) => {
+  return updateObject(state, { loading: true });
+};
+
+const fetchStockRevenuesSuccess = (state, action) => {
+  return updateObject(state, {
+    stockRevenues: action.stockRevenues,
+    loading: false,
+    totalPage: action.totalPage,
+    totalCount: action.totalCount,
+  });
+};
+
+const fetchStockRevenuePagedSuccess = (state, action) => {
+  return updateObject(state, {
+    stockRevenuePaged: action.stockRevenuePaged,
+    loading: false,
+  });
+};
+
+const fetchStockIndustrysSuccess = (state, action) => {
+  return updateObject(state, {
+    industrys: action.industrys,
+    loading: false,
+  });
+};
+
+const fetchStockRevenuesFail = (state, action) => {
+  return updateObject(state, { loading: false });
+};
+/// StockRevenues
+
+/// StockProfits
+const fetchStockProfitsStart = (state, action) => {
+  return updateObject(state, { loading: true });
+};
+
+const fetchStockProfitsSuccess = (state, action) => {
+  return updateObject(state, {
+    stockProfits: action.stockProfits,
+    loading: false,
+    totalPage: action.totalPage,
+    totalCount: action.totalCount,
+  });
+};
+
+const fetchStockProfitsFail = (state, action) => {
+  return updateObject(state, { loading: false });
+};
+/// StockProfits
+
+/// Stock
+const fetchStockStart = (state, action) => {
+  return updateObject(state, { loading: true });
+};
+
+const fetchStockSuccess = (state, action) => {
+  return updateObject(state, {
+    stock: action.stock,
+    loading: false,
+  });
+};
+
+const fetchStockFail = (state, action) => {
+  return updateObject(state, { loading: false });
+};
+
+/// Stock
+
+const saveStockStart = (state, action) => {
+  return updateObject(state, { loading: true, saved: false });
+};
+
+const saveStockSuccess = (state, action) => {
+  return updateObject(state, {
+    stock: action.stock,
+    loading: false,
+    saved: true,
+  });
+};
+
+const saveStockFail = (state, action) => {
+  return updateObject(state, { loading: false, saved: false });
+};
+
+//--functions
+/// StockFetchDates
+const fetchStockFetchDatesStart = (state, action) => {
+  return updateObject(state, { loading: true });
+};
+
+const fetchStockFetchDatesSuccess = (state, action) => {
+  return updateObject(state, {
+    stockFetchDates: action.stockFetchDates,
+    loading: false,
+  });
+};
+
+const fetchStockFetchDatesFail = (state, action) => {
+  return updateObject(state, { loading: false });
+};
+
+/// StockFetchDates
+
+
+const reducer = (state = initialState, action) => {
+  switch (action.type) {
+    case actionTypes.FETCH_STOCKS_START:
+      return fetchStocksStart(state, action);
+    case actionTypes.FETCH_STOCKS_SUCCESS:
+      return fetchStocksSuccess(state, action);
+    case actionTypes.FETCH_GROUP_STOCKS_SUCCESS:
+      return fetchGroupStocksSuccess(state, action);
+    case actionTypes.FETCH_STOCKS_FAIL:
+      return fetchStocksFail(state, action);
+    case actionTypes.FETCH_STOCK_OPTIONS_START:
+      return fetchStockOptionsStart(state, action);
+    case actionTypes.FETCH_STOCK_OPTIONS_SUCCESS:
+      return fetchStockOptionsSuccess(state, action);
+    case actionTypes.FETCH_STOCK_OPTIONS_FAIL:
+      return fetchStockOptionsFail(state, action);
+    case actionTypes.FETCH_STOCK_START:
+      return fetchStockStart(state, action);
+    case actionTypes.FETCH_STOCK_SUCCESS:
+      return fetchStockSuccess(state, action);
+    case actionTypes.FETCH_STOCK_FUNDERS_START:
+      return fetchStockFundersStart(state, action);
+    case actionTypes.FETCH_STOCK_FUNDERS_SUCCESS:
+      return fetchStockFundersSuccess(state, action);
+    case actionTypes.FETCH_STOCK_FUNDERS_FAIL:
+      return fetchStockFundersFail(state, action);
+    case actionTypes.FETCH_STOCK_FUNDER_SCORES_START:
+      return fetchStockFunderScoresStart(state, action);
+    case actionTypes.FETCH_STOCK_FUNDER_SCORES_SUCCESS:
+      return fetchStockFunderScoresSuccess(state, action);
+    case actionTypes.FETCH_STOCK_FUNDER_SCORES_FAIL:
+      return fetchStockFunderScoresFail(state, action);
+    case actionTypes.TOGGLE_STOCK_TREND_LINE:
+      return toggleStockTrendLine(state, action);
+    case actionTypes.FETCH_STOCK_REVENUES_START:
+      return fetchStockRevenuesStart(state, action);
+    case actionTypes.FETCH_STOCK_REVENUES_SUCCESS:
+      return fetchStockRevenuesSuccess(state, action);
+    case actionTypes.FETCH_STOCK_REVENUES_FAIL:
+      return fetchStockRevenuesFail(state, action);
+    case actionTypes.FETCH_STOCK_REVENUE_PAGED_SUCCESS:
+      return fetchStockRevenuePagedSuccess(state, action);
+    case actionTypes.FETCH_INDUSTRYS_SUCCESS:
+      return fetchStockIndustrysSuccess(state, action);
+    case actionTypes.FETCH_STOCK_PROFITS_START:
+      return fetchStockProfitsStart(state, action);
+    case actionTypes.FETCH_STOCK_PROFITS_SUCCESS:
+      return fetchStockProfitsSuccess(state, action);
+    case actionTypes.FETCH_STOCK_PROFITS_FAIL:
+      return fetchStockProfitsFail(state, action);
+    case actionTypes.FETCH_STOCK_FAIL:
+      return fetchStockFail(state, action);
+    case actionTypes.UPDATE_STOCK:
+      return updateObject(state, { stock: action.stock });
+    case actionTypes.RESET_STOCK:
+      return updateObject(state, initialState);
+    case actionTypes.SAVE_STOCK_START:
+      return saveStockStart(state, action);
+    case actionTypes.SAVE_STOCK_SUCCESS:
+      return saveStockSuccess(state, action);
+    case actionTypes.SAVE_STOCK_FAIL:
+      return saveStockFail(state, action);
+    case actionTypes.DELETE_STOCK_START:
+      return updateObject(state, {
+        stock: action.stock,
+        loading: true,
+        deleted: false,
+      });
+    case actionTypes.DELETE_STOCK_SUCCESS:
+      return updateObject(state, {
+        stock: initialState.stock,
+        loading: false,
+        deleted: true,
+      });
+    case actionTypes.DELETE_STOCK_FAIL:
+      return updateObject(state, {
+        error: action.error,
+        loading: false,
+        deleted: false,
+      });
+    case actionTypes.REMOVE_LIST_STOCK:
+      return updateObject(state, {
+        stocks: state.stocks.filter(x => x.code !== action.stockCode)
+      });
+    case actionTypes.FETCH_STOCK_AUDIT_LOGS_START:
+      return updateObject(state, {
+        stock: action.stock,
+        loading: true,
+      });
+    case actionTypes.FETCH_STOCK_AUDIT_LOGS_SUCCESS:
+      return updateObject(state, {
+        auditLogs: action.auditLogs,
+        loading: false,
+      });
+    case actionTypes.FETCH_STOCK_AUDIT_LOGS_FAIL:
+      return updateObject(state, {
+        error: action.error,
+        loading: false,
+      });
+    //--case
+    case actionTypes.FETCH_STOCK_FETCH_DATES_START:
+      return fetchStockFetchDatesStart(state, action);
+    case actionTypes.FETCH_STOCK_FETCH_DATES_SUCCESS:
+      return fetchStockFetchDatesSuccess(state, action);
+    case actionTypes.FETCH_STOCK_FETCH_DATES_FAIL:
+      return fetchStockFetchDatesFail(state, action); default:
+      return state;
+  }
+};
+
+export default reducer;
