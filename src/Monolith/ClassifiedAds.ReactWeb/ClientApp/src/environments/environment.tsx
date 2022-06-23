@@ -1,15 +1,15 @@
 const environment = {
     name: "production",
     OpenIdConnect: {
-        Authority: "https://localhost:44367",
+        Authority: "https://minsdream-tst-identity.azurewebsites.net",
         ClientId: "ClassifiedAds.React"
     },
     ResourceServer: {
-        Endpoint: "https://localhost:44312/api/",
-        ChatHub: "https://localhost:44312/chatHub/",
-        NotificationHub: "https://localhost:44312/notificationHub/",
-        NotificationEndpoint: "https://localhost:44312/hubs/notification",
+        Endpoint: "https://minsdream-tst-api.azurewebsites.net/api/",
+        ChatHub: "https://minsdream-tst-api.azurewebsites.net/chatHub/",
+        NotificationHub: "https://minsdream-tst-api.azurewebsites.net/notificationHub/",
+        NotificationEndpoint: "https://minsdream-tst-api.azurewebsites.net/hubs/notification",
     },
-    CurrentUrl: "http://localhost:3000/"
+    CurrentUrl: "https://minsdream-tst-react.azurewebsites.net/"
 };
 export default environment;
