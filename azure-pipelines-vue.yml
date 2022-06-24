@@ -22,12 +22,10 @@ steps:
     command: restore
     projects: $(project)
 
-- task: DotNetCoreCLI@2
+- task: MSBuild@1
   inputs:
-    command: 'build'
-    projects: $(project)
-    arguments: '--configuration $(buildConfiguration)'
-    zipAfterPublish: true
+    solution: '$(project)'
+    configuration: '$(BuildConfiguration)'
 
 - task: DotNetCoreCLI@2
   inputs:
