@@ -5,8 +5,10 @@
 		<TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
 		<IsPackable>false</IsPackable>
 		<SpaRoot>ClientApp\</SpaRoot>
+		<Vue3>..\..\UIs\vue3\</Vue3>
 		<DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
 	</PropertyGroup>
+
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="6.0.6" />
 	</ItemGroup>
@@ -16,6 +18,36 @@
 		<None Remove="$(SpaRoot)**" />
 		<None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
 	</ItemGroup>
+	<ItemGroup>
+		<Folder Include="ClientApp\" />
+	</ItemGroup>
+	<Target Name="CopyFiles" BeforeTargets="DebugEnsureNodeEnv">
+		<ItemGroup>
+			<!-- Because this ItemGroup is inside the target, this will enumerate
+                 all files just before calling Copy. If the ItemGroup were outside
+                 the target , it would enumerate the files during evaluation, before
+                 the build starts, which may miss files created during the build. -->
+			<UISourceFiles Include="$(Vue3)**" Exclude="$(Vue3)dist\**;$(Vue3)node_modules\**" />
+		</ItemGroup>
+		<Copy SourceFiles="@(UISourceFiles)" DestinationFiles="$(SpaRoot)%(RecursiveDir)%(Filename)%(Extension)" SkipUnchangedFiles="true" />
+	</Target>
+	<Target Name="Replace" AfterTargets="CopyFiles">
+		<PropertyGroup>
+			<InputFile>$(SpaRoot)src\environments\environment.ts</InputFile>
+			<OutputFile>$(SpaRoot)src\environments\environment.ts</OutputFile>
+			<LauncherCmd>
+				$([System.IO.File]::ReadAllText($(InputFile))
+					.Replace('https://localhost:44367','https://minsdream-tst-identity.azurewebsites.net')
+					.Replace('https://localhost:44312','https://minsdream-tst-api.azurewebsites.net')
+					.Replace('http://localhost:8080','https://minsdream-tst-vue.azurewebsites.net'))
+			</LauncherCmd>
+		</PropertyGroup>
+		<WriteLinesToFile
+			File="$(OutputFile)"
+			Lines="$(LauncherCmd)"
+			Overwrite="true"
+			Encoding="Unicode"/>
+	</Target>
 	<Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
 		<!-- Ensure Node.js is installed -->
 		<Exec Command="node --version" ContinueOnError="true">
