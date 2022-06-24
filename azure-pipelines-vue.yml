@@ -1,43 +1,41 @@
-# Docker
-# Build and push an image to Azure Container Registry
-# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
-
 trigger:
  branches:
-   include:
-     - minsDream
+  include:
+    - minsDream
  paths:
-   include:
-     - src/Monolith/ClassifiedAds.VueWeb/**
+  include:
+    - src/Monolith/ClassifiedAds.VueWeb/**
 
-resources:
-- repo: self
+pool: Default
 
 variables:
-  # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: '3632f531-d6f2-497e-bfbe-b929249de9a5'
-  imageRepository: 'vue'
-  containerRegistry: 'minsdream.azurecr.io'
-  dockerfilePath: '$(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.VueWeb/Dockerfile'
-  tag: '$(Build.BuildId)'
+  project: '$(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.VueWeb/ClassifiedAds.VueWeb.csproj'
+  clientApp: '$(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.VueWeb/ClientApp'
+  buildConfiguration: 'Release'
 
-  # Agent VM image name
-  vmImageName: 'ubuntu-latest'
+steps:
+- checkout: self
+  persistCredentials: true
 
-stages:
-- stage: Build
-  displayName: Build and push stage
-  jobs:
-  - job: Build
-    displayName: Build
-    pool: Default
-    steps:
-    - task: Docker@2
-      displayName: Build and push an image to container registry
-      inputs:
-        command: buildAndPush
-        repository: $(imageRepository)
-        dockerfile: $(dockerfilePath)
-        containerRegistry: $(dockerRegistryServiceConnection)
-        tags: |
-          $(tag)
+- task: DotNetCoreCLI@2
+  displayName: Restore
+  inputs:
+    command: restore
+    projects: $(project)
+  
+- task: VSBuild@1
+  inputs:
+    solution: $(project)
+    msbuildArgs: '/t:build /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:OutputPath="$(Build.ArtifactStagingDirectory)"'
+    configuration: '$(BuildConfiguration)'
+
+#- task: AzureWebApp@1
+#  inputs:
+#    azureSubscription: 'Azure subscription 1(12f9fe73-501c-467e-b224-dc534d3b5bb3)'
+#    appType: 'webApp'
+#    appName: 'minsDream-tst-vue'
+#    deployToSlotOrASE: true
+#    resourceGroupName: 'Test'
+#    slotName: 'production'
+#    package: '$(Build.ArtifactStagingDirectory)/ClassifiedAds.VueWeb.zip'
+#    deploymentMethod: 'zipDeploy'

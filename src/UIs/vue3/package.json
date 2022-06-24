@@ -2,7 +2,7 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc --noEmit --skipLibCheck && vite build",
+    "build": "vite build",
     "serve": "vite preview",
     "test": "jest",
     "test-e2e": "npx playwright test --config=tests/app.config.ts",
