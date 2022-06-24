@@ -22,7 +22,7 @@ steps:
     command: restore
     projects: $(project)
 
-- task: MSBuild@1
+- task: VSBuild@1
   inputs:
     solution: '$(project)'
     configuration: '$(BuildConfiguration)'
