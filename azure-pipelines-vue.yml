@@ -20,19 +20,19 @@ steps:
   displayName: Restore
   inputs:
     command: restore
-    projects: $(project)
+    projects: '$(project)'
 
 - task: DotNetCoreCLI@2
   inputs:
     command: 'build'
-    projects: $(project)
+    projects: '$(project)'
     arguments: '--configuration $(buildConfiguration)'
     zipAfterPublish: true
 
 - task: DotNetCoreCLI@2
   inputs:
     command: publish
-    projects: $(project)
+    projects: '$(project)'
     arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
     zipAfterPublish: True
 
