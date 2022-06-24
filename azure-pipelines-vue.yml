@@ -10,6 +10,7 @@ pool: Default
 
 variables:
   project: '$(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.VueWeb/ClassifiedAds.VueWeb.csproj'
+  clientApp: '$(Build.SourcesDirectory)/src/Monolith/ClassifiedAds.VueWeb/ClientApp'
   buildConfiguration: 'Release'
 
 steps:
@@ -21,26 +22,20 @@ steps:
   inputs:
     command: restore
     projects: $(project)
-
+  
 - task: VSBuild@1
   inputs:
-    solution: '$(project)'
+    solution: $(project)
+    msbuildArgs: '/t:build /p:DeployOnBuild=true'
     configuration: '$(BuildConfiguration)'
 
-- task: DotNetCoreCLI@2
-  inputs:
-    command: publish
-    projects: $(project)
-    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-    zipAfterPublish: True
-
-- task: AzureWebApp@1
-  inputs:
-    azureSubscription: 'Azure subscription 1(12f9fe73-501c-467e-b224-dc534d3b5bb3)'
-    appType: 'webApp'
-    appName: 'minsDream-tst-vue'
-    deployToSlotOrASE: true
-    resourceGroupName: 'Test'
-    slotName: 'production'
-    package: '$(Build.ArtifactStagingDirectory)/ClassifiedAds.VueWeb.zip'
-    deploymentMethod: 'zipDeploy'
+#- task: AzureWebApp@1
+#  inputs:
+#    azureSubscription: 'Azure subscription 1(12f9fe73-501c-467e-b224-dc534d3b5bb3)'
+#    appType: 'webApp'
+#    appName: 'minsDream-tst-vue'
+#    deployToSlotOrASE: true
+#    resourceGroupName: 'Test'
+#    slotName: 'production'
+#    package: '$(Build.ArtifactStagingDirectory)/ClassifiedAds.VueWeb.zip'
+#    deploymentMethod: 'zipDeploy'
