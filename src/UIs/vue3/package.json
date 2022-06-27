@@ -25,6 +25,7 @@
     "primeicons": "^4.1.0",
     "primevue": "^3.5.1",
     "tui-calendar": "^1.14.1",
+    "vite-plugin-cdn-import": "^0.3.5",
     "vue": "^3.0.5",
     "vue-i18n": "^9.1.7",
     "vue-router": "^4.0.10",

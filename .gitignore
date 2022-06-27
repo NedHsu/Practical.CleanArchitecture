@@ -381,3 +381,4 @@ src/Monolith/tye.yml
 pkg/*
 src/UIs/reactjs/pkg/*
 src/UIs/vue3/src/assets/audio/*
+/src/Monolith/ClassifiedAds.VueWeb/ClientApp/src/assets/audio

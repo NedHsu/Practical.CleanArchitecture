@@ -194,6 +194,7 @@ import { createNamespacedHelpers } from "vuex";
 import { WordStats } from "../../store/modules/word/types";
 import { useRouter } from "vue-router";
 import WordEditor from "../../components/words/WordEditor.vue";
+import env from '../../environments';
 
 const { mapState, mapActions, mapMutations, mapGetters } =
     createNamespacedHelpers("word");
@@ -370,7 +371,7 @@ export default {
                 return;
             }
 
-            const url = new URL(`../../assets/audio/${file}`, import.meta.url)
+            const url = new URL(`${env.ResourceServer.Blob}audio/${file}`, env.isDev ? import.meta.url : undefined)
                 .href;
             const audio = new Audio(url);
             audio.play();
